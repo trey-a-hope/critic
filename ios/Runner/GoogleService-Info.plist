@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>237172304059-96osbm0gc7ifjmpc98f559eopcqndve5.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.237172304059-96osbm0gc7ifjmpc98f559eopcqndve5</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCMV1lA56RW0ld8ncCfiH4a0zd194zMnK8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>237172304059</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.critic</string>
+	<key>PROJECT_ID</key>
+	<string>critic-a9e44</string>
+	<key>STORAGE_BUCKET</key>
+	<string>critic-a9e44.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:237172304059:ios:a60bc37a9a989c3053a19e</string>
+	<key>DATABASE_URL</key>
+	<string>https://critic-a9e44.firebaseio.com</string>
+</dict>
+</plist>
