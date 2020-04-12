@@ -1,20 +1,38 @@
 import 'package:critic/pages/HomePage.dart';
+import 'package:critic/pages/LoginPage.dart';
+import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
+import 'package:critic/services/UsersService.dart';
+import 'package:critic/services/ValidationService.dart';
 import 'package:critic/style/ThemeData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'dart:ui' as ui;
+import 'package:package_info/package_info.dart';
+
+import 'Constants.dart';
 
 final GetIt getIt = GetIt.instance;
 
-void main() {
-  //Widgets Flutter Binding
+void main() async {
+  //Call this at the beginning of main().
   WidgetsFlutterBinding.ensureInitialized();
 
-  //Register Dependency Injections
+  //Register dependencies.
   getIt.registerSingleton<IMovieService>(MovieService(), signalsReady: true);
+  getIt.registerSingleton<IAuthService>(AuthService(), signalsReady: true);
+  getIt.registerSingleton<IValidationService>(ValidationService(),
+      signalsReady: true);
+  getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
+  getIt.registerSingleton<IUsersService>(UsersService(), signalsReady: true);
+
+    //Assign app version and build number.
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  version = packageInfo.version;
+  buildNumber = packageInfo.buildNumber;
 
   runApp(
     MyApp(),
@@ -32,7 +50,19 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Critic',
       theme: themeData,
-      home: HomePage()
+      home: StreamBuilder(
+        stream: getIt<IAuthService>().onAuthStateChanged(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          final FirebaseUser firebaseUser = snapshot.data;
+
+          //If user is logged in...
+          if (firebaseUser != null) {
+            return HomePage();
+          }
+
+          return LoginPage();
+        },
+      ),
     );
   }
 }

@@ -347,20 +347,6 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
                           )
                         ],
                       ),
-                      Divider(
-                        color: Colors.black,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          '0 people have critiqued this movie...',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.black,
-                      ),
                       SizedBox(
                         height: 30,
                       ),
