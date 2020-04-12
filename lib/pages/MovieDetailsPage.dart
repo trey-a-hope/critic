@@ -61,183 +61,178 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
 
               MovieModel movie = snapshot.data;
 
-              return SingleChildScrollView(
-                child: Stack(
+              return ListView(children: [
+                Stack(
                   children: <Widget>[
-                    Container(
-                      // color: Colors.white,
-                      width: screenWidth,
-                      height: screenHeight,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40)),
-                        image: DecorationImage(
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.6), BlendMode.darken),
-                          image: NetworkImage(movie.poster),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: imageSize,
-                      child: Container(
-                        height: screenHeight - imageSize,
-                        width: screenWidth,
-                        color: Colors.black,
-                        // decoration: BoxDecoration(
-                        //   color: Colors.greenAccent,
-                        //   borderRadius: BorderRadius.all(
-                        //     Radius.circular(40),
-                        //   ),
-                        // ),
-                        child: Padding(
-                          padding: EdgeInsets.only(top: listViewBuilderPadding),
-                          child: Container(
-                            height: screenHeight -
-                                imageSize +
-                                listViewBuilderPadding,
-                            width: screenWidth,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: Center(
-                                child: ListView(
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 125,
-                                    ),
-                                    Wrap(
-                                      children: <Widget>[
-                                        Text(
-                                          '${movie.title}',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          '${movie.year}',
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            color: Colors.grey[500],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Wrap(
-                                      children: <Widget>[
-                                        Text(
-                                          'Directed by',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[300],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          ' ${movie.director}',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[500],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Wrap(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          ' ${movie.imdbRating} (${movie.imdbVotes})',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey[300],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          ' IMDB Rating',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[500],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Divider(
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 10),
-                                      child: Text(
-                                        '0 people have critiqued this movie...',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    Divider(
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Text(
-                                          'Write Critique',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              letterSpacing: 2.0),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        FloatingActionButton(
-                                          heroTag: 'fab',
-                                          child: Icon(
-                                            Icons.note_add,
-                                            size: 30,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CritiquePage(
-                                                  movie: movie,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   // color: Colors.white,
+                    //   width: screenWidth,
+                    //   height: screenHeight * 0.6,
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.only(
+                    //         bottomLeft: Radius.circular(40),
+                    //         bottomRight: Radius.circular(40)),
+                    //     image: DecorationImage(
+                    //       colorFilter: ColorFilter.mode(
+                    //           Colors.black.withOpacity(0.6), BlendMode.darken),
+                    //       image: NetworkImage(movie.poster),
+                    //       fit: BoxFit.fill,
+                    //     ),
+                    //   ),
+                    // ),
+                    // Positioned(
+                    //   top: imageSize,
+                    //   child: Container(
+                    //     height: screenHeight - imageSize,
+                    //     width: screenWidth,
+                    //     color: Colors.black,
+                    //     // decoration: BoxDecoration(
+                    //     //   color: Colors.greenAccent,
+                    //     //   borderRadius: BorderRadius.all(
+                    //     //     Radius.circular(40),
+                    //     //   ),
+                    //     // ),
+                    //     child: Padding(
+                    //       padding: EdgeInsets.only(top: listViewBuilderPadding),
+                    //       child: Container(
+                    //         height: screenHeight -
+                    //             imageSize +
+                    //             listViewBuilderPadding,
+                    //         width: screenWidth,
+                    //         child: Padding(
+                    //           padding: EdgeInsets.symmetric(horizontal: 20),
+                    //           child: Center(
+                    //             child: Column(
+                    //               crossAxisAlignment: CrossAxisAlignment.center,
+                    //               children: <Widget>[
+                    //                 // SizedBox(
+                    //                 //   height: 125,
+                    //                 // ),
+                    //                 // Text(
+                    //                 //   '${movie.title}',
+                    //                 //   textAlign: TextAlign.center,
+                    //                 //   style: TextStyle(
+                    //                 //       fontSize: 25,
+                    //                 //       color: Colors.white,
+                    //                 //       fontWeight: FontWeight.bold),
+                    //                 // ),
+                    //                 // Text(
+                    //                 //   '${movie.year}',
+                    //                 //   textAlign: TextAlign.center,
+                    //                 //   style: TextStyle(
+                    //                 //     fontSize: 25,
+                    //                 //     color: Colors.grey[500],
+                    //                 //   ),
+                    //                 // ),
+                    //                 // SizedBox(
+                    //                 //   height: 10,
+                    //                 // ),
+                    //                 // Wrap(
+                    //                 //   children: <Widget>[
+                    //                 //     Text(
+                    //                 //       'Directed by',
+                    //                 //       style: TextStyle(
+                    //                 //           fontSize: 14,
+                    //                 //           color: Colors.grey[300],
+                    //                 //           fontWeight: FontWeight.bold),
+                    //                 //     ),
+                    //                 //     Text(
+                    //                 //       ' ${movie.director}',
+                    //                 //       style: TextStyle(
+                    //                 //         fontSize: 14,
+                    //                 //         color: Colors.grey[500],
+                    //                 //       ),
+                    //                 //     )
+                    //                 //   ],
+                    //                 // ),
+                    //                 // SizedBox(
+                    //                 //   height: 10,
+                    //                 // ),
+                    //                 // Wrap(
+                    //                 //   children: <Widget>[
+                    //                 //     Icon(
+                    //                 //       Icons.star,
+                    //                 //       color: Colors.yellow,
+                    //                 //     ),
+                    //                 //     Text(
+                    //                 //       ' ${movie.imdbRating} (${movie.imdbVotes})',
+                    //                 //       style: TextStyle(
+                    //                 //           fontSize: 14,
+                    //                 //           color: Colors.grey[300],
+                    //                 //           fontWeight: FontWeight.bold),
+                    //                 //     ),
+                    //                 //     Text(
+                    //                 //       ' IMDB Rating',
+                    //                 //       style: TextStyle(
+                    //                 //         fontSize: 14,
+                    //                 //         color: Colors.grey[500],
+                    //                 //       ),
+                    //                 //     )
+                    //                 //   ],
+                    //                 // ),
+                    //                 // Divider(
+                    //                 //   color: Colors.white,
+                    //                 // ),
+                    //                 // Padding(
+                    //                 //   padding:
+                    //                 //       EdgeInsets.symmetric(vertical: 10),
+                    //                 //   child: Text(
+                    //                 //     '0 people have critiqued this movie...',
+                    //                 //     style: TextStyle(color: Colors.white),
+                    //                 //   ),
+                    //                 // ),
+                    //                 // Divider(
+                    //                 //   color: Colors.white,
+                    //                 // ),
+                    //                 // SizedBox(
+                    //                 //   height: 30,
+                    //                 // ),
+                    //                 // Row(
+                    //                 //   mainAxisAlignment: MainAxisAlignment.end,
+                    //                 //   children: <Widget>[
+                    //                 //     Text(
+                    //                 //       'Write Critique',
+                    //                 //       style: TextStyle(
+                    //                 //           color: Colors.white,
+                    //                 //           letterSpacing: 2.0),
+                    //                 //     ),
+                    //                 //     SizedBox(
+                    //                 //       width: 10,
+                    //                 //     ),
+                    //                 //     FloatingActionButton(
+                    //                 //       heroTag: 'fab',
+                    //                 //       child: Icon(
+                    //                 //         Icons.note_add,
+                    //                 //         size: 30,
+                    //                 //       ),
+                    //                 //       onPressed: () {
+                    //                 //         Navigator.of(context).push(
+                    //                 //           MaterialPageRoute(
+                    //                 //             builder: (context) =>
+                    //                 //                 CritiquePage(
+                    //                 //               movie: movie,
+                    //                 //             ),
+                    //                 //           ),
+                    //                 //         );
+                    //                 //       },
+                    //                 //     ),
+                    //                 //   ],
+                    //                 // ),
+                    //                 // SizedBox(
+                    //                 //   height: 20,
+                    //                 // )
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Stack(
                       children: <Widget>[
                         Container(
-                          height: imageSize + 100,
+                          height: screenHeight * 0.6,
                           width: screenWidth,
                           decoration: BoxDecoration(
                             // borderRadius: BorderRadius.only(
@@ -288,7 +283,137 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
                     ),
                   ],
                 ),
-              );
+                Container(
+                  height: 320,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        '${movie.title}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 25,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '${movie.year}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Directed by ${movie.director}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+                            fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                              Text(
+                                ' ${movie.imdbRating} (${movie.imdbVotes})',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                ' IMDB Rating',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[700],
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                      Divider(
+                        color: Colors.black,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          '0 people have critiqued this movie...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      Divider(
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: GoodButton(
+                          title: 'Write Critique',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CritiquePage(
+                                  movie: movie,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: <Widget>[
+                      //     Text(
+                      //       'Write Critique',
+                      //       style: TextStyle(color: Colors.white, letterSpacing: 2.0),
+                      //     ),
+                      //     SizedBox(
+                      //       width: 10,
+                      //     ),
+                      //     FloatingActionButton(
+                      //       heroTag: 'fab',
+                      //       child: Icon(
+                      //         Icons.note_add,
+                      //         size: 30,
+                      //       ),
+                      //       onPressed: () {
+                      //         Navigator.of(context).push(
+                      //           MaterialPageRoute(
+                      //             builder: (context) => CritiquePage(
+                      //               movie: movie,
+                      //             ),
+                      //           ),
+                      //         );
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
+                      SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
+                )
+              ]);
           }
         },
       ),

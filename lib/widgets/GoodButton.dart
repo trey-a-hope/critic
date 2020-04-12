@@ -19,7 +19,7 @@ class GoodButton extends StatelessWidget {
         title,
         style: TextStyle(
           fontSize: 16,
-          fontFamily: 'SFUIDisplay',
+          fontFamily: 'Montserrat',
           fontWeight: FontWeight.bold,
         ),
       ),
