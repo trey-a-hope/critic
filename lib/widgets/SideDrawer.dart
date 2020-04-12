@@ -57,22 +57,26 @@ class SideDrawerState extends State<SideDrawer> {
             leading: Icon(Icons.home, color: iconColor),
             title: Text('Home'),
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
+              if (page != 'Home') {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              }
             },
           ),
           ListTile(
             leading: Icon(Icons.movie, color: iconColor),
             title: Text('Find Movie'),
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => FindMoviePage(),
-                ),
-              );
+              if (page != 'Find Movie') {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => FindMoviePage(),
+                  ),
+                );
+              }
             },
           ),
           Spacer(),

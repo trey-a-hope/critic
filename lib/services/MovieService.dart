@@ -69,7 +69,7 @@ class MovieService extends IMovieService {
     Map<String, String> params = {
       's': '$search',
       'apiKey': apiKey,
-      'p': '$page'
+      'page': '$page'
     };
 
     Uri uri = Uri.https(authority, '', params);
