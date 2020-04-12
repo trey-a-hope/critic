@@ -61,7 +61,7 @@ class SideDrawerState extends State<SideDrawer> {
             title: Text('Home'),
             onTap: () {
               if (page != 'Home') {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ),
@@ -87,7 +87,7 @@ class SideDrawerState extends State<SideDrawer> {
             title: Text('Find Movie'),
             onTap: () {
               if (page != 'Find Movie') {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => FindMoviePage(),
                   ),
@@ -101,7 +101,7 @@ class SideDrawerState extends State<SideDrawer> {
             title: Text('Profile'),
             onTap: () {
               if (page != 'Profile') {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => FindMoviePage(),
                   ),
@@ -114,7 +114,7 @@ class SideDrawerState extends State<SideDrawer> {
             title: Text('Settings'),
             onTap: () {
               if (page != 'Settings') {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => FindMoviePage(),
                   ),
