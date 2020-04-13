@@ -15,13 +15,26 @@ abstract class IUsersService {
 
 class UsersService extends IUsersService {
   final CollectionReference usersDB = Firestore.instance.collection('Users');
+  final CollectionReference dataDB = Firestore.instance.collection('Data');
 
   @override
   Future<void> createUser({UserModel user}) async {
     try {
-      DocumentReference docRef = usersDB.document();
-      user.id = docRef.documentID;
-      docRef.setData(user.toMap());
+      //Create new batch object.
+      final WriteBatch batch = Firestore.instance.batch();
+      //Create document reference for the new user.
+      final DocumentReference userDocRef = usersDB.document();
+      //Create document reference for the table counts.
+      final DocumentReference tableCountsDocRef =
+          dataDB.document('tableCounts');
+      //Set data for new reference.
+      user.id = userDocRef.documentID;
+      //Set data for user.
+      batch.setData(userDocRef, user.toMap());
+      //Increase count value for total likes on this template.
+      batch.updateData(tableCountsDocRef, {'users': FieldValue.increment(1)});
+      //Commit batch.
+      batch.commit();
       return;
     } catch (e) {
       throw Exception(
@@ -42,7 +55,7 @@ class UsersService extends IUsersService {
 
   @override
   Stream<QuerySnapshot> streamUsers() {
-    Query query = usersDB; 
+    Query query = usersDB;
     return query.snapshots();
   }
 

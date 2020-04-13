@@ -10,7 +10,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../Constants.dart';
 import 'package:flutter/src/services/message_codec.dart';
 
-
 class SignUpPage extends StatefulWidget {
   @override
   State createState() => SignUpPageState();
@@ -18,9 +17,12 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage>
     with SingleTickerProviderStateMixin {
-  final TextEditingController emailController = TextEditingController(text: 'trey.a.hope@gmail.com');
-  final TextEditingController usernameController = TextEditingController(text: 'Travisty92');
-  final TextEditingController passwordController = TextEditingController(text: 'Peachy33');
+  final TextEditingController emailController =
+      TextEditingController(text: 'trey.a.hope@gmail.com');
+  final TextEditingController usernameController =
+      TextEditingController(text: 'Travisty92');
+  final TextEditingController passwordController =
+      TextEditingController(text: 'Peachy33');
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final formKey = GlobalKey<FormState>();
   bool autoValidate = false;
@@ -65,13 +67,8 @@ class SignUpPageState extends State<SignUpPage>
               username: usernameController.text);
 
           await getIt<IUsersService>().createUser(user: user);
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => HomePage(),
-          //   ),
-          // );
-          //Navigator.of(context).pop();
+
+          Navigator.pop(context);
         } on PlatformException catch (e) {
           print(e);
           setState(
