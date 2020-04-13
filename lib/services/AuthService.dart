@@ -17,14 +17,14 @@ abstract class IAuthService {
 }
 
 class AuthService extends IAuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CollectionReference _usersDB = Firestore.instance.collection('Users');
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final CollectionReference usersDB = Firestore.instance.collection('Users');
 
   @override
   Future<UserModel> getCurrentUser() async {
     try {
-      FirebaseUser firebaseUser = await _auth.currentUser();
-      QuerySnapshot querySnapshot = await _usersDB
+      FirebaseUser firebaseUser = await auth.currentUser();
+      QuerySnapshot querySnapshot = await usersDB
           .where('uid', isEqualTo: firebaseUser.uid)
           .getDocuments();
       DocumentSnapshot documentSnapshot = querySnapshot.documents.first;
@@ -36,31 +36,31 @@ class AuthService extends IAuthService {
 
   @override
   Future<void> signOut() {
-    return _auth.signOut();
+    return auth.signOut();
   }
 
   @override
   Stream<FirebaseUser> onAuthStateChanged() {
-    return _auth.onAuthStateChanged;
+    return auth.onAuthStateChanged;
   }
 
   @override
   Future<AuthResult> signInWithEmailAndPassword(
       {@required String email, @required String password}) {
-    return _auth.signInWithEmailAndPassword(email: email, password: password);
+    return auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
   Future<AuthResult> createUserWithEmailAndPassword(
       {@required String email, @required String password}) {
-    return _auth.createUserWithEmailAndPassword(
+    return auth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 
   @override
   Future<void> updatePassword({String password}) async {
     try {
-      FirebaseUser firebaseUser = await _auth.currentUser();
+      FirebaseUser firebaseUser = await auth.currentUser();
       firebaseUser.updatePassword(password);
       return;
     } catch (e) {
@@ -73,9 +73,9 @@ class AuthService extends IAuthService {
   @override
   Future<void> deleteUser({String userID}) async {
     try {
-      FirebaseUser firebaseUser = await _auth.currentUser();
+      FirebaseUser firebaseUser = await auth.currentUser();
       await firebaseUser.delete();
-      await _usersDB.document(userID).delete();
+      await usersDB.document(userID).delete();
       //TODO: DELETE STRIPE ACCOUNT
       return;
     } catch (e) {
