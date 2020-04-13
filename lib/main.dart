@@ -1,6 +1,7 @@
 import 'package:critic/pages/HomePage.dart';
 import 'package:critic/pages/LoginPage.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UsersService.dart';
@@ -28,6 +29,7 @@ void main() async {
       signalsReady: true);
   getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
   getIt.registerSingleton<IUsersService>(UsersService(), signalsReady: true);
+  getIt.registerSingleton<ICritiqueService>(CritiqueService(), signalsReady: true);
 
     //Assign app version and build number.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
