@@ -1,3 +1,4 @@
+import 'package:critic/pages/EntryPage.dart';
 import 'package:critic/pages/HomePage.dart';
 import 'package:critic/pages/LoginPage.dart';
 import 'package:critic/services/AuthService.dart';
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
 
           //If user is logged in...
           if (firebaseUser != null) {
-            return HomePage();
+            return EntryPage();
           }
 
           return LoginPage();

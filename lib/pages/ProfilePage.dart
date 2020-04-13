@@ -2,12 +2,12 @@ import 'package:critic/widgets/SideDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-class HomePage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   @override
-  State createState() => HomePageState();
+  State createState() => ProfilePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class ProfilePageState extends State<ProfilePage> {
   final GetIt getIt = GetIt.I;
 
   @override
@@ -18,7 +18,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Welcome to Critic.'),
+      child: Text('Profile Page'),
     );
   }
 }
