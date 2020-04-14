@@ -16,22 +16,22 @@ class EntryPageState extends State<EntryPage> {
   int currentTab = 0;
 
   final List<String> childrenTitle = [
-    'Home',
+    // 'Home',
     'Create',
     'Profile',
     'Settings',
   ];
   final List<Widget> children = [
-    HomePage(),
+    // HomePage(),
     CreatePage(),
     ProfilePage(),
     SettingsPage(),
   ];
   final List<BottomNavigationBarItem> items = [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home),
-      title: Text('Home'),
-    ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.home),
+    //   title: Text('Home'),
+    // ),
     BottomNavigationBarItem(
       icon: Icon(Icons.add),
       title: Text('Create'),

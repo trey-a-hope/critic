@@ -5,6 +5,7 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
+import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/style/ThemeData.dart';
@@ -31,6 +32,7 @@ void main() async {
   getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
   getIt.registerSingleton<IUserService>(UsersService(), signalsReady: true);
   getIt.registerSingleton<ICritiqueService>(CritiqueService(), signalsReady: true);
+  getIt.registerSingleton<IStorageService>(StorageService(), signalsReady: true);
 
     //Assign app version and build number.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();

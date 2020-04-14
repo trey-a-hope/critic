@@ -1,5 +1,7 @@
 import 'package:critic/models/UserModel.dart';
+import 'package:critic/pages/EditProfilePage.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -41,23 +43,40 @@ class ProfilePageState extends State<ProfilePage> {
             return SingleChildScrollView(
               child: Stack(
                 children: <Widget>[
-                  SizedBox(
+                  // SizedBox(
+                  //   height: 250,
+                  //   width: double.infinity,
+                  //   child: Image.network(
+                  //       'https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'),
+                  // ),
+                  Container(
                     height: 250,
                     width: double.infinity,
-                    child: Image.network(
-                        'https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(
+                            'https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'),
+                      ),
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.fromLTRB(16.0, 200.0, 16.0, 16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
                     child: Column(
                       children: <Widget>[
+                        SizedBox(
+                          height: 20,
+                        ),
                         Stack(
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.all(16.0),
                               margin: EdgeInsets.only(top: 20.0),
                               decoration: BoxDecoration(
-                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(5.0),
                               ),
                               child: Column(
@@ -76,7 +95,7 @@ class ProfilePageState extends State<ProfilePage> {
                                         ),
                                         ListTile(
                                           contentPadding: EdgeInsets.all(0),
-                                          title: Text('General User'),
+                                          title: Text(currentUser.email),
                                         ),
                                       ],
                                     ),
@@ -133,6 +152,22 @@ class ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: FloatingActionButton(
+                      child: Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditProfilePage(
+                              currentUser: currentUser,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
                 ],
               ),
             );
