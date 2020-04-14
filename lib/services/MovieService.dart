@@ -13,9 +13,8 @@ abstract class IMovieService {
 }
 
 class MovieService extends IMovieService {
-  final String apiKey = '1f1c49fc';
+  final String apiKey = '7c304592';
   final String authority = 'www.omdbapi.com';
-  //final String unencodedPath = '/api/v1/';
 
   @override
   Future<MovieModel> getMovieByID({@required String id}) async {

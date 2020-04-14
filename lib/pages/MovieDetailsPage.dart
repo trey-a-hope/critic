@@ -63,17 +63,23 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(movie.poster),
-                        fit: BoxFit.fill,
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                   ),
-                  Text(
-                    '${movie.title}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      '${movie.title}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Text(
                     '${movie.year}',

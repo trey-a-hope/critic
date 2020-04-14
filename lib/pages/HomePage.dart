@@ -109,13 +109,13 @@ class HomePageState extends State<HomePage> {
       if (critiques.isEmpty) {
         querySnapshot = await Firestore.instance
             .collection('Critiques')
-            .orderBy('created')
+            .orderBy('created', descending: true)
             .limit(limit)
             .getDocuments();
       } else {
         querySnapshot = await Firestore.instance
             .collection('Critiques')
-            .orderBy('created')
+            .orderBy('created', descending: true)
             .startAfterDocument(critiques[critiques.length - 1])
             .limit(limit)
             .getDocuments();
