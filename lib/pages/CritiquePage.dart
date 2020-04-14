@@ -4,6 +4,7 @@ import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/UserService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/SideDrawer.dart';
@@ -37,6 +38,7 @@ class CritiquePageState extends State<CritiquePage> {
   final IAuthService authService = getIt<IAuthService>();
   final IValidationService validationService = getIt<IValidationService>();
   final ICritiqueService critiqueService = getIt<ICritiqueService>();
+  final IUserService userService = getIt<IUserService>();
   bool autoValidate = false;
 
   @override
@@ -55,10 +57,13 @@ class CritiquePageState extends State<CritiquePage> {
           modalService.showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Submitting critique...');
 
+          //Fetch current user;
+          UserModel currentUser = await authService.getCurrentUser();
+
           DateTime now = DateTime.now();
           CritiqueModel critique = CritiqueModel(
             id: '',
-            userID: 'ylmUtJaS6rSdjfKg7RTo',
+            userID: currentUser.id,
             imdbID: movie.imdbID,
             message: critiqueController.text,
             modified: now,
@@ -118,6 +123,7 @@ class CritiquePageState extends State<CritiquePage> {
                     textInputAction: TextInputAction.done,
                     validator: validationService.isEmpty,
                     maxLines: 5,
+                    maxLength: 150,
                     maxLengthEnforced: true,
                     decoration: InputDecoration(
                         hintText: 'What do you think about this movie/show?'),
