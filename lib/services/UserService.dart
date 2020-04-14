@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
-abstract class IUsersService {
+abstract class IUserService {
   //Users
   Future<void> createUser({@required UserModel user});
   Future<UserModel> retrieveUser({@required String id});
@@ -13,7 +13,7 @@ abstract class IUsersService {
       {@required String userID, @required Map<String, dynamic> data});
 }
 
-class UsersService extends IUsersService {
+class UsersService extends IUserService {
   final CollectionReference usersDB = Firestore.instance.collection('Users');
   final CollectionReference dataDB = Firestore.instance.collection('Data');
 

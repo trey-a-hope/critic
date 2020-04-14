@@ -79,7 +79,7 @@ class SearchResultsPageState extends State<SearchResultsPage> {
             child: Text('Something Went Wrong'),
           ),
           onEmpty: Center(
-            child: Text('Empty List'),
+            child: Text('No results.'),
           ),
         ),
 

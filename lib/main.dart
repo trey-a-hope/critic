@@ -5,7 +5,7 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
-import 'package:critic/services/UsersService.dart';
+import 'package:critic/services/UserService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/style/ThemeData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,7 +29,7 @@ void main() async {
   getIt.registerSingleton<IValidationService>(ValidationService(),
       signalsReady: true);
   getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
-  getIt.registerSingleton<IUsersService>(UsersService(), signalsReady: true);
+  getIt.registerSingleton<IUserService>(UsersService(), signalsReady: true);
   getIt.registerSingleton<ICritiqueService>(CritiqueService(), signalsReady: true);
 
     //Assign app version and build number.

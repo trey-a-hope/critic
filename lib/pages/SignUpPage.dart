@@ -1,7 +1,7 @@
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/UsersService.dart';
+import 'package:critic/services/Userservice.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +66,7 @@ class SignUpPageState extends State<SignUpPage>
               uid: firebaseUser.uid,
               username: usernameController.text);
 
-          await getIt<IUsersService>().createUser(user: user);
+          await getIt<IUserService>().createUser(user: user);
 
           Navigator.pop(context);
         } on PlatformException catch (e) {

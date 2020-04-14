@@ -13,7 +13,7 @@ class GoodButton extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return MaterialButton(
+    return FlatButton(
       onPressed: onTap,
       child: Text(
         title,
@@ -24,9 +24,9 @@ class GoodButton extends StatelessWidget {
         ),
       ),
       color: Theme.of(context).buttonColor,
-      elevation: 0,
-      minWidth: screenWidth * 0.75,
-      height: 50,
+      // elevation: 0,
+      // minWidth: screenWidth * 0.75,
+      // height: 50,
       textColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
