@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/widgets/Spinner.dart';
+import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/StorageService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:critic/services/UserService.dart';
+import 'package:flutter/src/services/message_codec.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key, @required this.currentUser})
@@ -16,67 +21,52 @@ class EditProfilePage extends StatefulWidget {
 class EditProfilePageState extends State<EditProfilePage> {
   EditProfilePageState({@required this.currentUser});
   final UserModel currentUser;
-  final GetIt getIt = GetIt.I;
-  final String timeFormat = 'MMM d, yyyy @ h:mm a';
   final TextEditingController usernameController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   bool autoValidate = false;
+  File profilePic;
+  ImageProvider profilePicImageProvider;
+  final IModalService modalService = GetIt.I<IModalService>();
+  final IStorageService storageService = GetIt.I<IStorageService>();
+  final IUserService userService = GetIt.I<IUserService>();
+
   @override
   void initState() {
     super.initState();
-
+    profilePicImageProvider = NetworkImage(currentUser.imgUrl);
     usernameController.text = currentUser.username;
+  }
+
+  Future<void> pickProfileImage() async {
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      profilePicImageProvider = FileImage(image);
+      profilePic = image;
+    });
   }
 
   void save() async {
     if (formKey.currentState.validate()) {
-      // formKey.currentState.save();
+      formKey.currentState.save();
 
-      // bool confirm = await getIt<IModalService>().showConfirmation(
-      //     context: context, title: 'Submit', message: 'Are you sure?');
-      // if (confirm) {
-      //   try {
-      //     setState(
-      //       () {
-      //         isLoading = true;
-      //       },
-      //     );
+      bool confirm = await modalService.showConfirmation(
+          context: context, title: 'Submit', message: 'Are you sure?');
+      if (confirm) {
+        try {
+          modalService.showInSnackBar(
+              scaffoldKey: scaffoldKey, message: 'Updating...');
+          await submitFormData();
+          await submitImages();
+          modalService.showInSnackBar(
+              scaffoldKey: scaffoldKey, message: 'Updated!');
+        } on PlatformException catch (e) {
+          print(e);
 
-      //     //Create new user in auth.
-      //     AuthResult authResult =
-      //         await getIt<IAuthService>().createUserWithEmailAndPassword(
-      //       email: emailController.text,
-      //       password: passwordController.text,
-      //     );
-
-      //     final FirebaseUser firebaseUser = authResult.user;
-
-      //     UserModel user = UserModel(
-      //         id: '',
-      //         imgUrl: DUMMY_PROFILE_PHOTO_URL,
-      //         email: firebaseUser.email,
-      //         created: DateTime.now(),
-      //         modified: DateTime.now(),
-      //         uid: firebaseUser.uid,
-      //         username: usernameController.text);
-
-      //     await getIt<IUserService>().createUser(user: user);
-
-      //     Navigator.pop(context);
-      //   } on PlatformException catch (e) {
-      //     print(e);
-      //     setState(
-      //       () {
-      //         isLoading = false;
-      //       },
-      //     );
-      //     getIt<IModalService>().showAlert(
-      //       context: context,
-      //       title: 'Error',
-      //       message: e.message,
-      //     );
-      //   }
-      // }
+          modalService.showInSnackBar(
+              scaffoldKey: scaffoldKey, message: e.message);
+        }
+      }
     } else {
       setState(
         () {
@@ -86,9 +76,33 @@ class EditProfilePageState extends State<EditProfilePage> {
     }
   }
 
+  Future<void> submitImages() async {
+    if (profilePic != null) {
+      String newPhotoUrl = await storageService.uploadImage(
+          file: profilePic, imgPath: 'Images/Users/${currentUser.id}/Profile');
+      await userService.updateUser(
+        userID: currentUser.id,
+        data: {'imgUrl': newPhotoUrl},
+      );
+      return;
+    }
+  }
+
+  Future<void> submitFormData() async {
+    await userService.updateUser(userID: currentUser.id, data: {
+      'username': usernameController.text,
+      'modified': DateTime.now()
+    });
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Text('Edit Profile'),
@@ -101,20 +115,25 @@ class EditProfilePageState extends State<EditProfilePage> {
       body: Form(
         key: formKey,
         autovalidate: autoValidate,
-        child: Column(
+        child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(40),
-              child: Container(
-                height: 100,
-                width: 100,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2.0, color: Colors.black),
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                      image: Image.network(currentUser.imgUrl).image,
-                      fit: BoxFit.cover),
+              child: InkWell(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: profilePicImageProvider,
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
                 ),
+                onTap: () {
+                  pickProfileImage();
+                },
               ),
             ),
             Padding(

@@ -61,6 +61,7 @@ class CritiquePageState extends State<CritiquePage> {
           UserModel currentUser = await authService.getCurrentUser();
 
           DateTime now = DateTime.now();
+          
           CritiqueModel critique = CritiqueModel(
             id: '',
             userID: currentUser.id,
