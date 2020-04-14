@@ -1,5 +1,6 @@
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/widgets/CritiqueView.dart';
+import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'dart:async';
@@ -18,7 +19,7 @@ class HomePageState extends State<HomePage> {
 
   bool isRequesting = false;
   bool isFinish = false;
-  final int limit = 5;
+  final int limit = 10;
 
   void onChangeData(List<DocumentChange> documentChanges) {
     var isChange = false;
@@ -80,7 +81,7 @@ class HomePageState extends State<HomePage> {
             if (snapshot.hasError) return Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return Text('Loading...');
+                return Spinner();
               default:
                 List<DocumentSnapshot> critiqueDocs = snapshot.data;
                 //log("Items: " + snapshot.data.length.toString());

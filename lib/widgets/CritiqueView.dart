@@ -73,6 +73,7 @@ class CritiqueViewState extends State<CritiqueView> {
 
             UserModel user = snapshot.data[0];
             MovieModel movie = snapshot.data[1];
+            print(movie.title);
 
             return ListTile(
               leading: CircleAvatar(
