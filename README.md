@@ -1,5 +1,9 @@
-## iOS Image Issue
+## iOS Image_Picker plugin issue,(either or.)
 let jpegData = UIImageJPEGRepresentation(newImage, 1.0)!
+let jpegData = newImage.jpegData(compressionQuality: 0.75)!
+
+# Building for iOS Simulator, but the linked and embedded framework 'App.framework' was built for iOS. (in target 'Runner' from project 'Runner')
+rm -rf ios/Flutter/App.framework
 
 ## Create keystore file.
 - Command [keytool -genkey -v -keystore ~/key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key]

@@ -1,7 +1,7 @@
 name: critic
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 1.0.2+2
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -15,6 +15,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  bottom_navy_bar: ^5.4.0
+  #bubble_bottom_bar: ^1.2.0
   carousel_slider: ^1.4.1
   #cached_network_image: ^2.0.0
   cloud_firestore: ^0.13.4+2

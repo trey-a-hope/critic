@@ -2,7 +2,7 @@ import 'package:critic/pages/CreatePage.dart';
 import 'package:critic/pages/HomePage.dart';
 import 'package:critic/pages/ProfilePage.dart';
 import 'package:critic/pages/SettingsPage.dart';
-import 'package:critic/widgets/SideDrawer.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -13,7 +13,7 @@ class EntryPage extends StatefulWidget {
 
 class EntryPageState extends State<EntryPage> {
   final GetIt getIt = GetIt.I;
-  int currentTab = 0;
+  int currentIndex = 0;
 
   final List<String> childrenTitle = [
     'Home',
@@ -52,24 +52,58 @@ class EntryPageState extends State<EntryPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          childrenTitle[currentTab],
+          childrenTitle[currentIndex],
         ),
         centerTitle: true,
       ),
-      // drawer: SideDrawer(
-      //   page: 'Home',
-      // ),
-      body: children[currentTab],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        onTap: (tab) {
-          setState(() {
-            currentTab = tab;
-          });
-        }, // new
-        currentIndex: currentTab, // new
-        items: items,
+      body: children[currentIndex],
+      bottomNavigationBar: BottomNavyBar(
+        selectedIndex: currentIndex,
+        showElevation: true,
+        itemCornerRadius: 8,
+        curve: Curves.easeInBack,
+        onItemSelected: (index) => setState(() {
+          currentIndex = index;
+        }),
+        items: [
+          BottomNavyBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            activeColor: Colors.red,
+            textAlign: TextAlign.center,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.add),
+            title: Text('Create'),
+            activeColor: Colors.deepPurple,
+            textAlign: TextAlign.center,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.person),
+            title: Text(
+              'Profile',
+            ),
+            activeColor: Colors.blue,
+            textAlign: TextAlign.center,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings'),
+            activeColor: Colors.green,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   onTap: (tab) {
+      //     setState(() {
+      //       currentTab = tab;
+      //     });
+      //   }, // new
+      //   currentIndex: currentTab, // new
+      //   items: items,
+      // ),
     );
   }
 }

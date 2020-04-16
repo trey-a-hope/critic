@@ -1,6 +1,7 @@
 import 'package:critic/pages/EntryPage.dart';
 import 'package:critic/pages/HomePage.dart';
 import 'package:critic/pages/LoginPage.dart';
+import 'package:critic/pages/myhomepage.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
@@ -61,9 +62,7 @@ class MyApp extends StatelessWidget {
           final FirebaseUser firebaseUser = snapshot.data;
 
           //If user is logged in...
-          if (firebaseUser != null) {
-            return EntryPage();
-          }
+          if (firebaseUser != null) return EntryPage();
 
           return LoginPage();
         },
