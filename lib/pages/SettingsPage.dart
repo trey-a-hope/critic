@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../Constants.dart';
+import '../ServiceLocator.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -12,8 +13,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  final IModalService modalService = GetIt.I<IModalService>();
-  final IAuthService authService = GetIt.I<IAuthService>();
 
   @override
   void initState() {
@@ -28,7 +27,7 @@ class SettingsPageState extends State<SettingsPage> {
           leading: Icon(Icons.exit_to_app),
           title: Text('Logout'),
           onTap: () async {
-            bool confirm = await modalService.showConfirmation(
+            bool confirm = await locator<ModalService>().showConfirmation(
                 context: context, title: 'Logout', message: 'Are you sure?');
             if (confirm) {
               //Clear stack of routes.
@@ -36,7 +35,7 @@ class SettingsPageState extends State<SettingsPage> {
                 Navigator.pop(context);
               }
               //Sign the user out and update the onAuth stream.
-              await authService.signOut();
+              await locator<AuthService>().signOut();
               print('Goodbye...');
             }
           },

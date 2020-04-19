@@ -1,40 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
 abstract class IUserService {
   //Users
   Future<void> createUser({@required UserModel user});
-  Future<UserModel> retrieveUser({@required String id});
+  Future<UserModel> retrieveUser({@required String uid});
   // Future<List<UserModel>> retrieveUsers(
   //     {bool isAdmin, int limit, String orderBy});
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
-      {@required String userID, @required Map<String, dynamic> data});
+      {@required String uid, @required Map<String, dynamic> data});
 }
 
-class UsersService extends IUserService {
+class UserService extends IUserService {
   final CollectionReference usersDB = Firestore.instance.collection('Users');
   final CollectionReference dataDB = Firestore.instance.collection('Data');
 
   @override
-  Future<void> createUser({UserModel user}) async {
+  Future<void> createUser({@required UserModel user}) async {
     try {
       //Create new batch object.
       final WriteBatch batch = Firestore.instance.batch();
       //Create document reference for the new user.
-      final DocumentReference userDocRef = usersDB.document();
+      final DocumentReference userDocRef = usersDB.document(user.uid);
       //Create document reference for the table counts.
       final DocumentReference tableCountsDocRef =
           dataDB.document('tableCounts');
-      //Set data for new reference.
-      user.id = userDocRef.documentID;
       //Set data for user.
       batch.setData(userDocRef, user.toMap());
       //Increase count value for total likes on this template.
       batch.updateData(tableCountsDocRef, {'users': FieldValue.increment(1)});
       //Commit batch.
-      batch.commit();
+      await batch.commit();
       return;
     } catch (e) {
       throw Exception(
@@ -44,10 +43,10 @@ class UsersService extends IUserService {
   }
 
   @override
-  Future<UserModel> retrieveUser({String id}) async {
+  Future<UserModel> retrieveUser({@required String uid}) async {
     try {
-      DocumentSnapshot documentSnapshot = await usersDB.document(id).get();
-      return UserModel.extractDocument(documentSnapshot: documentSnapshot);
+      DocumentSnapshot documentSnapshot = await usersDB.document(uid).get();
+      return UserModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -60,9 +59,9 @@ class UsersService extends IUserService {
   }
 
   @override
-  Future<void> updateUser({String userID, Map<String, dynamic> data}) async {
+  Future<void> updateUser({@required String uid, Map<String, dynamic> data}) async {
     try {
-      await usersDB.document(userID).updateData(data);
+      await usersDB.document(uid).updateData(data);
       return;
     } catch (e) {
       throw Exception(

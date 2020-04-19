@@ -1,17 +1,9 @@
-import 'package:critic/models/MovieModel.dart';
-import 'package:critic/models/SearchQueryModel.dart';
-import 'package:critic/pages/MovieDetailsPage.dart';
 import 'package:critic/pages/SearchResultsPage.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/MovieService.dart';
-import 'package:critic/widgets/GoodButton.dart';
-import 'package:critic/widgets/SideDrawer.dart';
-import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
-import 'package:pagination/pagination.dart';
-import 'package:flappy_search_bar/flappy_search_bar.dart';
+
+import '../ServiceLocator.dart';
 
 class CreatePage extends StatefulWidget {
   @override
@@ -22,7 +14,6 @@ class CreatePageState extends State<CreatePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String searchText = '';
   final TextEditingController searchController = TextEditingController();
-  final IModalService modalService = GetIt.I<IModalService>();
 
   @override
   void initState() {
@@ -87,7 +78,7 @@ class CreatePageState extends State<CreatePage> {
                   child: Icon(Icons.send),
                   onPressed: () {
                     if (searchText.length < 1) {
-                      modalService.showAlert(
+                      locator<ModalService>().showAlert(
                           context: context,
                           title: 'Error',
                           message: 'Cannot have empty search.');

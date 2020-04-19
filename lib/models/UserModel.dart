@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class UserModel {
-  String id;
   String imgUrl;
   String email;
   DateTime modified;
@@ -11,7 +10,7 @@ class UserModel {
   String username;
 
   UserModel(
-      {@required this.id,
+      {
       @required this.imgUrl,
       @required this.email,
       @required this.modified,
@@ -20,27 +19,26 @@ class UserModel {
       @required this.username});
 
   static UserModel extractDocument(
-      {@required DocumentSnapshot documentSnapshot}) {
+      {@required DocumentSnapshot ds}) {
     return UserModel(
-      id: documentSnapshot.data['id'],
-      imgUrl: documentSnapshot.data['imgUrl'],
-      email: documentSnapshot.data['email'],
-      created: documentSnapshot.data['created'].toDate(),
-      modified: documentSnapshot.data['modified'].toDate(),
-      uid: documentSnapshot.data['uid'],
-      username: documentSnapshot.data['username'],
+      imgUrl: ds.data['imgUrl'],
+      email: ds.data['email'],
+      created: ds.data['created'].toDate(),
+      modified: ds.data['modified'].toDate(),
+      uid: ds.data['uid'],
+      username: ds.data['username'],
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'imgUrl': imgUrl,
       'email': email,
       'modified': modified,
       'created': created,
       'uid': uid,
-      'username': username
+      'username': username,
+      'id': uid
     };
   }
 }

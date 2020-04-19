@@ -28,7 +28,7 @@ class AuthService extends IAuthService {
           .where('uid', isEqualTo: firebaseUser.uid)
           .getDocuments();
       DocumentSnapshot documentSnapshot = querySnapshot.documents.first;
-      return UserModel.extractDocument(documentSnapshot: documentSnapshot);
+      return UserModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
       throw Exception('Could not fetch user at this time.');
     }

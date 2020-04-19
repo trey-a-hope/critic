@@ -1,14 +1,16 @@
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/Userservice.dart';
+import 'package:critic/services/UserService.dart';
+// import 'package:critic/services/Userservice.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../Constants.dart';
 import 'package:flutter/src/services/message_codec.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -27,7 +29,6 @@ class SignUpPageState extends State<SignUpPage>
   final formKey = GlobalKey<FormState>();
   bool autoValidate = false;
   bool isLoading = false;
-  final GetIt getIt = GetIt.I;
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class SignUpPageState extends State<SignUpPage>
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
-      bool confirm = await getIt<IModalService>().showConfirmation(
+      bool confirm = await locator<ModalService>().showConfirmation(
           context: context, title: 'Submit', message: 'Are you sure?');
       if (confirm) {
         try {
@@ -48,25 +49,24 @@ class SignUpPageState extends State<SignUpPage>
             },
           );
 
-          //Create new user in auth.
-          AuthResult authResult =
-              await getIt<IAuthService>().createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
+          // //Create new user in auth.
+          // AuthResult authResult =
+          //     await locator<AuthService>().createUserWithEmailAndPassword(
+          //   email: emailController.text,
+          //   password: passwordController.text,
+          // );
 
-          final FirebaseUser firebaseUser = authResult.user;
+          // final FirebaseUser firebaseUser = authResult.user;
 
           UserModel user = UserModel(
-              id: '',
               imgUrl: DUMMY_PROFILE_PHOTO_URL,
-              email: firebaseUser.email,
+              email: emailController.text,
               created: DateTime.now(),
               modified: DateTime.now(),
-              uid: firebaseUser.uid,
+              uid: 'a',
               username: usernameController.text);
 
-          await getIt<IUserService>().createUser(user: user);
+          await locator<UserService>().createUser(user: user);
 
           Navigator.pop(context);
         } on PlatformException catch (e) {
@@ -76,7 +76,7 @@ class SignUpPageState extends State<SignUpPage>
               isLoading = false;
             },
           );
-          getIt<IModalService>().showAlert(
+          locator<ModalService>().showAlert(
             context: context,
             title: 'Error',
             message: e.message,
@@ -121,7 +121,7 @@ class SignUpPageState extends State<SignUpPage>
                     maxLengthEnforced: true,
                     // maxLength: MyFormData.nameCharLimit,
                     onFieldSubmitted: (term) {},
-                    validator: getIt<IValidationService>().isEmpty,
+                    validator: locator<ValidationService>().isEmpty,
                     onSaved: (value) {},
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
@@ -142,7 +142,7 @@ class SignUpPageState extends State<SignUpPage>
                     maxLengthEnforced: true,
                     // maxLength: MyFormData.nameCharLimit,
                     onFieldSubmitted: (term) {},
-                    validator: getIt<IValidationService>().email,
+                    validator: locator<ValidationService>().email,
                     onSaved: (value) {},
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
@@ -164,7 +164,7 @@ class SignUpPageState extends State<SignUpPage>
                     // maxLength: MyFormData.nameCharLimit,
                     onFieldSubmitted: (term) {},
                     obscureText: true,
-                    validator: getIt<IValidationService>().password,
+                    validator: locator<ValidationService>().password,
                     // onSaved: (value) {},
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(

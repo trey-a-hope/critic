@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/StorageService.dart';
@@ -8,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/src/services/message_codec.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key key, @required this.currentUser})
@@ -27,9 +27,6 @@ class EditProfilePageState extends State<EditProfilePage> {
   bool autoValidate = false;
   File profilePic;
   ImageProvider profilePicImageProvider;
-  final IModalService modalService = GetIt.I<IModalService>();
-  final IStorageService storageService = GetIt.I<IStorageService>();
-  final IUserService userService = GetIt.I<IUserService>();
 
   @override
   void initState() {
@@ -50,20 +47,20 @@ class EditProfilePageState extends State<EditProfilePage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
-      bool confirm = await modalService.showConfirmation(
+      bool confirm = await locator<ModalService>().showConfirmation(
           context: context, title: 'Submit', message: 'Are you sure?');
       if (confirm) {
         try {
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Updating...');
           await submitFormData();
           await submitImages();
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Updated!');
         } on PlatformException catch (e) {
           print(e);
 
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: e.message);
         }
       }
@@ -78,10 +75,10 @@ class EditProfilePageState extends State<EditProfilePage> {
 
   Future<void> submitImages() async {
     if (profilePic != null) {
-      String newPhotoUrl = await storageService.uploadImage(
-          file: profilePic, imgPath: 'Images/Users/${currentUser.id}/Profile');
-      await userService.updateUser(
-        userID: currentUser.id,
+      String newPhotoUrl = await locator<StorageService>().uploadImage(
+          file: profilePic, imgPath: 'Images/Users/${currentUser.uid}/Profile');
+      await locator<UserService>().updateUser(
+        uid: currentUser.uid,
         data: {'imgUrl': newPhotoUrl},
       );
       return;
@@ -89,7 +86,7 @@ class EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> submitFormData() async {
-    await userService.updateUser(userID: currentUser.id, data: {
+    await locator<UserService>().updateUser(uid: currentUser.uid, data: {
       'username': usernameController.text,
       'modified': DateTime.now()
     });

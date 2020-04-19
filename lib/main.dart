@@ -1,3 +1,4 @@
+import 'package:critic/models/UserModel.dart';
 import 'package:critic/pages/EntryPage.dart';
 import 'package:critic/pages/HomePage.dart';
 import 'package:critic/pages/LoginPage.dart';
@@ -18,24 +19,30 @@ import 'dart:ui' as ui;
 import 'package:package_info/package_info.dart';
 
 import 'Constants.dart';
+import 'ServiceLocator.dart';
 
-final GetIt getIt = GetIt.instance;
+
+
+
 
 void main() async {
   //Call this at the beginning of main().
   WidgetsFlutterBinding.ensureInitialized();
 
   //Register dependencies.
-  getIt.registerSingleton<IMovieService>(MovieService(), signalsReady: true);
-  getIt.registerSingleton<IAuthService>(AuthService(), signalsReady: true);
-  getIt.registerSingleton<IValidationService>(ValidationService(),
-      signalsReady: true);
-  getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
-  getIt.registerSingleton<IUserService>(UsersService(), signalsReady: true);
-  getIt.registerSingleton<ICritiqueService>(CritiqueService(), signalsReady: true);
-  getIt.registerSingleton<IStorageService>(StorageService(), signalsReady: true);
+  // getIt.registerSingleton<IMovieService>(MovieService(), signalsReady: true);
+  // getIt.registerSingleton<IAuthService>(AuthService(), signalsReady: true);
+  // getIt.registerSingleton<IValidationService>(ValidationService(),
+  //     signalsReady: true);
+  // getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
+  // getIt.registerSingleton<IUserService>(UserService(), signalsReady: true);
+  // getIt.registerSingleton<ICritiqueService>(CritiqueService(),
+  //     signalsReady: true);
+  // getIt.registerSingleton<IStorageService>(StorageService(),
+  //     signalsReady: true);
+  setUpLocater();
 
-    //Assign app version and build number.
+  //Assign app version and build number.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
   buildNumber = packageInfo.buildNumber;
@@ -57,14 +64,17 @@ class MyApp extends StatelessWidget {
       title: 'Critic',
       theme: themeData,
       home: StreamBuilder(
-        stream: getIt<IAuthService>().onAuthStateChanged(),
+        stream: locator<AuthService>().onAuthStateChanged(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           final FirebaseUser firebaseUser = snapshot.data;
 
-          //If user is logged in...
-          if (firebaseUser != null) return EntryPage();
 
-          return LoginPage();
+          //DELETE ME!!!
+          if (firebaseUser != null) {
+            FirebaseAuth.instance.signOut();
+          }
+
+          return firebaseUser == null ? LoginPage() : EntryPage();
         },
       ),
     );

@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '../ServiceLocator.dart';
+
 class ProfilePage extends StatefulWidget {
   @override
   State createState() => ProfilePageState();
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  final GetIt getIt = GetIt.I;
-  final IAuthService authService = GetIt.I<IAuthService>();
   final String timeFormat = 'MMM d, yyyy @ h:mm a';
 
   @override
@@ -25,7 +25,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: authService.getCurrentUser(),
+      future: locator<AuthService>().getCurrentUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:

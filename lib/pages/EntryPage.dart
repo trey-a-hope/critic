@@ -94,16 +94,6 @@ class EntryPageState extends State<EntryPage> {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (tab) {
-      //     setState(() {
-      //       currentTab = tab;
-      //     });
-      //   }, // new
-      //   currentIndex: currentTab, // new
-      //   items: items,
-      // ),
     );
   }
 }

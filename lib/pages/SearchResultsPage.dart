@@ -10,6 +10,8 @@ import 'package:get_it/get_it.dart';
 import 'package:pagination/pagination.dart';
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 
+import '../ServiceLocator.dart';
+
 class SearchResultsPage extends StatefulWidget {
   const SearchResultsPage({Key key, @required this.searchText})
       : super(key: key);
@@ -22,7 +24,6 @@ class SearchResultsPage extends StatefulWidget {
 class SearchResultsPageState extends State<SearchResultsPage> {
   SearchResultsPageState({@required this.searchText});
   final String searchText;
-  final GetIt getIt = GetIt.I;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   int page = 1;
   bool endPageFetch = false;
@@ -33,7 +34,7 @@ class SearchResultsPageState extends State<SearchResultsPage> {
   }
 
   Future<List<SearchQueryModel>> pageFetch(int offset) async {
-    List<SearchQueryModel> movies = await getIt<IMovieService>()
+    List<SearchQueryModel> movies = await locator<MovieService>()
         .getMovieBySearch(search: searchText, page: page);
     if (movies.isEmpty) endPageFetch = true;
 

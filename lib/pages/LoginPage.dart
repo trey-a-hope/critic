@@ -1,3 +1,4 @@
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/pages/SignUpPage.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
@@ -22,7 +23,6 @@ class LoginPageState extends State<LoginPage>
   final formKey = GlobalKey<FormState>();
   bool autoValidate = false;
   bool isLoading = false;
-  final GetIt getIt = GetIt.I;
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class LoginPageState extends State<LoginPage>
             isLoading = true;
           },
         );
-        var authResult = await getIt<IAuthService>().signInWithEmailAndPassword(
+        var authResult = await locator<AuthService>().signInWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
 
         if (authResult.user == null) {
@@ -51,7 +51,7 @@ class LoginPageState extends State<LoginPage>
         setState(
           () {
             isLoading = false;
-            getIt<IModalService>().showAlert(
+            locator<ModalService>().showAlert(
               context: context,
               title: 'Error',
               message: e.message,
@@ -99,7 +99,7 @@ class LoginPageState extends State<LoginPage>
                           maxLengthEnforced: true,
                           // maxLength: MyFormData.nameCharLimit,
                           onFieldSubmitted: (term) {},
-                          validator: getIt<IValidationService>().email,
+                          validator: locator<ValidationService>().email,
                           onSaved: (value) {},
                           decoration: InputDecoration(
                             focusedBorder: UnderlineInputBorder(
@@ -121,7 +121,7 @@ class LoginPageState extends State<LoginPage>
                           // maxLength: MyFormData.nameCharLimit,
                           onFieldSubmitted: (term) {},
                           obscureText: true,
-                          validator: getIt<IValidationService>().password,
+                          validator: locator<ValidationService>().password,
                           // onSaved: (value) {},
                           decoration: InputDecoration(
                             focusedBorder: UnderlineInputBorder(

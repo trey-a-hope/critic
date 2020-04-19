@@ -1,3 +1,4 @@
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/main.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
@@ -12,21 +13,6 @@ import 'package:get_it/get_it.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// class CritiqueView extends StatelessWidget {
-//   final CritiqueModel critique;
-
-//   CritiqueView({Key key, @required this.critique})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     double screenWidth = MediaQuery.of(context).size.width;
-//     Future getMovieFuture = getIt
-
-//     return FutureBuilder(future: ,);
-//   }
-// }
-
 class CritiqueView extends StatefulWidget {
   const CritiqueView({Key key, @required this.critique}) : super(key: key);
   final CritiqueModel critique;
@@ -37,8 +23,6 @@ class CritiqueView extends StatefulWidget {
 class CritiqueViewState extends State<CritiqueView> {
   CritiqueViewState({@required this.critique});
   final CritiqueModel critique;
-  final IUserService usersService = GetIt.I<IUserService>();
-  final IMovieService movieService = GetIt.I<IMovieService>();
 
   @override
   void initState() {
@@ -47,8 +31,8 @@ class CritiqueViewState extends State<CritiqueView> {
 
   @override
   Widget build(BuildContext context) {
-    Future getUserFuture = usersService.retrieveUser(id: critique.userID);
-    Future getMovieFuture = movieService.getMovieByID(id: critique.imdbID);
+    Future getUserFuture = locator<UserService>().retrieveUser(uid: critique.userID);
+    Future getMovieFuture = locator<MovieService>().getMovieByID(id: critique.imdbID);
 
     Future futures = Future.wait(
       [

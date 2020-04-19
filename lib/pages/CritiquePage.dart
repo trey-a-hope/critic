@@ -4,14 +4,12 @@ import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/UserService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
-import 'package:critic/widgets/SideDrawer.dart';
-import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter/src/services/message_codec.dart';
+
+import '../ServiceLocator.dart';
 
 class CritiquePage extends StatefulWidget {
   const CritiquePage({Key key, @required this.movie}) : super(key: key);
@@ -27,18 +25,12 @@ class CritiquePage extends StatefulWidget {
 
 class CritiquePageState extends State<CritiquePage> {
   CritiquePageState({@required this.movie});
-  static final GetIt getIt = GetIt.I;
 
   final MovieModel movie;
   final TextEditingController critiqueController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final IModalService modalService = getIt<IModalService>();
-  final IAuthService authService = getIt<IAuthService>();
-  final IValidationService validationService = getIt<IValidationService>();
-  final ICritiqueService critiqueService = getIt<ICritiqueService>();
-  final IUserService userService = getIt<IUserService>();
   bool autoValidate = false;
 
   @override
@@ -50,42 +42,42 @@ class CritiquePageState extends State<CritiquePage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
-      bool confirm = await getIt<IModalService>().showConfirmation(
+      bool confirm = await locator<ModalService>().showConfirmation(
           context: context, title: 'Submit', message: 'Are you sure?');
       if (confirm) {
         try {
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Submitting critique...');
 
           //Fetch current user;
-          UserModel currentUser = await authService.getCurrentUser();
+          UserModel currentUser = await locator<AuthService>().getCurrentUser();
 
           DateTime now = DateTime.now();
           
           CritiqueModel critique = CritiqueModel(
             id: '',
-            userID: currentUser.id,
+            userID: currentUser.uid,
             imdbID: movie.imdbID,
             message: critiqueController.text,
             modified: now,
             created: now,
           );
 
-          await critiqueService.createCritique(critique: critique);
+          await locator<CritiqueService>().createCritique(critique: critique);
 
           formKey.currentState.reset();
 
           critiqueController.clear();
 
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Sent!');
         } on PlatformException catch (e) {
-          modalService.showInSnackBar(
+          locator<ModalService>().showInSnackBar(
               scaffoldKey: scaffoldKey, message: 'Error: ${e.toString()}');
         }
       }
     } else {
-      modalService.showInSnackBar(
+      locator<ModalService>().showInSnackBar(
           scaffoldKey: scaffoldKey, message: 'Cannot leave field empty.');
 
       setState(
@@ -122,7 +114,7 @@ class CritiquePageState extends State<CritiquePage> {
                     controller: critiqueController,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.done,
-                    validator: validationService.isEmpty,
+                    validator: locator<ValidationService>().isEmpty,
                     maxLines: 5,
                     maxLength: 150,
                     maxLengthEnforced: true,
