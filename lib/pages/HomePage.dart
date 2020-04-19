@@ -12,7 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final GetIt getIt = GetIt.I;
   StreamController<List<DocumentSnapshot>> streamController =
       StreamController<List<DocumentSnapshot>>();
   List<DocumentSnapshot> critiques = [];
@@ -68,39 +67,45 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollInfo) {
-          if (scrollInfo.metrics.maxScrollExtent == scrollInfo.metrics.pixels) {
-            requestNextPage();
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.maxScrollExtent == scrollInfo.metrics.pixels) {
+          requestNextPage();
+        }
+        return true;
+      },
+      child: StreamBuilder<List<DocumentSnapshot>>(
+        stream: streamController.stream,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Error ${snapshot.error.toString()}'),
+            );
           }
-          return true;
+
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Spinner();
+              break;
+            default:
+              List<DocumentSnapshot> critiqueDocs = snapshot.data;
+              return ListView.separated(
+                separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                ),
+                itemCount: critiqueDocs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  CritiqueModel critique =
+                      CritiqueModel.extractDocument(ds: critiqueDocs[index]);
+                  return CritiqueView(
+                    critique: critique,
+                  );
+                },
+              );
+          }
         },
-        child: StreamBuilder<List<DocumentSnapshot>>(
-          stream: streamController.stream,
-          builder: (BuildContext context,
-              AsyncSnapshot<List<DocumentSnapshot>> snapshot) {
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Spinner();
-              default:
-                List<DocumentSnapshot> critiqueDocs = snapshot.data;
-                //log("Items: " + snapshot.data.length.toString());
-                return ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: Colors.black,
-                  ),
-                  itemCount: critiqueDocs.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    CritiqueModel critique =
-                        CritiqueModel.extractDocument(ds: critiqueDocs[index]);
-                    return CritiqueView(
-                      critique: critique,
-                    );
-                  },
-                );
-            }
-          },
-        ));
+      ),
+    );
   }
 
   void requestNextPage() async {

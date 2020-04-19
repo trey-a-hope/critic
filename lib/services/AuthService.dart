@@ -24,10 +24,8 @@ class AuthService extends IAuthService {
   Future<UserModel> getCurrentUser() async {
     try {
       FirebaseUser firebaseUser = await auth.currentUser();
-      QuerySnapshot querySnapshot = await usersDB
-          .where('uid', isEqualTo: firebaseUser.uid)
-          .getDocuments();
-      DocumentSnapshot documentSnapshot = querySnapshot.documents.first;
+      DocumentSnapshot documentSnapshot =
+          await usersDB.document(firebaseUser.uid).get();
       return UserModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
       throw Exception('Could not fetch user at this time.');

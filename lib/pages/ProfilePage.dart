@@ -1,10 +1,9 @@
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/pages/EditProfilePage.dart';
+import 'package:critic/pages/SearchUsersPage.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 import '../ServiceLocator.dart';
@@ -156,6 +155,22 @@ class ProfilePageState extends State<ProfilePage> {
                     top: 10,
                     right: 10,
                     child: FloatingActionButton(
+                      heroTag: 'fab_search_users',
+                      child: Icon(Icons.search),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => SearchUsersPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: FloatingActionButton(
+                      heroTag: 'fab_profile_edit',
                       child: Icon(Icons.edit),
                       onPressed: () {
                         Navigator.of(context).push(

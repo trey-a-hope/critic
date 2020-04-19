@@ -3,6 +3,8 @@ import 'package:critic/services/ValidationService.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../ServiceLocator.dart';
+
 
 abstract class IModalService {
   void showInSnackBar(
@@ -29,7 +31,6 @@ abstract class IModalService {
 }
 
 class ModalService extends IModalService {
-  final GetIt getIt = GetIt.I;
 
   // Future<Categories> showCategoryOptionsDialog(
   //     {@required BuildContext context, @required String title}) async {
@@ -147,7 +148,7 @@ class ModalService extends IModalService {
             maxLengthEnforced: true,
             // maxLength: MyFormData.nameCharLimit,
             onFieldSubmitted: (term) {},
-            validator: getIt<IValidationService>().email,
+            validator: locator<ValidationService>().email,
             onSaved: (value) {},
             decoration: InputDecoration(
               hintText: 'Email',
@@ -200,7 +201,7 @@ class ModalService extends IModalService {
             maxLengthEnforced: true,
             // maxLength: MyFormData.nameCharLimit,
             onFieldSubmitted: (term) {},
-            validator: getIt<IValidationService>().email,
+            validator: locator<ValidationService>().email,
             onSaved: (value) {},
             decoration: InputDecoration(
               hintText: 'New Email',

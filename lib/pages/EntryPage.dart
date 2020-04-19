@@ -12,7 +12,6 @@ class EntryPage extends StatefulWidget {
 }
 
 class EntryPageState extends State<EntryPage> {
-  final GetIt getIt = GetIt.I;
   int currentIndex = 0;
 
   final List<String> childrenTitle = [

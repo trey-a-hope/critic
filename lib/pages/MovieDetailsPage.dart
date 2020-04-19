@@ -1,4 +1,5 @@
 import 'package:critic/Constants.dart';
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/pages/CritiquePage.dart';
 import 'package:critic/services/MovieService.dart';
@@ -19,7 +20,6 @@ class MovieDetailsPage extends StatefulWidget {
 class MovieDetailsPageState extends State<MovieDetailsPage> {
   MovieDetailsPageState({@required this.imdbID});
   final String imdbID;
-  final GetIt getIt = GetIt.I;
   double imageSize;
   final double listViewBuilderPadding = 10;
 
@@ -41,7 +41,7 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: getIt<IMovieService>().getMovieByID(id: imdbID),
+        future: locator<MovieService>().getMovieByID(id: imdbID),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.waiting:

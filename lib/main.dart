@@ -69,10 +69,10 @@ class MyApp extends StatelessWidget {
           final FirebaseUser firebaseUser = snapshot.data;
 
 
-          //DELETE ME!!!
-          if (firebaseUser != null) {
-            FirebaseAuth.instance.signOut();
-          }
+          // //DELETE ME!!!
+          // if (firebaseUser != null) {
+          //   FirebaseAuth.instance.signOut();
+          // }
 
           return firebaseUser == null ? LoginPage() : EntryPage();
         },

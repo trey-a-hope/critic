@@ -6,3 +6,6 @@ final String DUMMY_PROFILE_PHOTO_URL =
 //These are set in main().
 String version;
 String buildNumber;
+
+final String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
+final String ALGOLIA_SEARCH_API_KEY = '01be9bb46f445fa21cdba2c7197d84bf';

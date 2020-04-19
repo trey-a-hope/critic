@@ -49,21 +49,21 @@ class SignUpPageState extends State<SignUpPage>
             },
           );
 
-          // //Create new user in auth.
-          // AuthResult authResult =
-          //     await locator<AuthService>().createUserWithEmailAndPassword(
-          //   email: emailController.text,
-          //   password: passwordController.text,
-          // );
+          //Create new user in auth.
+          AuthResult authResult =
+              await locator<AuthService>().createUserWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text,
+          );
 
-          // final FirebaseUser firebaseUser = authResult.user;
+          final FirebaseUser firebaseUser = authResult.user;
 
           UserModel user = UserModel(
               imgUrl: DUMMY_PROFILE_PHOTO_URL,
               email: emailController.text,
               created: DateTime.now(),
               modified: DateTime.now(),
-              uid: 'a',
+              uid: firebaseUser.uid,
               username: usernameController.text);
 
           await locator<UserService>().createUser(user: user);
