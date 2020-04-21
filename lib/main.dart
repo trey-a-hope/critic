@@ -28,18 +28,7 @@ import 'ServiceLocator.dart';
 void main() async {
   //Call this at the beginning of main().
   WidgetsFlutterBinding.ensureInitialized();
-
-  //Register dependencies.
-  // getIt.registerSingleton<IMovieService>(MovieService(), signalsReady: true);
-  // getIt.registerSingleton<IAuthService>(AuthService(), signalsReady: true);
-  // getIt.registerSingleton<IValidationService>(ValidationService(),
-  //     signalsReady: true);
-  // getIt.registerSingleton<IModalService>(ModalService(), signalsReady: true);
-  // getIt.registerSingleton<IUserService>(UserService(), signalsReady: true);
-  // getIt.registerSingleton<ICritiqueService>(CritiqueService(),
-  //     signalsReady: true);
-  // getIt.registerSingleton<IStorageService>(StorageService(),
-  //     signalsReady: true);
+  
   setUpLocater();
 
   //Assign app version and build number.

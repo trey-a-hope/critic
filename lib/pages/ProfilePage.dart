@@ -151,38 +151,6 @@ class ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: FloatingActionButton(
-                      heroTag: 'fab_search_users',
-                      child: Icon(Icons.search),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => SearchUsersPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: FloatingActionButton(
-                      heroTag: 'fab_profile_edit',
-                      child: Icon(Icons.edit),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditProfilePage(
-                              currentUser: currentUser,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
                 ],
               ),
             );

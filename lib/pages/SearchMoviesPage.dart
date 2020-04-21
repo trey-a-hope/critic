@@ -9,17 +9,17 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../Constants.dart';
 import '../ServiceLocator.dart';
 
-class SearchUsersPage extends StatefulWidget {
+class SearchMoviesPage extends StatefulWidget {
   @override
-  State createState() => SearchUsersPageState();
+  State createState() => SearchMoviesPageState();
 }
 
-class SearchUsersPageState extends State<SearchUsersPage> {
+class SearchMoviesPageState extends State<SearchMoviesPage> {
   SearchBar searchAppBar;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  List<AlgoliaObjectSnapshot> results;
+  // List<AlgoliaObjectSnapshot> results;
   bool searching = false;
-  bool isSearchingGems = true;
+  // bool isSearchingGems = true;
 
   @override
   void initState() {
@@ -27,11 +27,12 @@ class SearchUsersPageState extends State<SearchUsersPage> {
 
     searchAppBar = SearchBar(
         inBar: true,
-        hintText: 'Enter username...',
+        hintText: 'Enter title of movie / show...',
         buildDefaultAppBar: (context) {
           return AppBar(
+            backgroundColor: Colors.black,
             automaticallyImplyLeading: true,
-            title: Text('Search Users'),
+            title: Text('Search Movies / Shows'),
             actions: [
               searchAppBar.getSearchAction(context),
             ],
@@ -53,15 +54,15 @@ class SearchUsersPageState extends State<SearchUsersPage> {
       },
     );
 
-    Algolia algolia = Algolia.init(
-      applicationId: ALGOLIA_APP_ID,
-      apiKey: ALGOLIA_SEARCH_API_KEY,
-    );
+    // Algolia algolia = Algolia.init(
+    //   applicationId: ALGOLIA_APP_ID,
+    //   apiKey: ALGOLIA_SEARCH_API_KEY,
+    // );
 
-    AlgoliaQuery query = algolia.instance.index('Users').search(value);
-    // query = query.setFacetFilter('isGem:$_isSearchingGems');
+    // AlgoliaQuery query = algolia.instance.index('Users').search(value);
+    // // query = query.setFacetFilter('isGem:$_isSearchingGems');
 
-    results = (await query.getObjects()).hits;
+    // results = (await query.getObjects()).hits;
 
     setState(
       () {
@@ -73,34 +74,14 @@ class SearchUsersPageState extends State<SearchUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: searchAppBar.build(context),
-      // floatingActionButton: _buildFAB(),
-      body: searching == true
-          ? Spinner()
-          : results.length == 0
-              ? Center(
-                  child: Text("No results found."),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: results.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    AlgoliaObjectSnapshot snap = results[index];
-                    UserModel user =
-                        UserModel.extractAlgoliaObjectSnapshot(snap);
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(user.imgUrl),
-                      ),
-                      title: Text(user.username),
-                      subtitle: Text(user.email),
-                      trailing: Icon(Icons.chevron_right),
-
-                    );
-                  },
-                ),
-    );
+        key: scaffoldKey,
+        appBar: searchAppBar.build(context),
+        // floatingActionButton: _buildFAB(),
+        body: searching == true
+            ? Spinner()
+            : Center(
+                child: Text('To Do'),
+              ));
   }
 
   // _buildFAB() {
