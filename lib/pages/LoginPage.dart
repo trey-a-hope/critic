@@ -172,16 +172,6 @@ class LoginPageState extends State<LoginPage>
                                 ],
                               ),
                             ),
-                            // child: Text(
-                            //   "New to Critic?",
-                            //   textAlign: TextAlign.right,
-                            //   style: TextStyle(
-                            //     color: Color.fromARGB(255, 232, 63, 63),
-                            //     fontFamily: "Avenir",
-                            //     fontWeight: FontWeight.w800,
-                            //     fontSize: 16,
-                            //   ),
-                            // ),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -200,112 +190,5 @@ class LoginPageState extends State<LoginPage>
             ),
     );
 
-    // return Scaffold(
-    //   body: SingleChildScrollView(
-    //     child: Container(
-    //         width: screenWidth,
-    //         height: screenHeight,
-    //         child: Padding(
-    //           padding: SCAFFOLD_PADDING,
-    //           child: isLoading
-    //               ? Spinner(text: 'Logging In...')
-    //               : Form(
-    //                   key: formKey,
-    //                   autovalidate: autoValidate,
-    //                   child: Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: [
-    //                       SilentNavbar(
-    //                         title: 'Login',
-    //                         leftTap: () => {Navigator.of(context).pop()},
-    //                       ),
-    //                       Container(
-    //                         margin:
-    //                             EdgeInsets.only(top: 60, left: 10, right: 10),
-    //                         child: TextFormField(
-    //                           controller: emailController,
-    //                           keyboardType: TextInputType.emailAddress,
-    //                           textInputAction: TextInputAction.next,
-    //                           maxLengthEnforced: true,
-    //                           // maxLength: MyFormData.nameCharLimit,
-    //                           onFieldSubmitted: (term) {},
-    //                           validator: getIt<IValidatorService>().email,
-    //                           onSaved: (value) {},
-    //                           decoration: InputDecoration(
-    //                             focusedBorder: UnderlineInputBorder(
-    //                               borderSide: BorderSide(color: Colors.red),
-    //                             ),
-    //                             hintText: 'Email',
-    //                             // icon: Icon(Icons.email),
-    //                             fillColor: Colors.white,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                       Container(
-    //                         margin:
-    //                             EdgeInsets.only(top: 30, left: 10, right: 10),
-    //                         child: TextFormField(
-    //                           controller: passwordController,
-    //                           keyboardType: TextInputType.emailAddress,
-    //                           textInputAction: TextInputAction.next,
-    //                           maxLengthEnforced: true,
-    //                           // maxLength: MyFormData.nameCharLimit,
-    //                           onFieldSubmitted: (term) {},
-    //                           obscureText: true,
-    //                           validator: getIt<IValidatorService>().password,
-    //                           onSaved: (value) {},
-    //                           decoration: InputDecoration(
-    //                             focusedBorder: UnderlineInputBorder(
-    //                               borderSide: BorderSide(color: Colors.red),
-    //                             ),
-    //                             hintText: 'Password',
-    //                             // icon: Icon(Icons.email),
-    //                             fillColor: Colors.white,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                       Spacer(),
-    //                       Row(
-    //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                         children: <Widget>[
-    //                           SilentButton(
-    //                             title: 'CONTINUE',
-    //                             onTap: login,
-    //                           )
-    //                         ],
-    //                       ),
-    //                       Align(
-    //                         alignment: Alignment.topCenter,
-    //                         child: Container(
-    //                           margin: EdgeInsets.only(top: 30),
-    //                           child: InkWell(
-    //                             child: Text(
-    //                               "Forgot Password?",
-    //                               textAlign: TextAlign.right,
-    //                               style: TextStyle(
-    //                                 color: Color.fromARGB(255, 232, 63, 63),
-    //                                 fontFamily: "Avenir",
-    //                                 fontWeight: FontWeight.w800,
-    //                                 fontSize: 16,
-    //                               ),
-    //                             ),
-    //                             onTap: () => {
-    //                               Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                   builder: (context) =>
-    //                                       ForgotPasswordPage(),
-    //                                 ),
-    //                               )
-    //                             },
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //         )),
-    //   ),
-    // );
   }
 }

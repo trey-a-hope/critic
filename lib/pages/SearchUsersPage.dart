@@ -44,10 +44,10 @@ class SearchUsersPageState extends State<SearchUsersPage> {
 
   void onSubmitted(String value) {
     if (value == '') return;
-    _search(value);
+    search(value);
   }
 
-  _search(String value) async {
+  search(String value) async {
     setState(
       () {
         searching = true;

@@ -1,34 +1,22 @@
-import 'package:critic/models/UserModel.dart';
+import 'package:critic/login/LoginRepo.dart';
 import 'package:critic/pages/EntryPage.dart';
-import 'package:critic/pages/HomePage.dart';
-import 'package:critic/pages/LoginPage.dart';
-import 'package:critic/pages/myhomepage.dart';
+import 'package:critic/login/LoginPage.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/MovieService.dart';
-import 'package:critic/services/StorageService.dart';
-import 'package:critic/services/UserService.dart';
-import 'package:critic/services/ValidationService.dart';
 import 'package:critic/style/ThemeData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
-import 'dart:ui' as ui;
 import 'package:package_info/package_info.dart';
-
 import 'Constants.dart';
 import 'ServiceLocator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
-
+import 'login/LoginBloc.dart';
 
 void main() async {
   //Call this at the beginning of main().
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   setUpLocater();
 
   //Assign app version and build number.
@@ -49,23 +37,21 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Critic',
-      theme: themeData,
-      home: StreamBuilder(
-        stream: locator<AuthService>().onAuthStateChanged(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          final FirebaseUser firebaseUser = snapshot.data;
+        debugShowCheckedModeBanner: false,
+        title: 'Critic',
+        theme: themeData,
+        home: BlocProvider(
+          create: (BuildContext context) => LoginBloc(loginRepo: LoginRepo()),
+          child: LoginPage(),
+        )
 
-
-          // //DELETE ME!!!
-          // if (firebaseUser != null) {
-          //   FirebaseAuth.instance.signOut();
-          // }
-
-          return firebaseUser == null ? LoginPage() : EntryPage();
-        },
-      ),
-    );
+        // StreamBuilder(
+        //   stream: locator<AuthService>().onAuthStateChanged(),
+        //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //     final FirebaseUser firebaseUser = snapshot.data;
+        //     return firebaseUser == null ? LoginPage() : EntryPage();
+        //   },
+        // ),
+        );
   }
 }
