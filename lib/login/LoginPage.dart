@@ -1,5 +1,6 @@
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/login/LoginBloc.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,10 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-
   LoginBloc loginBloc;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -28,12 +29,12 @@ class LoginPageState extends State<LoginPage>
     loginBloc.close();
   }
 
-  Widget buildFormView(
-      {@required double screenHeight,
-      @required double screenWidth,
-      @required LoginBloc loginBloc,
-      @required bool autovalidate,
-      @required Widget errorWidget}) {
+  Widget buildFormView({
+    @required double screenHeight,
+    @required double screenWidth,
+    @required LoginBloc loginBloc,
+    @required bool autovalidate,
+  }) {
     return SafeArea(
       child: Container(
         height: screenHeight,
@@ -45,7 +46,6 @@ class LoginPageState extends State<LoginPage>
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                errorWidget == null ? SizedBox.shrink() : errorWidget,
                 TextFormField(
                   autovalidate: autovalidate,
                   controller: emailController,
@@ -122,12 +122,26 @@ class LoginPageState extends State<LoginPage>
     loginBloc = BlocProvider.of<LoginBloc>(context);
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('Login'),
         centerTitle: true,
       ),
-      body: BlocBuilder<LoginBloc, LoginState>(
+      body: BlocConsumer<LoginBloc, LoginState>(
+        //"Do stuff" on state changes.
+        listener: (BuildContext context, LoginState state) {
+
+          //Navigation actions would go here....
+
+          //If user fails login, display error in snack bar.
+          if (state is LoginFailed) {
+            locator<ModalService>().showInSnackBar(
+                scaffoldKey: scaffoldKey,
+                message: 'Error: ${state.error.message}');
+          }
+        },
+        //Change view on state changes.
         builder: (BuildContext context, LoginState state) {
           if (state is LoginNotStarted) {
             return buildFormView(
@@ -135,7 +149,6 @@ class LoginPageState extends State<LoginPage>
               screenWidth: screenWidth,
               loginBloc: loginBloc,
               autovalidate: false,
-              errorWidget: null,
             );
           } else if (state is LoggingIn) {
             return Spinner();
@@ -149,7 +162,6 @@ class LoginPageState extends State<LoginPage>
               screenWidth: screenWidth,
               loginBloc: loginBloc,
               autovalidate: true,
-              errorWidget: Text(state.error.toString()),
             );
           }
           return Center(

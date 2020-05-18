@@ -68,14 +68,18 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
+    //Event, user attempts login.
     if (event is Login) {
+      //Display loading screen initially...
       yield LoggingIn();
       try {
+        //Proceed to login via service.
         AuthResult authResult = await loginRepo.signInWithEmailAndPassword(
             email: event.email, password: event.password);
-
+        //Continue to success screen.
         yield LoginSuccessful(authResult: authResult);
       } catch (error) {
+        //Display the error that happened.
         yield LoginFailed(error: error);
       }
     }
