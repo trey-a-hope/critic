@@ -1,10 +1,10 @@
 import 'package:critic/ServiceLocator.dart';
-import 'package:critic/login/LoginBloc.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'Bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -131,7 +131,6 @@ class LoginPageState extends State<LoginPage>
       body: BlocConsumer<LoginBloc, LoginState>(
         //"Do stuff" on state changes.
         listener: (BuildContext context, LoginState state) {
-
           //Navigation actions would go here....
 
           //If user fails login, display error in snack bar.

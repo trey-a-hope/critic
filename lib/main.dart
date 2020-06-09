@@ -1,9 +1,4 @@
-import 'package:critic/login/LoginRepo.dart';
-import 'package:critic/pages/EntryPage.dart';
-import 'package:critic/login/LoginPage.dart';
-import 'package:critic/services/AuthService.dart';
 import 'package:critic/style/ThemeData.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
@@ -11,7 +6,7 @@ import 'Constants.dart';
 import 'ServiceLocator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'login/LoginBloc.dart';
+import 'blocs/login/Bloc.dart' as LoginBP;
 
 void main() async {
   //Call this at the beginning of main().
@@ -41,8 +36,8 @@ class MyApp extends StatelessWidget {
         title: 'Critic',
         theme: themeData,
         home: BlocProvider(
-          create: (BuildContext context) => LoginBloc(loginRepo: LoginRepo()),
-          child: LoginPage(),
+          create: (BuildContext context) => LoginBP.LoginBloc(),
+          child: LoginBP.LoginPage(),
         )
 
         // StreamBuilder(
