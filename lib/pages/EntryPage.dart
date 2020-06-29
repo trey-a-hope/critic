@@ -10,6 +10,9 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:critic/widgets/AppBarLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
+import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -26,9 +29,23 @@ class EntryPageState extends State<EntryPage> {
   ];
 
   final List<Widget> children = [
-    HomePage(),
-    //CreatePage(),
-    ProfilePage(),
+    //BLoC for Home Page.
+    BlocProvider(
+      create: (BuildContext context) => HOME_BP.HomeBloc()
+        ..add(
+          HOME_BP.LoadPageEvent(),
+        ),
+      child: HOME_BP.HomePage(),
+    ),
+    //BLoC for Profile Page.
+    BlocProvider(
+      create: (BuildContext context) => PROFILE_BP.ProfileBloc()
+        ..add(
+          PROFILE_BP.LoadPageEvent(),
+        ),
+      child: PROFILE_BP.ProfilePage(),
+    ),
+    //BLoC for Settings Page.
     SettingsPage(),
   ];
   final List<BottomNavyBarItem> items = [

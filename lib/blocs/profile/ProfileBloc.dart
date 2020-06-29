@@ -13,16 +13,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   ProfileState get initialState => ProfileState();
 
-  UserModel currentUser;
+  UserModel _currentUser;
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is LoadPageEvent) {
       yield LoadingState();
 
-      currentUser = await locator<AuthService>().getCurrentUser();
+      _currentUser = await locator<AuthService>().getCurrentUser();
 
-      yield LoadedState(currentUser: currentUser);
+      yield LoadedState(currentUser: _currentUser);
     }
   }
 }

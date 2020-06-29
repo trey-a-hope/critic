@@ -20,6 +20,8 @@ class LoginPageState extends State<LoginPage>
 
   @override
   void initState() {
+    loginBloc = BlocProvider.of<LoginBloc>(context);
+
     super.initState();
   }
 
@@ -117,9 +119,6 @@ class LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    //Assign LoginBloc
-    loginBloc = BlocProvider.of<LoginBloc>(context);
 
     return Scaffold(
       key: scaffoldKey,

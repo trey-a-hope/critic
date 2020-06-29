@@ -23,23 +23,16 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     profileBloc = BlocProvider.of<ProfileBloc>(context);
 
-    return BlocConsumer<ProfileBloc, ProfileState>(
-      //"Do stuff" on state changes.
-      listener: (BuildContext context, ProfileState state) {},
-      //Change view on state changes.
+    return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (BuildContext context, ProfileState state) {
         if (state is LoadingState) {
           return Spinner();
-        } else if (state is LoadedState) {
+        }
+
+        if (state is LoadedState) {
           return SingleChildScrollView(
             child: Stack(
               children: <Widget>[
-                // SizedBox(
-                //   height: 250,
-                //   width: double.infinity,
-                //   child: Image.network(
-                //       'https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'),
-                // ),
                 Container(
                   height: 250,
                   width: double.infinity,
@@ -146,35 +139,9 @@ class ProfilePageState extends State<ProfilePage> {
               ],
             ),
           );
-        } else {
-          return Center(
-            child: Text('You should NEVER see this.'),
-          );
         }
-        // if (state is LoginNotStarted) {
-        //   return buildFormView(
-        //     screenHeight: screenHeight,
-        //     screenWidth: screenWidth,
-        //     loginBloc: loginBloc,
-        //     autovalidate: false,
-        //   );
-        // } else if (state is LoggingIn) {
-        //   return Spinner();
-        // } else if (state is LoginSuccessful) {
-        //   return Center(
-        //     child: Text(state.authResult.user.uid),
-        //   );
-        // } else if (state is LoginFailed) {
-        //   return buildFormView(
-        //     screenHeight: screenHeight,
-        //     screenWidth: screenWidth,
-        //     loginBloc: loginBloc,
-        //     autovalidate: true,
-        //   );
-        // }
-        // return Center(
-        //   child: Text('You should NEVER see this.'),
-        // );
+        
+        return Container();
       },
     );
   }
