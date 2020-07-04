@@ -1,6 +1,5 @@
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/Searchbar.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
@@ -15,7 +14,7 @@ class SearchUsersPage extends StatefulWidget {
 }
 
 class SearchUsersPageState extends State<SearchUsersPage> {
-  SearchBar searchAppBar;
+  //SearchBar searchAppBar;
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<AlgoliaObjectSnapshot> results = List<AlgoliaObjectSnapshot>();
   bool searching = false;
@@ -25,21 +24,21 @@ class SearchUsersPageState extends State<SearchUsersPage> {
   void initState() {
     super.initState();
 
-    searchAppBar = SearchBar(
-        inBar: true,
-        hintText: 'Enter username...',
-        buildDefaultAppBar: (context) {
-          return AppBar(
-            backgroundColor: Colors.black,
-            automaticallyImplyLeading: true,
-            title: Text('Search Users'),
-            actions: [
-              searchAppBar.getSearchAction(context),
-            ],
-          );
-        },
-        setState: setState,
-        onSubmitted: onSubmitted);
+    // searchAppBar = SearchBar(
+    //     inBar: true,
+    //     hintText: 'Enter username...',
+    //     buildDefaultAppBar: (context) {
+    //       return AppBar(
+    //         backgroundColor: Colors.black,
+    //         automaticallyImplyLeading: true,
+    //         title: Text('Search Users'),
+    //         actions: [
+    //           searchAppBar.getSearchAction(context),
+    //         ],
+    //       );
+    //     },
+    //     setState: setState,
+    //     onSubmitted: onSubmitted);
   }
 
   void onSubmitted(String value) {
@@ -75,7 +74,7 @@ class SearchUsersPageState extends State<SearchUsersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      appBar: searchAppBar.build(context),
+      //appBar: searchAppBar.build(context),
       // floatingActionButton: _buildFAB(),
       body: searching == true
           ? Spinner()

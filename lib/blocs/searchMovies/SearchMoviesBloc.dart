@@ -1,28 +1,56 @@
+import 'dart:async';
+import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
+import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import '../../ServiceLocator.dart';
-import 'Bloc.dart';
+import 'SearchMoviesEvent.dart';
+import 'SearchMoviesState.dart';
 
 class SearchMoviesBloc extends Bloc<SearchMoviesEvent, SearchMoviesState> {
-  SearchMoviesBloc();
+  final SearchMoviesRepository searchMoviesRepository;
+
+  SearchMoviesBloc({@required this.searchMoviesRepository});
 
   @override
-  SearchMoviesState get initialState => SearchMoviesState();
-
-  UserModel _currentUser;
+  Stream<Transition<SearchMoviesEvent, SearchMoviesState>> transformEvents(
+    Stream<SearchMoviesEvent> events,
+    Stream<Transition<SearchMoviesEvent, SearchMoviesState>> Function(
+      SearchMoviesEvent event,
+    )
+        transitionFn,
+  ) {
+    return events
+        .debounceTime(const Duration(milliseconds: 300))
+        .switchMap(transitionFn);
+  }
 
   @override
-  Stream<SearchMoviesState> mapEventToState(SearchMoviesEvent event) async* {
-    // if (event is LoadPageEvent) {
-    //   yield LoadingState();
+  void onTransition(
+      Transition<SearchMoviesEvent, SearchMoviesState> transition) {
+    print(transition);
+    super.onTransition(transition);
+  }
 
-    //   _currentUser = await locator<AuthService>().getCurrentUser();
+  @override
+  SearchMoviesState get initialState => SearchMoviesStateEmpty();
 
-    //   yield LoadedState(currentUser: _currentUser);
-    // }
+  @override
+  Stream<SearchMoviesState> mapEventToState(
+    SearchMoviesEvent event,
+  ) async* {
+    if (event is TextChangedEvent) {
+      final String searchTerm = event.text;
+      if (searchTerm.isEmpty) {
+        yield SearchMoviesStateEmpty();
+      } else {
+        yield SearchMoviesStateLoading();
+        try {
+          final results = await searchMoviesRepository.search(searchTerm);
+          yield SearchMoviesStateSuccess(movies: results.items);
+        } catch (error) {
+          yield SearchMoviesStateError(error: error);
+        }
+      }
+    }
   }
 }

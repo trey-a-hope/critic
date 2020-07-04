@@ -88,13 +88,13 @@ class CreatePageState extends State<CreatePage> {
                             title: 'Error',
                             message: 'Cannot have empty search.');
                       } else {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => SearchResultsPage(
-                              searchText: searchText,
-                            ),
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SearchResultsPage(
+                        //       searchText: searchText,
+                        //     ),
+                        //   ),
+                        // );
                       }
                     },
                   ),

@@ -1,13 +1,18 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
-class SearchMoviesEvent extends Equatable {
-  @override
-  List<Object> get props => [];
+abstract class SearchMoviesEvent extends Equatable {
+  const SearchMoviesEvent();
 }
 
-//Event: User selects login.
-class SearchEvent extends SearchMoviesEvent {
-  SearchEvent();
+class TextChangedEvent extends SearchMoviesEvent {
+  final String text;
 
-  List<Object> get props => [];
+  const TextChangedEvent({@required this.text});
+
+  @override
+  List<Object> get props => [text];
+
+  @override
+  String toString() => 'TextChanged { text: $text }';
 }

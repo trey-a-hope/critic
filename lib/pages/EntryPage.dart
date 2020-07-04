@@ -1,3 +1,8 @@
+import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesClient.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/pages/EditProfilePage.dart';
 import 'package:critic/pages/SearchUsersPage.dart';
 import 'package:critic/pages/SettingsPage.dart';
@@ -6,7 +11,7 @@ import 'package:critic/widgets/AppBarLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
-import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
+// import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EntryPage extends StatefulWidget {
@@ -112,13 +117,22 @@ class EntryPageState extends State<EntryPage> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.add),
+              tooltip: 'Movie Search',
+              icon: Icon(
+                Icons.add
+              ),
               onPressed: () {
+                final SearchMoviesRepository _searchMoviesRepository =
+                    SearchMoviesRepository(
+                  SearchMoviesCache(),
+                  SearchMoviesClient(),
+                );
+
                 Route route = MaterialPageRoute(
                   builder: (context) => BlocProvider(
-                    create: (BuildContext context) =>
-                        SEARCH_MOVIES_BP.SearchMoviesBloc(),
-                    child: SEARCH_MOVIES_BP.SearchMoviesPage(),
+                    create: (context) => SearchMoviesBloc(
+                        searchMoviesRepository: _searchMoviesRepository),
+                    child: SearchMoviesPage(),
                   ),
                 );
 

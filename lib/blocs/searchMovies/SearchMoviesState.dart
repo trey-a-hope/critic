@@ -1,37 +1,39 @@
-//import 'package:bloc/bloc.dart';
-import 'package:critic/models/UserModel.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesResultItem.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class SearchMoviesState extends Equatable {
+abstract class SearchMoviesState extends Equatable {
+  const SearchMoviesState();
+
   @override
   List<Object> get props => [];
 }
 
-class LoadingState extends SearchMoviesState {}
+class SearchMoviesStateEmpty extends SearchMoviesState {}
 
-class LoadedState extends SearchMoviesState {
-  final UserModel currentUser;
+class SearchMoviesStateLoading extends SearchMoviesState {}
 
-  LoadedState({
-    @required this.currentUser,
+class SearchMoviesStateSuccess extends SearchMoviesState {
+  final List<SearchMoviesResultItem> movies;
+
+  const SearchMoviesStateSuccess({
+    @required this.movies,
   });
 
   @override
-  List<Object> get props => [
-        currentUser,
-      ];
+  List<Object> get props => [movies];
+
+  @override
+  String toString() => 'SearchStateSuccess { items: ${movies.length} }';
 }
 
-class ErrorState extends SearchMoviesState {
+class SearchMoviesStateError extends SearchMoviesState {
   final dynamic error;
 
-  ErrorState({
+  const SearchMoviesStateError({
     @required this.error,
   });
 
   @override
-  List<Object> get props => [
-        error,
-      ];
+  List<Object> get props => [error];
 }

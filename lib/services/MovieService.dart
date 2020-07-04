@@ -1,5 +1,6 @@
+
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/models/SearchQueryModel.dart';
+import 'package:critic/pages/SearchResultsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -8,8 +9,10 @@ import 'dart:convert' show Encoding, json;
 abstract class IMovieService {
   // Future<MovieModel> getMovieByTitle({@required String title});
   Future<MovieModel> getMovieByID({@required String id});
-  Future<List<SearchQueryModel>> getMovieBySearch(
-      {@required String search, @required int page});
+  // Future<MovieSearchResult> search({
+  //   @required String term,
+  //   @required int page,
+  // });
 }
 
 class MovieService extends IMovieService {
@@ -62,36 +65,51 @@ class MovieService extends IMovieService {
   //   }
   // }
 
-  @override
-  Future<List<SearchQueryModel>> getMovieBySearch(
-      {@required String search, @required int page}) async {
-    Map<String, String> params = {
-      's': '$search',
-      'apiKey': apiKey,
-      'page': '$page'
-    };
+  // Future<MovieSearchResult> search({
+  //   @required String term,
+  //   @required int page,
+  // }) async {
+  //   final http.Response response = await http.get(
+  //       Uri.https(
+  //           authority, '', {'s': '$search', 'apiKey': apiKey, 'page': '$page'}),
+  //       headers: {'content-type': 'application/json'});
+  //   final results = json.decode(response.body);
 
-    Uri uri = Uri.https(authority, '', params);
+  //   if (response.statusCode == 200) {
+  //     return MovieSearchResult.fromJson(results);
+  //   } else {
+  //     throw MovieSearchResultError.fromJson(results);
+  //   }
+  // }
 
-    http.Response response = await http.get(
-      uri,
-      headers: {'content-type': 'application/json'},
-    );
+  // @override
+  // Future<List<MovieSearchModel>> getMovieBySearch(
+  //     {@required String search, @required int page}) async {
+  //   Map<String, String> params = {
+  //     's': '$search',
+  //     'apiKey': apiKey,
+  //     'page': '$page'
+  //   };
 
-    try {
-      Map bodyMap = json.decode(response.body);
-      if (bodyMap['Response'] == 'False') {
-        return [];
-      }
-      List<dynamic> moviesData = bodyMap['Search'];
-      List<SearchQueryModel> movies = List<SearchQueryModel>();
-      moviesData.forEach((movieData) {
-        SearchQueryModel movie = SearchQueryModel.fromJSON(map: movieData);
-        movies.add(movie);
-      });
-      return movies;
-    } catch (e) {
-      throw PlatformException(message: e.toString(), code: '');
-    }
-  }
+  //   Uri uri = Uri.https(authority, '', params);
+
+  //   http.Response response = await http.get(
+  //     uri,
+  //     headers: {'content-type': 'application/json'},
+  //   );
+
+  //   try {
+  //     Map bodyMap = json.decode(response.body);
+  //     if (bodyMap['Response'] == 'False') {
+  //       return [];
+  //     }
+
+  //     final List<MovieSearchModel> movies = (bodyMap['Search'] as List<dynamic>)
+  //         .map((dynamic item) => MovieSearchModel.fromJSON(map: item))
+  //         .toList();
+  //     return movies;
+  //   } catch (e) {
+  //     throw PlatformException(message: e.toString(), code: '');
+  //   }
+  // }
 }

@@ -1,95 +1,139 @@
-import 'package:critic/widgets/Searchbar.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesResult.dart';
+import 'package:critic/blocs/searchMovies/SearchMoviesResultItem.dart';
+import 'package:critic/pages/MovieDetailsPage.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class SearchMoviesPage extends StatefulWidget {
+import 'SearchMoviesEvent.dart';
+import 'SearchMoviesState.dart';
+
+class SearchMoviesPage extends StatelessWidget {
   @override
-  State createState() => SearchMoviesPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Search Movies'),
+      ),
+      body: Column(
+        children: <Widget>[_SearchBar(), _SearchBody()],
+      ),
+    );
+  }
 }
 
-class SearchMoviesPageState extends State<SearchMoviesPage> {
-  SearchBar searchAppBar;
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  // List<AlgoliaObjectSnapshot> results;
-  bool searching = false;
-  // bool isSearchingGems = true;
+class _SearchBar extends StatefulWidget {
+  @override
+  State<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<_SearchBar> {
+  final TextEditingController _textController = TextEditingController();
+  SearchMoviesBloc _searchMoviesBloc;
 
   @override
   void initState() {
     super.initState();
-
-    searchAppBar = SearchBar(
-        inBar: true,
-        hintText: 'Enter title of movie / show...',
-        buildDefaultAppBar: (context) {
-          return AppBar(
-            backgroundColor: Colors.black,
-            automaticallyImplyLeading: true,
-            title: Text('Search Movies / Shows'),
-            actions: [
-              searchAppBar.getSearchAction(context),
-            ],
-          );
-        },
-        setState: setState,
-        onSubmitted: onSubmitted);
+    _searchMoviesBloc = BlocProvider.of<SearchMoviesBloc>(context);
   }
 
-  void onSubmitted(String value) {
-    if (value == '') return;
-    _search(value);
-  }
-
-  _search(String value) async {
-    setState(
-      () {
-        searching = true;
-      },
-    );
-
-    // Algolia algolia = Algolia.init(
-    //   applicationId: ALGOLIA_APP_ID,
-    //   apiKey: ALGOLIA_SEARCH_API_KEY,
-    // );
-
-    // AlgoliaQuery query = algolia.instance.index('Users').search(value);
-    // // query = query.setFacetFilter('isGem:$_isSearchingGems');
-
-    // results = (await query.getObjects()).hits;
-
-    setState(
-      () {
-        searching = false;
-      },
-    );
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: searchAppBar.build(context),
-      // floatingActionButton: _buildFAB(),
-      body: searching == true
-          ? Spinner()
-          : Center(
-              child: Text('To Dofe'),
-            ),
+    return TextField(
+      controller: _textController,
+      autocorrect: false,
+      onChanged: (text) {
+        _searchMoviesBloc.add(
+          TextChangedEvent(text: text),
+        );
+      },
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.search),
+        suffixIcon: GestureDetector(
+          child: Icon(Icons.clear),
+          onTap: _onClearTapped,
+        ),
+        border: InputBorder.none,
+        hintText: 'Enter a search term',
+      ),
     );
   }
 
-  // _buildFAB() {
-  //   return FloatingActionButton(
-  //     elevation: Theme.of(context).floatingActionButtonTheme.elevation,
-  //     backgroundColor: _isSearchingGems ? Colors.green : Colors.white,
-  //     child: Icon(MdiIcons.diamondStone,
-  //         color: _isSearchingGems ? Colors.white : Colors.green),
-  //     onPressed: () {
-  //       setState(() {
-  //         _isSearchingGems = !_isSearchingGems;
-  //         //getIt<Modal>().showInSnackBar(scaffoldKey: _scaffoldKey, message: 'Now searching ${_isSearchingGems ? 'Gems' : 'General Users'}');
-  //       });
-  //     },
-  //   );
-  // }
+  void _onClearTapped() {
+    _textController.text = '';
+    _searchMoviesBloc.add(TextChangedEvent(text: ''));
+  }
+}
+
+class _SearchBody extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
+      bloc: BlocProvider.of<SearchMoviesBloc>(context),
+      builder: (BuildContext context, SearchMoviesState state) {
+        if (state is SearchMoviesStateEmpty) {
+          return Expanded(
+            child: Center(
+              child: Text('Please enter a movie name to begin...'),
+            ),
+          );
+        }
+
+        if (state is SearchMoviesStateLoading) {
+          return Spinner();
+        }
+
+        if (state is SearchMoviesStateError) {
+          return Expanded(
+            child: Center(
+              child: Text(state.error.message),
+            ),
+          );
+        }
+
+        if (state is SearchMoviesStateSuccess) {
+          final List<SearchMoviesResultItem> movies = state.movies;
+
+          return Expanded(
+            child: ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (BuildContext context, int index) {
+                final SearchMoviesResultItem movie = movies[index];
+
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(movie.poster),
+                  ),
+                  title: Text('${movie.title}'),
+                  subtitle: Text('Year: ${movie.year}'),
+                  trailing: Icon(Icons.chevron_right),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MovieDetailsPage(
+                          imdbID: movie.imdbID,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+        }
+
+        return Center(
+          child: Text('YOU SHOULD NEVER SEE THIS...'),
+        );
+      },
+    );
+  }
 }
