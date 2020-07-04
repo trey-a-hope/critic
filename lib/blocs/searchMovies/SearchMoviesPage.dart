@@ -1,12 +1,9 @@
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesResult.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesResultItem.dart';
+import 'package:critic/models/SearchMoviesResultItem.dart';
 import 'package:critic/pages/MovieDetailsPage.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'SearchMoviesEvent.dart';
 import 'SearchMoviesState.dart';
 
@@ -100,13 +97,13 @@ class _SearchBody extends StatelessWidget {
         }
 
         if (state is SearchMoviesStateSuccess) {
-          final List<SearchMoviesResultItem> movies = state.movies;
+          final List<SearchMoviesResultItemModel> movies = state.movies;
 
           return Expanded(
             child: ListView.builder(
               itemCount: movies.length,
               itemBuilder: (BuildContext context, int index) {
-                final SearchMoviesResultItem movie = movies[index];
+                final SearchMoviesResultItemModel movie = movies[index];
 
                 return ListTile(
                   leading: CircleAvatar(

@@ -1,4 +1,4 @@
-
+import 'package:critic/blocs/searchMovies/SearchMoviesResult.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/pages/SearchResultsPage.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,7 @@ abstract class IMovieService {
   //   @required String term,
   //   @required int page,
   // });
+  Future<SearchMoviesResult> search({@required String term});
 }
 
 class MovieService extends IMovieService {
@@ -39,6 +40,20 @@ class MovieService extends IMovieService {
       return movie;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');
+    }
+  }
+
+  @override
+  Future<SearchMoviesResult> search({@required String term}) async {
+    final String baseUrl = 'http://www.omdbapi.com';
+    final response =
+        await http.get(Uri.parse("$baseUrl/?s=$term&apiKey=$apiKey"));
+    final results = json.decode(response.body);
+
+    if (results['Response'] == 'False') {
+      throw Exception(results['Error']);
+    } else {
+      return SearchMoviesResult.fromJson(results);
     }
   }
 

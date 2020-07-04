@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SearchMoviesResultItem {
+class SearchMoviesResultItemModel {
   final String imdbID;
   final String title;
   final String poster;
   final String type;
   final String year;
 
-  const SearchMoviesResultItem({
+  const SearchMoviesResultItemModel({
     @required this.imdbID,
     @required this.title,
     @required this.poster,
@@ -15,8 +15,8 @@ class SearchMoviesResultItem {
     @required this.year,
   });
 
-  static SearchMoviesResultItem fromJson(dynamic json) {
-    return SearchMoviesResultItem(
+  static SearchMoviesResultItemModel fromJson(dynamic json) {
+    return SearchMoviesResultItemModel(
       imdbID: json['imdbID'] as String,
       title: json['Title'] as String,
       poster: json['Poster'] as String,

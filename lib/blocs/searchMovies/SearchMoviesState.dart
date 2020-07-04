@@ -1,4 +1,4 @@
-import 'package:critic/blocs/searchMovies/SearchMoviesResultItem.dart';
+import 'package:critic/models/SearchMoviesResultItem.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class SearchMoviesStateEmpty extends SearchMoviesState {}
 class SearchMoviesStateLoading extends SearchMoviesState {}
 
 class SearchMoviesStateSuccess extends SearchMoviesState {
-  final List<SearchMoviesResultItem> movies;
+  final List<SearchMoviesResultItemModel> movies;
 
   const SearchMoviesStateSuccess({
     @required this.movies,

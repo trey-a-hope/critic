@@ -1,6 +1,5 @@
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesClient.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/pages/EditProfilePage.dart';
@@ -118,14 +117,11 @@ class EntryPageState extends State<EntryPage> {
           actions: <Widget>[
             IconButton(
               tooltip: 'Movie Search',
-              icon: Icon(
-                Icons.add
-              ),
+              icon: Icon(Icons.add),
               onPressed: () {
                 final SearchMoviesRepository _searchMoviesRepository =
                     SearchMoviesRepository(
-                  SearchMoviesCache(),
-                  SearchMoviesClient(),
+                  cache: SearchMoviesCache(),
                 );
 
                 Route route = MaterialPageRoute(
