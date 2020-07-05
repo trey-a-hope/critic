@@ -1,4 +1,3 @@
-import 'package:critic/pages/SearchResultsPage.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

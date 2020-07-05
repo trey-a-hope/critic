@@ -1,6 +1,5 @@
 import 'package:critic/blocs/searchMovies/SearchMoviesResult.dart';
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/pages/SearchResultsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;

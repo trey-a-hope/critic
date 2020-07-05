@@ -76,10 +76,10 @@ class _SearchBody extends StatelessWidget {
     return BlocBuilder<SearchUsersBloc, SearchUsersState>(
       bloc: BlocProvider.of<SearchUsersBloc>(context),
       builder: (BuildContext context, SearchUsersState state) {
-        if (state is SearchUsersStateEmpty) {
+        if (state is SearchUsersStateStart) {
           return Expanded(
             child: Center(
-              child: Text('Enter a usernamef...'),
+              child: Text('Enter a username...'),
             ),
           );
         }
@@ -96,7 +96,15 @@ class _SearchBody extends StatelessWidget {
           );
         }
 
-        if (state is SearchUsersStateSuccess) {
+        if (state is SearchUsersStateNoResults) {
+          return Expanded(
+            child: Center(
+              child: Text('No results found. :('),
+            ),
+          );
+        }
+
+        if (state is SearchUsersStateFoundResults) {
           final List<UserModel> users = state.users;
 
           return Expanded(

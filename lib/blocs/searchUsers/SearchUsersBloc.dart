@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
+import 'package:critic/models/UserModel.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
@@ -33,7 +34,7 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   }
 
   @override
-  SearchUsersState get initialState => SearchUsersStateEmpty();
+  SearchUsersState get initialState => SearchUsersStateStart();
 
   @override
   Stream<SearchUsersState> mapEventToState(
@@ -42,12 +43,18 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
     if (event is TextChangedEvent) {
       final String searchTerm = event.text;
       if (searchTerm.isEmpty) {
-        yield SearchUsersStateEmpty();
+        yield SearchUsersStateStart();
       } else {
         yield SearchUsersStateLoading();
         try {
-          final results = await searchUsersRepository.search(searchTerm);
-          yield SearchUsersStateSuccess(users: results);
+          final List<UserModel> results =
+              await searchUsersRepository.search(searchTerm);
+
+          if (results.isEmpty) {
+            yield SearchUsersStateNoResults();
+          } else {
+            yield SearchUsersStateFoundResults(users: results);
+          }
         } catch (error) {
           yield SearchUsersStateError(error: error);
         }

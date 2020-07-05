@@ -9,14 +9,16 @@ abstract class SearchUsersState extends Equatable {
   List<Object> get props => [];
 }
 
-class SearchUsersStateEmpty extends SearchUsersState {}
+class SearchUsersStateNoResults extends SearchUsersState {}
+
+class SearchUsersStateStart extends SearchUsersState {}
 
 class SearchUsersStateLoading extends SearchUsersState {}
 
-class SearchUsersStateSuccess extends SearchUsersState {
+class SearchUsersStateFoundResults extends SearchUsersState {
   final List<UserModel> users;
 
-  const SearchUsersStateSuccess({
+  const SearchUsersStateFoundResults({
     @required this.users,
   });
 
