@@ -16,6 +16,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   bool isFinish = false;
   final int limit = 10;
 
+  HomeBloc() : super(null);
+
   @override
   HomeState get initialState => HomeState();
 

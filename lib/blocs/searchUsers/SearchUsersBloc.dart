@@ -11,8 +11,7 @@ import 'SearchUsersState.dart';
 
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   final SearchUsersRepository searchUsersRepository;
-
-  SearchUsersBloc({@required this.searchUsersRepository});
+  SearchUsersBloc({@required this.searchUsersRepository}) : super(null);
 
   @override
   Stream<Transition<SearchUsersEvent, SearchUsersState>> transformEvents(

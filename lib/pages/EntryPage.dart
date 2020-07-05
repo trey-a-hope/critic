@@ -56,12 +56,7 @@ class EntryPageState extends State<EntryPage> {
       activeColor: Colors.red,
       textAlign: TextAlign.center,
     ),
-    // BottomNavyBarItem(
-    //   icon: Icon(Icons.add),
-    //   title: Text('Create'),
-    //   activeColor: Colors.deepPurple,
-    //   textAlign: TextAlign.center,
-    // ),
+
     BottomNavyBarItem(
       icon: Icon(Icons.person),
       title: Text(

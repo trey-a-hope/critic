@@ -22,7 +22,6 @@ import 'package:flutter/src/services/message_codec.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
-  //Call this at the beginning of main().
   WidgetsFlutterBinding.ensureInitialized();
 
   setUpLocater();

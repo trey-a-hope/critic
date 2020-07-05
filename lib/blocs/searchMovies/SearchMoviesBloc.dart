@@ -8,8 +8,7 @@ import 'SearchMoviesState.dart';
 
 class SearchMoviesBloc extends Bloc<SearchMoviesEvent, SearchMoviesState> {
   final SearchMoviesRepository searchMoviesRepository;
-
-  SearchMoviesBloc({@required this.searchMoviesRepository});
+  SearchMoviesBloc({@required this.searchMoviesRepository}) : super(null);
 
   @override
   Stream<Transition<SearchMoviesEvent, SearchMoviesState>> transformEvents(

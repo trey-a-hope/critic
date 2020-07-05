@@ -4,28 +4,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'Bloc.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc();
+abstract class LoginBlocDelegate {
+  void navigateHome();
+  void showMessage({@required String message});
+}
 
-  @override
-  LoginState get initialState => LoginNotStarted();
+class LoginBloc extends Bloc<LoginEvent, LoginState> {
+  LoginBloc()
+      : super(
+          LoginStartState(
+            autoValidate: false,
+            formKey: GlobalKey<FormState>(),
+          ),
+        );
+
+  LoginBlocDelegate _loginBlocDelegate;
+
+  void setDelegate({@required LoginBlocDelegate delegate}) {
+    this._loginBlocDelegate = delegate;
+  }
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    //Event, user attempts login.
     if (event is Login) {
-      //Display loading screen initially...
-      yield LoggingIn();
+      yield LoadingState();
       try {
-        //Proceed to login via service.
-        AuthResult authResult = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: event.email, password: event.password);
-        //Continue to success screen.
-        yield LoginSuccessful(authResult: authResult);
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: event.email, password: event.password);
+
+        yield LoginStartState(autoValidate: true, formKey: event.formKey);
       } catch (error) {
-        //Display the error that happened.
-        yield LoginFailed(error: error);
+        _loginBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+        yield LoginStartState(autoValidate: true, formKey: event.formKey);
       }
     }
   }

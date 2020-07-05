@@ -8,7 +8,7 @@ import '../../ServiceLocator.dart';
 import 'Bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  ProfileBloc();
+  ProfileBloc() : super(null);
 
   @override
   ProfileState get initialState => ProfileState();

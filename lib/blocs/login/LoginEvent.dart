@@ -6,12 +6,20 @@ class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
-//Event: User selects login.
 class Login extends LoginEvent {
   final String email;
   final String password;
+  final GlobalKey<FormState> formKey;
 
-  Login({@required this.email, @required this.password});
+  Login({
+    @required this.email,
+    @required this.password,
+    @required this.formKey,
+  });
 
-  List<Object> get props => [email, password];
+  List<Object> get props => [
+        email,
+        password,
+        formKey,
+      ];
 }

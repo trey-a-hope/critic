@@ -13,15 +13,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
-  LoginBloc loginBloc;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+    with SingleTickerProviderStateMixin
+    implements LoginBlocDelegate {
+  LoginBloc _loginBloc;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    loginBloc = BlocProvider.of<LoginBloc>(context);
+    _loginBloc = BlocProvider.of<LoginBloc>(context);
+    _loginBloc.setDelegate(delegate: this);
 
     super.initState();
   }
@@ -29,102 +31,7 @@ class LoginPageState extends State<LoginPage>
   @override
   void dispose() {
     super.dispose();
-    loginBloc.close();
-  }
-
-  Widget buildFormView({
-    @required double screenHeight,
-    @required double screenWidth,
-    @required LoginBloc loginBloc,
-    @required bool autovalidate,
-  }) {
-    return SafeArea(
-      child: Container(
-        height: screenHeight,
-        width: screenWidth,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  autovalidate: autovalidate,
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  maxLengthEnforced: true,
-                  // maxLength: MyFormData.nameCharLimit,
-                  onFieldSubmitted: (term) {},
-                  validator: locator<ValidationService>().email,
-                  onSaved: (value) {},
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    hintText: 'Email',
-                    // icon: Icon(Icons.email),
-                    fillColor: Colors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  autovalidate: autovalidate,
-
-                  controller: passwordController,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  maxLengthEnforced: true,
-                  // maxLength: MyFormData.nameCharLimit,
-                  onFieldSubmitted: (term) {},
-                  obscureText: true,
-                  validator: locator<ValidationService>().password,
-                  // onSaved: (value) {},
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                    ),
-                    hintText: 'Password',
-                    // icon: Icon(Icons.email),
-                    fillColor: Colors.white,
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                OutlineButton(
-                  child: Text('Login'),
-                  onPressed: () {
-                    loginBloc.add(
-                      Login(
-                          email: emailController.text,
-                          password: passwordController.text),
-                    );
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                OutlineButton(
-                  child: Text('Sign Up'),
-                  onPressed: () {
-                    Route route = MaterialPageRoute(
-                        builder: (BuildContext context) => SignUpPage());
-                    Navigator.push(context, route);
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    _loginBloc.close();
   }
 
   @override
@@ -133,52 +40,128 @@ class LoginPageState extends State<LoginPage>
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      key: scaffoldKey,
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('Login'),
         centerTitle: true,
       ),
-      body: BlocConsumer<LoginBloc, LoginState>(
-        //"Do stuff" on state changes.
-        listener: (BuildContext context, LoginState state) {
-          //Navigation actions would go here....
-
-          //If user fails login, display error in snack bar.
-          if (state is LoginFailed) {
-            locator<ModalService>().showInSnackBar(
-                scaffoldKey: scaffoldKey,
-                message: 'Error: ${state.error.message}');
-          }
-        },
+      body: BlocBuilder<LoginBloc, LoginState>(
         //Change view on state changes.
         builder: (BuildContext context, LoginState state) {
-          if (state is LoginNotStarted) {
-            return buildFormView(
-              screenHeight: screenHeight,
-              screenWidth: screenWidth,
-              loginBloc: loginBloc,
-              autovalidate: false,
-            );
-          } else if (state is LoggingIn) {
+          if (state is LoadingState) {
             return Spinner();
-          } else if (state is LoginSuccessful) {
-            return Center(
-              child: Text(state.authResult.user.uid),
-            );
-          } else if (state is LoginFailed) {
-            return buildFormView(
-              screenHeight: screenHeight,
-              screenWidth: screenWidth,
-              loginBloc: loginBloc,
-              autovalidate: true,
+          }
+
+          if (state is LoginStartState) {
+            return SafeArea(
+              child: Container(
+                height: screenHeight,
+                width: screenWidth,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          autovalidate: state.autoValidate,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          maxLengthEnforced: true,
+                          // maxLength: MyFormData.nameCharLimit,
+                          onFieldSubmitted: (term) {},
+                          validator: locator<ValidationService>().email,
+                          onSaved: (value) {},
+                          decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            hintText: 'Email',
+                            // icon: Icon(Icons.email),
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          autovalidate: state.autoValidate,
+
+                          controller: _passwordController,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          maxLengthEnforced: true,
+                          // maxLength: MyFormData.nameCharLimit,
+                          onFieldSubmitted: (term) {},
+                          obscureText: true,
+                          validator: locator<ValidationService>().password,
+                          // onSaved: (value) {},
+                          decoration: InputDecoration(
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            hintText: 'Password',
+                            // icon: Icon(Icons.email),
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                        OutlineButton(
+                          child: Text('Login'),
+                          onPressed: () {
+                            _loginBloc.add(
+                              Login(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                formKey: state.formKey,
+                              ),
+                            );
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        OutlineButton(
+                          child: Text('Sign Up'),
+                          onPressed: () {
+                            Route route = MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    SignUpPage());
+                            Navigator.push(context, route);
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             );
           }
+
           return Center(
             child: Text('You should NEVER see this.'),
           );
         },
       ),
     );
+  }
+
+  @override
+  void navigateHome() {
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void showMessage({String message}) {
+    locator<ModalService>()
+        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
   }
 }
