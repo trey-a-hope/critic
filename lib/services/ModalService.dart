@@ -1,15 +1,27 @@
 import 'dart:io';
-import 'package:critic/services/ValidationService.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 import '../ServiceLocator.dart';
+import 'ValidationService.dart';
 
+enum Categories {
+  GoodMorning,
+  GoodAfternoon,
+  GoodNight,
+  HappyBirthday,
+  HappyAnniversary,
+  Congrats,
+  Apology,
+  Condolence
+}
 
 abstract class IModalService {
   void showInSnackBar(
       {@required GlobalKey<ScaffoldState> scaffoldKey,
       @required String message});
+
   void showAlert(
       {@required BuildContext context,
       @required String title,
@@ -26,81 +38,162 @@ abstract class IModalService {
       @required String message,
       @required File file});
 
-  // Future<Categories> showCategoryOptionsDialog(
-  //     {@required BuildContext context, @required String title});
+  Future<Categories> showCategoryOptionsDialog(
+      {@required BuildContext context, @required String title});
+
+  Future<int> showOptions(
+      {@required BuildContext context,
+      @required String title,
+      @required List<String> options});
 }
 
 class ModalService extends IModalService {
+  Future<Categories> showCategoryOptionsDialog(
+      {@required BuildContext context, @required String title}) async {
+    if (Platform.isIOS) {
+      return await showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          List<CupertinoActionSheetAction> actions = [
+            CupertinoActionSheetAction(
+              child: Text('Good Morning'),
+              onPressed: () {
+                Navigator.pop(context, Categories.GoodMorning);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Good Afternoon'),
+              onPressed: () {
+                Navigator.pop(context, Categories.GoodAfternoon);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Good Night'),
+              onPressed: () {
+                Navigator.pop(context, Categories.GoodNight);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Happy Birthday'),
+              onPressed: () {
+                Navigator.pop(context, Categories.HappyBirthday);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Happy Anniversary'),
+              onPressed: () {
+                Navigator.pop(context, Categories.HappyAnniversary);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Congrats'),
+              onPressed: () {
+                Navigator.pop(context, Categories.Congrats);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Apology'),
+              onPressed: () {
+                Navigator.pop(context, Categories.Apology);
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Text('Condolence'),
+              onPressed: () {
+                Navigator.pop(context, Categories.Condolence);
+              },
+            ),
+          ];
 
-  // Future<Categories> showCategoryOptionsDialog(
-  //     {@required BuildContext context, @required String title}) async {
-  //   return await showDialog<Categories>(
-  //       context: context,
-  //       barrierDismissible: true,
-  //       builder: (BuildContext context) {
-  //         return SimpleDialog(
-  //           title: Text(title),
-  //           children: <Widget>[
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.GoodMorning);
-  //               },
-  //               child: Text('Good Morning'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.GoodAfternoon);
-  //               },
-  //               child: Text('Good Afternoon'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.GoodNight);
-  //               },
-  //               child: Text('Good Night'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.HappyBirthday);
-  //               },
-  //               child: Text('Happy Birthday'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.HappyAnniversary);
-  //               },
-  //               child: Text('Happy Anniversary'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.Congrats);
-  //               },
-  //               child: Text('Congrats'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.Apology);
-  //               },
-  //               child: Text('Apology'),
-  //             ),
-  //             SimpleDialogOption(
-  //               onPressed: () {
-  //                 Navigator.pop(context, Categories.Condolence);
-  //               },
-  //               child: Text('Condolence'),
-  //             )
-  //           ],
-  //         );
-  //       });
-  // }
+          return CupertinoActionSheet(
+            title: Text(title),
+            actions: actions,
+            cancelButton: CupertinoActionSheetAction(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          );
+        },
+      );
+    } else {
+      return await showDialog<Categories>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          if (Platform.isIOS) {
+            return null;
+          } else {
+            return SimpleDialog(
+              title: Text(title),
+              children: <Widget>[
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.GoodMorning);
+                  },
+                  child: Text('Good Morning'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.GoodAfternoon);
+                  },
+                  child: Text('Good Afternoon'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.GoodNight);
+                  },
+                  child: Text('Good Night'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.HappyBirthday);
+                  },
+                  child: Text('Happy Birthday'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.HappyAnniversary);
+                  },
+                  child: Text('Happy Anniversary'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.Congrats);
+                  },
+                  child: Text('Congrats'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.Apology);
+                  },
+                  child: Text('Apology'),
+                ),
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, Categories.Condolence);
+                  },
+                  child: Text('Condolence'),
+                )
+              ],
+            );
+          }
+        },
+      );
+    }
+  }
 
   @override
   void showInSnackBar(
       {@required GlobalKey<ScaffoldState> scaffoldKey,
       @required String message}) {
-    scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+    scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   @override
@@ -111,18 +204,34 @@ class ModalService extends IModalService {
     showDialog(
       context: context,
       builder: (BuildContext buildContext) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+        if (Platform.isIOS) {
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
       },
     );
   }
@@ -130,8 +239,8 @@ class ModalService extends IModalService {
   @override
   Future<String> showPasswordResetEmail({@required BuildContext context}) {
     final TextEditingController emailController = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    bool _autovalidate = false;
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    bool autovalidate = false;
 
     return showDialog<String>(
       barrierDismissible: false,
@@ -139,8 +248,8 @@ class ModalService extends IModalService {
       child: AlertDialog(
         title: Text('Reset Password'),
         content: Form(
-          key: _formKey,
-          autovalidate: _autovalidate,
+          key: formKey,
+          autovalidate: autovalidate,
           child: TextFormField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
@@ -167,9 +276,9 @@ class ModalService extends IModalService {
           FlatButton(
             child: const Text('SUBMIT'),
             onPressed: () {
-              final FormState form = _formKey.currentState;
+              final FormState form = formKey.currentState;
               if (!form.validate()) {
-                _autovalidate = true;
+                autovalidate = true;
               } else {
                 Navigator.of(context).pop(emailController.text);
               }
@@ -183,8 +292,8 @@ class ModalService extends IModalService {
   @override
   Future<String> showChangeEmail({@required BuildContext context}) {
     final TextEditingController emailController = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    bool _autovalidate = false;
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    bool autovalidate = false;
 
     return showDialog<String>(
       barrierDismissible: false,
@@ -192,8 +301,8 @@ class ModalService extends IModalService {
       child: AlertDialog(
         title: Text('Change Email'),
         content: Form(
-          key: _formKey,
-          autovalidate: _autovalidate,
+          key: formKey,
+          autovalidate: autovalidate,
           child: TextFormField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
@@ -220,9 +329,9 @@ class ModalService extends IModalService {
           FlatButton(
             child: const Text('SUBMIT'),
             onPressed: () {
-              final FormState form = _formKey.currentState;
+              final FormState form = formKey.currentState;
               if (!form.validate()) {
-                _autovalidate = true;
+                autovalidate = true;
               } else {
                 Navigator.of(context).pop(emailController.text);
               }
@@ -241,24 +350,49 @@ class ModalService extends IModalService {
     return showDialog<bool>(
       barrierDismissible: false,
       context: context,
-      child: AlertDialog(
-        title: Text(title),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('NO', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-          FlatButton(
-            child: const Text('YES', style: TextStyle(color: Colors.black)),
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-          )
-        ],
-      ),
+      builder: (BuildContext context) {
+        if (Platform.isIOS) {
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text('Yes'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              CupertinoDialogAction(
+                isDefaultAction: false,
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              )
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('YES', style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              FlatButton(
+                child: const Text('NO', style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -303,5 +437,75 @@ class ModalService extends IModalService {
         ],
       ),
     );
+  }
+
+  @override
+  Future<int> showOptions(
+      {@required BuildContext context,
+      @required String title,
+      @required List<String> options}) async {
+    if (Platform.isIOS) {
+      return showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          List<CupertinoActionSheetAction> actions =
+              List<CupertinoActionSheetAction>();
+
+          //Build actions based on optino titles.
+          for (var i = 0; i < options.length; i++) {
+            actions.add(
+              CupertinoActionSheetAction(
+                child: Text(options[i]),
+                onPressed: () {
+                  Navigator.of(context).pop(i);
+                },
+              ),
+            );
+          }
+
+          return CupertinoActionSheet(
+            title: Text(title),
+            actions: actions,
+            cancelButton: CupertinoActionSheetAction(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          );
+        },
+      );
+    } else {
+      return await showModalBottomSheet<int>(
+        context: context,
+        builder: (BuildContext context) {
+          List<ListTile> actions = List<ListTile>();
+
+          actions.add(
+            ListTile(
+              title: Text(title),
+            ),
+          );
+
+          for (var i = 0; i < options.length; i++) {
+            actions.add(
+              ListTile(
+                title: Text(options[i]),
+                onTap: () {
+                  Navigator.of(context).pop(i);
+                  //return i;
+                },
+              ),
+            );
+          }
+
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: actions,
+          );
+        },
+      );
+    }
   }
 }
