@@ -1,4 +1,5 @@
 import 'package:critic/ServiceLocator.dart';
+import 'package:critic/pages/SignUpPage.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
@@ -102,6 +103,17 @@ class LoginPageState extends State<LoginPage>
                           email: emailController.text,
                           password: passwordController.text),
                     );
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
+                OutlineButton(
+                  child: Text('Sign Up'),
+                  onPressed: () {
+                    Route route = MaterialPageRoute(
+                        builder: (BuildContext context) => SignUpPage());
+                    Navigator.push(context, route);
                   },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),

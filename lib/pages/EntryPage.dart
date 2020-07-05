@@ -2,15 +2,17 @@ import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
+import 'package:critic/blocs/searchUsers/SearchUsersBloc.dart';
+import 'package:critic/blocs/searchUsers/SearchUsersCache.dart';
+import 'package:critic/blocs/searchUsers/SearchUsersPage.dart';
+import 'package:critic/blocs/searchUsers/SearchUsersRepository.dart';
 import 'package:critic/pages/EditProfilePage.dart';
-import 'package:critic/pages/SearchUsersPage.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:critic/widgets/AppBarLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
-// import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EntryPage extends StatefulWidget {
@@ -107,11 +109,20 @@ class EntryPageState extends State<EntryPage> {
           leading: IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchUsersPage(),
+              final SearchUsersRepository _searchUsersRepository =
+                  SearchUsersRepository(
+                cache: SearchUsersCache(),
+              );
+
+              Route route = MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => SearchUsersBloc(
+                      searchUsersRepository: _searchUsersRepository),
+                  child: SearchUsersPage(),
                 ),
               );
+
+              Navigator.push(context, route);
             },
           ),
           actions: <Widget>[
