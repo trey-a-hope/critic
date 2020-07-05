@@ -1,28 +1,35 @@
 //import 'package:bloc/bloc.dart';
+import 'package:critic/models/CritiqueModel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-//State: View of the user when loogging in.
 class LoadingState extends HomeState {}
 
-//State: View of a successful login.
-class LoadedState extends HomeState {
-  final List<DocumentSnapshot> docs;
-  LoadedState({
-    @required this.docs,
+class NoCritiquesState extends HomeState {
+  NoCritiquesState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class FoundCritiquesState extends HomeState {
+  final List<CritiqueModel> critiques;
+
+  FoundCritiquesState({
+    @required this.critiques,
   });
 
   @override
-  List<Object> get props => [docs,];
+  List<Object> get props => [
+        critiques,
+      ];
 }
 
-//State: View of an unsuccessful login.
 class ErrorState extends HomeState {
   final dynamic error;
 

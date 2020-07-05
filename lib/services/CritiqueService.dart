@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 
 abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
+  Future<List<CritiqueModel>> retrieveCritiques();
 }
 
 class CritiqueService extends ICritiqueService {
-  final CollectionReference critiquesDB =
+  final CollectionReference _critiquesDB =
       Firestore.instance.collection('Critiques');
-  final CollectionReference dataDB = Firestore.instance.collection('Data');
+  final CollectionReference _dataDB = Firestore.instance.collection('Data');
 
   @override
   Future<void> createCritique({@required CritiqueModel critique}) async {
@@ -18,10 +19,10 @@ class CritiqueService extends ICritiqueService {
       //Create new batch object.
       final WriteBatch batch = Firestore.instance.batch();
       //Create document reference for the new item.
-      final DocumentReference critiqueDocRef = critiquesDB.document();
+      final DocumentReference critiqueDocRef = _critiquesDB.document();
       //Create document reference for the table counts.
       final DocumentReference tableCountsDocRef =
-          dataDB.document('tableCounts');
+          _dataDB.document('tableCounts');
       //Set data for new reference.
       critique.id = critiqueDocRef.documentID;
       //Set data for user.
@@ -32,6 +33,26 @@ class CritiqueService extends ICritiqueService {
       //Commit batch.
       batch.commit();
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<CritiqueModel>> retrieveCritiques() async {
+    try {
+      QuerySnapshot querySnapshot = await _critiquesDB.getDocuments();
+
+      List<CritiqueModel> critiques = querySnapshot.documents
+          .map(
+            (DocumentSnapshot documentSnapshot) =>
+                CritiqueModel.extractDocument(ds: documentSnapshot),
+          )
+          .toList();
+
+      return critiques;
     } catch (e) {
       throw Exception(
         e.toString(),

@@ -1,120 +1,50 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:flutter/material.dart';
+import '../../ServiceLocator.dart';
 import 'Bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+abstract class HomeBlocDelegate {
+  void showMessage({@required String message});
+}
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  StreamController<List<DocumentSnapshot>> streamController =
-      StreamController<List<DocumentSnapshot>>();
-  List<DocumentSnapshot> critiques = [];
+  HomeBloc()
+      : super(
+          HomeState(),
+        );
 
-  bool isRequesting = false;
-  bool isFinish = false;
-  final int limit = 10;
+  HomeBlocDelegate _homeBlocDelegate;
 
-  HomeBloc() : super(null);
-
-  @override
-  HomeState get initialState => HomeState();
+  void setDelegate({@required HomeBlocDelegate delegate}) {
+    this._homeBlocDelegate = delegate;
+  }
 
   @override
   Stream<HomeState> mapEventToState(HomeEvent event) async* {
     if (event is LoadPageEvent) {
       yield LoadingState();
 
-      Firestore.instance.collection('Critiques').snapshots().listen(
-            (data) => (List<DocumentChange> documentChanges) {
-              bool isChange = false;
-              documentChanges.forEach(
-                (critiqueChange) {
-                  if (critiqueChange.type == DocumentChangeType.removed) {
-                    critiques.removeWhere(
-                      (critique) {
-                        return critiqueChange.document.documentID ==
-                            critique.documentID;
-                      },
-                    );
-                    isChange = true;
-                  } else {
-                    if (critiqueChange.type == DocumentChangeType.modified) {
-                      int indexWhere = critiques.indexWhere(
-                        (product) {
-                          return critiqueChange.document.documentID ==
-                              product.documentID;
-                        },
-                      );
-
-                      if (indexWhere >= 0) {
-                        critiques[indexWhere] = critiqueChange.document;
-                      }
-                      isChange = true;
-                    }
-                  }
-                },
-              );
-
-              if (isChange) {
-                streamController.add(critiques);
-                add(AddCritiqueEvent());
-              }
-            },
-          );
-
-      requestNextPage();
-    }
-
-    if (event is AddCritiqueEvent) {
-      yield LoadedState(
-        docs: critiques,
-      );
-    }
-
-    if (event is RequestNextPageEvent) {
-      requestNextPage();
-    }
-  }
-
-  void requestNextPage() async {
-    if (!isRequesting && !isFinish) {
-      QuerySnapshot querySnapshot;
-      isRequesting = true;
-      if (critiques.isEmpty) {
-        querySnapshot = await Firestore.instance
-            .collection('Critiques')
-            .orderBy('created', descending: true)
-            .limit(limit)
-            .getDocuments();
-      } else {
-        querySnapshot = await Firestore.instance
-            .collection('Critiques')
-            .orderBy('created', descending: true)
-            .startAfterDocument(critiques[critiques.length - 1])
-            .limit(limit)
-            .getDocuments();
-      }
-
-      if (querySnapshot != null) {
-        int oldSize = critiques.length;
-        critiques.addAll(querySnapshot.documents);
-        int newSize = critiques.length;
-        if (oldSize != newSize) {
-          streamController.add(critiques);
-          add(AddCritiqueEvent());
+      try {
+        List<CritiqueModel> critiques =
+            await locator<CritiqueService>().retrieveCritiques();
+            
+        if (critiques.isEmpty) {
+          yield NoCritiquesState();
         } else {
-          isFinish = true;
+          yield FoundCritiquesState(critiques: critiques);
         }
+      } catch (error) {
+        _homeBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+        yield ErrorState(error: error);
       }
-      isRequesting = false;
     }
   }
 
   @override
   Future<void> close() {
-    // _tickerSubscription?.cancel();
     return super.close();
   }
 }
