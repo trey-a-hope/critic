@@ -3,11 +3,9 @@ import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/UserService.dart';
-// import 'package:critic/services/Userservice.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import '../Constants.dart';
 import 'package:flutter/src/services/message_codec.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -186,146 +184,11 @@ class SignUpPageState extends State<SignUpPage>
                     )
                   ],
                 ),
-                // Align(
-                //   alignment: Alignment.topCenter,
-                //   child: Container(
-                //     margin: EdgeInsets.only(top: 30),
-                //     child: InkWell(
-                //       child: Text(
-                //         "Forgot Password?",
-                //         textAlign: TextAlign.right,
-                //         style: TextStyle(
-                //           color: Color.fromARGB(255, 232, 63, 63),
-                //           fontFamily: "Avenir",
-                //           fontWeight: FontWeight.w800,
-                //           fontSize: 16,
-                //         ),
-                //       ),
-                //       onTap: () {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //             builder: (context) =>
-                //                 ForgotPasswordPage(),
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
         ),
       ),
     );
-
-    // return Scaffold(
-    //   body: SingleChildScrollView(
-    //     child: Container(
-    //         width: screenWidth,
-    //         height: screenHeight,
-    //         child: Padding(
-    //           padding: SCAFFOLD_PADDING,
-    //           child: isLoading
-    //               ? Spinner(text: 'Logging In...')
-    //               : Form(
-    //                   key: formKey,
-    //                   autovalidate: autoValidate,
-    //                   child: Column(
-    //                     crossAxisAlignment: CrossAxisAlignment.start,
-    //                     children: [
-    //                       SilentNavbar(
-    //                         title: 'Login',
-    //                         leftTap: () => {Navigator.of(context).pop()},
-    //                       ),
-    //                       Container(
-    //                         margin:
-    //                             EdgeInsets.only(top: 60, left: 10, right: 10),
-    //                         child: TextFormField(
-    //                           controller: emailController,
-    //                           keyboardType: TextInputType.emailAddress,
-    //                           textInputAction: TextInputAction.next,
-    //                           maxLengthEnforced: true,
-    //                           // maxLength: MyFormData.nameCharLimit,
-    //                           onFieldSubmitted: (term) {},
-    //                           validator: getIt<IValidatorService>().email,
-    //                           onSaved: (value) {},
-    //                           decoration: InputDecoration(
-    //                             focusedBorder: UnderlineInputBorder(
-    //                               borderSide: BorderSide(color: Colors.red),
-    //                             ),
-    //                             hintText: 'Email',
-    //                             // icon: Icon(Icons.email),
-    //                             fillColor: Colors.white,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                       Container(
-    //                         margin:
-    //                             EdgeInsets.only(top: 30, left: 10, right: 10),
-    //                         child: TextFormField(
-    //                           controller: passwordController,
-    //                           keyboardType: TextInputType.emailAddress,
-    //                           textInputAction: TextInputAction.next,
-    //                           maxLengthEnforced: true,
-    //                           // maxLength: MyFormData.nameCharLimit,
-    //                           onFieldSubmitted: (term) {},
-    //                           obscureText: true,
-    //                           validator: getIt<IValidatorService>().password,
-    //                           onSaved: (value) {},
-    //                           decoration: InputDecoration(
-    //                             focusedBorder: UnderlineInputBorder(
-    //                               borderSide: BorderSide(color: Colors.red),
-    //                             ),
-    //                             hintText: 'Password',
-    //                             // icon: Icon(Icons.email),
-    //                             fillColor: Colors.white,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                       Spacer(),
-    //                       Row(
-    //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //                         children: <Widget>[
-    //                           SilentButton(
-    //                             title: 'CONTINUE',
-    //                             onTap: login,
-    //                           )
-    //                         ],
-    //                       ),
-    //                       Align(
-    //                         alignment: Alignment.topCenter,
-    //                         child: Container(
-    //                           margin: EdgeInsets.only(top: 30),
-    //                           child: InkWell(
-    //                             child: Text(
-    //                               "Forgot Password?",
-    //                               textAlign: TextAlign.right,
-    //                               style: TextStyle(
-    //                                 color: Color.fromARGB(255, 232, 63, 63),
-    //                                 fontFamily: "Avenir",
-    //                                 fontWeight: FontWeight.w800,
-    //                                 fontSize: 16,
-    //                               ),
-    //                             ),
-    //                             onTap: () => {
-    //                               Navigator.push(
-    //                                 context,
-    //                                 MaterialPageRoute(
-    //                                   builder: (context) =>
-    //                                       ForgotPasswordPage(),
-    //                                 ),
-    //                               )
-    //                             },
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //         )),
-    //   ),
-    // );
   }
 }
