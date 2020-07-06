@@ -27,15 +27,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
     if (event is Login) {
-      yield LoadingState();
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: event.email, password: event.password);
+      if (event.formKey.currentState.validate()) {
+        yield LoadingState();
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: event.email, password: event.password);
 
-        yield LoginStartState(autoValidate: true, formKey: event.formKey);
-      } catch (error) {
-        _loginBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
-        yield LoginStartState(autoValidate: true, formKey: event.formKey);
+          yield LoginStartState(autoValidate: true, formKey: event.formKey);
+        } catch (error) {
+          _loginBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+          yield LoginStartState(autoValidate: true, formKey: event.formKey);
+        }
       }
     }
   }

@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
-
 import 'SearchUsersEvent.dart';
 import 'SearchUsersRepository.dart';
 import 'SearchUsersState.dart';
 
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   final SearchUsersRepository searchUsersRepository;
-  SearchUsersBloc({@required this.searchUsersRepository}) : super(null);
+  SearchUsersBloc({@required this.searchUsersRepository})
+      : super(
+          SearchUsersStateStart(),
+        );
 
   @override
   Stream<Transition<SearchUsersEvent, SearchUsersState>> transformEvents(
@@ -31,9 +32,6 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
     print(transition);
     super.onTransition(transition);
   }
-
-  @override
-  SearchUsersState get initialState => SearchUsersStateStart();
 
   @override
   Stream<SearchUsersState> mapEventToState(

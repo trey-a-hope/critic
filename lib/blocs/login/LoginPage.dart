@@ -1,11 +1,11 @@
 import 'package:critic/ServiceLocator.dart';
-import 'package:critic/pages/SignUpPage.dart';
+import 'package:critic/blocs/signUp/Bloc.dart' as SIGN_UP_BP;
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'Bloc.dart';
+import 'Bloc.dart' as LOGIN_BP;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -14,15 +14,15 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin
-    implements LoginBlocDelegate {
-  LoginBloc _loginBloc;
+    implements LOGIN_BP.LoginBlocDelegate {
+  LOGIN_BP.LoginBloc _loginBloc;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    _loginBloc = BlocProvider.of<LoginBloc>(context);
+    _loginBloc = BlocProvider.of<LOGIN_BP.LoginBloc>(context);
     _loginBloc.setDelegate(delegate: this);
 
     super.initState();
@@ -46,14 +46,13 @@ class LoginPageState extends State<LoginPage>
         title: Text('Login'),
         centerTitle: true,
       ),
-      body: BlocBuilder<LoginBloc, LoginState>(
-        //Change view on state changes.
-        builder: (BuildContext context, LoginState state) {
-          if (state is LoadingState) {
+      body: BlocBuilder<LOGIN_BP.LoginBloc, LOGIN_BP.LoginState>(
+        builder: (BuildContext context, LOGIN_BP.LoginState state) {
+          if (state is LOGIN_BP.LoadingState) {
             return Spinner();
           }
 
-          if (state is LoginStartState) {
+          if (state is LOGIN_BP.LoginStartState) {
             return SafeArea(
               child: Container(
                 height: screenHeight,
@@ -115,7 +114,7 @@ class LoginPageState extends State<LoginPage>
                           child: Text('Login'),
                           onPressed: () {
                             _loginBloc.add(
-                              Login(
+                              LOGIN_BP.Login(
                                 email: _emailController.text,
                                 password: _passwordController.text,
                                 formKey: state.formKey,
@@ -130,8 +129,12 @@ class LoginPageState extends State<LoginPage>
                           child: Text('Sign Up'),
                           onPressed: () {
                             Route route = MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    SignUpPage());
+                              builder: (context) => BlocProvider(
+                                create: (context) => SIGN_UP_BP.SignUpBloc(),
+                                child: SIGN_UP_BP.SignUpPage(),
+                              ),
+                            );
+
                             Navigator.push(context, route);
                           },
                           shape: RoundedRectangleBorder(
