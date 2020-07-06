@@ -6,13 +6,13 @@ import 'package:critic/blocs/searchUsers/SearchUsersBloc.dart';
 import 'package:critic/blocs/searchUsers/SearchUsersCache.dart';
 import 'package:critic/blocs/searchUsers/SearchUsersPage.dart';
 import 'package:critic/blocs/searchUsers/SearchUsersRepository.dart';
-import 'package:critic/pages/EditProfilePage.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:critic/widgets/AppBarLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
+import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EntryPage extends StatefulWidget {
@@ -56,7 +56,6 @@ class EntryPageState extends State<EntryPage> {
       activeColor: Colors.red,
       textAlign: TextAlign.center,
     ),
-
     BottomNavyBarItem(
       icon: Icon(Icons.person),
       title: Text(
@@ -150,11 +149,17 @@ class EntryPageState extends State<EntryPage> {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(),
+                Route route = MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => EDIT_PROFILE_BP.EditProfileBloc()
+                      ..add(
+                        EDIT_PROFILE_BP.LoadPageEvent(),
+                      ),
+                    child: EDIT_PROFILE_BP.EditProfilePage(),
                   ),
                 );
+
+                Navigator.push(context, route);
               },
             )
           ],

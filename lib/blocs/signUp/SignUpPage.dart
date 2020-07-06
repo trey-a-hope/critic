@@ -1,18 +1,11 @@
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/UserService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/message_codec.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../Constants.dart';
 import 'Bloc.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -28,10 +21,6 @@ class SignUpPageState extends State<SignUpPage>
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   SignUpBloc _signUpBloc;
-  // final formKey = GlobalKey<FormState>();
-  // bool autoValidate = false;
-  // bool isLoading = false;
-
   @override
   void initState() {
     _signUpBloc = BlocProvider.of<SignUpBloc>(context);
