@@ -202,8 +202,8 @@ class CritiqueViewState extends State<CritiqueView> {
                           bool confirm = await locator<ModalService>()
                               .showConfirmation(
                                   context: context,
-                                  title: 'Report This ',
-                                  message: '');
+                                  title: 'Report This?',
+                                  message: 'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline on the next page refresh.');
 
                           if (!confirm) return;
 

@@ -1,10 +1,10 @@
+import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
+import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
+
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'SearchUsersBloc.dart';
-import 'SearchUsersEvent.dart';
-import 'SearchUsersState.dart';
 
 class SearchUsersPage extends StatelessWidget {
   @override
@@ -28,12 +28,13 @@ class _SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<_SearchBar> {
   final TextEditingController _textController = TextEditingController();
-  SearchUsersBloc _searchUsersBloc;
+  SEARCH_USERS_BP.SearchUsersBloc _searchUsersBloc;
 
   @override
   void initState() {
     super.initState();
-    _searchUsersBloc = BlocProvider.of<SearchUsersBloc>(context);
+    _searchUsersBloc =
+        BlocProvider.of<SEARCH_USERS_BP.SearchUsersBloc>(context);
   }
 
   @override
@@ -49,7 +50,7 @@ class _SearchBarState extends State<_SearchBar> {
       autocorrect: false,
       onChanged: (text) {
         _searchUsersBloc.add(
-          TextChangedEvent(text: text),
+          SEARCH_USERS_BP.TextChangedEvent(text: text),
         );
       },
       decoration: InputDecoration(
@@ -66,17 +67,18 @@ class _SearchBarState extends State<_SearchBar> {
 
   void _onClearTapped() {
     _textController.text = '';
-    _searchUsersBloc.add(TextChangedEvent(text: ''));
+    _searchUsersBloc.add(SEARCH_USERS_BP.TextChangedEvent(text: ''));
   }
 }
 
 class _SearchBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchUsersBloc, SearchUsersState>(
-      bloc: BlocProvider.of<SearchUsersBloc>(context),
-      builder: (BuildContext context, SearchUsersState state) {
-        if (state is SearchUsersStateStart) {
+    return BlocBuilder<SEARCH_USERS_BP.SearchUsersBloc,
+        SEARCH_USERS_BP.SearchUsersState>(
+      bloc: BlocProvider.of<SEARCH_USERS_BP.SearchUsersBloc>(context),
+      builder: (BuildContext context, SEARCH_USERS_BP.SearchUsersState state) {
+        if (state is SEARCH_USERS_BP.SearchUsersStateStart) {
           return Expanded(
             child: Center(
               child: Text('Enter a username...'),
@@ -84,11 +86,11 @@ class _SearchBody extends StatelessWidget {
           );
         }
 
-        if (state is SearchUsersStateLoading) {
+        if (state is SEARCH_USERS_BP.SearchUsersStateLoading) {
           return Spinner();
         }
 
-        if (state is SearchUsersStateError) {
+        if (state is SEARCH_USERS_BP.SearchUsersStateError) {
           return Expanded(
             child: Center(
               child: Text(state.error.message),
@@ -96,7 +98,7 @@ class _SearchBody extends StatelessWidget {
           );
         }
 
-        if (state is SearchUsersStateNoResults) {
+        if (state is SEARCH_USERS_BP.SearchUsersStateNoResults) {
           return Expanded(
             child: Center(
               child: Text('No results found. :('),
@@ -104,7 +106,7 @@ class _SearchBody extends StatelessWidget {
           );
         }
 
-        if (state is SearchUsersStateFoundResults) {
+        if (state is SEARCH_USERS_BP.SearchUsersStateFoundResults) {
           final List<UserModel> users = state.users;
 
           return Expanded(
@@ -121,13 +123,18 @@ class _SearchBody extends StatelessWidget {
                   subtitle: Text('${user.email}'),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MovieDetailsPage(
-                    //       imdbID: movie.imdbID,
-                    //     ),
-                    //   ),
-                    // );
+                    Route route = MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
+                          otherUserID: user.uid,
+                        )..add(
+                            OTHER_PROFILE_BP.LoadPageEvent(),
+                          ),
+                        child: OTHER_PROFILE_BP.OtherProfilePage(),
+                      ),
+                    );
+
+                    Navigator.push(context, route);
                   },
                 );
               },
