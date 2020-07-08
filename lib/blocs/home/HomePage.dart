@@ -42,16 +42,25 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
         }
 
         if (state is FoundCritiquesState) {
-          return ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              color: Colors.black,
+          return RefreshIndicator(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                color: Colors.black,
+              ),
+              itemCount: state.critiques.length,
+              itemBuilder: (BuildContext context, int index) {
+                CritiqueModel critique = state.critiques[index];
+                return CritiqueView(
+                  critique: critique,
+                );
+              },
             ),
-            itemCount: state.critiques.length,
-            itemBuilder: (BuildContext context, int index) {
-              CritiqueModel critique = state.critiques[index];
-              return CritiqueView(
-                critique: critique,
+            onRefresh: () {
+              _homeBloc.add(
+                LoadPageEvent(),
               );
+
+              return;
             },
           );
         }
