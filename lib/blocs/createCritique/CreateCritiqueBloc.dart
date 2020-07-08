@@ -73,7 +73,7 @@ class CreateCritiqueBloc
 
           _createCritiqueBlocDelegate.clearText();
 
-          _createCritiqueBlocDelegate.showMessage(message: 'Critique added!');
+          _createCritiqueBlocDelegate.showMessage(message: 'Critique added, return to home page and refresh.');
 
           yield CreateCritiqueStartState(
             formKey: formKey,

@@ -1,5 +1,6 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
+import 'package:critic/blocs/otherProfile/Bloc.dart';
 import 'package:critic/main.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'RoundedContainer.dart';
 
@@ -182,11 +184,16 @@ class CritiqueViewState extends State<CritiqueView> {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        userWhoPosted.username,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            '${userWhoPosted.username}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text('${timeago.format(critique.created)}', style: TextStyle(fontSize: 12),)
+                        ],
                       ),
                       Spacer(),
                       IconButton(
@@ -220,7 +227,18 @@ class CritiqueViewState extends State<CritiqueView> {
                       IconButton(
                         tooltip: '${userWhoPosted.username}',
                         onPressed: () async {
-                          print('${userWhoPosted.username}');
+                          Route route = MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => OtherProfileBloc(
+                                otherUserID: userWhoPosted.uid,
+                              )..add(
+                                  LoadPageEvent(),
+                                ),
+                              child: OtherProfilePage(),
+                            ),
+                          );
+
+                          Navigator.push(context, route);
                         },
                         color: Colors.purple,
                         icon: Icon(Icons.chevron_right),
