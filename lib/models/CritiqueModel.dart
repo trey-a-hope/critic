@@ -39,6 +39,7 @@ class CritiqueModel {
       'message': message,
       'modified': modified,
       'created': created,
+      'safe': safe,
     };
   }
 }

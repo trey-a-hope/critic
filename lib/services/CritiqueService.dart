@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
   Future<List<CritiqueModel>> retrieveCritiques();
+  Future<void> updateCritique(
+      {@required String critiqueID, @required dynamic data});
 }
 
 class CritiqueService extends ICritiqueService {
@@ -41,9 +43,15 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<List<CritiqueModel>> retrieveCritiques() async {
+  Future<List<CritiqueModel>> retrieveCritiques({bool safe}) async {
     try {
-      QuerySnapshot querySnapshot = await _critiquesDB.getDocuments();
+      Query query = _critiquesDB;
+
+      if (safe != null) {
+        query = query.where('safe', isEqualTo: safe);
+      }
+
+      QuerySnapshot querySnapshot = await query.getDocuments();
 
       List<CritiqueModel> critiques = querySnapshot.documents
           .map(
@@ -53,6 +61,21 @@ class CritiqueService extends ICritiqueService {
           .toList();
 
       return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> updateCritique({
+    @required String critiqueID,
+    @required dynamic data,
+  }) async {
+    try {
+      await _critiquesDB.document(critiqueID).updateData(data);
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),

@@ -29,7 +29,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         List<CritiqueModel> critiques =
-            await locator<CritiqueService>().retrieveCritiques();
+            await locator<CritiqueService>().retrieveCritiques(safe: true);
             
         if (critiques.isEmpty) {
           yield NoCritiquesState();

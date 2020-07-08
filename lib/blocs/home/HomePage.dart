@@ -37,16 +37,13 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
 
         if (state is NoCritiquesState) {
           return Center(
-            child: Text('None of your followees have critiqued.'),
+            child: Text('None critiques at this moment.'),
           );
         }
 
         if (state is FoundCritiquesState) {
           return RefreshIndicator(
-            child: ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                color: Colors.black,
-              ),
+            child: ListView.builder(
               itemCount: state.critiques.length,
               itemBuilder: (BuildContext context, int index) {
                 CritiqueModel critique = state.critiques[index];
