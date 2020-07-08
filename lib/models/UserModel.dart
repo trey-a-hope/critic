@@ -10,17 +10,16 @@ class UserModel {
   String uid;
   String username;
 
-  UserModel(
-      {
-      @required this.imgUrl,
-      @required this.email,
-      @required this.modified,
-      @required this.created,
-      @required this.uid,
-      @required this.username});
+  UserModel({
+    @required this.imgUrl,
+    @required this.email,
+    @required this.modified,
+    @required this.created,
+    @required this.uid,
+    @required this.username,
+  });
 
-  static UserModel extractDocument(
-      {@required DocumentSnapshot ds}) {
+  static UserModel extractDocument({@required DocumentSnapshot ds}) {
     return UserModel(
       imgUrl: ds.data['imgUrl'],
       email: ds.data['email'],
@@ -32,19 +31,18 @@ class UserModel {
   }
 
   static UserModel extractAlgoliaObjectSnapshot(AlgoliaObjectSnapshot aob) {
-  Map<String, dynamic> data = aob.data;
+    Map<String, dynamic> data = aob.data;
     return UserModel(
       imgUrl: data['imgUrl'],
       email: data['email'],
-      // created: data['created'].toDate(),
-      // modified: data['modified'].toDate(),
+      // created: data['created'].toDate(),//todo:
+      // modified: data['modified'].toDate(),//todo:
       created: DateTime.now(),
       modified: DateTime.now(),
       uid: data['uid'],
       username: data['username'],
     );
   }
-
 
   Map<String, dynamic> toMap() {
     return {

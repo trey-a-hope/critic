@@ -1,10 +1,11 @@
 import 'package:critic/ServiceLocator.dart';
+import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/pages/CritiquePage.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieDetailsPage extends StatefulWidget {
   const MovieDetailsPage({Key key, @required this.imdbID}) : super(key: key);
@@ -119,17 +120,22 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
                     child: GoodButton(
                       title: 'Write Critique',
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CritiquePage(
-                              movie: movie,
-                            ),
+                        Route route = MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) =>
+                                CREATE_CRITIQUE_BP.CreateCritiqueBloc(
+                                    movie: movie)
+                                  ..add(
+                                    CREATE_CRITIQUE_BP.LoadPageEvent(),
+                                  ),
+                            child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
                           ),
                         );
+
+                        Navigator.push(context, route);
                       },
                     ),
                   ),
-
                   SizedBox(
                     height: 20,
                   )
@@ -139,7 +145,5 @@ class MovieDetailsPageState extends State<MovieDetailsPage> {
         },
       ),
     );
-
-  
   }
 }
