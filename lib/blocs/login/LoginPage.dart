@@ -60,6 +60,7 @@ class LoginPageState extends State<LoginPage>
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Form(
+                    key: state.formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,

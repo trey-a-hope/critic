@@ -7,6 +7,9 @@ abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
   Future<CritiqueModel> getCritique({@required String critiqueID});
   Future<List<CritiqueModel>> retrieveCritiques();
+  Future<List<CritiqueModel>> retrieveCritiquesForUser({
+    @required String userID,
+  });
   Future<void> updateCritique(
       {@required String critiqueID, @required dynamic data});
 }
@@ -107,6 +110,29 @@ class CritiqueService extends ICritiqueService {
           (await _critiquesDB.document(critiqueID).get());
 
       return CritiqueModel.extractDocument(ds: documentSnapshot);
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<CritiqueModel>> retrieveCritiquesForUser(
+      {@required String userID}) async {
+    try {
+      Query query = _critiquesDB.where('userID', isEqualTo: userID);
+
+      QuerySnapshot querySnapshot = await query.getDocuments();
+
+      List<CritiqueModel> critiques = querySnapshot.documents
+          .map(
+            (DocumentSnapshot documentSnapshot) =>
+                CritiqueModel.extractDocument(ds: documentSnapshot),
+          )
+          .toList();
+
+      return critiques;
     } catch (e) {
       throw Exception(
         e.toString(),
