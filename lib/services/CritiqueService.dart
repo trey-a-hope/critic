@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
+  Future<CritiqueModel> getCritique({@required String critiqueID});
   Future<List<CritiqueModel>> retrieveCritiques();
   Future<void> updateCritique(
       {@required String critiqueID, @required dynamic data});
@@ -14,25 +15,39 @@ class CritiqueService extends ICritiqueService {
   final CollectionReference _critiquesDB =
       Firestore.instance.collection('Critiques');
   final CollectionReference _dataDB = Firestore.instance.collection('Data');
+  final CollectionReference _followersDB =
+      Firestore.instance.collection('Followers');
 
   @override
   Future<void> createCritique({@required CritiqueModel critique}) async {
     try {
-      //Create new batch object.
       final WriteBatch batch = Firestore.instance.batch();
-      //Create document reference for the new item.
+
       final DocumentReference critiqueDocRef = _critiquesDB.document();
-      //Create document reference for the table counts.
+      critique.id = critiqueDocRef.documentID;
+      batch.setData(
+        critiqueDocRef,
+        critique.toMap(),
+      );
+
       final DocumentReference tableCountsDocRef =
           _dataDB.document('tableCounts');
-      //Set data for new reference.
-      critique.id = critiqueDocRef.documentID;
-      //Set data for user.
-      batch.setData(critiqueDocRef, critique.toMap());
-      //Increase count value for total likes on this template.
       batch.updateData(
-          tableCountsDocRef, {'critiques': FieldValue.increment(1)});
-      //Commit batch.
+        tableCountsDocRef,
+        {
+          'critiques': FieldValue.increment(1),
+        },
+      );
+
+      final DocumentReference followerDoc =
+          _followersDB.document(critique.userID);
+      batch.updateData(followerDoc, {
+        'lastPost': DateTime.now(),
+        'recentPosts': FieldValue.arrayUnion([
+          {'id': critique.id, 'date': DateTime.now()}
+        ])
+      });
+
       batch.commit();
       return;
     } catch (e) {
@@ -76,6 +91,22 @@ class CritiqueService extends ICritiqueService {
     try {
       await _critiquesDB.document(critiqueID).updateData(data);
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<CritiqueModel> getCritique({
+    @required String critiqueID,
+  }) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          (await _critiquesDB.document(critiqueID).get());
+
+      return CritiqueModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
       throw Exception(
         e.toString(),

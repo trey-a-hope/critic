@@ -3,6 +3,7 @@ import 'package:critic/blocs/otherProfile/OtherProfileEvent.dart';
 import 'package:critic/blocs/otherProfile/OtherProfileState.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/FollowerService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,7 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
   UserModel _otherUser;
   UserModel _currentUser;
   OtherProfileBlocDelegate _otherProfileBlocDelegate;
+  bool _isFollowing;
 
   void setDelegate({@required OtherProfileBlocDelegate delegate}) {
     this._otherProfileBlocDelegate = delegate;
@@ -39,16 +41,21 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
 
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        yield LoadedState(otherUser: _otherUser, isFollowing: false);
+        _isFollowing = await locator<FollowerService>()
+            .followerAisFollowingUserB(
+                userAID: _currentUser.uid, userBID: _otherUser.uid);
+
+        yield LoadedState(otherUser: _otherUser, isFollowing: _isFollowing);
       } catch (error) {
         _otherProfileBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
 
-        yield LoadedState(otherUser: _otherUser, isFollowing: false);
+        yield LoadedState(otherUser: _otherUser, isFollowing: _isFollowing);
       }
     }
 
     if (event is FollowEvent) {
+      //todo delete this, it's not needed.
       if (_otherUser.uid == _currentUser.uid) {
         _otherProfileBlocDelegate.showMessage(
           message: 'Sorry, you can\'t follow yourself.',
@@ -56,12 +63,20 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
         return;
       }
 
-      //todo: follow user.
+      locator<FollowerService>().follow(
+        followed: _otherUser.uid,
+        follower: _currentUser.uid,
+      );
+
       yield LoadedState(otherUser: _otherUser, isFollowing: true);
     }
 
     if (event is UnfollowEvent) {
-      //todo: unfollow user.
+      locator<FollowerService>().unfollow(
+        followed: _otherUser.uid,
+        follower: _currentUser.uid,
+      );
+
       yield LoadedState(otherUser: _otherUser, isFollowing: false);
     }
   }

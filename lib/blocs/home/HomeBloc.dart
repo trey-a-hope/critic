@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FollowerService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
@@ -17,6 +20,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
 
   HomeBlocDelegate _homeBlocDelegate;
+  UserModel _currentUser;
 
   void setDelegate({@required HomeBlocDelegate delegate}) {
     this._homeBlocDelegate = delegate;
@@ -28,9 +32,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield LoadingState();
 
       try {
-        List<CritiqueModel> critiques =
-            await locator<CritiqueService>().retrieveCritiques(safe: true);
-            
+        _currentUser = await locator<AuthService>().getCurrentUser();
+
+        final List<String> critiqueIDs =
+            await locator<FollowerService>().getCritiqueIDSForFeed(
+          userID: _currentUser.uid,
+        );
+
+        List<CritiqueModel> critiques = List<CritiqueModel>();
+        for (var i = 0; i < critiqueIDs.length; i++) {
+          final CritiqueModel critique = await locator<CritiqueService>()
+              .getCritique(critiqueID: critiqueIDs[i]);
+
+          critiques.add(critique);
+        }
+
+        critiques.sort((a, b) => b.created.millisecondsSinceEpoch - a.created.millisecondsSinceEpoch);
+
         if (critiques.isEmpty) {
           yield NoCritiquesState();
         } else {

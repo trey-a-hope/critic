@@ -1,5 +1,6 @@
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FollowerService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/StorageService.dart';
@@ -17,6 +18,7 @@ void setUpLocater() {
   locator.registerLazySingleton(() => ModalService());
   locator.registerLazySingleton(() => CritiqueService());
   locator.registerLazySingleton(() => StorageService());
+  locator.registerLazySingleton(() => FollowerService());
 
   //Register models?
   // locator.registerFactory<UserModel>(() => UserModel());

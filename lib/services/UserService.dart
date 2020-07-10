@@ -15,24 +15,30 @@ abstract class IUserService {
 }
 
 class UserService extends IUserService {
-  final CollectionReference usersDB = Firestore.instance.collection('Users');
-  final CollectionReference dataDB = Firestore.instance.collection('Data');
+  final CollectionReference _usersDB = Firestore.instance.collection('Users');
+  final CollectionReference _dataDB = Firestore.instance.collection('Data');
+  final CollectionReference _followersDB =
+      Firestore.instance.collection('Followers');
 
   @override
   Future<void> createUser({@required UserModel user}) async {
     try {
-      //Create new batch object.
       final WriteBatch batch = Firestore.instance.batch();
-      //Create document reference for the new user.
-      final DocumentReference userDocRef = usersDB.document(user.uid);
-      //Create document reference for the table counts.
+
+      final DocumentReference userDocRef = _usersDB.document(user.uid);
+      batch.setData(
+        userDocRef,
+        user.toMap(),
+      );
+
       final DocumentReference tableCountsDocRef =
-          dataDB.document('tableCounts');
-      //Set data for user.
-      batch.setData(userDocRef, user.toMap());
-      //Increase count value for total likes on this template.
+          _dataDB.document('tableCounts');
       batch.updateData(tableCountsDocRef, {'users': FieldValue.increment(1)});
-      //Commit batch.
+
+      final DocumentReference followerDocRef = _followersDB.document(user.uid);
+      batch.setData(
+          followerDocRef, {'lastPost': null, 'recentPosts': [], 'users': []});
+
       await batch.commit();
       return;
     } catch (e) {
@@ -45,7 +51,7 @@ class UserService extends IUserService {
   @override
   Future<UserModel> retrieveUser({@required String uid}) async {
     try {
-      DocumentSnapshot documentSnapshot = await usersDB.document(uid).get();
+      DocumentSnapshot documentSnapshot = await _usersDB.document(uid).get();
       return UserModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
       throw Exception(e.toString());
@@ -54,14 +60,15 @@ class UserService extends IUserService {
 
   @override
   Stream<QuerySnapshot> streamUsers() {
-    Query query = usersDB;
+    Query query = _usersDB;
     return query.snapshots();
   }
 
   @override
-  Future<void> updateUser({@required String uid, Map<String, dynamic> data}) async {
+  Future<void> updateUser(
+      {@required String uid, Map<String, dynamic> data}) async {
     try {
-      await usersDB.document(uid).updateData(data);
+      await _usersDB.document(uid).updateData(data);
       return;
     } catch (e) {
       throw Exception(
