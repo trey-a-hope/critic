@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FollowerService.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,19 +13,47 @@ import 'Bloc.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(null);
 
-  @override
-  ProfileState get initialState => ProfileState();
-
   UserModel _currentUser;
+
+  List<String> _followersIDs;
+
+  List<String> _followingsIDs;
+
+  List<CritiqueModel> _critiques;
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is LoadPageEvent) {
       yield LoadingState();
 
-      _currentUser = await locator<AuthService>().getCurrentUser();
+      try {
+        _currentUser = await locator<AuthService>().getCurrentUser();
 
-      yield LoadedState(currentUser: _currentUser);
+        _critiques = await locator<CritiqueService>()
+            .retrieveCritiquesForUser(userID: _currentUser.uid);
+
+        _critiques.sort((a, b) =>
+            b.created.millisecondsSinceEpoch -
+            a.created.millisecondsSinceEpoch);
+
+        _critiques.removeWhere((critique) => critique.safe == false);
+
+        _followersIDs = await locator<FollowerService>()
+            .getFollowersIDS(userID: _currentUser.uid);
+
+        _followingsIDs = await locator<FollowerService>()
+            .getFollowingsIDS(userID: _currentUser.uid);
+
+        yield LoadedState(
+          currentUser: _currentUser,
+          followersCount: _followersIDs.length,
+          followingsCount: _followingsIDs.length,
+          critiquesCount: _critiques.length,
+          critiques: _critiques,
+        );
+      } catch (error) {
+        yield ErrorState(error: error);
+      }
     }
   }
 }

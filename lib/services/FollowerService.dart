@@ -23,6 +23,9 @@ abstract class IFollowerService {
   Future<List<String>> getCritiqueIDSForFeed({
     @required String userID,
   });
+
+  Future<List<String>> getFollowersIDS({@required String userID});
+  Future<List<String>> getFollowingsIDS({@required String userID});
 }
 
 class FollowerService extends IFollowerService {
@@ -97,11 +100,67 @@ class FollowerService extends IFollowerService {
   }
 
   @override
-  Future<bool> followerAisFollowingUserB(
-      {@required String userAID, @required String userBID}) async {
+  Future<bool> followerAisFollowingUserB({
+    @required String userAID,
+    @required String userBID,
+  }) async {
     final DocumentSnapshot followersRef =
         await _followersDB.document(userBID).get();
     final List<dynamic> followers = followersRef.data['users'];
     return followers.contains(userAID);
+  }
+
+  @override
+  Future<List<String>> getFollowersIDS({
+    @required String userID,
+  }) async {
+    DocumentSnapshot followerDocSnapshot =
+        await _followersDB.document(userID).get();
+
+    dynamic followersIDS = followerDocSnapshot.data['users'];
+
+    List<String> followersIDs = List<String>();
+
+    for (dynamic followersID in followersIDS) {
+      followersIDs.add(followersID);
+    }
+
+    return followersIDs;
+  }
+
+  @override
+  Future<List<String>> getFollowingsIDS({
+    @required String userID,
+  }) async {
+    final QuerySnapshot followedUsers = await _followersDB
+        .where(
+          'users',
+          arrayContains: userID,
+        )
+        .getDocuments();
+
+    List<String> followingsIDs = followedUsers.documents
+        .map((DocumentSnapshot doc) => doc.documentID)
+        .toList();
+
+    return followingsIDs;
+
+    // Iterable<Map<String, dynamic>> followedUsersData =
+    //     followedUsers.documents.map((doc) => doc.data);
+
+    // if (followedUsersData.isEmpty) return [];
+
+    // List<String> critiqueIDs = List<String>();
+
+    // for (Map<String, dynamic> followedUserData in followedUsersData) {
+    //   for (Map<String, dynamic> recentPostsMap
+    //       in followedUserData['recentPosts']) {
+    //     critiqueIDs.add(
+    //       recentPostsMap['id'],
+    //     );
+    //   }
+    // }
+
+    // return critiqueIDs;
   }
 }
