@@ -12,6 +12,7 @@ import '../../Constants.dart';
 
 abstract class SignUpBlocDelegate {
   void navigateHome();
+  void navigateToTermsServicePage();
   void showMessage({@required String message});
 }
 
@@ -21,10 +22,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           SignUpStartState(
             autoValidate: false,
             formKey: GlobalKey<FormState>(),
+            termsServicesChecked: false,
           ),
         );
 
   SignUpBlocDelegate _signUpBlocDelegate;
+  bool _termsServicesChecked = false;
 
   void setDelegate({@required SignUpBlocDelegate delegate}) {
     this._signUpBlocDelegate = delegate;
@@ -58,13 +61,32 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
           _signUpBlocDelegate.navigateHome();
 
-          yield SignUpStartState(autoValidate: true, formKey: event.formKey);
+          yield SignUpStartState(
+              autoValidate: true,
+              formKey: event.formKey,
+              termsServicesChecked: _termsServicesChecked);
         } catch (error) {
           _signUpBlocDelegate.showMessage(
               message: 'Error: ${error.toString()}');
-          yield SignUpStartState(autoValidate: true, formKey: event.formKey);
+          yield SignUpStartState(
+              autoValidate: true,
+              formKey: event.formKey,
+              termsServicesChecked: _termsServicesChecked);
         }
       }
+    }
+
+    if (event is NavigateToTermsServicePageEvent) {
+      _signUpBlocDelegate.navigateToTermsServicePage();
+    }
+
+    if (event is TermsServiceCheckboxEvent) {
+      _termsServicesChecked = event.checked;
+
+      yield SignUpStartState(
+          autoValidate: true,
+          formKey: event.formKey,
+          termsServicesChecked: _termsServicesChecked);
     }
   }
 }

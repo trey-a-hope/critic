@@ -1,5 +1,6 @@
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart';
+import 'package:critic/pages/TermsServicePage.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/GoodButton.dart';
@@ -34,7 +35,12 @@ class SignUpPageState extends State<SignUpPage>
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Sign Up'),
+        title: Text(
+          'Sign Up',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
       ),
       body: BlocBuilder<SignUpBloc, SignUpState>(
@@ -117,13 +123,55 @@ class SignUpPageState extends State<SignUpPage>
                           ),
                         ),
                       ),
+                      CheckboxListTile(
+                        title: InkWell(
+                          onTap: () {
+                            Route route = MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  TermsServicePage(),
+                            );
+                            Navigator.of(context).push(route);
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 12),
+                              children: [
+                                TextSpan(text: 'I accept and agree to the '),
+                                TextSpan(
+                                  text: 'Terms & Services',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                TextSpan(text: ' of Critic.')
+                              ],
+                            ),
+                          ),
+                        ),
+                        value: state.termsServicesChecked,
+                        onChanged: (newValue) {
+                          _signUpBloc.add(
+                            TermsServiceCheckboxEvent(
+                                formKey: state.formKey, checked: newValue),
+                          );
+                        },
+                      ),
                       Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          GoodButton(
-                            title: 'SIGN UP',
-                            onTap: () {
+                          RaisedButton(
+                            child: Text('SIGN UP'),
+                            color: Colors.red,
+                            textColor: Colors.white,
+                            onPressed: () {
+                              if (!state.termsServicesChecked) {
+                                locator<ModalService>().showInSnackBar(
+                                    scaffoldKey: _scaffoldKey,
+                                    message:
+                                        'Error: You must check the Terms & Service first.');
+                                return;
+                              }
+
                               _signUpBloc.add(
                                 SignUp(
                                   formKey: state.formKey,
@@ -160,5 +208,14 @@ class SignUpPageState extends State<SignUpPage>
   void showMessage({String message}) {
     locator<ModalService>()
         .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+  }
+
+  @override
+  void navigateToTermsServicePage() {
+    Route route = MaterialPageRoute(
+      builder: (BuildContext context) => TermsServicePage(),
+    );
+
+    Navigator.of(context).push(route);
   }
 }

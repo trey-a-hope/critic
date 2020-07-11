@@ -43,7 +43,12 @@ class LoginPageState extends State<LoginPage>
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Login'),
+        title: Text(
+          'Login',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
       ),
       body: BlocBuilder<LOGIN_BP.LoginBloc, LOGIN_BP.LoginState>(

@@ -10,9 +10,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  final String timeFormat = 'MMM d, yyyy @ h:mm a';
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  ProfileBloc profileBloc;
+  final String _timeFormat = 'MMM d, yyyy @ h:mm a';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
@@ -21,7 +21,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    profileBloc = BlocProvider.of<ProfileBloc>(context);
+    _profileBloc = BlocProvider.of<ProfileBloc>(context);
 
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (BuildContext context, ProfileState state) {
@@ -102,7 +102,7 @@ class ProfilePageState extends State<ProfilePage> {
                                       child: Column(
                                         children: <Widget>[
                                           Text(
-                                            DateFormat(timeFormat).format(
+                                            DateFormat(_timeFormat).format(
                                                 state.currentUser.created),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),

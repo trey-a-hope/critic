@@ -7,24 +7,10 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MovieDetailsPage extends StatefulWidget {
-  const MovieDetailsPage({Key key, @required this.imdbID}) : super(key: key);
+class MovieDetailsPage extends StatelessWidget {
+  MovieDetailsPage({@required this.imdbID});
   final String imdbID;
-
-  @override
-  State createState() => MovieDetailsPageState(imdbID: imdbID);
-}
-
-class MovieDetailsPageState extends State<MovieDetailsPage> {
-  MovieDetailsPageState({@required this.imdbID});
-  final String imdbID;
-  double imageSize;
   final double listViewBuilderPadding = 10;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

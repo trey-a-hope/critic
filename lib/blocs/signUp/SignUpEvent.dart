@@ -1,3 +1,4 @@
+import 'package:critic/blocs/signUp/Bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,25 @@ class SignUp extends SignUpEvent {
         username,
         email,
         password,
+        formKey,
+      ];
+}
+
+class NavigateToTermsServicePageEvent extends SignUpEvent {
+  List<Object> get props => [];
+}
+
+class TermsServiceCheckboxEvent extends SignUpEvent {
+  final bool checked;
+  final GlobalKey<FormState> formKey;
+
+  TermsServiceCheckboxEvent({
+    @required this.checked,
+    @required this.formKey,
+  });
+
+  List<Object> get props => [
+        checked,
         formKey,
       ];
 }

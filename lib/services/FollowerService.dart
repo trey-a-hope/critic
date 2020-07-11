@@ -87,7 +87,9 @@ class FollowerService extends IFollowerService {
     for (Map<String, dynamic> followedUserData in followedUsersData) {
       for (Map<String, dynamic> recentPostsMap
           in followedUserData['recentPosts']) {
-        critiqueIDs.add(recentPostsMap['id']);
+        critiqueIDs.add(
+          recentPostsMap['id'],
+        );
       }
     }
 
