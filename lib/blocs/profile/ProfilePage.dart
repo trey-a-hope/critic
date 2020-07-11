@@ -201,17 +201,23 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Expanded(
-                      child: ListView.builder(
-                    addAutomaticKeepAlives: true,
-                    itemCount: state.critiques.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      CritiqueModel critique = state.critiques[index];
-                      return CritiqueView(
-                        currentUser: state.currentUser,
-                        critique: critique,
-                      );
-                    },
-                  ))
+                    child: state.critiques.isEmpty
+                        ? Center(
+                            child:
+                                Text('You have no critiques at the moment...'),
+                          )
+                        : ListView.builder(
+                            addAutomaticKeepAlives: true,
+                            itemCount: state.critiques.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              CritiqueModel critique = state.critiques[index];
+                              return CritiqueView(
+                                currentUser: state.currentUser,
+                                critique: critique,
+                              );
+                            },
+                          ),
+                  )
                 ],
               ),
             ],

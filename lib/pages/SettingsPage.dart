@@ -67,6 +67,7 @@ class SettingsPage extends StatelessWidget {
             Navigator.push(context, route);
           },
         ),
+        Divider(),
         ListTile(
           leading: Icon(
             Icons.exit_to_app,
