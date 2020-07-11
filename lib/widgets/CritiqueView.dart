@@ -72,43 +72,6 @@ class CritiqueViewState extends State<CritiqueView> {
               movie: movie,
               userWhoPosted: userWhoPosted,
             );
-
-          // return ListTile(
-          //   leading: CircleAvatar(
-          //     backgroundImage: NetworkImage(movie.poster),
-          //   ),
-          //   title: Text(
-          //     movie.title,
-          //     textAlign: TextAlign.center,
-          //     style: TextStyle(
-          //         color: Colors.red,
-          //         fontSize: 16,
-          //         fontWeight: FontWeight.bold),
-          //   ),
-          //   subtitle: RichText(
-          //     textAlign: TextAlign.center,
-          //     text: TextSpan(
-          //       children: [
-          //         TextSpan(
-          //           text: '\n\"${critique.message}\"',
-          //           style: TextStyle(
-          //               color: Colors.black,
-          //               fontFamily: 'Montserrat',
-          //               fontSize: 18),
-          //         ),
-          //         TextSpan(
-          //           text:
-          //               '\n\n${user.username}, ${timeago.format(critique.created)}',
-          //           style: TextStyle(
-          //               color: Colors.grey, fontFamily: 'Montserrat'),
-          //         )
-          //       ],
-          //     ),
-          //   ),
-          //   trailing: CircleAvatar(
-          //     backgroundImage: NetworkImage(user.imgUrl),
-          //   ),
-          // );
         }
       },
     );
@@ -175,11 +138,27 @@ class CritiqueViewState extends State<CritiqueView> {
                   Spacer(),
                   Row(
                     children: <Widget>[
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundImage: NetworkImage(
-                          userWhoPosted.imgUrl,
+                      InkWell(
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundImage: NetworkImage(
+                            userWhoPosted.imgUrl,
+                          ),
                         ),
+                        onTap: () {
+                          Route route = MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => OtherProfileBloc(
+                                otherUserID: userWhoPosted.uid,
+                              )..add(
+                                  LoadPageEvent(),
+                                ),
+                              child: OtherProfilePage(),
+                            ),
+                          );
+
+                          Navigator.push(context, route);
+                        },
                       ),
                       SizedBox(
                         width: 10,
@@ -192,7 +171,10 @@ class CritiqueViewState extends State<CritiqueView> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text('${timeago.format(critique.created)}', style: TextStyle(fontSize: 12),)
+                          Text(
+                            '${timeago.format(critique.created)}',
+                            style: TextStyle(fontSize: 12),
+                          )
                         ],
                       ),
                       Spacer(),
@@ -203,7 +185,8 @@ class CritiqueViewState extends State<CritiqueView> {
                               .showConfirmation(
                                   context: context,
                                   title: 'Report This?',
-                                  message: 'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline on the next page refresh.');
+                                  message:
+                                      'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline on the next page refresh.');
 
                           if (!confirm) return;
 
@@ -222,26 +205,6 @@ class CritiqueViewState extends State<CritiqueView> {
                         },
                         color: Colors.red,
                         icon: Icon(Icons.report),
-                        iconSize: 20,
-                      ),
-                      IconButton(
-                        tooltip: '${userWhoPosted.username}',
-                        onPressed: () async {
-                          Route route = MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (context) => OtherProfileBloc(
-                                otherUserID: userWhoPosted.uid,
-                              )..add(
-                                  LoadPageEvent(),
-                                ),
-                              child: OtherProfilePage(),
-                            ),
-                          );
-
-                          Navigator.push(context, route);
-                        },
-                        color: Colors.purple,
-                        icon: Icon(Icons.chevron_right),
                         iconSize: 20,
                       ),
                     ],
