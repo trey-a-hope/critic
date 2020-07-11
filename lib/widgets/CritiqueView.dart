@@ -202,11 +202,11 @@ class CritiqueViewState extends State<CritiqueView> {
     return RoundedContainer(
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.all(10),
-      height: 225,
+      height: 200,
       child: Row(
         children: <Widget>[
           Container(
-            width: 130,
+            width: 100,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(movie.poster),

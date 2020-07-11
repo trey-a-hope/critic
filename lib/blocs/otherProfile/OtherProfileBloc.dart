@@ -55,7 +55,6 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
     }
 
     if (event is FollowEvent) {
-      //todo delete this, it's not needed.
       if (_otherUser.uid == _currentUser.uid) {
         _otherProfileBlocDelegate.showMessage(
           message: 'Sorry, you can\'t follow yourself.',
@@ -81,6 +80,13 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
     }
 
     if (event is BlockUserEvent) {
+      if (_otherUser.uid == _currentUser.uid) {
+        _otherProfileBlocDelegate.showMessage(
+          message: 'Sorry, you can\'t block yourself.',
+        );
+        return;
+      }
+
       locator<FollowerService>().unfollow(
         followed: _otherUser.uid,
         follower: _currentUser.uid,

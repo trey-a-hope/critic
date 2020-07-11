@@ -21,27 +21,6 @@ class SettingsPage extends StatelessWidget {
       children: <Widget>[
         ListTile(
           leading: Icon(
-            Icons.exit_to_app,
-            color: _iconColor,
-          ),
-          title: Text('Logout'),
-          onTap: () async {
-            bool confirm = await locator<ModalService>().showConfirmation(
-                context: context, title: 'Logout', message: 'Are you sure?');
-            if (confirm) {
-              //Clear stack of routes.
-              while (Navigator.of(context).canPop()) {
-                Navigator.pop(context);
-              }
-              //Sign the user out and update the onAuth stream.
-              await locator<AuthService>().signOut();
-              print('Goodbye...');
-            }
-          },
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(
             Icons.info_outline,
             color: _iconColor,
           ),
@@ -88,6 +67,27 @@ class SettingsPage extends StatelessWidget {
             Navigator.push(context, route);
           },
         ),
+        ListTile(
+          leading: Icon(
+            Icons.exit_to_app,
+            color: _iconColor,
+          ),
+          title: Text('Logout'),
+          onTap: () async {
+            bool confirm = await locator<ModalService>().showConfirmation(
+                context: context, title: 'Logout', message: 'Are you sure?');
+            if (confirm) {
+              //Clear stack of routes.
+              while (Navigator.of(context).canPop()) {
+                Navigator.pop(context);
+              }
+              //Sign the user out and update the onAuth stream.
+              await locator<AuthService>().signOut();
+              print('Goodbye...');
+            }
+          },
+        ),
+        Divider(),
         Spacer(),
         Padding(
           padding: EdgeInsets.only(bottom: 20),

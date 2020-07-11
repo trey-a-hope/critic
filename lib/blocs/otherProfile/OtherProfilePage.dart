@@ -162,6 +162,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () {
+
                                   _otherProfileBloc.add(
                                     FollowEvent(),
                                   );
