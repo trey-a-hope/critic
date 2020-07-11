@@ -52,7 +52,10 @@ class EntryPageState extends State<EntryPage> {
   final List<BottomNavyBarItem> items = [
     BottomNavyBarItem(
       icon: Icon(Icons.home),
-      title: Text('Home'),
+      title: Text(
+        'Home',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       activeColor: Colors.red,
       textAlign: TextAlign.center,
     ),
@@ -60,13 +63,17 @@ class EntryPageState extends State<EntryPage> {
       icon: Icon(Icons.person),
       title: Text(
         'Profile',
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
       activeColor: Colors.blue,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
       icon: Icon(Icons.settings),
-      title: Text('Settings'),
+      title: Text(
+        'Settings',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       activeColor: Colors.green,
       textAlign: TextAlign.center,
     ),

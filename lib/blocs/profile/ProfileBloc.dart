@@ -46,9 +46,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
         yield LoadedState(
           currentUser: _currentUser,
-          followersCount: _followersIDs.length,
-          followingsCount: _followingsIDs.length,
-          critiquesCount: _critiques.length,
+          followers: _followersIDs,
+          followings: _followingsIDs,
           critiques: _critiques,
         );
       } catch (error) {

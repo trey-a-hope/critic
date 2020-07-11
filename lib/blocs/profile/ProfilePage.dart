@@ -1,4 +1,7 @@
-import 'package:critic/blocs/profile/Bloc.dart';
+import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
+import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
+
+import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
@@ -14,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   final String _timeFormat = 'MMM d, yyyy @ h:mm a';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ProfileBloc _profileBloc;
+  PROFILE_BP.ProfileBloc _profileBloc;
 
   @override
   void initState() {
@@ -23,15 +26,15 @@ class ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    _profileBloc = BlocProvider.of<ProfileBloc>(context);
+    _profileBloc = BlocProvider.of<PROFILE_BP.ProfileBloc>(context);
 
-    return BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (BuildContext context, ProfileState state) {
-        if (state is LoadingState) {
+    return BlocBuilder<PROFILE_BP.ProfileBloc, PROFILE_BP.ProfileState>(
+      builder: (BuildContext context, PROFILE_BP.ProfileState state) {
+        if (state is PROFILE_BP.LoadingState) {
           return Spinner();
         }
 
-        if (state is LoadedState) {
+        if (state is PROFILE_BP.LoadedState) {
           return Stack(
             children: <Widget>[
               Container(
@@ -98,14 +101,30 @@ class ProfilePageState extends State<ProfilePage> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text('${state.critiquesCount}')
+                                            Text('${state.critiques.length}')
                                           ],
                                         ),
                                       ),
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            print('go to followers bloc');
+                                            Route route = MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BlocProvider(
+                                                create: (context) =>
+                                                    FOLLOWERS_BP.FollowersBloc(
+                                                        followersIDs:
+                                                            state.followers)
+                                                      ..add(
+                                                        FOLLOWERS_BP
+                                                            .LoadPageEvent(),
+                                                      ),
+                                                child: FOLLOWERS_BP
+                                                    .FollowersPage(),
+                                              ),
+                                            );
+
+                                            Navigator.push(context, route);
                                           },
                                           child: Column(
                                             children: <Widget>[
@@ -115,7 +134,7 @@ class ProfilePageState extends State<ProfilePage> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text('${state.followersCount}')
+                                              Text('${state.followers.length}')
                                             ],
                                           ),
                                         ),
@@ -123,7 +142,24 @@ class ProfilePageState extends State<ProfilePage> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
-                                            print('go to followings bloc');
+                                            Route route = MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BlocProvider(
+                                                create: (context) =>
+                                                    FOLLOWINGS_BP
+                                                        .FollowingsBloc(
+                                                            followingsIDs: state
+                                                                .followings)
+                                                      ..add(
+                                                        FOLLOWINGS_BP
+                                                            .LoadPageEvent(),
+                                                      ),
+                                                child: FOLLOWINGS_BP
+                                                    .FollowingsPage(),
+                                              ),
+                                            );
+
+                                            Navigator.push(context, route);
                                           },
                                           child: Column(
                                             children: <Widget>[
@@ -133,7 +169,7 @@ class ProfilePageState extends State<ProfilePage> {
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text('${state.followingsCount}')
+                                              Text('${state.followings.length}')
                                             ],
                                           ),
                                         ),
