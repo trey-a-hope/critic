@@ -32,7 +32,16 @@ abstract class IFollowerService {
     @required String blockeeID,
   });
 
-  Future<List<String>> getBlockedUsersIDs({
+  void unblock({
+    @required String blockerID,
+    @required String blockeeID,
+  });
+
+  Future<List<String>> getUsersIBlockedIDs({
+    @required String userID,
+  });
+
+  Future<List<String>> getUsersWhoBlockedMeIDs({
     @required String userID,
   });
 }
@@ -172,7 +181,23 @@ class FollowerService extends IFollowerService {
   }
 
   @override
-  Future<List<String>> getBlockedUsersIDs({@required String userID}) async {
+  void unblock({
+    @required String blockerID,
+    @required String blockeeID,
+  }) async {
+    final DocumentReference docRef = _followersDB.document(blockerID);
+    docRef.updateData({
+      'blockedUsers': FieldValue.arrayRemove(
+        [
+          blockeeID,
+        ],
+      )
+    });
+    return;
+  }
+
+  @override
+  Future<List<String>> getUsersIBlockedIDs({@required String userID}) async {
     DocumentSnapshot followerDocSnapshot =
         await _followersDB.document(userID).get();
 
@@ -185,5 +210,22 @@ class FollowerService extends IFollowerService {
     }
 
     return blockedUsersIDS;
+  }
+
+  @override
+  Future<List<String>> getUsersWhoBlockedMeIDs(
+      {@required String userID}) async {
+    final QuerySnapshot usersWhoBlockedMe = await _followersDB
+        .where(
+          'blockedUsers',
+          arrayContains: userID,
+        )
+        .getDocuments();
+
+    List<String> usersWhoBlockedMeIDs = usersWhoBlockedMe.documents
+        .map((DocumentSnapshot doc) => doc.documentID)
+        .toList();
+
+    return usersWhoBlockedMeIDs;
   }
 }

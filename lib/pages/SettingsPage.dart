@@ -4,7 +4,10 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/SideDrawer.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
 
 import '../Constants.dart';
 import '../ServiceLocator.dart';
@@ -62,6 +65,27 @@ class SettingsPage extends StatelessWidget {
               builder: (BuildContext context) => ContactPage(),
             );
             Navigator.of(context).push(route);
+          },
+        ),
+        Divider(),
+        ListTile(
+          leading: Icon(
+            Icons.block,
+            color: _iconColor,
+          ),
+          title: Text('Blocked Users'),
+          onTap: () async {
+            Route route = MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => BLOCKED_USERS_BP.BlockedUsersBloc()
+                  ..add(
+                    BLOCKED_USERS_BP.LoadPageEvent(),
+                  ),
+                child: BLOCKED_USERS_BP.BlockedUsersPage(),
+              ),
+            );
+
+            Navigator.push(context, route);
           },
         ),
         Spacer(),

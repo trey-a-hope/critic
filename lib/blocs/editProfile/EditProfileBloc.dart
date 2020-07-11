@@ -73,6 +73,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
             },
           );
 
+          _currentUser.username = username;
+
           if (_profilePic != null) {
             final String newImgUrl =
                 await locator<StorageService>().uploadImage(

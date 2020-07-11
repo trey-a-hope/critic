@@ -41,56 +41,58 @@ class EditProfilePageState extends State<EditProfilePage>
           if (state is EditProfileStartState) {
             _usernameController.text = state.currentUser.username;
 
-            return Form(
-              key: state.formKey,
-              autovalidate: state.autoValidate,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(40),
-                    child: InkWell(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: state.profilePicImageProvider,
-                            fit: BoxFit.fitHeight,
+            return SafeArea(
+              child: Form(
+                key: state.formKey,
+                autovalidate: state.autoValidate,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(40),
+                      child: InkWell(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: state.profilePicImageProvider,
+                              fit: BoxFit.fitHeight,
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          _editProfileBloc.add(
+                            PickProfileImageEvent(),
+                          );
+                        },
                       ),
-                      onTap: () {
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(40),
+                      child: TextFormField(
+                        controller: _usernameController,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                        maxLines: 1,
+                        maxLengthEnforced: true,
+                        decoration: InputDecoration(hintText: 'Username'),
+                      ),
+                    ),
+                    Spacer(),
+                    RaisedButton(
+                      child: Text('Save'),
+                      color: Colors.redAccent,
+                      textColor: Colors.white,
+                      onPressed: () {
                         _editProfileBloc.add(
-                          PickProfileImageEvent(),
+                          SaveFormEvent(
+                              username: _usernameController.text,
+                              formKey: state.formKey),
                         );
                       },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(40),
-                    child: TextFormField(
-                      controller: _usernameController,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      maxLines: 1,
-                      maxLengthEnforced: true,
-                      decoration: InputDecoration(hintText: 'Username'),
-                    ),
-                  ),
-                  Spacer(),
-                  RaisedButton(
-                    child: Text('Save'),
-                    color: Colors.redAccent,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      _editProfileBloc.add(
-                        SaveFormEvent(
-                            username: _usernameController.text,
-                            formKey: state.formKey),
-                      );
-                    },
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             );
           }

@@ -45,8 +45,8 @@ class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
   }
 
   UserModel _currentUser;
-
-  List<String> _blockedUserIDs;
+  List<String> _usersIBlockedIDs;
+  List<String> _usersWhoBlockedMeIDs;
 
   @override
   Stream<SEARCH_USERS_BP.SearchUsersState> mapEventToState(
@@ -55,10 +55,13 @@ class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
     if (event is SEARCH_USERS_BP.LoadPageEvent) {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
-        _blockedUserIDs = await locator<FollowerService>()
-            .getBlockedUsersIDs(userID: _currentUser.uid);
+        _usersIBlockedIDs = await locator<FollowerService>()
+            .getUsersIBlockedIDs(userID: _currentUser.uid);
+
+        _usersWhoBlockedMeIDs = await locator<FollowerService>()
+            .getUsersWhoBlockedMeIDs(userID: _currentUser.uid);
       } catch (error) {
-        print(error.toString());//todo: Display error message.
+        print(error.toString()); //todo: Display error message.
       }
     }
 
@@ -72,7 +75,11 @@ class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
           final List<UserModel> results =
               await searchUsersRepository.search(searchTerm);
 
-          results.removeWhere((user) => _blockedUserIDs.contains(user.uid));
+          results.removeWhere(
+            (user) =>
+                _usersIBlockedIDs.contains(user.uid) ||
+                _usersWhoBlockedMeIDs.contains(user.uid),
+          );
 
           if (results.isEmpty) {
             yield SEARCH_USERS_BP.SearchUsersStateNoResults();
