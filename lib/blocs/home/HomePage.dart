@@ -44,6 +44,7 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
         if (state is FoundCritiquesState) {
           return RefreshIndicator(
             child: ListView.builder(
+              addAutomaticKeepAlives: true,
               itemCount: state.critiques.length,
               itemBuilder: (BuildContext context, int index) {
                 CritiqueModel critique = state.critiques[index];

@@ -54,7 +54,9 @@ class CritiqueViewState extends State<CritiqueView> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return Spinner();
+            return buildBlankCriticView(
+              context: context,
+            );
             break;
           default:
             if (snapshot.hasError) {
@@ -74,6 +76,111 @@ class CritiqueViewState extends State<CritiqueView> {
             );
         }
       },
+    );
+  }
+
+  Widget buildBlankCriticView({
+    @required BuildContext context,
+  }) {
+    return RoundedContainer(
+      padding: const EdgeInsets.all(0),
+      margin: EdgeInsets.all(10),
+      height: 225,
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 130,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(''),
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+          ),
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Row(
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(
+                          'Dummy Movie',
+                          overflow: TextOverflow.fade,
+                          softWrap: true,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text("Year: "),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        '1992',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w300),
+                      )
+                    ],
+                  ),
+                  Divider(),
+                  Text(
+                    "No message yet.",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                  ),
+                  Spacer(),
+                  Row(
+                    children: <Widget>[
+                      InkWell(
+                        child: CircleAvatar(
+                          radius: 25,
+                          child: Text('T'),
+                        ),
+                        onTap: () {},
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            'John Doe',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            '${timeago.format(DateTime.now())}',
+                            style: TextStyle(fontSize: 12),
+                          )
+                        ],
+                      ),
+                      Spacer(),
+                      IconButton(
+                        tooltip: 'Report This Post',
+                        onPressed: () async {},
+                        color: Colors.red,
+                        icon: Icon(Icons.report),
+                        iconSize: 20,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
