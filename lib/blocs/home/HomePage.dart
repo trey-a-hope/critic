@@ -50,6 +50,7 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
                 CritiqueModel critique = state.critiques[index];
                 return CritiqueView(
                   critique: critique,
+                  currentUser: state.currentUser,
                 );
               },
             ),

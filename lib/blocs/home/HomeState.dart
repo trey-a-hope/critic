@@ -1,5 +1,6 @@
 //import 'package:bloc/bloc.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/UserModel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -19,14 +20,17 @@ class NoCritiquesState extends HomeState {
 
 class FoundCritiquesState extends HomeState {
   final List<CritiqueModel> critiques;
+  final UserModel currentUser;
 
   FoundCritiquesState({
     @required this.critiques,
+    @required this.currentUser,
   });
 
   @override
   List<Object> get props => [
         critiques,
+        currentUser,
       ];
 }
 

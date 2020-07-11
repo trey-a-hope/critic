@@ -207,6 +207,7 @@ class ProfilePageState extends State<ProfilePage> {
                     itemBuilder: (BuildContext context, int index) {
                       CritiqueModel critique = state.critiques[index];
                       return CritiqueView(
+                        currentUser: state.currentUser,
                         critique: critique,
                       );
                     },

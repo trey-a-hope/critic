@@ -64,7 +64,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if (critiques.isEmpty) {
           yield NoCritiquesState();
         } else {
-          yield FoundCritiquesState(critiques: critiques);
+          yield FoundCritiquesState(
+            critiques: critiques,
+            currentUser: _currentUser,
+          );
         }
       } catch (error) {
         _homeBlocDelegate.showMessage(message: 'Error: ${error.toString()}');

@@ -92,9 +92,9 @@ class SettingsPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(bottom: 20),
           child: Text(
-            'v. $version',
+            'Critic, Version: $version',
             style: TextStyle(
-                color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold),
+                color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),
           ),
         )
       ],

@@ -5,6 +5,7 @@ import 'package:critic/main.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
@@ -12,23 +13,33 @@ import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/Spinner.dart';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'RoundedContainer.dart';
 
 class CritiqueView extends StatefulWidget {
-  const CritiqueView({Key key, @required this.critique}) : super(key: key);
+  const CritiqueView({
+    Key key,
+    @required this.critique,
+    @required this.currentUser,
+  }) : super(key: key);
   final CritiqueModel critique;
+  final UserModel currentUser;
   @override
-  State createState() => CritiqueViewState(critique: critique);
+  State createState() => CritiqueViewState(
+        critique: critique,
+        currentUser: currentUser,
+      );
 }
 
 class CritiqueViewState extends State<CritiqueView> {
-  CritiqueViewState({@required this.critique});
+  CritiqueViewState({
+    @required this.critique,
+    @required this.currentUser,
+  });
   final CritiqueModel critique;
+  final UserModel currentUser;
 
   @override
   void initState() {
@@ -67,7 +78,6 @@ class CritiqueViewState extends State<CritiqueView> {
 
             UserModel userWhoPosted = snapshot.data[0];
             MovieModel movie = snapshot.data[1];
-            print(movie.title);
 
             return buildCritiqueView(
               context: context,
@@ -285,6 +295,36 @@ class CritiqueViewState extends State<CritiqueView> {
                         ],
                       ),
                       Spacer(),
+                      currentUser.uid == userWhoPosted.uid
+                          ? IconButton(
+                              tooltip: 'Delete Post',
+                              onPressed: () async {
+                                final bool confirm =
+                                    await locator<ModalService>()
+                                        .showConfirmation(
+                                            context: context,
+                                            title: 'Delete this critique.',
+                                            message: 'Are you sure?');
+
+                                if (!confirm) return;
+
+                                await locator<CritiqueService>().deleteCritique(
+                                  critiqueID: critique.id,
+                                  userID: critique.userID,
+                                  created: critique.created,
+                                );
+
+                                locator<ModalService>().showAlert(
+                                    context: context,
+                                    title: 'Critique deleted.',
+                                    message:
+                                        'Pull and refresh to see results.');
+                              },
+                              color: Colors.red,
+                              icon: Icon(Icons.delete),
+                              iconSize: 20,
+                            )
+                          : SizedBox.shrink(),
                       IconButton(
                         tooltip: 'Report This Post',
                         onPressed: () async {

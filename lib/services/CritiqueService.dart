@@ -12,6 +12,11 @@ abstract class ICritiqueService {
   });
   Future<void> updateCritique(
       {@required String critiqueID, @required dynamic data});
+  Future<void> deleteCritique({
+    @required String critiqueID,
+    @required String userID,
+    @required DateTime created,
+  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -44,12 +49,17 @@ class CritiqueService extends ICritiqueService {
 
       final DocumentReference followerDoc =
           _followersDB.document(critique.userID);
-      batch.updateData(followerDoc, {
-        'lastPost': DateTime.now(),
-        'recentPosts': FieldValue.arrayUnion([
-          {'id': critique.id, 'date': DateTime.now()}
-        ])
-      });
+      batch.updateData(
+        followerDoc,
+        {
+          'lastPost': DateTime.now(),
+          'recentPosts': FieldValue.arrayUnion(
+            [
+              critique.id,
+            ],
+          )
+        },
+      );
 
       batch.commit();
       return;
@@ -133,6 +143,44 @@ class CritiqueService extends ICritiqueService {
           .toList();
 
       return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteCritique({
+    @required String critiqueID,
+    @required String userID,
+    @required DateTime created,
+  }) async {
+    try {
+      final WriteBatch batch = Firestore.instance.batch();
+
+      batch.delete(
+        _critiquesDB.document(critiqueID),
+      );
+
+      batch.updateData(
+        _dataDB.document('tableCounts'),
+        {
+          'critiques': FieldValue.increment(-1),
+        },
+      );
+
+      batch.updateData(_followersDB.document(userID), {
+        'recentPosts': FieldValue.arrayRemove(
+          [
+            critiqueID,
+          ],
+        )
+      });
+
+      batch.commit();
+
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),

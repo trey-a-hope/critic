@@ -1,10 +1,12 @@
 import 'package:critic/blocs/followers/Bloc.dart';
 import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 
+import '../../ServiceLocator.dart';
 import 'Bloc.dart' as FOLLOWINGS_BP;
 
 class FollowingsPage extends StatefulWidget {
@@ -89,7 +91,10 @@ class FollowingsPageState extends State<FollowingsPage>
   }
 
   @override
-  void showMessage({String message}) {
-    // TODO: implement showMessage
+  void showMessage({@required String message}) {
+    locator<ModalService>().showInSnackBar(
+      scaffoldKey: _scaffoldKey,
+      message: message,
+    );
   }
 }

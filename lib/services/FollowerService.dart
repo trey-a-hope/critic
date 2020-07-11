@@ -98,19 +98,15 @@ class FollowerService extends IFollowerService {
         )
         .getDocuments();
 
-    Iterable<Map<String, dynamic>> followedUsersData =
-        followedUsers.documents.map((doc) => doc.data);
-
-    if (followedUsersData.isEmpty) return [];
-
     List<String> critiqueIDs = List<String>();
 
-    for (Map<String, dynamic> followedUserData in followedUsersData) {
-      for (Map<String, dynamic> recentPostsMap
-          in followedUserData['recentPosts']) {
-        critiqueIDs.add(
-          recentPostsMap['id'],
-        );
+    for (var i = 0; i < followedUsers.documents.length; i++) {
+      for (var j = 0;
+          j < followedUsers.documents[i].data['recentPosts'].length;
+          j++) {
+        final String critiqueID =
+            followedUsers.documents[i].data['recentPosts'][j] as String;
+        critiqueIDs.add(critiqueID);
       }
     }
 
