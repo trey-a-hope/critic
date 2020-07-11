@@ -5,6 +5,13 @@ abstract class SearchUsersEvent extends Equatable {
   const SearchUsersEvent();
 }
 
+class LoadPageEvent extends SearchUsersEvent {
+  const LoadPageEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
 class TextChangedEvent extends SearchUsersEvent {
   final String text;
 

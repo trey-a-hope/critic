@@ -31,6 +31,10 @@ abstract class IFollowerService {
     @required String blockerID,
     @required String blockeeID,
   });
+
+  Future<List<String>> getBlockedUsersIDs({
+    @required String userID,
+  });
 }
 
 class FollowerService extends IFollowerService {
@@ -149,24 +153,6 @@ class FollowerService extends IFollowerService {
         .toList();
 
     return followingsIDs;
-
-    // Iterable<Map<String, dynamic>> followedUsersData =
-    //     followedUsers.documents.map((doc) => doc.data);
-
-    // if (followedUsersData.isEmpty) return [];
-
-    // List<String> critiqueIDs = List<String>();
-
-    // for (Map<String, dynamic> followedUserData in followedUsersData) {
-    //   for (Map<String, dynamic> recentPostsMap
-    //       in followedUserData['recentPosts']) {
-    //     critiqueIDs.add(
-    //       recentPostsMap['id'],
-    //     );
-    //   }
-    // }
-
-    // return critiqueIDs;
   }
 
   @override
@@ -183,5 +169,21 @@ class FollowerService extends IFollowerService {
       )
     });
     return;
+  }
+
+  @override
+  Future<List<String>> getBlockedUsersIDs({@required String userID}) async {
+    DocumentSnapshot followerDocSnapshot =
+        await _followersDB.document(userID).get();
+
+    dynamic blockedUsers = followerDocSnapshot.data['blockedUsers'];
+
+    List<String> blockedUsersIDS = List<String>();
+
+    for (dynamic blockedUserID in blockedUsers) {
+      blockedUsersIDS.add(blockedUserID);
+    }
+
+    return blockedUsersIDS;
   }
 }

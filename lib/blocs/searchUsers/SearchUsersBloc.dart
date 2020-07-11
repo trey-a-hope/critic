@@ -1,24 +1,32 @@
 import 'dart:async';
 import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
-import 'SearchUsersEvent.dart';
-import 'SearchUsersRepository.dart';
-import 'SearchUsersState.dart';
+import '../../ServiceLocator.dart';
+import 'Bloc.dart' as SEARCH_USERS_BP;
 
-class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
-  final SearchUsersRepository searchUsersRepository;
+class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
+    SEARCH_USERS_BP.SearchUsersState> {
+  final SEARCH_USERS_BP.SearchUsersRepository searchUsersRepository;
   SearchUsersBloc({@required this.searchUsersRepository})
       : super(
-          SearchUsersStateStart(),
+          SEARCH_USERS_BP.SearchUsersStateStart(),
         );
 
   @override
-  Stream<Transition<SearchUsersEvent, SearchUsersState>> transformEvents(
-    Stream<SearchUsersEvent> events,
-    Stream<Transition<SearchUsersEvent, SearchUsersState>> Function(
-      SearchUsersEvent event,
+  Stream<
+      Transition<SEARCH_USERS_BP.SearchUsersEvent,
+          SEARCH_USERS_BP.SearchUsersState>> transformEvents(
+    Stream<SEARCH_USERS_BP.SearchUsersEvent> events,
+    Stream<
+                Transition<SEARCH_USERS_BP.SearchUsersEvent,
+                    SEARCH_USERS_BP.SearchUsersState>>
+            Function(
+      SEARCH_USERS_BP.SearchUsersEvent event,
     )
         transitionFn,
   ) {
@@ -28,32 +36,51 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   }
 
   @override
-  void onTransition(Transition<SearchUsersEvent, SearchUsersState> transition) {
+  void onTransition(
+      Transition<SEARCH_USERS_BP.SearchUsersEvent,
+              SEARCH_USERS_BP.SearchUsersState>
+          transition) {
     print(transition);
     super.onTransition(transition);
   }
 
+  UserModel _currentUser;
+
+  List<String> _blockedUserIDs;
+
   @override
-  Stream<SearchUsersState> mapEventToState(
-    SearchUsersEvent event,
+  Stream<SEARCH_USERS_BP.SearchUsersState> mapEventToState(
+    SEARCH_USERS_BP.SearchUsersEvent event,
   ) async* {
-    if (event is TextChangedEvent) {
+    if (event is SEARCH_USERS_BP.LoadPageEvent) {
+      try {
+        _currentUser = await locator<AuthService>().getCurrentUser();
+        _blockedUserIDs = await locator<FollowerService>()
+            .getBlockedUsersIDs(userID: _currentUser.uid);
+      } catch (error) {
+        print(error.toString());//todo: Display error message.
+      }
+    }
+
+    if (event is SEARCH_USERS_BP.TextChangedEvent) {
       final String searchTerm = event.text;
       if (searchTerm.isEmpty) {
-        yield SearchUsersStateStart();
+        yield SEARCH_USERS_BP.SearchUsersStateStart();
       } else {
-        yield SearchUsersStateLoading();
+        yield SEARCH_USERS_BP.SearchUsersStateLoading();
         try {
           final List<UserModel> results =
               await searchUsersRepository.search(searchTerm);
 
+          results.removeWhere((user) => _blockedUserIDs.contains(user.uid));
+
           if (results.isEmpty) {
-            yield SearchUsersStateNoResults();
+            yield SEARCH_USERS_BP.SearchUsersStateNoResults();
           } else {
-            yield SearchUsersStateFoundResults(users: results);
+            yield SEARCH_USERS_BP.SearchUsersStateFoundResults(users: results);
           }
         } catch (error) {
-          yield SearchUsersStateError(error: error);
+          yield SEARCH_USERS_BP.SearchUsersStateError(error: error);
         }
       }
     }

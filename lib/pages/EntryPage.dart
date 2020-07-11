@@ -2,10 +2,7 @@ import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
-import 'package:critic/blocs/searchUsers/SearchUsersBloc.dart';
-import 'package:critic/blocs/searchUsers/SearchUsersCache.dart';
-import 'package:critic/blocs/searchUsers/SearchUsersPage.dart';
-import 'package:critic/blocs/searchUsers/SearchUsersRepository.dart';
+import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:critic/widgets/AppBarLayout.dart';
@@ -110,16 +107,18 @@ class EntryPageState extends State<EntryPage> {
           leading: IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              final SearchUsersRepository _searchUsersRepository =
-                  SearchUsersRepository(
-                cache: SearchUsersCache(),
+              final SEARCH_USERS_BP.SearchUsersRepository
+                  _searchUsersRepository =
+                  SEARCH_USERS_BP.SearchUsersRepository(
+                cache: SEARCH_USERS_BP.SearchUsersCache(),
               );
 
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
-                  create: (context) => SearchUsersBloc(
-                      searchUsersRepository: _searchUsersRepository),
-                  child: SearchUsersPage(),
+                  create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
+                      searchUsersRepository: _searchUsersRepository)
+                    ..add(SEARCH_USERS_BP.LoadPageEvent()),
+                  child: SEARCH_USERS_BP.SearchUsersPage(),
                 ),
               );
 
