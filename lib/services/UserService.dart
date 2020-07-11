@@ -36,8 +36,12 @@ class UserService extends IUserService {
       batch.updateData(tableCountsDocRef, {'users': FieldValue.increment(1)});
 
       final DocumentReference followerDocRef = _followersDB.document(user.uid);
-      batch.setData(
-          followerDocRef, {'lastPost': null, 'recentPosts': [], 'users': []});
+      batch.setData(followerDocRef, {
+        'lastPost': null,
+        'recentPosts': [],
+        'users': [],
+        'blockedUsers': [],
+      });
 
       await batch.commit();
       return;
@@ -76,37 +80,4 @@ class UserService extends IUserService {
       );
     }
   }
-
-  // @override
-  // Future<List<UserModel>> retrieveUsers(
-  //     {bool isAdmin, int limit, String orderBy}) async {
-  //   try {
-  //     Query query = usersDB;
-
-  //     if (isAdmin != null) {
-  //       query = query.where('isAdmin', isEqualTo: isAdmin);
-  //     }
-
-  //     if (limit != null) {
-  //       query = query.limit(limit);
-  //     }
-
-  //     if (orderBy != null) {
-  //       query = query.orderBy(orderBy);
-  //     }
-
-  //     List<DocumentSnapshot> docs = (await query.getDocuments()).documents;
-  //     List<UserModel> users = List<UserModel>();
-  //     for (int i = 0; i < docs.length; i++) {
-  //       users.add(
-  //         UserModel.extractDocument(docs[i]),
-  //       );
-  //     }
-
-  //     return users;
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
-
 }

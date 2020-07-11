@@ -22,3 +22,11 @@ class UnfollowEvent extends OtherProfileEvent {
 
   List<Object> get props => [];
 }
+
+
+
+class BlockUserEvent extends OtherProfileEvent {
+  BlockUserEvent();
+
+  List<Object> get props => [];
+}

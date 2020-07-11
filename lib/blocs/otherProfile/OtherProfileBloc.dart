@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:critic/blocs/otherProfile/OtherProfileEvent.dart';
-import 'package:critic/blocs/otherProfile/OtherProfileState.dart';
+import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/FollowerService.dart';
@@ -12,6 +11,7 @@ import '../../ServiceLocator.dart';
 import 'Bloc.dart';
 
 abstract class OtherProfileBlocDelegate {
+  void navigateHome();
   void showMessage({@required String message});
 }
 
@@ -78,6 +78,25 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
       );
 
       yield LoadedState(otherUser: _otherUser, isFollowing: false);
+    }
+
+    if (event is BlockUserEvent) {
+      locator<FollowerService>().unfollow(
+        followed: _otherUser.uid,
+        follower: _currentUser.uid,
+      );
+
+      locator<FollowerService>().unfollow(
+        followed: _currentUser.uid,
+        follower: _otherUser.uid,
+      );
+
+      locator<FollowerService>().block(
+        blockerID: _currentUser.uid,
+        blockeeID: _otherUser.uid,
+      );
+
+      _otherProfileBlocDelegate.navigateHome();
     }
   }
 }

@@ -26,6 +26,11 @@ abstract class IFollowerService {
 
   Future<List<String>> getFollowersIDS({@required String userID});
   Future<List<String>> getFollowingsIDS({@required String userID});
+
+  void block({
+    @required String blockerID,
+    @required String blockeeID,
+  });
 }
 
 class FollowerService extends IFollowerService {
@@ -162,5 +167,21 @@ class FollowerService extends IFollowerService {
     // }
 
     // return critiqueIDs;
+  }
+
+  @override
+  void block({
+    @required String blockerID,
+    @required String blockeeID,
+  }) async {
+    final DocumentReference docRef = _followersDB.document(blockerID);
+    docRef.updateData({
+      'blockedUsers': FieldValue.arrayUnion(
+        [
+          blockeeID,
+        ],
+      )
+    });
+    return;
   }
 }

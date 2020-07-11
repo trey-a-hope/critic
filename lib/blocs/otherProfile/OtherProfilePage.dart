@@ -137,33 +137,59 @@ class OtherProfilePageState extends State<OtherProfilePage>
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: state.isFollowing
-                        ? RaisedButton(
-                            color: Colors.white,
-                            textColor: Colors.red,
-                            child: Text(
-                              'Unfollow Me',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () {
-                              _otherProfileBloc.add(
-                                UnfollowEvent(),
-                              );
-                            },
-                          )
-                        : RaisedButton(
-                            color: Colors.red,
-                            textColor: Colors.white,
-                            child: Text(
-                              'Follow Me',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onPressed: () {
-                              _otherProfileBloc.add(
-                                FollowEvent(),
-                              );
-                            },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        state.isFollowing
+                            ? RaisedButton(
+                                color: Colors.white,
+                                textColor: Colors.red,
+                                child: Text(
+                                  'Unfollow Me',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  _otherProfileBloc.add(
+                                    UnfollowEvent(),
+                                  );
+                                },
+                              )
+                            : RaisedButton(
+                                color: Colors.red,
+                                textColor: Colors.white,
+                                child: Text(
+                                  'Follow Me',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  _otherProfileBloc.add(
+                                    FollowEvent(),
+                                  );
+                                },
+                              ),
+                        RaisedButton(
+                          color: Colors.blue.shade900,
+                          textColor: Colors.white,
+                          child: Text(
+                            'Block Me',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
+                          onPressed: () async {
+                            final bool confirm = await locator<ModalService>()
+                                .showConfirmation(
+                                    context: context,
+                                    title: 'Block ${state.otherUser.username}?',
+                                    message: 'Are you sure?');
+
+                            if (!confirm) return;
+
+                            _otherProfileBloc.add(
+                              BlockUserEvent(),
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   )
                 ],
               );
@@ -181,6 +207,14 @@ class OtherProfilePageState extends State<OtherProfilePage>
     locator<ModalService>().showInSnackBar(
       scaffoldKey: _scaffoldKey,
       message: message,
+    );
+  }
+
+  @override
+  void navigateHome() {
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName('/'),
     );
   }
 }
