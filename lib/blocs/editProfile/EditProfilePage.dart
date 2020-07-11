@@ -29,7 +29,10 @@ class EditProfilePageState extends State<EditProfilePage>
       key: _scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Edit Profile'),
+        title: Text(
+          'Edit Profile',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.black,
       ),
       body: BlocBuilder<EditProfileBloc, EditProfileState>(

@@ -12,7 +12,10 @@ class SearchUsersPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Search Users'),
+        title: Text(
+          'Search Users',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: <Widget>[_SearchBar(), _SearchBody()],

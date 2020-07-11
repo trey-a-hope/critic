@@ -33,7 +33,10 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text('Create Critique'),
+        title: Text(
+          'Create Critique',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: BlocBuilder<CreateCritiqueBloc, CreateCritiqueState>(

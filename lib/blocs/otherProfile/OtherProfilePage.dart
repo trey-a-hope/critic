@@ -31,7 +31,10 @@ class OtherProfilePageState extends State<OtherProfilePage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(''),
+        title: Text(
+          '',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: SafeArea(
         child: BlocBuilder<OtherProfileBloc, OtherProfileState>(
@@ -162,7 +165,6 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () {
-
                                   _otherProfileBloc.add(
                                     FollowEvent(),
                                   );

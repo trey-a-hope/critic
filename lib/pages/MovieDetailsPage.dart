@@ -21,6 +21,7 @@ class MovieDetailsPage extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text(
           'Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
