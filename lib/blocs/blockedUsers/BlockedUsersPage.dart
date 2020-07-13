@@ -44,7 +44,7 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
 
           if (state is BLOCKED_USERS_BP.NoBlockedUsersState) {
             return Center(
-              child: Text('You have no blocked accounts...'),
+              child: Text('You have no blocked users...'),
             );
           }
 

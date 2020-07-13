@@ -7,8 +7,7 @@ abstract class IUserService {
   //Users
   Future<void> createUser({@required UserModel user});
   Future<UserModel> retrieveUser({@required String uid});
-  // Future<List<UserModel>> retrieveUsers(
-  //     {bool isAdmin, int limit, String orderBy});
+  Future<List<UserModel>> retrieveAllUsers();
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
       {@required String uid, @required Map<String, dynamic> data});
@@ -74,6 +73,20 @@ class UserService extends IUserService {
     try {
       await _usersDB.document(uid).updateData(data);
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> retrieveAllUsers() async {
+    try {
+      return (await _usersDB.getDocuments())
+          .documents
+          .map((doc) => UserModel.extractDocument(ds: doc))
+          .toList();
     } catch (e) {
       throw Exception(
         e.toString(),
