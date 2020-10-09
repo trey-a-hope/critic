@@ -5,7 +5,6 @@ import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/message_codec.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'CreateCritiqueState.dart';

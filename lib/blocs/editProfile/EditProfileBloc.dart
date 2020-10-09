@@ -42,13 +42,14 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     }
 
     if (event is PickProfileImageEvent) {
-      final File image =
-          await ImagePicker.pickImage(source: ImageSource.gallery);
+      final PickedFile image =
+          await ImagePicker().getImage(source: ImageSource.gallery);
 
       if (image == null) return;
 
-      _profilePicImageProvider = FileImage(image);
-      _profilePic = image;
+      //todo: Update image upload logic.
+      // _profilePicImageProvider = FileImage(image);
+      // _profilePic = image;
 
       yield EditProfileStartState(
           currentUser: _currentUser,

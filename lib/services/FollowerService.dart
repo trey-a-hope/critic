@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
 abstract class IFollowerService {
@@ -48,18 +45,19 @@ abstract class IFollowerService {
 
 class FollowerService extends IFollowerService {
   final CollectionReference _critiquesDB =
-      Firestore.instance.collection('Critiques');
-  final CollectionReference _dataDB = Firestore.instance.collection('Data');
+      FirebaseFirestore.instance.collection('Critiques');
+  final CollectionReference _dataDB =
+      FirebaseFirestore.instance.collection('Data');
   final CollectionReference _followersDB =
-      Firestore.instance.collection('Followers');
+      FirebaseFirestore.instance.collection('Followers');
 
   @override
   void follow({
     @required String followed,
     @required String follower,
   }) {
-    final DocumentReference followersRef = _followersDB.document(followed);
-    followersRef.updateData(
+    final DocumentReference followersRef = _followersDB.doc(followed);
+    followersRef.update(
       {
         'users': FieldValue.arrayUnion(
           [
@@ -75,8 +73,8 @@ class FollowerService extends IFollowerService {
     @required String followed,
     @required String follower,
   }) {
-    final DocumentReference followersRef = _followersDB.document(followed);
-    followersRef.updateData(
+    final DocumentReference followersRef = _followersDB.doc(followed);
+    followersRef.update(
       {
         'users': FieldValue.arrayRemove(
           [
@@ -96,16 +94,16 @@ class FollowerService extends IFollowerService {
           'users',
           arrayContains: userID,
         )
-        .getDocuments();
+        .get();
 
     List<String> critiqueIDs = List<String>();
 
-    for (var i = 0; i < followedUsers.documents.length; i++) {
+    for (var i = 0; i < followedUsers.docs.length; i++) {
       for (var j = 0;
-          j < followedUsers.documents[i].data['recentPosts'].length;
+          j < followedUsers.docs[i].data()['recentPosts'].length;
           j++) {
         final String critiqueID =
-            followedUsers.documents[i].data['recentPosts'][j] as String;
+            followedUsers.docs[i].data()['recentPosts'][j] as String;
         critiqueIDs.add(critiqueID);
       }
     }
@@ -118,9 +116,8 @@ class FollowerService extends IFollowerService {
     @required String userAID,
     @required String userBID,
   }) async {
-    final DocumentSnapshot followersRef =
-        await _followersDB.document(userBID).get();
-    final List<dynamic> followers = followersRef.data['users'];
+    final DocumentSnapshot followersRef = await _followersDB.doc(userBID).get();
+    final List<dynamic> followers = followersRef.data()['users'];
     return followers.contains(userAID);
   }
 
@@ -128,10 +125,9 @@ class FollowerService extends IFollowerService {
   Future<List<String>> getFollowersIDS({
     @required String userID,
   }) async {
-    DocumentSnapshot followerDocSnapshot =
-        await _followersDB.document(userID).get();
+    DocumentSnapshot followerDocSnapshot = await _followersDB.doc(userID).get();
 
-    dynamic followersIDS = followerDocSnapshot.data['users'];
+    dynamic followersIDS = followerDocSnapshot.data()['users'];
 
     List<String> followersIDs = List<String>();
 
@@ -151,11 +147,10 @@ class FollowerService extends IFollowerService {
           'users',
           arrayContains: userID,
         )
-        .getDocuments();
+        .get();
 
-    List<String> followingsIDs = followedUsers.documents
-        .map((DocumentSnapshot doc) => doc.documentID)
-        .toList();
+    List<String> followingsIDs =
+        followedUsers.docs.map((DocumentSnapshot doc) => doc.id).toList();
 
     return followingsIDs;
   }
@@ -165,14 +160,16 @@ class FollowerService extends IFollowerService {
     @required String blockerID,
     @required String blockeeID,
   }) async {
-    final DocumentReference docRef = _followersDB.document(blockerID);
-    docRef.updateData({
-      'blockedUsers': FieldValue.arrayUnion(
-        [
-          blockeeID,
-        ],
-      )
-    });
+    final DocumentReference docRef = _followersDB.doc(blockerID);
+    docRef.update(
+      {
+        'blockedUsers': FieldValue.arrayUnion(
+          [
+            blockeeID,
+          ],
+        )
+      },
+    );
     return;
   }
 
@@ -181,23 +178,24 @@ class FollowerService extends IFollowerService {
     @required String blockerID,
     @required String blockeeID,
   }) async {
-    final DocumentReference docRef = _followersDB.document(blockerID);
-    docRef.updateData({
-      'blockedUsers': FieldValue.arrayRemove(
-        [
-          blockeeID,
-        ],
-      )
-    });
+    final DocumentReference docRef = _followersDB.doc(blockerID);
+    docRef.update(
+      {
+        'blockedUsers': FieldValue.arrayRemove(
+          [
+            blockeeID,
+          ],
+        )
+      },
+    );
     return;
   }
 
   @override
   Future<List<String>> getUsersIBlockedIDs({@required String userID}) async {
-    DocumentSnapshot followerDocSnapshot =
-        await _followersDB.document(userID).get();
+    DocumentSnapshot followerDocSnapshot = await _followersDB.doc(userID).get();
 
-    dynamic blockedUsers = followerDocSnapshot.data['blockedUsers'];
+    dynamic blockedUsers = followerDocSnapshot.data()['blockedUsers'];
 
     List<String> blockedUsersIDS = List<String>();
 
@@ -216,11 +214,10 @@ class FollowerService extends IFollowerService {
           'blockedUsers',
           arrayContains: userID,
         )
-        .getDocuments();
+        .get();
 
-    List<String> usersWhoBlockedMeIDs = usersWhoBlockedMe.documents
-        .map((DocumentSnapshot doc) => doc.documentID)
-        .toList();
+    List<String> usersWhoBlockedMeIDs =
+        usersWhoBlockedMe.docs.map((DocumentSnapshot doc) => doc.id).toList();
 
     return usersWhoBlockedMeIDs;
   }

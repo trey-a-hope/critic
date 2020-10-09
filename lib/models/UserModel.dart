@@ -20,13 +20,14 @@ class UserModel {
   });
 
   static UserModel extractDocument({@required DocumentSnapshot ds}) {
+    final Map<String, dynamic> data = ds.data();
     return UserModel(
-      imgUrl: ds.data['imgUrl'],
-      email: ds.data['email'],
-      created: ds.data['created'].toDate(),
-      modified: ds.data['modified'].toDate(),
-      uid: ds.data['uid'],
-      username: ds.data['username'],
+      imgUrl: data['imgUrl'],
+      email: data['email'],
+      created: data['created'].toDate(),
+      modified: data['modified'].toDate(),
+      uid: data['uid'],
+      username: data['username'],
     );
   }
 

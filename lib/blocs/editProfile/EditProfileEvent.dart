@@ -1,4 +1,3 @@
-import 'package:critic/blocs/editProfile/Bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 

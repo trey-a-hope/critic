@@ -43,10 +43,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           final String password = event.password;
           final String username = event.username;
 
-          AuthResult authResult = await locator<AuthService>()
+          UserCredential userCredential = await locator<AuthService>()
               .createUserWithEmailAndPassword(email: email, password: password);
 
-          final FirebaseUser firebaseUser = authResult.user;
+          final User firebaseUser = userCredential.user;
 
           UserModel user = UserModel(
             imgUrl: DUMMY_PROFILE_PHOTO_URL,

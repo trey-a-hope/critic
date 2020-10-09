@@ -14,16 +14,16 @@ ThemeData themeData = ThemeData(
   // accentColor: Colors.red,
   accentIconTheme: IconThemeData(color: Colors.white),
   accentTextTheme: TextTheme(
-    body1: TextStyle(color: Colors.white, fontSize: 20),
-    body2: TextStyle(color: Colors.white, fontSize: 15),
+    bodyText1: TextStyle(color: Colors.white, fontSize: 20),
+    bodyText2: TextStyle(color: Colors.white, fontSize: 15),
     button: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-    headline: TextStyle(
+    headline5: TextStyle(
         color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
-    display1: TextStyle(
+    headline4: TextStyle(
         color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
-    subtitle: TextStyle(
+    subtitle2: TextStyle(
         color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-    title: TextStyle(
+    headline6: TextStyle(
         color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
   ),
   // floatingActionButtonTheme: FloatingActionButtonThemeData(

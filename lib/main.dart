@@ -10,9 +10,19 @@ import 'blocs/login/Bloc.dart' as LOGIN_BP;
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+bool USE_FIRESTORE_EMULATOR = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+  if (USE_FIRESTORE_EMULATOR) {
+    FirebaseFirestore.instance.settings = Settings(
+        host: 'localhost:8080', sslEnabled: false, persistenceEnabled: false);
+  }
 
   setUpLocater();
 
@@ -36,28 +46,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Critic',
       theme: themeData,
-      // home: BlocProvider(
-      //   create: (BuildContext context) => LoginBP.LoginBloc(),
-      //   child: LoginBP.LoginPage(),
-      // )
-
       home: StreamBuilder(
         stream: locator<AuthService>().onAuthStateChanged(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          final FirebaseUser firebaseUser = snapshot.data;
-
-          // Route route = MaterialPageRoute(
-          //   builder: (BuildContext context) => BlocProvider(
-          //     create: (BuildContext context) =>
-          //         LOGIN_BP.LoginBloc(),
-          //     child: LOGIN_BP.LoginPage(),
-          //   ),
-          // );
-
-          // Navigator.push(
-          //   context,
-          //   route,
-          // );
+          final User firebaseUser = snapshot.data;
 
           return firebaseUser == null
               ? BlocProvider(

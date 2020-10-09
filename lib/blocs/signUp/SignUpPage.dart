@@ -3,7 +3,6 @@ import 'package:critic/blocs/signUp/Bloc.dart';
 import 'package:critic/pages/TermsServicePage.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
-import 'package:critic/widgets/GoodButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

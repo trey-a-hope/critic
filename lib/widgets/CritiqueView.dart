@@ -1,21 +1,16 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart';
-import 'package:critic/main.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
-import 'package:critic/widgets/Spinner.dart';
-
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'RoundedContainer.dart';
 
 class CritiqueView extends StatefulWidget {
@@ -24,8 +19,10 @@ class CritiqueView extends StatefulWidget {
     @required this.critique,
     @required this.currentUser,
   }) : super(key: key);
+
   final CritiqueModel critique;
   final UserModel currentUser;
+
   @override
   State createState() => CritiqueViewState(
         critique: critique,
@@ -38,6 +35,7 @@ class CritiqueViewState extends State<CritiqueView> {
     @required this.critique,
     @required this.currentUser,
   });
+
   final CritiqueModel critique;
   final UserModel currentUser;
 
@@ -79,13 +77,103 @@ class CritiqueViewState extends State<CritiqueView> {
             UserModel userWhoPosted = snapshot.data[0];
             MovieModel movie = snapshot.data[1];
 
-            return buildCritiqueView(
+            return movieView(
               context: context,
               movie: movie,
               userWhoPosted: userWhoPosted,
             );
+
+          // return buildCritiqueView(
+          //   context: context,
+          //   movie: movie,
+          //   userWhoPosted: userWhoPosted,
+          // );
         }
       },
+    );
+  }
+
+  Widget movieView({
+    @required BuildContext context,
+    @required UserModel userWhoPosted,
+    @required MovieModel movie,
+  }) {
+    return Container(
+      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+      margin: EdgeInsets.only(bottom: 20.0),
+      height: 300,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage('${movie.poster}'),
+                      fit: BoxFit.cover),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(5.0, 5.0),
+                        blurRadius: 10.0)
+                  ]),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${movie.title}',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text("\"${critique.message}\"",
+                      style: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                  Spacer(),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          '${userWhoPosted.imgUrl}',
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        '${userWhoPosted.username}',
+                        style: TextStyle(
+                          fontSize: 12.0,
+                          color: Colors.grey,
+                          height: 1.5,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0)),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(5.0, 5.0),
+                      blurRadius: 10.0)
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -102,7 +190,7 @@ class CritiqueViewState extends State<CritiqueView> {
             width: 130,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(''),
+                image: NetworkImage(DUMMY_POSTER_IMG_URL),
                 fit: BoxFit.scaleDown,
               ),
             ),

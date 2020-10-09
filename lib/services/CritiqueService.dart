@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
 abstract class ICritiqueService {
@@ -21,35 +20,34 @@ abstract class ICritiqueService {
 
 class CritiqueService extends ICritiqueService {
   final CollectionReference _critiquesDB =
-      Firestore.instance.collection('Critiques');
-  final CollectionReference _dataDB = Firestore.instance.collection('Data');
+      FirebaseFirestore.instance.collection('Critiques');
+  final CollectionReference _dataDB =
+      FirebaseFirestore.instance.collection('Data');
   final CollectionReference _followersDB =
-      Firestore.instance.collection('Followers');
+      FirebaseFirestore.instance.collection('Followers');
 
   @override
   Future<void> createCritique({@required CritiqueModel critique}) async {
     try {
-      final WriteBatch batch = Firestore.instance.batch();
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      final DocumentReference critiqueDocRef = _critiquesDB.document();
-      critique.id = critiqueDocRef.documentID;
-      batch.setData(
+      final DocumentReference critiqueDocRef = _critiquesDB.doc();
+      critique.id = critiqueDocRef.id;
+      batch.set(
         critiqueDocRef,
         critique.toMap(),
       );
 
-      final DocumentReference tableCountsDocRef =
-          _dataDB.document('tableCounts');
-      batch.updateData(
+      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
+      batch.update(
         tableCountsDocRef,
         {
           'critiques': FieldValue.increment(1),
         },
       );
 
-      final DocumentReference followerDoc =
-          _followersDB.document(critique.userID);
-      batch.updateData(
+      final DocumentReference followerDoc = _followersDB.doc(critique.userID);
+      batch.update(
         followerDoc,
         {
           'lastPost': DateTime.now(),
@@ -79,9 +77,9 @@ class CritiqueService extends ICritiqueService {
         query = query.where('safe', isEqualTo: safe);
       }
 
-      QuerySnapshot querySnapshot = await query.getDocuments();
+      QuerySnapshot querySnapshot = await query.get();
 
-      List<CritiqueModel> critiques = querySnapshot.documents
+      List<CritiqueModel> critiques = querySnapshot.docs
           .map(
             (DocumentSnapshot documentSnapshot) =>
                 CritiqueModel.extractDocument(ds: documentSnapshot),
@@ -102,7 +100,7 @@ class CritiqueService extends ICritiqueService {
     @required dynamic data,
   }) async {
     try {
-      await _critiquesDB.document(critiqueID).updateData(data);
+      await _critiquesDB.doc(critiqueID).update(data);
       return;
     } catch (e) {
       throw Exception(
@@ -117,7 +115,7 @@ class CritiqueService extends ICritiqueService {
   }) async {
     try {
       DocumentSnapshot documentSnapshot =
-          (await _critiquesDB.document(critiqueID).get());
+          (await _critiquesDB.doc(critiqueID).get());
 
       return CritiqueModel.extractDocument(ds: documentSnapshot);
     } catch (e) {
@@ -133,9 +131,9 @@ class CritiqueService extends ICritiqueService {
     try {
       Query query = _critiquesDB.where('userID', isEqualTo: userID);
 
-      QuerySnapshot querySnapshot = await query.getDocuments();
+      QuerySnapshot querySnapshot = await query.get();
 
-      List<CritiqueModel> critiques = querySnapshot.documents
+      List<CritiqueModel> critiques = querySnapshot.docs
           .map(
             (DocumentSnapshot documentSnapshot) =>
                 CritiqueModel.extractDocument(ds: documentSnapshot),
@@ -157,26 +155,29 @@ class CritiqueService extends ICritiqueService {
     @required DateTime created,
   }) async {
     try {
-      final WriteBatch batch = Firestore.instance.batch();
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
 
       batch.delete(
-        _critiquesDB.document(critiqueID),
+        _critiquesDB.doc(critiqueID),
       );
 
-      batch.updateData(
-        _dataDB.document('tableCounts'),
+      batch.update(
+        _dataDB.doc('tableCounts'),
         {
           'critiques': FieldValue.increment(-1),
         },
       );
 
-      batch.updateData(_followersDB.document(userID), {
-        'recentPosts': FieldValue.arrayRemove(
-          [
-            critiqueID,
-          ],
-        )
-      });
+      batch.update(
+        _followersDB.doc(userID),
+        {
+          'recentPosts': FieldValue.arrayRemove(
+            [
+              critiqueID,
+            ],
+          )
+        },
+      );
 
       batch.commit();
 

@@ -3,14 +3,10 @@ import 'package:critic/pages/TermsServicePage.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings_ui/settings_ui.dart';
-
 import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
 import 'package:critic/blocs/allUsers/Bloc.dart' as ALL_USERS_BP;
-
-import '../Constants.dart';
 import '../ServiceLocator.dart';
 
 class SettingsPage extends StatelessWidget {

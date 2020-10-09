@@ -1,8 +1,4 @@
 import 'package:critic/models/UserModel.dart';
-
-import 'SearchUsersResult.dart';
-import 'package:algolia/algolia.dart';
-
 class SearchUsersCache {
   final _cache = <String, List<UserModel>>{};
 

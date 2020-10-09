@@ -5,7 +5,6 @@ import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:critic/widgets/AppBarLayout.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
@@ -102,8 +101,8 @@ class EntryPageState extends State<EntryPage> {
   Widget buildAppBar({@required int index}) {
     switch (index) {
       case 0:
-        return AppBarLayout(
-          appBarTitle: 'Home',
+        return AppBar(
+          title: Text('Home'),
           leading: IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
@@ -128,7 +127,7 @@ class EntryPageState extends State<EntryPage> {
           actions: <Widget>[
             IconButton(
               tooltip: 'Movie Search',
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.movie),
               onPressed: () {
                 final SearchMoviesRepository _searchMoviesRepository =
                     SearchMoviesRepository(
@@ -149,8 +148,8 @@ class EntryPageState extends State<EntryPage> {
           ],
         );
       case 1:
-        return AppBarLayout(
-          appBarTitle: 'Profile',
+        return AppBar(
+          title: Text('Profile'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.edit),
@@ -171,8 +170,10 @@ class EntryPageState extends State<EntryPage> {
           ],
         );
       case 2:
-        return AppBarLayout(
-          appBarTitle: 'Settings',
+        return AppBar(
+          title: Text(
+            'Settings',
+          ),
         );
       default:
         return null;

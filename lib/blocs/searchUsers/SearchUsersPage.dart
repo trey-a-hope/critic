@@ -79,7 +79,6 @@ class _SearchBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SEARCH_USERS_BP.SearchUsersBloc,
         SEARCH_USERS_BP.SearchUsersState>(
-      bloc: BlocProvider.of<SEARCH_USERS_BP.SearchUsersBloc>(context),
       builder: (BuildContext context, SEARCH_USERS_BP.SearchUsersState state) {
         if (state is SEARCH_USERS_BP.SearchUsersStateStart) {
           return Expanded(

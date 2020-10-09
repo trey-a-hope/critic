@@ -88,7 +88,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                         Text(
                                           state.otherUser.username,
                                           style:
-                                              Theme.of(context).textTheme.title,
+                                              Theme.of(context).textTheme.headline6,
                                         ),
                                         ListTile(
                                           contentPadding: EdgeInsets.all(0),

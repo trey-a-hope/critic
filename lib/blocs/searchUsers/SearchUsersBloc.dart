@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/FollowerService.dart';
-import 'package:critic/services/ModalService.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';

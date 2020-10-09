@@ -1,16 +1,11 @@
 import 'package:critic/ServiceLocator.dart';
-import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
-import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
 import 'package:critic/blocs/followers/FollowersState.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/services/message_codec.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
-
 import 'FollowersBloc.dart';
 
 class FollowersPage extends StatefulWidget {

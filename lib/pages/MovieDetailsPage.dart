@@ -2,7 +2,7 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/services/MovieService.dart';
-import 'package:critic/widgets/GoodButton.dart';
+import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,9 +104,11 @@ class MovieDetailsPage extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: GoodButton(
-                      title: 'Write Critique',
-                      onTap: () {
+                    child: FullWidthButton(
+                      textColor: Colors.white,
+                      buttonColor: Colors.red,
+                      text: 'Write Critique',
+                      onPressed: () {
                         Route route = MaterialPageRoute(
                           builder: (context) => BlocProvider(
                             create: (context) =>

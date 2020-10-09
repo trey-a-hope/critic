@@ -47,7 +47,8 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
               addAutomaticKeepAlives: true,
               itemCount: state.critiques.length,
               itemBuilder: (BuildContext context, int index) {
-                CritiqueModel critique = state.critiques[index];
+                final CritiqueModel critique = state.critiques[index];
+                
                 return CritiqueView(
                   critique: critique,
                   currentUser: state.currentUser,

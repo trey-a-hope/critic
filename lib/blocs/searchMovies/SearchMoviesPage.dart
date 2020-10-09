@@ -77,7 +77,6 @@ class _SearchBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
-      bloc: BlocProvider.of<SearchMoviesBloc>(context),
       builder: (BuildContext context, SearchMoviesState state) {
         if (state is SearchMoviesStateEmpty) {
           return Expanded(

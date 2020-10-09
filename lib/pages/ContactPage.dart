@@ -1,11 +1,5 @@
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/SideDrawer.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
-import '../Constants.dart';
-import '../ServiceLocator.dart';
+import 'package:flutter/material.dart';
 
 class ContactPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();

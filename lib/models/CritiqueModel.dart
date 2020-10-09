@@ -20,14 +20,16 @@ class CritiqueModel {
       @required this.created});
 
   static CritiqueModel extractDocument({@required DocumentSnapshot ds}) {
+    final Map<String, dynamic> data = ds.data();
+
     return CritiqueModel(
-      imdbID: ds.data['imdbID'] as String,
-      id: ds.data['id'] as String,
-      userID: ds.data['userID'] as String,
-      message: ds.data['message'] as String,
-      safe: ds.data['safe'] as bool,
-      modified: ds.data['modified'].toDate(),
-      created: ds.data['created'].toDate(),
+      imdbID: data['imdbID'] as String,
+      id: data['id'] as String,
+      userID: data['userID'] as String,
+      message: data['message'] as String,
+      safe: data['safe'] as bool,
+      modified: data['modified'].toDate(),
+      created: data['created'].toDate(),
     );
   }
 

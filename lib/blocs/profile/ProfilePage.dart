@@ -1,12 +1,10 @@
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
 import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
-
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -81,7 +79,7 @@ class ProfilePageState extends State<ProfilePage> {
                                         Text(
                                           state.currentUser.username,
                                           style:
-                                              Theme.of(context).textTheme.title,
+                                              Theme.of(context).textTheme.headline6,
                                         ),
                                         ListTile(
                                           contentPadding: EdgeInsets.all(0),

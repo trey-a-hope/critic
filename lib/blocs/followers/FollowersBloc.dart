@@ -1,13 +1,8 @@
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:critic/blocs/followers/FollowersEvent.dart';
 import 'package:critic/blocs/followers/FollowersState.dart';
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
