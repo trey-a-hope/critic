@@ -1,5 +1,6 @@
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/editProfile/Bloc.dart';
+import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ class EditProfilePageState extends State<EditProfilePage>
     implements EditProfileBlocDelegate {
   final TextEditingController _usernameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
   EditProfileBloc _editProfileBloc;
 
   @override
@@ -42,34 +45,32 @@ class EditProfilePageState extends State<EditProfilePage>
           }
 
           if (state is EditProfileStartState) {
-            _usernameController.text = state.currentUser.username;
-
             return SafeArea(
               child: Form(
-                key: state.formKey,
-                autovalidate: state.autoValidate,
+                key: _formKey,
+                autovalidate: _autoValidate,
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(40),
-                      child: InkWell(
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: state.profilePicImageProvider,
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          _editProfileBloc.add(
-                            PickProfileImageEvent(),
-                          );
-                        },
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.all(40),
+                    //   child: InkWell(
+                    //     child: Container(
+                    //       width: 100,
+                    //       height: 100,
+                    //       decoration: BoxDecoration(
+                    //         image: DecorationImage(
+                    //           image: state.profilePicImageProvider,
+                    //           fit: BoxFit.fitHeight,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     onTap: () {
+                    //       _editProfileBloc.add(
+                    //         PickProfileImageEvent(),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
                     Padding(
                       padding: EdgeInsets.all(40),
                       child: TextFormField(
@@ -89,8 +90,9 @@ class EditProfilePageState extends State<EditProfilePage>
                       onPressed: () {
                         _editProfileBloc.add(
                           SaveFormEvent(
-                              username: _usernameController.text,
-                              formKey: state.formKey),
+                            username: _usernameController.text,
+                            formKey: _formKey,
+                          ),
                         );
                       },
                     )
@@ -110,5 +112,10 @@ class EditProfilePageState extends State<EditProfilePage>
   void showMessage({String message}) {
     locator<ModalService>()
         .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+  }
+
+  @override
+  void setTextFields({@required UserModel user}) {
+    _usernameController.text = user.username;
   }
 }

@@ -18,13 +18,14 @@ abstract class IAuthService {
 
 class AuthService extends IAuthService {
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final CollectionReference usersDB = FirebaseFirestore.instance.collection('Users');
+  final CollectionReference usersDB =
+      FirebaseFirestore.instance.collection('Users');
 
   @override
   Future<UserModel> getCurrentUser() async {
     try {
-      User firebaseUser = auth.currentUser;
-      DocumentSnapshot documentSnapshot =
+      final User firebaseUser = auth.currentUser;
+      final DocumentSnapshot documentSnapshot =
           await usersDB.doc(firebaseUser.uid).get();
       return UserModel.extractDocument(ds: documentSnapshot);
     } catch (e) {

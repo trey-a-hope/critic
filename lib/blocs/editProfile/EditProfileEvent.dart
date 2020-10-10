@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -13,11 +15,6 @@ class LoadPageEvent extends EditProfileEvent {
   List<Object> get props => [];
 }
 
-class PickProfileImageEvent extends EditProfileEvent {
-  PickProfileImageEvent();
-  List<Object> get props => [];
-}
-
 class SaveFormEvent extends EditProfileEvent {
   final GlobalKey<FormState> formKey;
   final String username;
@@ -29,5 +26,17 @@ class SaveFormEvent extends EditProfileEvent {
 
   List<Object> get props => [
         formKey,
+      ];
+}
+
+class UploadPictureEvent extends EditProfileEvent {
+  final File image;
+
+  UploadPictureEvent({
+    @required this.image,
+  });
+
+  List<Object> get props => [
+        image,
       ];
 }

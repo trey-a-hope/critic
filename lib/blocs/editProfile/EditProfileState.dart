@@ -11,22 +11,14 @@ class LoadingState extends EditProfileState {}
 
 class EditProfileStartState extends EditProfileState {
   final UserModel currentUser;
-  final bool autoValidate;
-  final GlobalKey<FormState> formKey;
-  final ImageProvider profilePicImageProvider;
 
-  EditProfileStartState(
-      {@required this.currentUser,
-      @required this.autoValidate,
-      @required this.formKey,
-      @required this.profilePicImageProvider});
+  EditProfileStartState({
+    @required this.currentUser,
+  });
 
   @override
   List<Object> get props => [
         currentUser,
-        autoValidate,
-        formKey,
-        profilePicImageProvider,
       ];
 }
 

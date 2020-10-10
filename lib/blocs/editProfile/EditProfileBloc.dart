@@ -10,7 +10,12 @@ import 'Bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 abstract class EditProfileBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({
+    @required String message,
+  });
+  void setTextFields({
+    @required UserModel user,
+  });
 }
 
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
@@ -18,8 +23,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
   EditProfileBlocDelegate _editProfileBlocDelegate;
   UserModel _currentUser;
-  File _profilePic;
-  ImageProvider _profilePicImageProvider;
 
   void setDelegate({@required EditProfileBlocDelegate delegate}) {
     this._editProfileBlocDelegate = delegate;
@@ -32,80 +35,66 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
       _currentUser = await locator<AuthService>().getCurrentUser();
 
-      _profilePicImageProvider = NetworkImage(_currentUser.imgUrl);
+      _editProfileBlocDelegate.setTextFields(user: _currentUser);
 
       yield EditProfileStartState(
-          currentUser: _currentUser,
-          autoValidate: false,
-          formKey: GlobalKey<FormState>(),
-          profilePicImageProvider: _profilePicImageProvider);
+        currentUser: _currentUser,
+      );
     }
 
-    if (event is PickProfileImageEvent) {
-      final PickedFile image =
-          await ImagePicker().getImage(source: ImageSource.gallery);
+    if (event is UploadPictureEvent) {
+      final File image = event.image;
 
-      if (image == null) return;
+      try {
+        final String imgUrl = await locator<StorageService>().uploadImage(
+          file: image,
+          imgPath: 'Images/Users/${_currentUser.uid}/Profile',
+        );
 
-      //todo: Update image upload logic.
-      // _profilePicImageProvider = FileImage(image);
-      // _profilePic = image;
+        await locator<UserService>().updateUser(
+          uid: _currentUser.uid,
+          data: {
+            'imgUrl': imgUrl,
+          },
+        );
 
-      yield EditProfileStartState(
-          currentUser: _currentUser,
-          autoValidate: false,
-          formKey: GlobalKey<FormState>(),
-          profilePicImageProvider: _profilePicImageProvider);
+        add(LoadPageEvent());
+      } catch (error) {
+        _editProfileBlocDelegate.showMessage(
+          message: error.toString(),
+        );
+      }
     }
 
     if (event is SaveFormEvent) {
-      if (event.formKey.currentState.validate()) {
-        yield LoadingState();
-        try {
-          final String username = event.username;
+      yield LoadingState();
+      try {
+        final String username = event.username;
 
-          _editProfileBlocDelegate.showMessage(message: 'Updating...');
+        _editProfileBlocDelegate.showMessage(message: 'Updating...');
 
-          await locator<UserService>().updateUser(
-            uid: _currentUser.uid,
-            data: {
-              'username': username,
-              'modified': DateTime.now(),
-            },
-          );
+        await locator<UserService>().updateUser(
+          uid: _currentUser.uid,
+          data: {
+            'username': username,
+            'modified': DateTime.now(),
+          },
+        );
 
-          _currentUser.username = username;
+        _currentUser.username = username;
 
-          if (_profilePic != null) {
-            final String newImgUrl =
-                await locator<StorageService>().uploadImage(
-              file: _profilePic,
-              imgPath: 'Images/Users/${_currentUser.uid}/Profile',
-            );
+        _editProfileBlocDelegate.showMessage(message: 'Updated!...');
 
-            await locator<UserService>().updateUser(
-              uid: _currentUser.uid,
-              data: {'imgUrl': newImgUrl},
-            );
-          }
+        yield EditProfileStartState(
+          currentUser: _currentUser,
+        );
+      } catch (error) {
+        _editProfileBlocDelegate.showMessage(
+            message: 'Error: ${error.toString()}');
 
-          _editProfileBlocDelegate.showMessage(message: 'Updated!...');
-
-          yield EditProfileStartState(
-              currentUser: _currentUser,
-              autoValidate: true,
-              formKey: event.formKey,
-              profilePicImageProvider: _profilePicImageProvider);
-        } catch (error) {
-          _editProfileBlocDelegate.showMessage(
-              message: 'Error: ${error.toString()}');
-
-          yield EditProfileStartState(
-              currentUser: _currentUser,
-              autoValidate: true,
-              formKey: event.formKey,
-              profilePicImageProvider: _profilePicImageProvider);
-        }
+        yield EditProfileStartState(
+          currentUser: _currentUser,
+        );
       }
     }
   }
