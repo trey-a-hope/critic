@@ -98,15 +98,23 @@ class CritiqueViewState extends State<CritiqueView> {
     @required UserModel userWhoPosted,
     @required MovieModel movie,
   }) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-      margin: EdgeInsets.only(bottom: 20.0),
-      height: 300,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
+    return InkWell(
+      onTap: () {
+        locator<ModalService>().showAlert(
+          context: context,
+          title: 'To Do',
+          message: 'Open critique details page.',
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+        margin: EdgeInsets.only(bottom: 20.0),
+        height: 300,
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage('${movie.poster}'),
                       fit: BoxFit.cover),
@@ -116,63 +124,66 @@ class CritiqueViewState extends State<CritiqueView> {
                         color: Colors.grey,
                         offset: Offset(5.0, 5.0),
                         blurRadius: 10.0)
-                  ]),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${movie.title}',
-                    style:
-                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text("\"${critique.message}\"",
-                      style: TextStyle(color: Colors.grey, fontSize: 12.0)),
-                  Spacer(),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          '${userWhoPosted.imgUrl}',
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        '${userWhoPosted.username}',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Colors.grey,
-                          height: 1.5,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  )
-                ],
+                  ],
+                ),
               ),
-              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${movie.title}',
+                      style: TextStyle(
+                          fontSize: 22.0, fontWeight: FontWeight.w700),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text("\"${critique.message}\"",
+                        style: TextStyle(color: Colors.grey.shade900, fontSize: 12.0)),
+                    Spacer(),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            '${userWhoPosted.imgUrl}',
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          '${userWhoPosted.username}',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                            height: 1.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10.0),
-                    topRight: Radius.circular(10.0)),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(5.0, 5.0),
-                      blurRadius: 10.0)
-                ],
+                    topRight: Radius.circular(10.0),
+                  ),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(5.0, 5.0),
+                        blurRadius: 10.0)
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

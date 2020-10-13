@@ -78,8 +78,9 @@ class ProfilePageState extends State<ProfilePage> {
                                       children: <Widget>[
                                         Text(
                                           state.currentUser.username,
-                                          style:
-                                              Theme.of(context).textTheme.headline6,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6,
                                         ),
                                         ListTile(
                                           contentPadding: EdgeInsets.all(0),
@@ -177,21 +178,13 @@ class ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 2.0, color: Colors.black),
-                                borderRadius: BorderRadius.circular(10.0),
-                                image: DecorationImage(
-                                    image:
-                                        Image.network(state.currentUser.imgUrl)
-                                            .image,
-                                    fit: BoxFit.cover),
+                            Center(
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  '${state.currentUser.imgUrl}',
+                                ),
                               ),
-                              margin: EdgeInsets.only(left: 16.0),
-                            ),
+                            )
                           ],
                         ),
                         SizedBox(height: 20.0),
@@ -208,7 +201,8 @@ class ProfilePageState extends State<ProfilePage> {
                             addAutomaticKeepAlives: true,
                             itemCount: state.critiques.length,
                             itemBuilder: (BuildContext context, int index) {
-                              CritiqueModel critique = state.critiques[index];
+                              final CritiqueModel critique =
+                                  state.critiques[index];
                               return CritiqueView(
                                 currentUser: state.currentUser,
                                 critique: critique,
