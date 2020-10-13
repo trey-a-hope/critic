@@ -10,16 +10,8 @@ import 'SearchMoviesState.dart';
 class SearchMoviesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Search Movies',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: Column(
-        children: <Widget>[_SearchBar(), _SearchBody()],
-      ),
+    return Column(
+      children: <Widget>[_SearchBar(), _SearchBody()],
     );
   }
 }

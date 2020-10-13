@@ -6,7 +6,6 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
-
 class HomePage extends StatefulWidget {
   @override
   State createState() => HomePageState();
@@ -14,6 +13,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> implements HomeBlocDelegate {
   HomeBloc _homeBloc;
+
+  final GlobalKey keyButton = GlobalKey();
 
   @override
   void initState() {
@@ -26,6 +27,8 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
   void dispose() {
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,7 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
               itemCount: state.critiques.length,
               itemBuilder: (BuildContext context, int index) {
                 final CritiqueModel critique = state.critiques[index];
-                
+
                 return CritiqueView(
                   critique: critique,
                   currentUser: state.currentUser,

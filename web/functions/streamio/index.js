@@ -17,10 +17,8 @@ exports.addActivityToFeed = functions.https.onRequest((req, res) => {
         movieTitle: 'Titanic',
         uid: 'UIDXXXHERE'
     }).then((result) => {
-        console.log(result);
         return res.send(result);
     }).catch((error) => {
-        console.log(error);
         return res.send(error);
     });
 });
@@ -31,10 +29,8 @@ exports.getUserFeed = functions.https.onRequest((req, res) => {
     const ericFeed = streamioClient.feed('Critiques', 'TreyHope');
 
     ericFeed.get({ limit: 10 }).then((results) => {
-        console.log(results);
         return res.send(results);
     }).catch((error) => {
-        console.log(error);
         return res.send(error);
     });
 });

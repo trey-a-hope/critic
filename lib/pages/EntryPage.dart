@@ -10,6 +10,7 @@ import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
 import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -17,16 +18,24 @@ class EntryPage extends StatefulWidget {
 }
 
 class EntryPageState extends State<EntryPage> {
+  static GlobalKey homeGlobalKey = GlobalKey();
+  static GlobalKey critiqueGlobalKey = GlobalKey();
+  static GlobalKey searchGlobalKey = GlobalKey();
+  static GlobalKey profileGlobalKey = GlobalKey();
+  static GlobalKey settingsGlobalKey = GlobalKey();
+
   int currentIndex = 0;
 
   final List<String> childrenTitle = [
     'Home',
+    'Critique',
+    'Search',
     'Profile',
     'Settings',
   ];
 
   final List<Widget> children = [
-    //BLoC for Home Page.
+    //Home Page
     BlocProvider(
       create: (BuildContext context) => HOME_BP.HomeBloc()
         ..add(
@@ -34,7 +43,25 @@ class EntryPageState extends State<EntryPage> {
         ),
       child: HOME_BP.HomePage(),
     ),
-    //BLoC for Profile Page.
+    //Critique Page
+    BlocProvider(
+      create: (context) => SearchMoviesBloc(
+        searchMoviesRepository: SearchMoviesRepository(
+          cache: SearchMoviesCache(),
+        ),
+      ),
+      child: SearchMoviesPage(),
+    ),
+    //Search Users Page
+    BlocProvider(
+      create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
+        searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
+          cache: SEARCH_USERS_BP.SearchUsersCache(),
+        ),
+      )..add(SEARCH_USERS_BP.LoadPageEvent()),
+      child: SEARCH_USERS_BP.SearchUsersPage(),
+    ),
+    //Profile Page
     BlocProvider(
       create: (BuildContext context) => PROFILE_BP.ProfileBloc()
         ..add(
@@ -42,12 +69,16 @@ class EntryPageState extends State<EntryPage> {
         ),
       child: PROFILE_BP.ProfilePage(),
     ),
-    //BLoC for Settings Page.
+    //Settings Page
     SettingsPage(),
   ];
+
   final List<BottomNavyBarItem> items = [
     BottomNavyBarItem(
-      icon: Icon(Icons.home),
+      icon: Icon(
+        Icons.home,
+        key: homeGlobalKey,
+      ),
       title: Text(
         'Home',
         style: TextStyle(fontWeight: FontWeight.bold),
@@ -56,27 +87,243 @@ class EntryPageState extends State<EntryPage> {
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
-      icon: Icon(Icons.person),
+      icon: Icon(
+        Icons.add,
+        key: critiqueGlobalKey,
+      ),
+      title: Text(
+        'Critique',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      activeColor: Colors.red,
+      textAlign: TextAlign.center,
+    ),
+    BottomNavyBarItem(
+      icon: Icon(
+        Icons.search,
+        key: searchGlobalKey,
+      ),
+      title: Text(
+        'Search',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      activeColor: Colors.red,
+      textAlign: TextAlign.center,
+    ),
+    BottomNavyBarItem(
+      icon: Icon(
+        Icons.person,
+        key: profileGlobalKey,
+      ),
       title: Text(
         'Profile',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.blue,
+      activeColor: Colors.red,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
-      icon: Icon(Icons.settings),
+      icon: Icon(
+        Icons.settings,
+        key: settingsGlobalKey,
+      ),
       title: Text(
         'Settings',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.green,
+      activeColor: Colors.red,
       textAlign: TextAlign.center,
     ),
   ];
 
+  void _showTutorial() async {
+    await Future.delayed(Duration(microseconds: 100));
+
+    TutorialCoachMark tutorial = TutorialCoachMark(context,
+        targets: [
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: "Target 1",
+            keyTarget: homeGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Home Page",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "This is where you can view your timeline. Your feed consists of you and people you follow.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: "Target 2",
+            keyTarget: critiqueGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Create Critique Page",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "This is where you search a movie/tv show that you want to critique.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: "Target 3",
+            keyTarget: searchGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Search Users Page",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "Search for other users to follow in the app.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: "Target 4",
+            keyTarget: profileGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Profile Page",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "View your critiques, followers, and who you follow.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: "Target 5",
+            keyTarget: settingsGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Settings Page",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          "Handle settings for the app. Enjoy!",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ], // List<TargetFocus>
+        colorShadow: Colors.black, // DEFAULT Colors.black
+        // alignSkip: Alignment.bottomRight,
+        // textSkip: "SKIP",
+        // paddingFocus: 10,
+        onFinish: () {
+      print("finish");
+    }, onClickTarget: (target) {
+      print(target);
+    }, onClickSkip: () {
+      print("skip");
+    })
+      ..show();
+
+    // tutorial.skip();
+    // tutorial.finish();
+    // tutorial.next(); // call next target programmatically
+    // tutorial.previous(); // call previous target programmatically
+  }
+
   @override
   void initState() {
+    _showTutorial();
     super.initState();
   }
 
@@ -102,52 +349,23 @@ class EntryPageState extends State<EntryPage> {
     switch (index) {
       case 0:
         return AppBar(
-          title: Text('Home'),
-          leading: IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              final SEARCH_USERS_BP.SearchUsersRepository
-                  _searchUsersRepository =
-                  SEARCH_USERS_BP.SearchUsersRepository(
-                cache: SEARCH_USERS_BP.SearchUsersCache(),
-              );
-
-              Route route = MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
-                      searchUsersRepository: _searchUsersRepository)
-                    ..add(SEARCH_USERS_BP.LoadPageEvent()),
-                  child: SEARCH_USERS_BP.SearchUsersPage(),
-                ),
-              );
-
-              Navigator.push(context, route);
-            },
+          title: Text(
+            'Home',
           ),
-          actions: <Widget>[
-            IconButton(
-              tooltip: 'Movie Search',
-              icon: Icon(Icons.movie),
-              onPressed: () {
-                final SearchMoviesRepository _searchMoviesRepository =
-                    SearchMoviesRepository(
-                  cache: SearchMoviesCache(),
-                );
-
-                Route route = MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => SearchMoviesBloc(
-                        searchMoviesRepository: _searchMoviesRepository),
-                    child: SearchMoviesPage(),
-                  ),
-                );
-
-                Navigator.push(context, route);
-              },
-            )
-          ],
         );
       case 1:
+        return AppBar(
+          title: Text(
+            'Create Critique',
+          ),
+        );
+      case 2:
+        return AppBar(
+          title: Text(
+            'Search Users',
+          ),
+        );
+      case 3:
         return AppBar(
           title: Text('Profile'),
           actions: <Widget>[
@@ -169,7 +387,7 @@ class EntryPageState extends State<EntryPage> {
             )
           ],
         );
-      case 2:
+      case 4:
         return AppBar(
           title: Text(
             'Settings',
