@@ -38,7 +38,9 @@ class CritiqueModel {
       uid: map['uid'],
       message: map['message'],
       modified: map['modified'],
-      created: map['created'],
+      created: DateTime.parse(map['time']).subtract(
+        Duration(hours: 4),
+      ), //time is 4 hours fast, I might have selected the wrong region for Stream.
       movieTitle: map['movieTitle'],
       moviePoster: map['moviePoster'],
       movieYear: map['movieYear'],
