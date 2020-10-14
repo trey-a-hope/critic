@@ -4,7 +4,7 @@ import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
-import 'package:critic/extensions/HexColor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,7 @@ import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
 import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -90,7 +91,7 @@ class EntryPageState extends State<EntryPage> {
     ),
     BottomNavyBarItem(
       icon: Icon(
-        Icons.add,
+        MdiIcons.movieEdit,
         key: critiqueGlobalKey,
       ),
       title: Text(
@@ -304,23 +305,21 @@ class EntryPageState extends State<EntryPage> {
             ],
           ),
         ], // List<TargetFocus>
-        colorShadow: Colors.black, // DEFAULT Colors.black
-        // alignSkip: Alignment.bottomRight,
-        // textSkip: "SKIP",
-        // paddingFocus: 10,
-        onFinish: () {
+        colorShadow: Colors.black, onFinish: () {
       print("finish");
     }, onClickTarget: (target) {
       print(target);
     }, onClickSkip: () {
       print("skip");
-    })
-      ..show();
+    });
 
-    // tutorial.skip();
-    // tutorial.finish();
-    // tutorial.next(); // call next target programmatically
-    // tutorial.previous(); // call previous target programmatically
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final bool seenTutorial = prefs.getBool('seenTutorial') ?? false;
+
+    if (!seenTutorial) {
+      tutorial.show();
+      prefs.setBool('seenTutorial', true);
+    }
   }
 
   @override

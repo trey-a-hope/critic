@@ -6,6 +6,8 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State createState() => HomePageState();
@@ -28,8 +30,6 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -40,7 +40,23 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
 
         if (state is NoCritiquesState) {
           return Center(
-            child: Text('None critiques at this moment.'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  MdiIcons.movieEdit,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+                Text(
+                  'No critiques at this moment.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text('Create your own or follow someone.')
+              ],
+            ),
           );
         }
 
