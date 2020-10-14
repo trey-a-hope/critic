@@ -8,8 +8,9 @@ import 'dart:convert' show Encoding, json;
 
 abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
-  Future<CritiqueModel> getCritique({@required String critiqueID});
   Future<List<CritiqueModel>> retrieveCritiques();
+
+  Future<CritiqueModel> getCritique({@required String critiqueID});
   Future<List<CritiqueModel>> retrieveCritiquesForUser({
     @required String userID,
   });
@@ -33,23 +34,9 @@ class CritiqueService extends ICritiqueService {
   @override
   Future<void> createCritique({@required CritiqueModel critique}) async {
     try {
-      Map data = {
-        'actor': critique.uid,
-        'message': critique.message,
-        'uid': critique.uid,
-        'movieTitle': critique.movieTitle,
-        'moviePoster': critique.moviePoster,
-        'movieYear': critique.movieYear,
-        'moviePlot': critique.moviePlot,
-        'movieDirector': critique.movieDirector,
-        'imdbID': critique.imdbID,
-        'imdbRating': critique.imdbRating,
-        'imdbVotes': critique.imdbVotes,
-      };
-
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}AddCritiqueToFeed',
-        body: data,
+        body: critique.toJson(),
         headers: {'content-type': 'application/x-www-form-urlencoded'},
       );
 
@@ -57,7 +44,9 @@ class CritiqueService extends ICritiqueService {
 
       if (map['statusCode'] != null) {
         throw PlatformException(
-            message: map['raw']['message'], code: map['raw']['code']);
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
       }
 
       final String critiqueID = map['id'];
@@ -124,22 +113,7 @@ class CritiqueService extends ICritiqueService {
 
         List<CritiqueModel> critiques = results
             .map(
-              (result) => CritiqueModel(
-                imdbID: result['imdbID'],
-                id: result['id'],
-                uid: result['uid'],
-                message: result['message'],
-                safe: result['safe'],
-                modified: result['modified'],
-                created: result['created'],
-                movieTitle: result['movieTitle'],
-                moviePoster: result['moviePoster'],
-                movieYear: result['movieYear'],
-                moviePlot: result['moviePlot'],
-                movieDirector: result['movieDirector'],
-                imdbRating: result['imdbRating'],
-                imdbVotes: result['imdbVotes'],
-              ),
+              (result) => CritiqueModel.fromJSON(map: result),
             )
             .toList();
 

@@ -32,4 +32,39 @@ class CritiqueModel {
     @required this.imdbRating,
     @required this.imdbVotes,
   });
+
+  factory CritiqueModel.fromJSON({@required Map map}) {
+    return CritiqueModel(
+      imdbID: map['imdbID'],
+      id: map['id'],
+      uid: map['uid'],
+      message: map['message'],
+      safe: map['safe'],
+      modified: map['modified'],
+      created: map['created'],
+      movieTitle: map['movieTitle'],
+      moviePoster: map['moviePoster'],
+      movieYear: map['movieYear'],
+      moviePlot: map['moviePlot'],
+      movieDirector: map['movieDirector'],
+      imdbRating: map['imdbRating'],
+      imdbVotes: map['imdbVotes'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'actor': uid,
+      'message': message,
+      'uid': uid,
+      'movieTitle': movieTitle,
+      'moviePoster': moviePoster,
+      'movieYear': movieYear,
+      'moviePlot': moviePlot,
+      'movieDirector': movieDirector,
+      'imdbID': imdbID,
+      'imdbRating': imdbRating,
+      'imdbVotes': imdbVotes,
+    };
+  }
 }
