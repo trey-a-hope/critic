@@ -7,20 +7,20 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show Encoding, json;
 
 abstract class ICritiqueService {
+  //complete
   Future<void> createCritique({@required CritiqueModel critique});
   Future<List<CritiqueModel>> retrieveCritiques();
-
+  Future<void> deleteCritique({
+    @required String critiqueID,
+    @required String uid,
+  });
+  //not complete
   Future<CritiqueModel> getCritique({@required String critiqueID});
   Future<List<CritiqueModel>> retrieveCritiquesForUser({
     @required String userID,
   });
   Future<void> updateCritique(
       {@required String critiqueID, @required dynamic data});
-  Future<void> deleteCritique({
-    @required String critiqueID,
-    @required String userID,
-    @required DateTime created,
-  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -187,31 +187,39 @@ class CritiqueService extends ICritiqueService {
   @override
   Future<void> deleteCritique({
     @required String critiqueID,
-    @required String userID,
-    @required DateTime created,
+    @required String uid,
   }) async {
     try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}DeleteCritiqueFromFeed',
+        body: {
+          'uid': uid,
+          'critiqueID': critiqueID,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+
       final WriteBatch batch = FirebaseFirestore.instance.batch();
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
 
       batch.delete(
-        _critiquesDB.doc(critiqueID),
+        critiqueDocRef,
       );
 
       batch.update(
-        _dataDB.doc('tableCounts'),
+        tableCountsDocRef,
         {
           'critiques': FieldValue.increment(-1),
-        },
-      );
-
-      batch.update(
-        _followersDB.doc(userID),
-        {
-          'recentPosts': FieldValue.arrayRemove(
-            [
-              critiqueID,
-            ],
-          )
         },
       );
 

@@ -1,4 +1,5 @@
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
@@ -42,6 +43,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
         if (state is LoadedState) {
           final CritiqueModel critique = state.critiqueModel;
+          final UserModel currentUser = state.currentUser;
 
           return Scaffold(
             appBar: AppBar(
@@ -49,12 +51,26 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
             ),
             body: Column(
               children: [
-                FullWidthButton(
-                  buttonColor: Colors.red,
-                  textColor: Colors.white,
-                  text: 'Delete',
-                  onPressed: () {},
-                )
+                currentUser.uid == critique.uid
+                    ? FullWidthButton(
+                        buttonColor: Colors.red,
+                        textColor: Colors.white,
+                        text: 'Delete',
+                        onPressed: () async {
+                          final bool confirm = await locator<ModalService>()
+                              .showConfirmation(
+                                  context: context,
+                                  title: 'Delete Critique',
+                                  message: 'Are you sure?');
+
+                          if (!confirm) return;
+
+                          _critiqueDetailsBloc.add(
+                            DeleteCritiqueEvent(),
+                          );
+                        },
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           );

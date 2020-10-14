@@ -399,11 +399,11 @@ class CritiqueViewState extends State<CritiqueView> {
 
                                 if (!confirm) return;
 
-                                await locator<CritiqueService>().deleteCritique(
-                                  critiqueID: critique.id,
-                                  userID: critique.uid,
-                                  created: critique.created,
-                                );
+                                // await locator<CritiqueService>().deleteCritique(
+                                //   critiqueID: critique.id,
+                                //   userID: critique.uid,
+                                //   created: critique.created,
+                                // );
 
                                 locator<ModalService>().showAlert(
                                     context: context,

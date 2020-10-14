@@ -10,3 +10,9 @@ class LoadPageEvent extends CritiqueDetailsEvent {
 
   List<Object> get props => [];
 }
+
+class DeleteCritiqueEvent extends CritiqueDetailsEvent {
+  DeleteCritiqueEvent();
+
+  List<Object> get props => [];
+}

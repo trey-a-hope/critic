@@ -42,27 +42,25 @@ class CritiqueDetailsBloc
           currentUser: _currentUser,
           critiqueModel: critiqueModel,
         );
-
-        // List<CritiqueModel> critiques =
-        //     await locator<CritiqueService>().retrieveCritiques(
-        //   safe: true,
-        //   uid: _currentUser.uid,
-        //   limit: 100,
-        //   offset: 0,
-        // );
-
-        // if (critiques.isEmpty) {
-        //   yield NoCritiquesState();
-        // } else {
-        //   yield FoundCritiquesState(
-        //     critiques: critiques,
-        //     currentUser: _currentUser,
-        //   );
-        // }
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
         yield ErrorState(error: error);
+      }
+    }
+
+    if (event is DeleteCritiqueEvent) {
+      try {
+        await locator<CritiqueService>().deleteCritique(
+          critiqueID: critiqueModel.id,
+          uid: critiqueModel.uid,
+        );
+
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Critique deleted, refresh home page to see results.');
+      } catch (error) {
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Error: ${error.toString()}');
       }
     }
   }

@@ -1,4 +1,5 @@
 const functions = require('firebase-functions');
+const { user } = require('firebase-functions/lib/providers/auth');
 const env = functions.config();
 const streamio = require('getstream');
 const streamioClient = streamio.connect(env.streamio.apikey, env.streamio.apisecret, env.streamio.appid);
@@ -50,6 +51,19 @@ exports.getUserFeed = functions.https.onRequest((req, res) => {
 
     userFeed.get({ limit: limit, offset: offset }).then((results) => {
         return res.send(results);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});
+
+exports.deleteCritiqueFromFeed = functions.https.onRequest((req, res) => {
+    const uid = req.body.uid;
+    const critiqueID = req.body.critiqueID;
+
+    const userFeed = streamioClient.feed('Critiques', uid);
+
+    userFeed.removeActivity(critiqueID).then((result) => {
+        return res.send(result);
     }).catch((error) => {
         return res.send(error);
     });
