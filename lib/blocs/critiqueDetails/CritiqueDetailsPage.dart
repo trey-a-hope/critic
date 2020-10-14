@@ -51,11 +51,29 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
             ),
             body: Column(
               children: [
+                FullWidthButton(
+                  buttonColor: Colors.grey,
+                  textColor: Colors.white,
+                  text: 'Report',
+                  onPressed: () async {
+                    bool confirm = await locator<ModalService>().showConfirmation(
+                        context: context,
+                        title: 'Report Critique',
+                        message:
+                            'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+
+                    if (!confirm) return;
+
+                    _critiqueDetailsBloc.add(
+                      ReportCritiqueEvent(),
+                    );
+                  },
+                ),
                 currentUser.uid == critique.uid
                     ? FullWidthButton(
                         buttonColor: Colors.red,
                         textColor: Colors.white,
-                        text: 'Delete',
+                        text: 'Delete Critique',
                         onPressed: () async {
                           final bool confirm = await locator<ModalService>()
                               .showConfirmation(

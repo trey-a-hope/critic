@@ -16,3 +16,9 @@ class DeleteCritiqueEvent extends CritiqueDetailsEvent {
 
   List<Object> get props => [];
 }
+
+class ReportCritiqueEvent extends CritiqueDetailsEvent {
+  ReportCritiqueEvent();
+
+  List<Object> get props => [];
+}

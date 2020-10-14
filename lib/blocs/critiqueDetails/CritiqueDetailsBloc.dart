@@ -63,6 +63,21 @@ class CritiqueDetailsBloc
             message: 'Error: ${error.toString()}');
       }
     }
+
+    if (event is ReportCritiqueEvent) {
+      try {
+        await locator<CritiqueService>().deleteCritique(
+          critiqueID: critiqueModel.id,
+          uid: critiqueModel.uid,
+        );
+
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Critique reported, you will no longer see this critique.');
+      } catch (error) {
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Error: ${error.toString()}');
+      }
+    }
   }
 
   @override
