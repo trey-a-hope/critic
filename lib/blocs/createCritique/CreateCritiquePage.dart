@@ -3,6 +3,7 @@ import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
+import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,10 +74,14 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                         ),
                       ),
                       Spacer(),
-                      RaisedButton(
-                        color: Colors.redAccent,
+                      FullWidthButton(
+                        buttonColor: Colors.red,
                         textColor: Colors.white,
                         onPressed: () async {
+                          if (!_formKey.currentState.validate()) {
+                            return;
+                          }
+
                           bool confirm = await locator<ModalService>()
                               .showConfirmation(
                                   context: context,
@@ -91,7 +96,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             ),
                           );
                         },
-                        child: Text('Submit'),
+                        text: 'Submit',
                       )
                     ],
                   ),

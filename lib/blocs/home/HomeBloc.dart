@@ -34,33 +34,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        final List<String> critiqueIDs =
-            await locator<FollowerService>().getCritiqueIDSForFeed(
-          userID: _currentUser.uid,
+        List<CritiqueModel> critiques =
+            await locator<CritiqueService>().retrieveCritiques(
+          safe: true,
+          uid: _currentUser.uid,
+          limit: 100,
+          offset: 0,
         );
-
-        List<CritiqueModel> critiques = List<CritiqueModel>();
-
-        List<CritiqueModel> usersIFollowCritiques = List<CritiqueModel>();
-
-        for (var i = 0; i < critiqueIDs.length; i++) {
-          final CritiqueModel critique = await locator<CritiqueService>()
-              .getCritique(critiqueID: critiqueIDs[i]);
-          usersIFollowCritiques.add(critique);
-        }
-
-        final List<CritiqueModel> myCritiques = await locator<CritiqueService>()
-            .retrieveCritiquesForUser(userID: _currentUser.uid);
-
-        critiques.addAll(myCritiques);
-        critiques.addAll(usersIFollowCritiques);
-
-        critiques.sort((a, b) =>
-            b.created.millisecondsSinceEpoch -
-            a.created.millisecondsSinceEpoch);
-
-        critiques.removeWhere((critique) => critique.safe == false);
-
+        
         if (critiques.isEmpty) {
           yield NoCritiquesState();
         } else {

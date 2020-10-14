@@ -62,7 +62,6 @@ class CritiqueService extends ICritiqueService {
 
       final String critiqueID = map['id'];
 
-
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
       final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
@@ -84,19 +83,6 @@ class CritiqueService extends ICritiqueService {
         },
       );
 
-      // final DocumentReference followerDoc = _followersDB.doc(critique.uid);
-      // batch.update(
-      //   followerDoc,
-      //   {
-      //     'lastPost': DateTime.now(),
-      //     'recentPosts': FieldValue.arrayUnion(
-      //       [
-      //         critique.id,
-      //       ],
-      //     )
-      //   },
-      // );
-
       batch.commit();
       return;
     } catch (e) {
@@ -107,24 +93,62 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<List<CritiqueModel>> retrieveCritiques({bool safe}) async {
+  Future<List<CritiqueModel>> retrieveCritiques({
+    @required bool safe,
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  }) async {
     try {
-      // Query query = _critiquesDB;
+      try {
+        Map data = {
+          'uid': uid,
+          'limit': '$limit',
+          'offset': '$offset',
+        };
 
-      // if (safe != null) {
-      //   query = query.where('safe', isEqualTo: safe);
-      // }
+        http.Response response = await http.post(
+          '${CLOUD_FUNCTIONS_ENDPOINT}GetUserFeed',
+          body: data,
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+        );
 
-      // QuerySnapshot querySnapshot = await query.get();
+        Map map = json.decode(response.body);
 
-      // List<CritiqueModel> critiques = querySnapshot.docs
-      //     .map(
-      //       (DocumentSnapshot documentSnapshot) =>
-      //           CritiqueModel.extractDocument(ds: documentSnapshot),
-      //     )
-      //     .toList();
+        if (map['statusCode'] != null) {
+          throw PlatformException(
+              message: map['raw']['message'], code: map['raw']['code']);
+        }
 
-      // return critiques;
+        final List<dynamic> results = map['results'];
+
+        List<CritiqueModel> critiques = results
+            .map(
+              (result) => CritiqueModel(
+                imdbID: result['imdbID'],
+                id: result['id'],
+                uid: result['uid'],
+                message: result['message'],
+                safe: result['safe'],
+                modified: result['modified'],
+                created: result['created'],
+                movieTitle: result['movieTitle'],
+                moviePoster: result['moviePoster'],
+                movieYear: result['movieYear'],
+                moviePlot: result['moviePlot'],
+                movieDirector: result['movieDirector'],
+                imdbRating: result['imdbRating'],
+                imdbVotes: result['imdbVotes'],
+              ),
+            )
+            .toList();
+
+        return critiques;
+      } catch (e) {
+        throw Exception(
+          e.toString(),
+        );
+      }
     } catch (e) {
       throw Exception(
         e.toString(),

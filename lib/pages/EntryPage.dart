@@ -1,8 +1,10 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
+import 'package:critic/extensions/HexColor.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +85,7 @@ class EntryPageState extends State<EntryPage> {
         'Home',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.red,
+      activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -95,7 +97,7 @@ class EntryPageState extends State<EntryPage> {
         'Critique',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.red,
+      activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -107,7 +109,7 @@ class EntryPageState extends State<EntryPage> {
         'Search',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.red,
+      activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -119,7 +121,7 @@ class EntryPageState extends State<EntryPage> {
         'Profile',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.red,
+      activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -131,7 +133,7 @@ class EntryPageState extends State<EntryPage> {
         'Settings',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: Colors.red,
+      activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
   ];

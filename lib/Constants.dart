@@ -1,3 +1,5 @@
+import 'package:critic/extensions/HexColor.dart';
+
 const String DUMMY_POSTER_IMG_URL =
     'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';
 const String DUMMY_PROFILE_PHOTO_URL =
@@ -10,4 +12,7 @@ String buildNumber;
 const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
 const String ALGOLIA_SEARCH_API_KEY = '01be9bb46f445fa21cdba2c7197d84bf';
 
-const String CLOUD_FUNCTIONS_ENDPOINT = 'https://us-central1-critic-a9e44.cloudfunctions.net/';
+const String CLOUD_FUNCTIONS_ENDPOINT =
+    'https://us-central1-critic-a9e44.cloudfunctions.net/';
+
+final HexColor COLOR_NAVY = HexColor('#09487e');
