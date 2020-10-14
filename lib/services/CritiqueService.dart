@@ -9,18 +9,27 @@ import 'dart:convert' show Encoding, json;
 abstract class ICritiqueService {
   //complete
   Future<void> createCritique({@required CritiqueModel critique});
-  Future<List<CritiqueModel>> retrieveCritiques();
+  Future<List<CritiqueModel>> retrieveCritiquesFromStream({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  });
+  Future<List<CritiqueModel>> retrieveCritiquesFromFirebase({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  });
   Future<void> deleteCritique({
     @required String critiqueID,
     @required String uid,
   });
   //not complete
-  Future<CritiqueModel> getCritique({@required String critiqueID});
-  Future<List<CritiqueModel>> retrieveCritiquesForUser({
-    @required String userID,
-  });
-  Future<void> updateCritique(
-      {@required String critiqueID, @required dynamic data});
+  // Future<CritiqueModel> getCritique({@required String critiqueID});
+  // Future<List<CritiqueModel>> retrieveCritiquesForUser({
+  //   @required String userID,
+  // });
+  // Future<void> updateCritique(
+  //     {@required String critiqueID, @required dynamic data});
 }
 
 class CritiqueService extends ICritiqueService {
@@ -82,8 +91,7 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<List<CritiqueModel>> retrieveCritiques({
-    @required bool safe,
+  Future<List<CritiqueModel>> retrieveCritiquesFromStream({
     @required String uid,
     @required int limit,
     @required int offset,
@@ -123,60 +131,6 @@ class CritiqueService extends ICritiqueService {
           e.toString(),
         );
       }
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> updateCritique({
-    @required String critiqueID,
-    @required dynamic data,
-  }) async {
-    try {
-      await _critiquesDB.doc(critiqueID).update(data);
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<CritiqueModel> getCritique({
-    @required String critiqueID,
-  }) async {
-    // try {
-    //   DocumentSnapshot documentSnapshot =
-    //       (await _critiquesDB.doc(critiqueID).get());
-
-    //   return CritiqueModel.extractDocument(ds: documentSnapshot);
-    // } catch (e) {
-    //   throw Exception(
-    //     e.toString(),
-    //   );
-    // }
-  }
-
-  @override
-  Future<List<CritiqueModel>> retrieveCritiquesForUser(
-      {@required String userID}) async {
-    try {
-      // Query query = _critiquesDB.where('userID', isEqualTo: userID);
-
-      // QuerySnapshot querySnapshot = await query.get();
-
-      // List<CritiqueModel> critiques = querySnapshot.docs
-      //     .map(
-      //       (DocumentSnapshot documentSnapshot) =>
-      //           CritiqueModel.extractDocument(ds: documentSnapshot),
-      //     )
-      //     .toList();
-
-      // return critiques;
     } catch (e) {
       throw Exception(
         e.toString(),
@@ -231,5 +185,15 @@ class CritiqueService extends ICritiqueService {
         e.toString(),
       );
     }
+  }
+
+  @override
+  Future<List<CritiqueModel>> retrieveCritiquesFromFirebase({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  }) {
+    // TODO: implement retrieveCritiquesFromFirebase
+    throw UnimplementedError();
   }
 }

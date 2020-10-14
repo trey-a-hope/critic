@@ -26,14 +26,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        _critiques = await locator<CritiqueService>()
-            .retrieveCritiquesForUser(userID: _currentUser.uid);
+        // _critiques = await locator<CritiqueService>()
+        //     .retrieveCritiquesForUser(userID: _currentUser.uid);
 
         _critiques.sort((a, b) =>
             b.created.millisecondsSinceEpoch -
             a.created.millisecondsSinceEpoch);
 
-        _critiques.removeWhere((critique) => critique.safe == false);
+        //_critiques.removeWhere((critique) => critique.safe == false);
 
         _followersIDs = await locator<FollowerService>()
             .getFollowersIDS(userID: _currentUser.uid);

@@ -35,13 +35,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
         List<CritiqueModel> critiques =
-            await locator<CritiqueService>().retrieveCritiques(
-          safe: true,
+            await locator<CritiqueService>().retrieveCritiquesFromStream(
           uid: _currentUser.uid,
           limit: 100,
           offset: 0,
         );
-        
+
         if (critiques.isEmpty) {
           yield NoCritiquesState();
         } else {

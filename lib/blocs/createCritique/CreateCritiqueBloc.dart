@@ -46,7 +46,7 @@ class CreateCritiqueBloc
       yield LoadingState();
 
       final String critiqueText = event.critique;
-      
+
       try {
         DateTime now = DateTime.now();
 
@@ -55,7 +55,6 @@ class CreateCritiqueBloc
           uid: _currentUser.uid,
           imdbID: movie.imdbID,
           message: critiqueText,
-          safe: true,
           modified: now,
           created: now,
           imdbRating: movie.imdbRating,

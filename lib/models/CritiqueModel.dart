@@ -5,7 +5,6 @@ class CritiqueModel {
   String imdbID;
   String uid;
   String message;
-  bool safe;
   DateTime modified;
   DateTime created;
   String movieTitle;
@@ -21,7 +20,6 @@ class CritiqueModel {
     @required this.id,
     @required this.uid,
     @required this.message,
-    @required this.safe,
     @required this.modified,
     @required this.created,
     @required this.movieTitle,
@@ -39,7 +37,6 @@ class CritiqueModel {
       id: map['id'],
       uid: map['uid'],
       message: map['message'],
-      safe: map['safe'],
       modified: map['modified'],
       created: map['created'],
       movieTitle: map['movieTitle'],

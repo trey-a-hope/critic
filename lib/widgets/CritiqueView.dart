@@ -419,27 +419,27 @@ class CritiqueViewState extends State<CritiqueView> {
                       IconButton(
                         tooltip: 'Report This Post',
                         onPressed: () async {
-                          bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Report This?',
-                                  message:
-                                      'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline on the next page refresh.');
+                          // bool confirm = await locator<ModalService>()
+                          //     .showConfirmation(
+                          //         context: context,
+                          //         title: 'Report This?',
+                          //         message:
+                          //             'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline on the next page refresh.');
 
-                          if (!confirm) return;
+                          // if (!confirm) return;
 
-                          await locator<CritiqueService>()
-                              .updateCritique(critiqueID: critique.id, data: {
-                            'modified': DateTime.now(),
-                            'safe': false,
-                          });
+                          // await locator<CritiqueService>()
+                          //     .updateCritique(critiqueID: critique.id, data: {
+                          //   'modified': DateTime.now(),
+                          //   'safe': false,
+                          // });
 
-                          locator<ModalService>().showAlert(
-                            context: context,
-                            title: 'Reported!',
-                            message:
-                                'This critique has now been reported. After you refresh the page, you will no longer see that post.',
-                          );
+                          // locator<ModalService>().showAlert(
+                          //   context: context,
+                          //   title: 'Reported!',
+                          //   message:
+                          //       'This critique has now been reported. After you refresh the page, you will no longer see that post.',
+                          // );
                         },
                         color: Colors.red,
                         icon: Icon(Icons.report),
