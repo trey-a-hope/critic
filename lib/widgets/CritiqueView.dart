@@ -47,7 +47,7 @@ class CritiqueViewState extends State<CritiqueView> {
   @override
   Widget build(BuildContext context) {
     Future getUserFuture =
-        locator<UserService>().retrieveUser(uid: critique.userID);
+        locator<UserService>().retrieveUser(uid: critique.uid);
     Future getMovieFuture =
         locator<MovieService>().getMovieByID(id: critique.imdbID);
 
@@ -409,7 +409,7 @@ class CritiqueViewState extends State<CritiqueView> {
 
                                 await locator<CritiqueService>().deleteCritique(
                                   critiqueID: critique.id,
-                                  userID: critique.userID,
+                                  userID: critique.uid,
                                   created: critique.created,
                                 );
 

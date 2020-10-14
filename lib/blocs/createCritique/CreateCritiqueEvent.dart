@@ -13,16 +13,13 @@ class LoadPageEvent extends CreateCritiqueEvent {
 }
 
 class SubmitEvent extends CreateCritiqueEvent {
-  final GlobalKey<FormState> formKey;
   final String critique;
 
   SubmitEvent({
-    @required this.formKey,
     @required this.critique,
   });
 
   List<Object> get props => [
-        formKey,
         critique,
       ];
 }

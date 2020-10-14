@@ -18,7 +18,11 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
     implements CreateCritiqueBlocDelegate {
   final TextEditingController _critiqueController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  //bool _autoValidate = false;
+
   CreateCritiqueBloc _createCritiqueBloc;
+
   @override
   void initState() {
     _createCritiqueBloc = BlocProvider.of<CreateCritiqueBloc>(context);
@@ -48,8 +52,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
             return SafeArea(
               child: Center(
                 child: Form(
-                  autovalidate: state.autoValidate,
-                  key: state.formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -83,8 +87,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
 
                           _createCritiqueBloc.add(
                             SubmitEvent(
-                                formKey: state.formKey,
-                                critique: _critiqueController.text),
+                              critique: _critiqueController.text,
+                            ),
                           );
                         },
                         child: Text('Submit'),

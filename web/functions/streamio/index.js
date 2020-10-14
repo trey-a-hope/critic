@@ -1,21 +1,39 @@
 const functions = require('firebase-functions');
 const env = functions.config();
 const streamio = require('getstream');
-const streamioClient = streamio.connect(env.streamio.apikey, env.streamio.appsecret, env.streamio.appid);
+const streamioClient = streamio.connect(env.streamio.apikey, env.streamio.apisecret, env.streamio.appid);
 
-exports.addActivityToFeed = functions.https.onRequest((req, res) => {
+exports.addCritiqueToFeed = functions.https.onRequest((req, res) => {
     const actor = req.body.actor;
-    const tweet = req.body.tweet;
+    const message = req.body.message;
+    const uid = req.body.uid;
+    const movieTitle = req.body.movieTitle;
+    const moviePoster = req.body.moviePoster;
+    const movieYear = req.body.movieYear;
+    const moviePlot = req.body.moviePlot;
+    const movieDirector = req.body.movieDirector;
+    const imdbID = req.body.imdbID;
+    const imdbRating = req.body.imdbRating;
+    const imdbVotes = req.body.imdbVotes;
 
-    const ericFeed = streamioClient.feed('Critiques', 'TreyHope');
+    const userFeed = streamioClient.feed('Critiques', uid);
 
-    ericFeed.addActivity({
+    userFeed.addActivity({
         actor: actor,
-        tweet: tweet,
-        verb: 'tweet',
+        verb: 'post',
         object: 1,
-        movieTitle: 'Titanic',
-        uid: 'UIDXXXHERE'
+        message: message,
+        movieTitle: movieTitle,
+        modifiedDate: new Date(),
+        imdbID: imdbID,
+        safe: true,
+        uid: uid,
+        moviePoster: moviePoster,
+        movieYear: movieYear,
+        moviePlot: moviePlot,
+        movieDirector: movieDirector,
+        imdbRating: imdbRating,
+        imdbVotes: imdbVotes,
     }).then((result) => {
         return res.send(result);
     }).catch((error) => {
@@ -24,16 +42,19 @@ exports.addActivityToFeed = functions.https.onRequest((req, res) => {
 });
 
 exports.getUserFeed = functions.https.onRequest((req, res) => {
-    //const couponID = req.body.couponID;
+    const uid = req.body.uid;
+    const limit = req.body.limit;
+    const offset = req.body.offset;
 
-    const ericFeed = streamioClient.feed('Critiques', 'TreyHope');
+    const userFeed = streamioClient.feed('Critiques', uid);
 
-    ericFeed.get({ limit: 10 }).then((results) => {
+    userFeed.get({ limit: limit, offset: offset }).then((results) => {
         return res.send(results);
     }).catch((error) => {
         return res.send(error);
     });
 });
+
 //exports.followUser
 //exports.unfollowUser
 //exports.getFollowers

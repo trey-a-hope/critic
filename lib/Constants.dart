@@ -9,3 +9,5 @@ String buildNumber;
 
 const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
 const String ALGOLIA_SEARCH_API_KEY = '01be9bb46f445fa21cdba2c7197d84bf';
+
+const String CLOUD_FUNCTIONS_ENDPOINT = 'https://us-central1-critic-a9e44.cloudfunctions.net/';

@@ -9,5 +9,5 @@ admin.initializeApp(functions.config().firebase);
 exports.AlgoliaSyncUsers = Algolia.algoliaSyncUsers;
 
 //StreamIO
-exports.AddActivityToFeed = StreamIO.addActivityToFeed;
+exports.AddCritiqueToFeed = StreamIO.addCritiqueToFeed;
 exports.GetUserFeed = StreamIO.getUserFeed;

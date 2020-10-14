@@ -9,17 +9,8 @@ class CreateCritiqueState extends Equatable {
 class LoadingState extends CreateCritiqueState {}
 
 class CreateCritiqueStartState extends CreateCritiqueState {
-  final bool autoValidate;
-  final GlobalKey<FormState> formKey;
-
-  CreateCritiqueStartState({
-    @required this.autoValidate,
-    @required this.formKey,
-  });
+  CreateCritiqueStartState();
 
   @override
-  List<Object> get props => [
-        autoValidate,
-        formKey,
-      ];
+  List<Object> get props => [];
 }

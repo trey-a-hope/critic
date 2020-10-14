@@ -35,10 +35,7 @@ class CreateCritiqueBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        yield CreateCritiqueStartState(
-          formKey: GlobalKey<FormState>(),
-          autoValidate: false,
-        );
+        yield CreateCritiqueStartState();
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
@@ -48,47 +45,41 @@ class CreateCritiqueBloc
     if (event is SubmitEvent) {
       yield LoadingState();
 
-      final GlobalKey<FormState> formKey = event.formKey;
       final String critiqueText = event.critique;
+      
+      try {
+        DateTime now = DateTime.now();
 
-      if (formKey.currentState.validate()) {
-        try {
-          DateTime now = DateTime.now();
-
-          CritiqueModel critique = CritiqueModel(
-            id: '',
-            userID: _currentUser.uid,
-            imdbID: movie.imdbID,
-            message: critiqueText,
-            safe: true,
-            modified: now,
-            created: now,
-          );
-
-          await locator<CritiqueService>().createCritique(critique: critique);
-
-          _createCritiqueBlocDelegate.clearText();
-
-          _createCritiqueBlocDelegate.showMessage(message: 'Critique added, return to home page and refresh.');
-
-          yield CreateCritiqueStartState(
-            formKey: formKey,
-            autoValidate: false,
-          );
-        } catch (error) {
-          _createCritiqueBlocDelegate.showMessage(
-              message: 'Error ${error.toString()}!');
-
-          yield CreateCritiqueStartState(
-            formKey: formKey,
-            autoValidate: true,
-          );
-        }
-      } else {
-        yield CreateCritiqueStartState(
-          formKey: formKey,
-          autoValidate: true,
+        CritiqueModel critique = CritiqueModel(
+          id: '',
+          uid: _currentUser.uid,
+          imdbID: movie.imdbID,
+          message: critiqueText,
+          safe: true,
+          modified: now,
+          created: now,
+          imdbRating: movie.imdbRating,
+          imdbVotes: movie.imdbVotes,
+          moviePlot: movie.plot,
+          moviePoster: movie.poster,
+          movieTitle: movie.title,
+          movieYear: movie.year,
+          movieDirector: movie.director,
         );
+
+        await locator<CritiqueService>().createCritique(critique: critique);
+
+        _createCritiqueBlocDelegate.clearText();
+
+        _createCritiqueBlocDelegate.showMessage(
+            message: 'Critique added, return to home page and refresh.');
+
+        yield CreateCritiqueStartState();
+      } catch (error) {
+        _createCritiqueBlocDelegate.showMessage(
+            message: 'Error ${error.toString()}!');
+
+        yield CreateCritiqueStartState();
       }
     }
   }
