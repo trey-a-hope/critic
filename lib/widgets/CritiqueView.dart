@@ -1,6 +1,6 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
-import 'package:critic/blocs/otherProfile/Bloc.dart';
+import 'package:critic/blocs/critiqueDetails/Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
@@ -100,11 +100,18 @@ class CritiqueViewState extends State<CritiqueView> {
   }) {
     return InkWell(
       onTap: () {
-        locator<ModalService>().showAlert(
-          context: context,
-          title: 'To Do',
-          message: 'Open critique details page.',
+        Route route = MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
+              critiqueModel: critique,
+            )..add(
+                CRITIQUE_DETAILS_BP.LoadPageEvent(),
+              ),
+            child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
+          ),
         );
+
+        Navigator.push(context, route);
       },
       child: Container(
         padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -143,7 +150,8 @@ class CritiqueViewState extends State<CritiqueView> {
                       height: 10.0,
                     ),
                     Text("\"${critique.message}\"",
-                        style: TextStyle(color: Colors.grey.shade900, fontSize: 12.0)),
+                        style: TextStyle(
+                            color: Colors.grey.shade900, fontSize: 12.0)),
                     Spacer(),
                     Row(
                       children: [
@@ -354,27 +362,11 @@ class CritiqueViewState extends State<CritiqueView> {
                   Spacer(),
                   Row(
                     children: <Widget>[
-                      InkWell(
-                        child: CircleAvatar(
-                          radius: 25,
-                          backgroundImage: NetworkImage(
-                            userWhoPosted.imgUrl,
-                          ),
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                          userWhoPosted.imgUrl,
                         ),
-                        onTap: () {
-                          Route route = MaterialPageRoute(
-                            builder: (context) => BlocProvider(
-                              create: (context) => OtherProfileBloc(
-                                otherUserID: userWhoPosted.uid,
-                              )..add(
-                                  LoadPageEvent(),
-                                ),
-                              child: OtherProfilePage(),
-                            ),
-                          );
-
-                          Navigator.push(context, route);
-                        },
                       ),
                       SizedBox(
                         width: 10,
