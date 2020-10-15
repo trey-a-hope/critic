@@ -10,20 +10,3 @@ class FollowersState extends Equatable {
 class LoadingState extends FollowersState {}
 
 class LoadedState extends FollowersState {}
-
-class NoFollowersState extends FollowersState {
-  NoFollowersState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class FoundFollowersState extends FollowersState {
-  final List<UserModel> users;
-  FoundFollowersState({
-    @required this.users,
-  });
-
-  @override
-  List<Object> get props => [users];
-}

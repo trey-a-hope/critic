@@ -133,43 +133,6 @@ class FollowersPageState extends State<FollowersPage>
             );
           }
 
-          // if (state is NoFollowersState) {
-          //   return Center(
-          //     child: Text('You have no followers...'),
-          //   );
-          // }
-
-          // if (state is FoundFollowersState) {
-          //   return ListView.builder(
-          //     itemCount: state.users.length,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       final UserModel user = state.users[index];
-          //       return ListTile(
-          //         leading: CircleAvatar(
-          //           backgroundImage: NetworkImage(user.imgUrl),
-          //         ),
-          //         title: Text('${user.username}'),
-          //         subtitle: Text('${user.email}'),
-          //         trailing: Icon(Icons.chevron_right),
-          //         onTap: () {
-          //           Route route = MaterialPageRoute(
-          //             builder: (context) => BlocProvider(
-          //               create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-          //                 otherUserID: user.uid,
-          //               )..add(
-          //                   OTHER_PROFILE_BP.LoadPageEvent(),
-          //                 ),
-          //               child: OTHER_PROFILE_BP.OtherProfilePage(),
-          //             ),
-          //           );
-
-          //           Navigator.push(context, route);
-          //         },
-          //       );
-          //     },
-          //   );
-          // }
-
           return Center(
             child: Text('You should NEVER see this.'),
           );

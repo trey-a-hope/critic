@@ -19,6 +19,12 @@ abstract class IUserService {
     @required int limit,
     @required int offset,
   });
+
+  Future<List<UserModel>> retrieveFollowingsFromStream({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  });
 }
 
 class UserService extends IUserService {
@@ -110,48 +116,92 @@ class UserService extends IUserService {
     @required int offset,
   }) async {
     try {
-      try {
-        Map data = {
-          'uid': uid,
-          'limit': '$limit',
-          'offset': '$offset',
-        };
+      Map data = {
+        'uid': uid,
+        'limit': '$limit',
+        'offset': '$offset',
+      };
 
-        http.Response response = await http.post(
-          '${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowers',
-          body: data,
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
-        );
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowers',
+        body: data,
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
 
-        Map map = json.decode(response.body);
+      Map map = json.decode(response.body);
 
-        if (map['statusCode'] != null) {
-          throw PlatformException(
-              message: map['raw']['message'], code: map['raw']['code']);
-        }
-
-        final List<dynamic> results = map['results'];
-
-        List<UserModel> users = List<UserModel>();
-
-        for (int i = 0; i < results.length; i++) {
-          dynamic result = results[0];
-
-          final String uid = result['feed_id'].replaceAll('Critiques:', '');
-
-          final UserModel user = await retrieveUser(uid: uid);
-
-          print(uid);
-
-          users.add(user);
-        }
-
-        return users;
-      } catch (e) {
-        throw Exception(
-          e.toString(),
-        );
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+            message: map['raw']['message'], code: map['raw']['code']);
       }
+
+      final List<dynamic> results = map['results'];
+
+      List<UserModel> users = List<UserModel>();
+
+      for (int i = 0; i < results.length; i++) {
+        dynamic result = results[0];
+
+        final String uid = result['feed_id'].replaceAll('Critiques:', '');
+
+        final UserModel user = await retrieveUser(uid: uid);
+
+        print(uid);
+
+        users.add(user);
+      }
+
+      return users;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> retrieveFollowingsFromStream({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  }) async {
+    try {
+      Map data = {
+        'uid': uid,
+        'limit': '$limit',
+        'offset': '$offset',
+      };
+
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowees',
+        body: data,
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+            message: map['raw']['message'], code: map['raw']['code']);
+      }
+
+      final List<dynamic> results = map['results'];
+
+      List<UserModel> users = List<UserModel>();
+
+      for (int i = 0; i < results.length; i++) {
+        dynamic result = results[0];
+
+        final String uid = result['target_id'].replaceAll('Critiques:', '');
+
+        final UserModel user = await retrieveUser(uid: uid);
+
+        print(uid);
+
+        users.add(user);
+      }
+
+      return users;
     } catch (e) {
       throw Exception(
         e.toString(),

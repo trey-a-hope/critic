@@ -14,6 +14,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pagination/pagination.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
+import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
 
 class OtherProfilePage extends StatefulWidget {
   @override
@@ -146,11 +147,13 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                       onTap: () {
                                         Route route = MaterialPageRoute(
                                           builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWERS_BP
-                                                .FollowersBloc(user: otherUser)
-                                              ..add(
-                                                FOLLOWERS_BP.LoadPageEvent(),
-                                              ),
+                                            create: (context) =>
+                                                FOLLOWERS_BP.FollowersBloc(
+                                              user: otherUser,
+                                            )..add(
+                                                    FOLLOWERS_BP
+                                                        .LoadPageEvent(),
+                                                  ),
                                             child: FOLLOWERS_BP.FollowersPage(),
                                           ),
                                         );
@@ -162,13 +165,32 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                 ),
                                 Expanded(
                                   child: Center(
-                                    child: Text(
-                                      '? Following',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
+                                    child: InkWell(
+                                      child: Text(
+                                        '? Following',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Route route = MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                            create: (context) =>
+                                                FOLLOWINGS_BP.FollowingsBloc(
+                                              user: otherUser,
+                                            )..add(
+                                                    FOLLOWINGS_BP
+                                                        .LoadPageEvent(),
+                                                  ),
+                                            child:
+                                                FOLLOWINGS_BP.FollowingsPage(),
+                                          ),
+                                        );
+
+                                        Navigator.push(context, route);
+                                      },
                                     ),
                                   ),
                                 ),

@@ -12,11 +12,12 @@ abstract class FollowingsBlocDelegate {
 
 class FollowingsBloc extends Bloc<FollowingsEvent, FollowingsState> {
   FollowingsBloc({
-    @required this.followingsIDs,
+    @required this.user,
   }) : super(null);
-  final List<String> followingsIDs;
+
   FollowingsBlocDelegate _followingsBlocDelegate;
-  UserModel _currentUser;
+  final UserModel user;
+  int limit = 10;
 
   void setDelegate({@required FollowingsBlocDelegate delegate}) {
     this._followingsBlocDelegate = delegate;
@@ -28,21 +29,7 @@ class FollowingsBloc extends Bloc<FollowingsEvent, FollowingsState> {
       yield LoadingState();
 
       try {
-        _currentUser = await locator<AuthService>().getCurrentUser();
-
-        List<UserModel> users = List<UserModel>();
-
-        for (var i = 0; i < followingsIDs.length; i++) {
-          UserModel user =
-              await locator<UserService>().retrieveUser(uid: followingsIDs[i]);
-          users.add(user);
-        }
-
-        if (users.isEmpty) {
-          yield NoFollowingsState();
-        } else {
-          yield FoundFollowingsState(users: users);
-        }
+        yield LoadedState();
       } catch (error) {
         _followingsBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');

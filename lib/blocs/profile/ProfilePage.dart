@@ -188,13 +188,30 @@ class ProfilePageState extends State<ProfilePage>
                                 ),
                                 Expanded(
                                   child: Center(
-                                    child: Text(
-                                      '? Following',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
+                                    child: InkWell(
+                                      child: Text(
+                                        '? Following',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Route route = MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                            create: (context) => FOLLOWINGS_BP
+                                                .FollowingsBloc(
+                                                    user: currentUser)
+                                              ..add(
+                                                FOLLOWINGS_BP.LoadPageEvent(),
+                                              ),
+                                            child: FOLLOWINGS_BP.FollowingsPage(),
+                                          ),
+                                        );
+
+                                        Navigator.push(context, route);
+                                      },
                                     ),
                                   ),
                                 ),
