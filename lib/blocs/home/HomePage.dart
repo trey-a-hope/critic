@@ -87,6 +87,7 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
                     ),
                     Text(
                       error.toString(),
+                      textAlign: TextAlign.center,
                     )
                   ],
                 ),

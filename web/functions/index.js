@@ -10,5 +10,10 @@ exports.AlgoliaSyncUsers = Algolia.algoliaSyncUsers;
 
 //StreamIO
 exports.AddCritiqueToFeed = StreamIO.addCritiqueToFeed;
-exports.GetUserFeed = StreamIO.getUserFeed;
 exports.DeleteCritiqueFromFeed = StreamIO.deleteCritiqueFromFeed;
+exports.GetUserFeed = StreamIO.getUserFeed;
+exports.FollowUserFeed = StreamIO.followUserFeed;
+exports.UnfollowUserFeed = StreamIO.unfollowUserFeed;
+exports.GetUsersFollowers = StreamIO.getUsersFollowers;
+exports.GetUsersFollowees = StreamIO.getUsersFollowees;
+exports.GetFollowStats = StreamIO.getFollowStats;

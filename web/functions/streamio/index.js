@@ -69,7 +69,70 @@ exports.deleteCritiqueFromFeed = functions.https.onRequest((req, res) => {
     });
 });
 
-//exports.followUser
-//exports.unfollowUser
-//exports.getFollowers
-//exports.getFollowees
+
+exports.followUserFeed = functions.https.onRequest((req, res) => {
+    const myUID = req.body.myUID;
+    const theirUID = req.body.theirUID;
+
+    const myUserFeed = streamioClient.feed('Critiques', myUID);
+
+    myUserFeed.follow('Critiques', theirUID).then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});
+
+exports.unfollowUserFeed = functions.https.onRequest((req, res) => {
+    const myUID = req.body.myUID;
+    const theirUID = req.body.theirUID;
+
+    const myUserFeed = streamioClient.feed('Critiques', myUID);
+
+    myUserFeed.unfollow('Critiques', theirUID).then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});
+
+exports.getUsersFollowers = functions.https.onRequest((req, res) => {
+    const uid = req.body.uid;
+    const limit = req.body.limit;
+    const offset = req.body.offset;
+
+    const userFeed = streamioClient.feed('Critiques', uid);
+
+    userFeed.followers({ limit: limit, offset: offset }).then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});
+
+
+exports.getUsersFollowees = functions.https.onRequest((req, res) => {
+    const uid = req.body.uid;
+    const limit = req.body.limit;
+    const offset = req.body.offset;
+
+    const userFeed = streamioClient.feed('Critiques', uid);
+
+    userFeed.following({ limit: limit, offset: offset }).then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});
+
+exports.getFollowStats = functions.https.onRequest((req, res) => {
+    const uid = req.body.uid;
+
+    const userFeed = streamioClient.feed('Critiques', uid);
+
+    userFeed.followStats().then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});

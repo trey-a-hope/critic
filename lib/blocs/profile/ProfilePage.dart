@@ -131,7 +131,7 @@ class ProfilePageState extends State<ProfilePage>
                                 Expanded(
                                   child: Center(
                                     child: Text(
-                                      '3 Followers',
+                                      '? Followers',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12.0,
@@ -143,7 +143,7 @@ class ProfilePageState extends State<ProfilePage>
                                 Expanded(
                                   child: Center(
                                     child: Text(
-                                      '3 Following',
+                                      '? Following',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12.0,
@@ -196,6 +196,7 @@ class ProfilePageState extends State<ProfilePage>
                         ),
                         Text(
                           error.toString(),
+                          textAlign: TextAlign.center,
                         )
                       ],
                     ),

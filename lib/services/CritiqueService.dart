@@ -23,6 +23,17 @@ abstract class ICritiqueService {
     @required String critiqueID,
     @required String uid,
   });
+
+  Future<void> followUser({
+    @required String myUID,
+    @required String theirID,
+  });
+
+  Future<void> unfollowUser({
+    @required String myUID,
+    @required String theirID,
+  });
+
   //not complete
   // Future<CritiqueModel> getCritique({@required String critiqueID});
   // Future<List<CritiqueModel>> retrieveCritiquesForUser({
@@ -235,6 +246,63 @@ class CritiqueService extends ICritiqueService {
     } catch (e) {
       throw Exception(
         e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> followUser({String myUID, String theirID}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}FollowUserFeed',
+        body: {
+          'myUID': myUID,
+          'theirID': theirID,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> unfollowUser({
+    @required String myUID,
+    @required String theirID,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}UnfollowUserFeed',
+        body: {
+          'myUID': myUID,
+          'theirID': theirID,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+    } catch (error) {
+      throw Exception(
+        error.toString(),
       );
     }
   }
