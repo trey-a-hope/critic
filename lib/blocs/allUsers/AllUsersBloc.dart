@@ -31,7 +31,10 @@ class AllUsersBloc extends Bloc<AllUsersEvent, AllUsersState> {
         List<UserModel> allUsers =
             await locator<UserService>().retrieveAllUsers();
 
-        yield LoadedState(users: allUsers);
+        yield LoadedState(
+          users: allUsers,
+          currentUser: _currentUser,
+        );
       } catch (error) {
         _allUsersBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');

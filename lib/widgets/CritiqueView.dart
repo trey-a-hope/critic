@@ -1,18 +1,13 @@
-import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/critiqueDetails/Bloc.dart' as CRITIQUE_DETAILS_BP;
+import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'RoundedContainer.dart';
 
 class CritiqueView extends StatefulWidget {
   const CritiqueView({
@@ -142,9 +137,28 @@ class CritiqueViewState extends State<CritiqueView> {
                     Spacer(),
                     Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            '${userWhoPosted.imgUrl}',
+                        InkWell(
+                          onTap: () {
+                            if (userWhoPosted.uid == currentUser.uid) return;
+
+                            Route route = MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) =>
+                                    OTHER_PROFILE_BP.OtherProfileBloc(
+                                  otherUserID: '${userWhoPosted.uid}',
+                                )..add(
+                                        OTHER_PROFILE_BP.LoadPageEvent(),
+                                      ),
+                                child: OTHER_PROFILE_BP.OtherProfilePage(),
+                              ),
+                            );
+
+                            Navigator.push(context, route);
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              '${userWhoPosted.imgUrl}',
+                            ),
                           ),
                         ),
                         Spacer(),
