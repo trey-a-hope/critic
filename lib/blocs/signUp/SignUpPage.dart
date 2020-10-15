@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart';
 import 'package:critic/pages/TermsServicePage.dart';
@@ -33,7 +34,7 @@ class SignUpPageState extends State<SignUpPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Sign Up',
           style: TextStyle(

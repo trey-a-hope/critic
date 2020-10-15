@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart' as SIGN_UP_BP;
 import 'package:critic/services/ModalService.dart';
@@ -42,7 +43,7 @@ class LoginPageState extends State<LoginPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Login',
           style: TextStyle(

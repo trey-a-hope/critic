@@ -1,4 +1,4 @@
-
+import 'package:critic/Constants.dart';
 import 'package:flutter/material.dart';
 
 class TermsServicePage extends StatelessWidget {
@@ -32,7 +32,7 @@ class TermsServicePage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
       ),
       body: SafeArea(
         child: Padding(

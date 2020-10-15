@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
@@ -28,7 +29,7 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Blocked Users',
           style: TextStyle(fontWeight: FontWeight.bold),

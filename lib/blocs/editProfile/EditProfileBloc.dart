@@ -7,7 +7,6 @@ import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
-import 'package:image_picker/image_picker.dart';
 
 abstract class EditProfileBlocDelegate {
   void showMessage({
@@ -71,8 +70,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       try {
         final String username = event.username;
 
-        _editProfileBlocDelegate.showMessage(message: 'Updating...');
-
         await locator<UserService>().updateUser(
           uid: _currentUser.uid,
           data: {
@@ -83,7 +80,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
         _currentUser.username = username;
 
-        _editProfileBlocDelegate.showMessage(message: 'Updated!...');
+        _editProfileBlocDelegate.showMessage(message: 'Profile updated.');
 
         yield EditProfileStartState(
           currentUser: _currentUser,

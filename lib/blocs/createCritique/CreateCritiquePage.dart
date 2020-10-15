@@ -21,7 +21,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
   final TextEditingController _critiqueController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  //bool _autoValidate = false;
 
   CreateCritiqueBloc _createCritiqueBloc;
 

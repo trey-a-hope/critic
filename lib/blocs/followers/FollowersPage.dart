@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
@@ -45,7 +46,7 @@ class FollowersPageState extends State<FollowersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Followers',
           style: TextStyle(fontWeight: FontWeight.bold),

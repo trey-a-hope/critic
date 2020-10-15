@@ -16,16 +16,14 @@ class LoadPageEvent extends EditProfileEvent {
 }
 
 class SaveFormEvent extends EditProfileEvent {
-  final GlobalKey<FormState> formKey;
   final String username;
 
   SaveFormEvent({
-    @required this.formKey,
     @required this.username,
   });
 
   List<Object> get props => [
-        formKey,
+        username,
       ];
 }
 

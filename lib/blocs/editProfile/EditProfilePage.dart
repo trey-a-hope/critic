@@ -1,7 +1,10 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/editProfile/Bloc.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/ValidationService.dart';
+import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +19,7 @@ class EditProfilePageState extends State<EditProfilePage>
   final TextEditingController _usernameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+
   EditProfileBloc _editProfileBloc;
 
   @override
@@ -36,7 +39,7 @@ class EditProfilePageState extends State<EditProfilePage>
           'Edit Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
       ),
       body: BlocBuilder<EditProfileBloc, EditProfileState>(
         builder: (BuildContext context, EditProfileState state) {
@@ -48,34 +51,15 @@ class EditProfilePageState extends State<EditProfilePage>
             return SafeArea(
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: <Widget>[
-                    // Padding(
-                    //   padding: EdgeInsets.all(40),
-                    //   child: InkWell(
-                    //     child: Container(
-                    //       width: 100,
-                    //       height: 100,
-                    //       decoration: BoxDecoration(
-                    //         image: DecorationImage(
-                    //           image: state.profilePicImageProvider,
-                    //           fit: BoxFit.fitHeight,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //     onTap: () {
-                    //       _editProfileBloc.add(
-                    //         PickProfileImageEvent(),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
                     Padding(
                       padding: EdgeInsets.all(40),
                       child: TextFormField(
                         controller: _usernameController,
                         keyboardType: TextInputType.text,
+                        validator: locator<ValidationService>().isEmpty,
                         textInputAction: TextInputAction.done,
                         maxLines: 1,
                         maxLengthEnforced: true,
@@ -83,18 +67,29 @@ class EditProfilePageState extends State<EditProfilePage>
                       ),
                     ),
                     Spacer(),
-                    RaisedButton(
-                      child: Text('Save'),
-                      color: Colors.redAccent,
+                    FullWidthButton(
+                      buttonColor: Colors.red,
                       textColor: Colors.white,
-                      onPressed: () {
+                      onPressed: () async {
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
+
+                        bool confirm = await locator<ModalService>()
+                            .showConfirmation(
+                                context: context,
+                                title: 'Submit',
+                                message: 'Are you sure?');
+
+                        if (!confirm) return;
+
                         _editProfileBloc.add(
                           SaveFormEvent(
                             username: _usernameController.text,
-                            formKey: _formKey,
                           ),
                         );
                       },
+                      text: 'Submit',
                     )
                   ],
                 ),

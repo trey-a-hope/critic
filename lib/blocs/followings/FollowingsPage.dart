@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/UserService.dart';
@@ -43,7 +44,7 @@ class FollowingsPageState extends State<FollowingsPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Following',
           style: TextStyle(fontWeight: FontWeight.bold),

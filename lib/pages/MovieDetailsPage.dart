@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
@@ -18,7 +19,7 @@ class MovieDetailsPage extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Details',
           style: TextStyle(fontWeight: FontWeight.bold),

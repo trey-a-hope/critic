@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/allUsers/Bloc.dart';
 import 'package:critic/models/UserModel.dart';
@@ -29,7 +30,7 @@ class AllUsersPageState extends State<AllUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'All Users',
           style: TextStyle(fontWeight: FontWeight.bold),
