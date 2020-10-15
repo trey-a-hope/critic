@@ -130,13 +130,29 @@ class ProfilePageState extends State<ProfilePage>
                                 ),
                                 Expanded(
                                   child: Center(
-                                    child: Text(
-                                      '? Followers',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
+                                    child: InkWell(
+                                      child: Text(
+                                        '? Followers',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Route route = MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                            create: (context) => FOLLOWERS_BP
+                                                .FollowersBloc(user: currentUser)
+                                              ..add(
+                                                FOLLOWERS_BP.LoadPageEvent(),
+                                              ),
+                                            child: FOLLOWERS_BP.FollowersPage(),
+                                          ),
+                                        );
+
+                                        Navigator.push(context, route);
+                                      },
                                     ),
                                   ),
                                 ),

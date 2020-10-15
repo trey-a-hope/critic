@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'Bloc.dart';
 import 'package:pagination/pagination.dart';
+import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
+import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
 
 class OtherProfilePage extends StatefulWidget {
   @override
@@ -20,14 +21,15 @@ class OtherProfilePage extends StatefulWidget {
 }
 
 class OtherProfilePageState extends State<OtherProfilePage>
-    implements OtherProfileBlocDelegate {
+    implements OTHER_PROFILE_BP.OtherProfileBlocDelegate {
   final String _timeFormat = 'MMM d, yyyy @ h:mm a';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  OtherProfileBloc _otherProfileBloc;
+  OTHER_PROFILE_BP.OtherProfileBloc _otherProfileBloc;
 
   @override
   void initState() {
-    _otherProfileBloc = BlocProvider.of<OtherProfileBloc>(context);
+    _otherProfileBloc =
+        BlocProvider.of<OTHER_PROFILE_BP.OtherProfileBloc>(context);
     _otherProfileBloc.setDelegate(delegate: this);
     super.initState();
   }
@@ -62,15 +64,17 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OtherProfileBloc, OtherProfileState>(
-      builder: (BuildContext context, OtherProfileState state) {
-        if (state is LoadingState) {
+    return BlocBuilder<OTHER_PROFILE_BP.OtherProfileBloc,
+        OTHER_PROFILE_BP.OtherProfileState>(
+      builder:
+          (BuildContext context, OTHER_PROFILE_BP.OtherProfileState state) {
+        if (state is OTHER_PROFILE_BP.LoadingState) {
           return Scaffold(
             body: Spinner(),
           );
         }
 
-        if (state is LoadedState) {
+        if (state is OTHER_PROFILE_BP.LoadedState) {
           final UserModel otherUser = state.otherUser;
           return Scaffold(
             key: _scaffoldKey,
@@ -130,13 +134,29 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                 ),
                                 Expanded(
                                   child: Center(
-                                    child: Text(
-                                      '? Followers',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
+                                    child: InkWell(
+                                      child: Text(
+                                        '? Followers',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        Route route = MaterialPageRoute(
+                                          builder: (context) => BlocProvider(
+                                            create: (context) => FOLLOWERS_BP
+                                                .FollowersBloc(user: otherUser)
+                                              ..add(
+                                                FOLLOWERS_BP.LoadPageEvent(),
+                                              ),
+                                            child: FOLLOWERS_BP.FollowersPage(),
+                                          ),
+                                        );
+
+                                        Navigator.push(context, route);
+                                      },
                                     ),
                                   ),
                                 ),
@@ -246,7 +266,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                 ),
                 onRefresh: () {
                   _otherProfileBloc.add(
-                    LoadPageEvent(),
+                    OTHER_PROFILE_BP.LoadPageEvent(),
                   );
 
                   return;

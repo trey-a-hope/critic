@@ -9,6 +9,8 @@ class FollowersState extends Equatable {
 
 class LoadingState extends FollowersState {}
 
+class LoadedState extends FollowersState {}
+
 class NoFollowersState extends FollowersState {
   NoFollowersState();
 

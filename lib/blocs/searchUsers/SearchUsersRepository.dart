@@ -26,7 +26,7 @@ class SearchUsersRepository {
           (await query.getObjects()).hits;
 
       final List<UserModel> users = results
-          .map((result) => UserModel.extractAlgoliaObjectSnapshot(result))
+          .map((result) => UserModel.fromAlgolia(result))
           .toList();
 
       cache.set(term, users);

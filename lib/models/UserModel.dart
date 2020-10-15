@@ -21,7 +21,7 @@ class UserModel {
     @required this.critiqueCount,
   });
 
-  static UserModel extractDocument({@required DocumentSnapshot ds}) {
+  factory UserModel.fromDoc({@required DocumentSnapshot ds}) {
     final Map<String, dynamic> data = ds.data();
     return UserModel(
       imgUrl: data['imgUrl'],
@@ -34,7 +34,7 @@ class UserModel {
     );
   }
 
-  static UserModel extractAlgoliaObjectSnapshot(AlgoliaObjectSnapshot aob) {
+  factory UserModel.fromAlgolia(AlgoliaObjectSnapshot aob) {
     Map<String, dynamic> data = aob.data;
     return UserModel(
       imgUrl: data['imgUrl'],

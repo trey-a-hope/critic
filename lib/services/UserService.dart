@@ -1,6 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/Constants.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' show Encoding, json;
 
 abstract class IUserService {
   //Users
@@ -10,11 +14,18 @@ abstract class IUserService {
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
       {@required String uid, @required Map<String, dynamic> data});
+  Future<List<UserModel>> retrieveFollowersFromStream({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  });
 }
 
 class UserService extends IUserService {
-  final CollectionReference _usersDB = FirebaseFirestore.instance.collection('Users');
-  final CollectionReference _dataDB = FirebaseFirestore.instance.collection('Data');
+  final CollectionReference _usersDB =
+      FirebaseFirestore.instance.collection('Users');
+  final CollectionReference _dataDB =
+      FirebaseFirestore.instance.collection('Data');
   final CollectionReference _followersDB =
       FirebaseFirestore.instance.collection('Followers');
 
@@ -29,8 +40,7 @@ class UserService extends IUserService {
         user.toMap(),
       );
 
-      final DocumentReference tableCountsDocRef =
-          _dataDB.doc('tableCounts');
+      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
       batch.update(tableCountsDocRef, {'users': FieldValue.increment(1)});
 
       final DocumentReference followerDocRef = _followersDB.doc(user.uid);
@@ -54,7 +64,7 @@ class UserService extends IUserService {
   Future<UserModel> retrieveUser({@required String uid}) async {
     try {
       DocumentSnapshot documentSnapshot = await _usersDB.doc(uid).get();
-      return UserModel.extractDocument(ds: documentSnapshot);
+      return UserModel.fromDoc(ds: documentSnapshot);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -84,8 +94,64 @@ class UserService extends IUserService {
     try {
       return (await _usersDB.get())
           .docs
-          .map((doc) => UserModel.extractDocument(ds: doc))
+          .map((doc) => UserModel.fromDoc(ds: doc))
           .toList();
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> retrieveFollowersFromStream({
+    @required String uid,
+    @required int limit,
+    @required int offset,
+  }) async {
+    try {
+      try {
+        Map data = {
+          'uid': uid,
+          'limit': '$limit',
+          'offset': '$offset',
+        };
+
+        http.Response response = await http.post(
+          '${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowers',
+          body: data,
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+        );
+
+        Map map = json.decode(response.body);
+
+        if (map['statusCode'] != null) {
+          throw PlatformException(
+              message: map['raw']['message'], code: map['raw']['code']);
+        }
+
+        final List<dynamic> results = map['results'];
+
+        List<UserModel> users = List<UserModel>();
+
+        for (int i = 0; i < results.length; i++) {
+          dynamic result = results[0];
+
+          final String uid = result['feed_id'].replaceAll('Critiques:', '');
+
+          final UserModel user = await retrieveUser(uid: uid);
+
+          print(uid);
+
+          users.add(user);
+        }
+
+        return users;
+      } catch (e) {
+        throw Exception(
+          e.toString(),
+        );
+      }
     } catch (e) {
       throw Exception(
         e.toString(),

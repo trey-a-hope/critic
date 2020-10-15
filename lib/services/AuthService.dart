@@ -27,7 +27,7 @@ class AuthService extends IAuthService {
       final User firebaseUser = auth.currentUser;
       final DocumentSnapshot documentSnapshot =
           await usersDB.doc(firebaseUser.uid).get();
-      return UserModel.extractDocument(ds: documentSnapshot);
+      return UserModel.fromDoc(ds: documentSnapshot);
     } catch (e) {
       throw Exception('Could not fetch user at this time.');
     }
