@@ -55,6 +55,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             modified: DateTime.now(),
             uid: firebaseUser.uid,
             username: username,
+            critiqueCount: 0,
           );
 
           await locator<UserService>().createUser(user: user);

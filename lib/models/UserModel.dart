@@ -9,6 +9,7 @@ class UserModel {
   DateTime created;
   String uid;
   String username;
+  int critiqueCount;
 
   UserModel({
     @required this.imgUrl,
@@ -17,6 +18,7 @@ class UserModel {
     @required this.created,
     @required this.uid,
     @required this.username,
+    @required this.critiqueCount,
   });
 
   static UserModel extractDocument({@required DocumentSnapshot ds}) {
@@ -28,6 +30,7 @@ class UserModel {
       modified: data['modified'].toDate(),
       uid: data['uid'],
       username: data['username'],
+      critiqueCount: data['critiqueCount'],
     );
   }
 
@@ -42,6 +45,7 @@ class UserModel {
       modified: DateTime.now(),
       uid: data['uid'],
       username: data['username'],
+      critiqueCount: data['critiqueCount'],
     );
   }
 

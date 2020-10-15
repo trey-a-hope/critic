@@ -11,25 +11,22 @@ class HomeState extends Equatable {
 
 class LoadingState extends HomeState {}
 
-class NoCritiquesState extends HomeState {
-  NoCritiquesState();
+// class NoCritiquesState extends HomeState {
+//   NoCritiquesState();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }
 
-class FoundCritiquesState extends HomeState {
-  final List<CritiqueModel> critiques;
+class LoadedState extends HomeState {
   final UserModel currentUser;
 
-  FoundCritiquesState({
-    @required this.critiques,
+  LoadedState({
     @required this.currentUser,
   });
 
   @override
   List<Object> get props => [
-        critiques,
         currentUser,
       ];
 }

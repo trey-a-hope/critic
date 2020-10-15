@@ -1,5 +1,7 @@
 import 'package:critic/blocs/home/Bloc.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:pagination/pagination.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,6 +33,18 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
     super.dispose();
   }
 
+  Future<List<CritiqueModel>> pageFetch(int offset) async {
+    //Fetch template documents.
+    List<CritiqueModel> critiques =
+        await locator<CritiqueService>().retrieveCritiquesFromStream(
+      limit: _homeBloc.limit,
+      offset: offset,
+      uid: _homeBloc.currentUser.uid,
+    );
+
+    return critiques;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -38,41 +53,63 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
           return Spinner();
         }
 
-        if (state is NoCritiquesState) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  MdiIcons.movieEdit,
-                  size: 100,
-                  color: Colors.grey,
-                ),
-                Text(
-                  'No critiques at this moment.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text('Create your own or follow someone.')
-              ],
-            ),
-          );
-        }
-
-        if (state is FoundCritiquesState) {
+        if (state is LoadedState) {
+          final UserModel currentUser = state.currentUser;
           return RefreshIndicator(
-            child: ListView.builder(
-              addAutomaticKeepAlives: true,
-              itemCount: state.critiques.length,
-              itemBuilder: (BuildContext context, int index) {
-                final CritiqueModel critique = state.critiques[index];
-
-                return CritiqueView(
-                  critique: critique,
-                  currentUser: state.currentUser,
+            child: PaginationList<CritiqueModel>(
+              onLoading: Spinner(),
+              onPageLoading: Spinner(),
+              separatorWidget: Divider(),
+              itemBuilder: (BuildContext context, CritiqueModel critique) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: CritiqueView(
+                    critique: critique,
+                    currentUser: currentUser,
+                  ),
                 );
               },
+              pageFetch: pageFetch,
+              onError: (dynamic error) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                    Text(
+                      'Error',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      error.toString(),
+                    )
+                  ],
+                ),
+              ),
+              onEmpty: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MdiIcons.movieEdit,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                    Text(
+                      'No critiques at this moment.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text('Create your own or follow someone.')
+                  ],
+                ),
+              ),
             ),
             onRefresh: () {
               _homeBloc.add(
@@ -83,6 +120,52 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
             },
           );
         }
+
+        // if (state is NoCritiquesState) {
+        //   return Center(
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Icon(
+        //           MdiIcons.movieEdit,
+        //           size: 100,
+        //           color: Colors.grey,
+        //         ),
+        //         Text(
+        //           'No critiques at this moment.',
+        //           style: TextStyle(
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //         Text('Create your own or follow someone.')
+        //       ],
+        //     ),
+        //   );
+        // }
+
+        // if (state is FoundCritiquesState) {
+        //   return RefreshIndicator(
+        //     child: ListView.builder(
+        //       addAutomaticKeepAlives: true,
+        //       itemCount: state.critiques.length,
+        //       itemBuilder: (BuildContext context, int index) {
+        //         final CritiqueModel critique = state.critiques[index];
+
+        //         return CritiqueView(
+        //           critique: critique,
+        //           currentUser: state.currentUser,
+        //         );
+        //       },
+        //     ),
+        //     onRefresh: () {
+        //       _homeBloc.add(
+        //         LoadPageEvent(),
+        //       );
+
+        //       return;
+        //     },
+        //   );
+        // }
 
         if (state is ErrorState) {
           return Center(

@@ -71,7 +71,7 @@ class CreateCritiqueBloc
         _createCritiqueBlocDelegate.clearText();
 
         _createCritiqueBlocDelegate.showMessage(
-            message: 'Critique added, return to home page and refresh.');
+            message: 'Critique added, check it out on the home page.');
 
         yield CreateCritiqueStartState();
       } catch (error) {

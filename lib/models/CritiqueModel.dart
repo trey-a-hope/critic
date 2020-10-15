@@ -1,4 +1,6 @@
+import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CritiqueModel {
   String id;
@@ -51,6 +53,25 @@ class CritiqueModel {
     );
   }
 
+  factory CritiqueModel.fromDoc({@required DocumentSnapshot ds}) {
+    final Map<String, dynamic> data = ds.data();
+    return CritiqueModel(
+      imdbID: data['imdbID'],
+      id: data['id'],
+      uid: data['uid'],
+      message: data['message'],
+      modified: data['modified'],
+      movieTitle: data['movieTitle'],
+      moviePoster: data['moviePoster'],
+      movieYear: data['movieYear'],
+      moviePlot: data['moviePlot'],
+      movieDirector: data['movieDirector'],
+      imdbRating: data['imdbRating'],
+      imdbVotes: data['imdbVotes'],
+      created: data['created'].toDate(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'actor': uid,
@@ -64,6 +85,23 @@ class CritiqueModel {
       'imdbID': imdbID,
       'imdbRating': imdbRating,
       'imdbVotes': imdbVotes,
+    };
+  }
+
+  Map<String, dynamic> toJsonWithDate() {
+    return {
+      'actor': uid,
+      'message': message,
+      'uid': uid,
+      'movieTitle': movieTitle,
+      'moviePoster': moviePoster,
+      'movieYear': movieYear,
+      'moviePlot': moviePlot,
+      'movieDirector': movieDirector,
+      'imdbID': imdbID,
+      'imdbRating': imdbRating,
+      'imdbVotes': imdbVotes,
+      'created': DateTime.now(),
     };
   }
 }

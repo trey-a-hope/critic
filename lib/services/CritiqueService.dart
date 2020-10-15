@@ -14,10 +14,10 @@ abstract class ICritiqueService {
     @required int limit,
     @required int offset,
   });
-  Future<List<CritiqueModel>> retrieveCritiquesFromFirebase({
+  Future<List<DocumentSnapshot>> retrieveCritiquesFromFirebase({
     @required String uid,
     @required int limit,
-    @required int offset,
+    @required DocumentSnapshot startAfterDocument,
   });
   Future<void> deleteCritique({
     @required String critiqueID,
@@ -33,6 +33,8 @@ abstract class ICritiqueService {
 }
 
 class CritiqueService extends ICritiqueService {
+  final CollectionReference _usersDB =
+      FirebaseFirestore.instance.collection('Users');
   final CollectionReference _critiquesDB =
       FirebaseFirestore.instance.collection('Critiques');
   final CollectionReference _dataDB =
@@ -62,15 +64,18 @@ class CritiqueService extends ICritiqueService {
 
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
+      Map firebaseMap = critique.toJsonWithDate();
+
+      firebaseMap['commentCount'] = 0;
+      firebaseMap['likeCount'] = 0;
+      firebaseMap['likes'] = [];
+      firebaseMap['id'] = critiqueID;
+
       final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
       batch.set(
         critiqueDocRef,
-        {
-          'commentCount': 0,
-          'likeCount': 0,
-          'likes': [],
-          'id': critiqueID,
-        },
+        firebaseMap,
       );
 
       final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
@@ -81,7 +86,15 @@ class CritiqueService extends ICritiqueService {
         },
       );
 
-      batch.commit();
+      final DocumentReference userDocRef = _usersDB.doc(critique.uid);
+      batch.update(
+        userDocRef,
+        {
+          'critiqueCount': FieldValue.increment(1),
+        },
+      );
+
+      await batch.commit();
       return;
     } catch (e) {
       throw Exception(
@@ -163,12 +176,12 @@ class CritiqueService extends ICritiqueService {
       }
 
       final WriteBatch batch = FirebaseFirestore.instance.batch();
-      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
-      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
 
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
       batch.delete(
         critiqueDocRef,
       );
+      final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
 
       batch.update(
         tableCountsDocRef,
@@ -177,7 +190,14 @@ class CritiqueService extends ICritiqueService {
         },
       );
 
-      batch.commit();
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+      batch.update(
+        userDocRef,
+        {
+          'critiqueCount': FieldValue.increment(-1),
+        },
+      );
+      await batch.commit();
 
       return;
     } catch (e) {
@@ -188,12 +208,33 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<List<CritiqueModel>> retrieveCritiquesFromFirebase({
+  Future<List<DocumentSnapshot>> retrieveCritiquesFromFirebase({
     @required String uid,
     @required int limit,
-    @required int offset,
-  }) {
-    // TODO: implement retrieveCritiquesFromFirebase
-    throw UnimplementedError();
+    @required DocumentSnapshot startAfterDocument,
+  }) async {
+    try {
+      Query query = _critiquesDB.orderBy('created', descending: true);
+
+      if (uid != null) {
+        query = query.where('uid', isEqualTo: uid);
+      }
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
+
+      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+
+      return documentSnapshots;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
   }
 }

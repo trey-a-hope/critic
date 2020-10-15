@@ -4,19 +4,33 @@ import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FollowerService.dart';
+import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+abstract class ProfileBlocDelegate {
+  void showMessage({@required String message});
+}
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(null);
 
-  UserModel _currentUser;
+  ProfileBlocDelegate _profileBlocDelegate;
+
+  UserModel currentUser;
 
   List<String> _followersIDs;
 
   List<String> _followingsIDs;
 
-  List<CritiqueModel> _critiques;
+  int limit = 10;
+
+  DocumentSnapshot startAfterDocument;
+
+  void setDelegate({@required ProfileBlocDelegate delegate}) {
+    this._profileBlocDelegate = delegate;
+  }
 
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
@@ -24,30 +38,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield LoadingState();
 
       try {
-        _currentUser = await locator<AuthService>().getCurrentUser();
+        currentUser = await locator<AuthService>().getCurrentUser();
 
-        // _critiques = await locator<CritiqueService>()
-        //     .retrieveCritiquesForUser(userID: _currentUser.uid);
+        _followersIDs = [];
 
-        _critiques.sort((a, b) =>
-            b.created.millisecondsSinceEpoch -
-            a.created.millisecondsSinceEpoch);
+        _followingsIDs = [];
 
-        //_critiques.removeWhere((critique) => critique.safe == false);
-
-        _followersIDs = await locator<FollowerService>()
-            .getFollowersIDS(userID: _currentUser.uid);
-
-        _followingsIDs = await locator<FollowerService>()
-            .getFollowingsIDS(userID: _currentUser.uid);
+        startAfterDocument = null;
 
         yield LoadedState(
-          currentUser: _currentUser,
+          currentUser: currentUser,
           followers: _followersIDs,
           followings: _followingsIDs,
-          critiques: _critiques,
         );
       } catch (error) {
+        _profileBlocDelegate.showMessage(message: error.toString());
         yield ErrorState(error: error);
       }
     }

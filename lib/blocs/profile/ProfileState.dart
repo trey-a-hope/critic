@@ -1,5 +1,4 @@
 //import 'package:bloc/bloc.dart';
-import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +14,11 @@ class LoadedState extends ProfileState {
   final UserModel currentUser;
   final List<String> followers;
   final List<String> followings;
-  final List<CritiqueModel> critiques;
 
   LoadedState({
     @required this.currentUser,
     @required this.followers,
     @required this.followings,
-    @required this.critiques,
   });
 
   @override
@@ -29,7 +26,6 @@ class LoadedState extends ProfileState {
         currentUser,
         followers,
         followings,
-        critiques,
       ];
 }
 

@@ -8,6 +8,7 @@ import 'package:critic/services/FollowerService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class HomeBlocDelegate {
   void showMessage({@required String message});
@@ -20,8 +21,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
 
   HomeBlocDelegate _homeBlocDelegate;
-  UserModel _currentUser;
-
+  UserModel currentUser;
+  int limit = 10;
   void setDelegate({@required HomeBlocDelegate delegate}) {
     this._homeBlocDelegate = delegate;
   }
@@ -32,23 +33,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield LoadingState();
 
       try {
-        _currentUser = await locator<AuthService>().getCurrentUser();
+        currentUser = await locator<AuthService>().getCurrentUser();
 
-        List<CritiqueModel> critiques =
-            await locator<CritiqueService>().retrieveCritiquesFromStream(
-          uid: _currentUser.uid,
-          limit: 100,
-          offset: 0,
-        );
-
-        if (critiques.isEmpty) {
-          yield NoCritiquesState();
-        } else {
-          yield FoundCritiquesState(
-            critiques: critiques,
-            currentUser: _currentUser,
-          );
-        }
+        yield LoadedState(currentUser: currentUser);
       } catch (error) {
         _homeBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
         yield ErrorState(error: error);

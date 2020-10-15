@@ -1,31 +1,68 @@
+import 'package:critic/Constants.dart';
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
 import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pagination/pagination.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
   State createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage>
+    implements PROFILE_BP.ProfileBlocDelegate {
   final String _timeFormat = 'MMM d, yyyy @ h:mm a';
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   PROFILE_BP.ProfileBloc _profileBloc;
 
   @override
   void initState() {
+    _profileBloc = BlocProvider.of<PROFILE_BP.ProfileBloc>(context);
+    _profileBloc.setDelegate(delegate: this);
+
     super.initState();
+  }
+
+  Future<List<CritiqueModel>> pageFetch(int offset) async {
+    //Fetch template documents.
+    List<DocumentSnapshot> documentSnapshots =
+        await locator<CritiqueService>().retrieveCritiquesFromFirebase(
+      uid: _profileBloc.currentUser.uid,
+      limit: _profileBloc.limit,
+      startAfterDocument: _profileBloc.startAfterDocument,
+    );
+
+    //Return an empty list if there are no new documents.
+    if (documentSnapshots.isEmpty) {
+      return List<CritiqueModel>();
+    }
+
+    _profileBloc.startAfterDocument =
+        documentSnapshots[documentSnapshots.length - 1];
+
+    List<CritiqueModel> critiques = List<CritiqueModel>();
+
+    //Convert documents to template models.
+    documentSnapshots.forEach((documentSnapshot) {
+      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
+      critiques.add(critiqueModel);
+    });
+
+    return critiques;
   }
 
   @override
   Widget build(BuildContext context) {
-    _profileBloc = BlocProvider.of<PROFILE_BP.ProfileBloc>(context);
-
     return BlocBuilder<PROFILE_BP.ProfileBloc, PROFILE_BP.ProfileState>(
       builder: (BuildContext context, PROFILE_BP.ProfileState state) {
         if (state is PROFILE_BP.LoadingState) {
@@ -33,191 +70,179 @@ class ProfilePageState extends State<ProfilePage> {
         }
 
         if (state is PROFILE_BP.LoadedState) {
-          return Stack(
-            children: <Widget>[
-              Container(
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(
-                        'https://images.unsplash.com/photo-1535016120720-40c646be5580?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80'),
-                  ),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 25.0, 16.0, 16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 20,
+          final UserModel currentUser = state.currentUser;
+
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  SliverAppBar(
+                    backgroundColor: COLOR_NAVY,
+                    expandedHeight: 200.0,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      centerTitle: true,
+                      title: Text(
+                        '${currentUser.username}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Stack(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(16.0),
-                              margin: EdgeInsets.only(top: 20.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    margin: EdgeInsets.only(left: 110.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          state.currentUser.username,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        ),
-                                        ListTile(
-                                          contentPadding: EdgeInsets.all(0),
-                                          title: Text(state.currentUser.email),
-                                        ),
-                                      ],
+                      ),
+                      background: Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(0.3),
+                                BlendMode.darken),
+                            image: AssetImage('assets/images/theater.jpeg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundImage:
+                                  NetworkImage('${currentUser.imgUrl}'),
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      '${currentUser.critiqueCount} Critiques',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                  SizedBox(height: 10.0),
-                                  Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              'Critiques',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text('${state.critiques.length}')
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            Route route = MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BlocProvider(
-                                                create: (context) =>
-                                                    FOLLOWERS_BP.FollowersBloc(
-                                                        followersIDs:
-                                                            state.followers)
-                                                      ..add(
-                                                        FOLLOWERS_BP
-                                                            .LoadPageEvent(),
-                                                      ),
-                                                child: FOLLOWERS_BP
-                                                    .FollowersPage(),
-                                              ),
-                                            );
-
-                                            Navigator.push(context, route);
-                                          },
-                                          child: Column(
-                                            children: <Widget>[
-                                              Text(
-                                                'Followers',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text('${state.followers.length}')
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            Route route = MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BlocProvider(
-                                                create: (context) =>
-                                                    FOLLOWINGS_BP
-                                                        .FollowingsBloc(
-                                                            followingsIDs: state
-                                                                .followings)
-                                                      ..add(
-                                                        FOLLOWINGS_BP
-                                                            .LoadPageEvent(),
-                                                      ),
-                                                child: FOLLOWINGS_BP
-                                                    .FollowingsPage(),
-                                              ),
-                                            );
-
-                                            Navigator.push(context, route);
-                                          },
-                                          child: Column(
-                                            children: <Widget>[
-                                              Text(
-                                                'Following',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text('${state.followings.length}')
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Center(
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  '${state.currentUser.imgUrl}',
                                 ),
-                              ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      '3 Followers',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      '3 Following',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
                             )
                           ],
                         ),
-                        SizedBox(height: 20.0),
+                      ),
+                    ),
+                  ),
+                ];
+              },
+              body: RefreshIndicator(
+                child: PaginationList<CritiqueModel>(
+                  onLoading: Spinner(),
+                  onPageLoading: Spinner(),
+                  separatorWidget: Divider(),
+                  itemBuilder: (BuildContext context, CritiqueModel critique) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: CritiqueView(
+                        critique: critique,
+                        currentUser: currentUser,
+                      ),
+                    );
+                  },
+                  pageFetch: pageFetch,
+                  onError: (dynamic error) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          'Error',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          error.toString(),
+                        )
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: state.critiques.isEmpty
-                        ? Center(
-                            child:
-                                Text('You have no critiques at the moment...'),
-                          )
-                        : ListView.builder(
-                            addAutomaticKeepAlives: true,
-                            itemCount: state.critiques.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final CritiqueModel critique =
-                                  state.critiques[index];
-                              return CritiqueView(
-                                currentUser: state.currentUser,
-                                critique: critique,
-                              );
-                            },
+                  onEmpty: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          MdiIcons.movieEdit,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          'No critiques at this moment.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                  )
-                ],
+                        ),
+                        Text('Create your own or follow someone.')
+                      ],
+                    ),
+                  ),
+                ),
+                onRefresh: () {
+                  _profileBloc.add(
+                    PROFILE_BP.LoadPageEvent(),
+                  );
+
+                  return;
+                },
               ),
-            ],
+            ),
           );
         }
 
         return Container();
       },
+    );
+  }
+
+  @override
+  void showMessage({String message}) {
+    locator<ModalService>().showAlert(
+      context: context,
+      title: 'Error',
+      message: message,
     );
   }
 }

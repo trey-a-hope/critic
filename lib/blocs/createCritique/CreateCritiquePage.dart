@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
@@ -36,7 +37,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: COLOR_NAVY,
         title: Text(
           'Create Critique',
           style: TextStyle(fontWeight: FontWeight.bold),
