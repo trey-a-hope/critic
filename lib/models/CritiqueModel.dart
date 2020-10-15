@@ -88,20 +88,4 @@ class CritiqueModel {
     };
   }
 
-  Map<String, dynamic> toJsonWithDate() {
-    return {
-      'actor': uid,
-      'message': message,
-      'uid': uid,
-      'movieTitle': movieTitle,
-      'moviePoster': moviePoster,
-      'movieYear': movieYear,
-      'moviePlot': moviePlot,
-      'movieDirector': movieDirector,
-      'imdbID': imdbID,
-      'imdbRating': imdbRating,
-      'imdbVotes': imdbVotes,
-      'created': DateTime.now(),
-    };
-  }
 }

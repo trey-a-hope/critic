@@ -64,12 +64,13 @@ class CritiqueService extends ICritiqueService {
 
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      Map firebaseMap = critique.toJsonWithDate();
+      Map firebaseMap = critique.toJson();
 
       firebaseMap['commentCount'] = 0;
       firebaseMap['likeCount'] = 0;
       firebaseMap['likes'] = [];
       firebaseMap['id'] = critiqueID;
+      firebaseMap['created'] = DateTime.now();
 
       final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
 
