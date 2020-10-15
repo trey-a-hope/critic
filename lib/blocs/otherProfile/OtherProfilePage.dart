@@ -77,6 +77,8 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
         if (state is OTHER_PROFILE_BP.LoadedState) {
           final UserModel otherUser = state.otherUser;
+          final bool isFollowing = state.isFollowing;
+
           return Scaffold(
             key: _scaffoldKey,
             body: NestedScrollView(
@@ -198,17 +200,38 @@ class OtherProfilePageState extends State<OtherProfilePage>
                             ),
                             Row(
                               children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: FullWidthButton(
-                                      buttonColor: Colors.red,
-                                      text: 'Follow Me',
-                                      textColor: Colors.white,
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ),
+                                isFollowing
+                                    ? Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: FullWidthButton(
+                                            buttonColor: Colors.white,
+                                            text: 'Unfollow Me',
+                                            textColor: Colors.red,
+                                            onPressed: () {
+                                              _otherProfileBloc.add(
+                                                OTHER_PROFILE_BP
+                                                    .UnfollowEvent(),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      )
+                                    : Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: FullWidthButton(
+                                            buttonColor: Colors.red,
+                                            text: 'Follow Me',
+                                            textColor: Colors.white,
+                                            onPressed: () {
+                                              _otherProfileBloc.add(
+                                                OTHER_PROFILE_BP.FollowEvent(),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
                                 Expanded(
                                   child: Padding(
                                     padding: EdgeInsets.all(10),

@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
@@ -19,7 +20,9 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
   }) : super(null);
 
   final String otherUserID;
+
   OtherProfileBlocDelegate _otherProfileBlocDelegate;
+
   bool _isFollowing = false;
 
   UserModel currentUser;
@@ -40,10 +43,14 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
       yield LoadingState();
 
       try {
-        otherUser =
-            await locator<UserService>().retrieveUser(uid: otherUserID);
+        otherUser = await locator<UserService>().retrieveUser(uid: otherUserID);
 
         currentUser = await locator<AuthService>().getCurrentUser();
+
+        _isFollowing = await locator<CritiqueService>().isFollowing(
+          myUID: currentUser.uid,
+          theirUID: otherUser.uid,
+        );
 
         startAfterDocument = null;
 
@@ -61,28 +68,47 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
     }
 
     if (event is FollowEvent) {
-      // if (_otherUser.uid == _currentUser.uid) {
-      //   _otherProfileBlocDelegate.showMessage(
-      //     message: 'Sorry, you can\'t follow yourself.',
-      //   );
-      //   return;
-      // }
+      yield LoadingState();
+      try {
+        await locator<CritiqueService>()
+            .followUser(myUID: currentUser.uid, theirUID: otherUser.uid);
 
-      // locator<FollowerService>().follow(
-      //   followed: _otherUser.uid,
-      //   follower: _currentUser.uid,
-      // );
+        _isFollowing = await locator<CritiqueService>().isFollowing(
+          myUID: currentUser.uid,
+          theirUID: otherUser.uid,
+        );
 
-      // yield LoadedState(otherUser: _otherUser, isFollowing: true);
+        if (_isFollowing && otherUser.fcmToken != null) {
+          //Send notification to user.
+          await locator<FCMNotificationService>().sendNotificationToUser(
+            fcmToken: otherUser.fcmToken,
+            title: 'You gained a follower.',
+            body: '${otherUser.username} ',
+            notificationData: null,
+          );
+        }
+
+        add(LoadPageEvent());
+      } catch (error) {
+        yield ErrorState(error: error.toString());
+      }
     }
 
     if (event is UnfollowEvent) {
-      // locator<FollowerService>().unfollow(
-      //   followed: _otherUser.uid,
-      //   follower: _currentUser.uid,
-      // );
+      yield LoadingState();
+      try {
+        await locator<CritiqueService>()
+            .unfollowUser(myUID: currentUser.uid, theirUID: otherUser.uid);
 
-      // yield LoadedState(otherUser: _otherUser, isFollowing: false);
+        _isFollowing = await locator<CritiqueService>().isFollowing(
+          myUID: currentUser.uid,
+          theirUID: otherUser.uid,
+        );
+
+        add(LoadPageEvent());
+      } catch (error) {
+        yield ErrorState(error: error.toString());
+      }
     }
 
     if (event is BlockUserEvent) {

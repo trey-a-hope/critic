@@ -10,6 +10,7 @@ class UserModel {
   String uid;
   String username;
   int critiqueCount;
+  String fcmToken;
 
   UserModel({
     @required this.imgUrl,
@@ -19,6 +20,7 @@ class UserModel {
     @required this.uid,
     @required this.username,
     @required this.critiqueCount,
+    @required this.fcmToken,
   });
 
   factory UserModel.fromDoc({@required DocumentSnapshot ds}) {
@@ -31,6 +33,7 @@ class UserModel {
       uid: data['uid'],
       username: data['username'],
       critiqueCount: data['critiqueCount'],
+      fcmToken: data['fcmToken'],
     );
   }
 
@@ -46,6 +49,7 @@ class UserModel {
       uid: data['uid'],
       username: data['username'],
       critiqueCount: data['critiqueCount'],
+      fcmToken: data['fcmToken'],
     );
   }
 
@@ -56,7 +60,8 @@ class UserModel {
       'modified': modified,
       'created': created,
       'uid': uid,
-      'username': username
+      'username': username,
+      'fcmToken': fcmToken,
     };
   }
 }

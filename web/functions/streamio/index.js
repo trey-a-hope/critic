@@ -136,3 +136,16 @@ exports.getFollowStats = functions.https.onRequest((req, res) => {
         return res.send(error);
     });
 });
+
+exports.isFollowing = functions.https.onRequest((req, res) => {
+    const myUID = req.body.myUID;
+    const theirUID = req.body.theirUID;
+
+    const myUserFeed = streamioClient.feed('Critiques', myUID);
+
+    myUserFeed.following({ offset: 0, limit: 1, filter: ['Critiques:' + theirUID] }).then((result) => {
+        return res.send(result);
+    }).catch((error) => {
+        return res.send(error);
+    });
+});

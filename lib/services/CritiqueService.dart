@@ -26,12 +26,17 @@ abstract class ICritiqueService {
 
   Future<void> followUser({
     @required String myUID,
-    @required String theirID,
+    @required String theirUID,
   });
 
   Future<void> unfollowUser({
     @required String myUID,
-    @required String theirID,
+    @required String theirUID,
+  });
+
+  Future<bool> isFollowing({
+    @required String myUID,
+    @required String theirUID,
   });
 
   //not complete
@@ -251,13 +256,14 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<void> followUser({String myUID, String theirID}) async {
+  Future<void> followUser(
+      {@required String myUID, @required String theirUID}) async {
     try {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}FollowUserFeed',
         body: {
           'myUID': myUID,
-          'theirID': theirID,
+          'theirUID': theirUID,
         },
         headers: {'content-type': 'application/x-www-form-urlencoded'},
       );
@@ -270,6 +276,7 @@ class CritiqueService extends ICritiqueService {
           code: map['raw']['code'],
         );
       }
+      return;
     } catch (error) {
       throw Exception(
         error.toString(),
@@ -280,14 +287,14 @@ class CritiqueService extends ICritiqueService {
   @override
   Future<void> unfollowUser({
     @required String myUID,
-    @required String theirID,
+    @required String theirUID,
   }) async {
     try {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}UnfollowUserFeed',
         body: {
           'myUID': myUID,
-          'theirID': theirID,
+          'theirUID': theirUID,
         },
         headers: {'content-type': 'application/x-www-form-urlencoded'},
       );
@@ -300,6 +307,42 @@ class CritiqueService extends ICritiqueService {
           code: map['raw']['code'],
         );
       }
+
+      return;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<bool> isFollowing({
+    @required String myUID,
+    @required String theirUID,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}IsFollowing',
+        body: {
+          'myUID': myUID,
+          'theirUID': theirUID,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+
+      final List<dynamic> results = map['results'];
+
+      return results.length > 0;
     } catch (error) {
       throw Exception(
         error.toString(),

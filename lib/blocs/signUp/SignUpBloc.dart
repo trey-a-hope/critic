@@ -56,6 +56,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             uid: firebaseUser.uid,
             username: username,
             critiqueCount: 0,
+            fcmToken: null,
           );
 
           await locator<UserService>().createUser(user: user);

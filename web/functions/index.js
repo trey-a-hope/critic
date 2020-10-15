@@ -17,3 +17,4 @@ exports.UnfollowUserFeed = StreamIO.unfollowUserFeed;
 exports.GetUsersFollowers = StreamIO.getUsersFollowers;
 exports.GetUsersFollowees = StreamIO.getUsersFollowees;
 exports.GetFollowStats = StreamIO.getFollowStats;
+exports.IsFollowing = StreamIO.isFollowing;
