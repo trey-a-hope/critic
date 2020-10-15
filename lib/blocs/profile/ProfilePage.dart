@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
@@ -9,11 +11,14 @@ import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pagination/pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -108,10 +113,34 @@ class ProfilePageState extends State<ProfilePage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundImage:
-                                  NetworkImage('${currentUser.imgUrl}'),
+                            Stack(
+                              children: <Widget>[
+                                GFAvatar(
+                                  radius: 40,
+                                  backgroundImage:
+                                      NetworkImage(currentUser.imgUrl),
+                                ),
+                                Positioned(
+                                  bottom: 1,
+                                  right: 1,
+                                  child: CircleAvatar(
+                                    radius: 15,
+                                    backgroundColor: Colors.red,
+                                    child: Center(
+                                      child: IconButton(
+                                        icon: Icon(
+                                          MdiIcons.camera,
+                                          size: 15,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          showSelectImageDialog();
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                             SizedBox(height: 10),
                             Row(
@@ -143,7 +172,8 @@ class ProfilePageState extends State<ProfilePage>
                                         Route route = MaterialPageRoute(
                                           builder: (context) => BlocProvider(
                                             create: (context) => FOLLOWERS_BP
-                                                .FollowersBloc(user: currentUser)
+                                                .FollowersBloc(
+                                                    user: currentUser)
                                               ..add(
                                                 FOLLOWERS_BP.LoadPageEvent(),
                                               ),
@@ -252,6 +282,88 @@ class ProfilePageState extends State<ProfilePage>
         return Container();
       },
     );
+  }
+
+  showSelectImageDialog() {
+    return Platform.isIOS ? iOSBottomSheet() : androidDialog();
+  }
+
+  iOSBottomSheet() {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoActionSheet(
+            title: Text('Add Photo'),
+            actions: <Widget>[
+              CupertinoActionSheetAction(
+                child: Text('Take Photo'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _profileBloc.add(
+                    PROFILE_BP.UploadImageEvent(
+                        imageSource: ImageSource.camera),
+                  );
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: Text('Choose From Gallery'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _profileBloc.add(
+                    PROFILE_BP.UploadImageEvent(
+                        imageSource: ImageSource.gallery),
+                  );
+                },
+              )
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.redAccent),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          );
+        });
+  }
+
+  androidDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: Text('Add Photo'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: Text('Take Photo'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _profileBloc.add(
+                    PROFILE_BP.UploadImageEvent(
+                        imageSource: ImageSource.camera),
+                  );
+                },
+              ),
+              SimpleDialogOption(
+                child: Text('Choose From Gallery'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _profileBloc.add(
+                    PROFILE_BP.UploadImageEvent(
+                        imageSource: ImageSource.gallery),
+                  );
+                },
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.redAccent),
+                ),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        });
   }
 
   @override
