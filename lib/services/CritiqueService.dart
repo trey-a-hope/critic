@@ -39,6 +39,10 @@ abstract class ICritiqueService {
     @required String theirUID,
   });
 
+  Future<dynamic> followStats({
+    @required String uid,
+  });
+
   //not complete
   // Future<CritiqueModel> getCritique({@required String critiqueID});
   // Future<List<CritiqueModel>> retrieveCritiquesForUser({
@@ -327,6 +331,36 @@ class CritiqueService extends ICritiqueService {
         body: {
           'myUID': myUID,
           'theirUID': theirUID,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+
+      final List<dynamic> results = map['results'];
+
+      return results.length > 0;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<dynamic> followStats({@required String uid}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}GetFollowStats',
+        body: {
+          'uid': uid,
         },
         headers: {'content-type': 'application/x-www-form-urlencoded'},
       );

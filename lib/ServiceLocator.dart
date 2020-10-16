@@ -1,5 +1,6 @@
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/FollowerService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
@@ -12,14 +13,12 @@ GetIt locator = GetIt.I;
 
 void setUpLocater() {
   locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton(() => UserService());
-  locator.registerLazySingleton(() => MovieService());
-  locator.registerLazySingleton(() => ValidationService());
-  locator.registerLazySingleton(() => ModalService());
   locator.registerLazySingleton(() => CritiqueService());
-  locator.registerLazySingleton(() => StorageService());
+  locator.registerLazySingleton(() => FCMNotificationService());
   locator.registerLazySingleton(() => FollowerService());
-
-  //Register models?
-  // locator.registerFactory<UserModel>(() => UserModel());
+  locator.registerLazySingleton(() => ModalService());
+  locator.registerLazySingleton(() => MovieService());
+  locator.registerLazySingleton(() => StorageService());
+  locator.registerLazySingleton(() => UserService());
+  locator.registerLazySingleton(() => ValidationService());
 }

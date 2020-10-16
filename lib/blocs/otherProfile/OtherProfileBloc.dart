@@ -82,8 +82,8 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
           //Send notification to user.
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: otherUser.fcmToken,
-            title: 'You gained a follower.',
-            body: '${otherUser.username} ',
+            title: 'You gained a new follower!',
+            body: '${otherUser.username}',
             notificationData: null,
           );
         }
