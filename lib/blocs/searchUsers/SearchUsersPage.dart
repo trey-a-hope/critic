@@ -73,8 +73,16 @@ class _SearchBody extends StatelessWidget {
       builder: (BuildContext context, SEARCH_USERS_BP.SearchUsersState state) {
         if (state is SEARCH_USERS_BP.SearchUsersStateStart) {
           return Expanded(
-            child: Center(
-              child: Text('Enter a username...'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                  size: 100,
+                ),
+                Text('Please enter a username...')
+              ],
             ),
           );
         }

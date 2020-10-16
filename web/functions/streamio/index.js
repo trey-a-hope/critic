@@ -1,10 +1,9 @@
 const functions = require('firebase-functions');
-const { user } = require('firebase-functions/lib/providers/auth');
 const env = functions.config();
 const streamio = require('getstream');
 const streamioClient = streamio.connect(env.streamio.apikey, env.streamio.apisecret, env.streamio.appid);
 
-exports.addCritiqueToFeed = functions.https.onRequest((req, res) => {
+exports.addCritiqueToFeed = functions.https.onRequest(async (req, res) => {
     const actor = req.body.actor;
     const message = req.body.message;
     const uid = req.body.uid;
@@ -19,7 +18,7 @@ exports.addCritiqueToFeed = functions.https.onRequest((req, res) => {
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.addActivity({
+    const activityResult = await userFeed.addActivity({
         actor: actor,
         verb: 'post',
         object: 1,
@@ -35,117 +34,135 @@ exports.addCritiqueToFeed = functions.https.onRequest((req, res) => {
         movieDirector: movieDirector,
         imdbRating: imdbRating,
         imdbVotes: imdbVotes,
-    }).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
-        return res.send(error);
     });
+
+    try {
+        return res.send(activityResult);
+    } catch (error) {
+        return res.send(error);
+    }
 });
 
-exports.getUserFeed = functions.https.onRequest((req, res) => {
+exports.getUserFeed = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
     const limit = req.body.limit;
     const offset = req.body.offset;
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.get({ limit: limit, offset: offset }).then((results) => {
-        return res.send(results);
-    }).catch((error) => {
+    const feedAPIResponse = await userFeed.get({ limit: limit, offset: offset });
+
+    try {
+        return res.send(feedAPIResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
-exports.deleteCritiqueFromFeed = functions.https.onRequest((req, res) => {
+exports.deleteCritiqueFromFeed = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
     const critiqueID = req.body.critiqueID;
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.removeActivity(critiqueID).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const apiResponse = await userFeed.removeActivity(critiqueID)
+
+    try {
+        return res.send(apiResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
 
-exports.followUserFeed = functions.https.onRequest((req, res) => {
+exports.followUserFeed = functions.https.onRequest(async (req, res) => {
     const myUID = req.body.myUID;
     const theirUID = req.body.theirUID;
 
     const myUserFeed = streamioClient.feed('Critiques', myUID);
 
-    myUserFeed.follow('Critiques', theirUID).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const apiResponse = await myUserFeed.follow('Critiques', theirUID);
+
+    try {
+        return res.send(apiResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
-exports.unfollowUserFeed = functions.https.onRequest((req, res) => {
+exports.unfollowUserFeed = functions.https.onRequest(async (req, res) => {
     const myUID = req.body.myUID;
     const theirUID = req.body.theirUID;
 
     const myUserFeed = streamioClient.feed('Critiques', myUID);
 
-    myUserFeed.unfollow('Critiques', theirUID).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const apiResponse = await myUserFeed.unfollow('Critiques', theirUID);
+
+    try {
+        return res.send(apiResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
-exports.getUsersFollowers = functions.https.onRequest((req, res) => {
+exports.getUsersFollowers = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
     const limit = req.body.limit;
     const offset = req.body.offset;
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.followers({ limit: limit, offset: offset }).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const getFollowAPIResponse = await userFeed.followers({ limit: limit, offset: offset });
+
+    try {
+        return res.send(getFollowAPIResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
 
-exports.getUsersFollowees = functions.https.onRequest((req, res) => {
+exports.getUsersFollowees = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
     const limit = req.body.limit;
     const offset = req.body.offset;
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.following({ limit: limit, offset: offset }).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const getFollowAPIResponse = await userFeed.following({ limit: limit, offset: offset });
+
+    try {
+        return res.send(getFollowAPIResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
-exports.getFollowStats = functions.https.onRequest((req, res) => {
-    const uid = req.body.uid;
+exports.getFollowStats = functions.https.onRequest(async (req, res) => {
+    const uid = req.body.myUID;
 
     const userFeed = streamioClient.feed('Critiques', uid);
 
-    userFeed.followStats().then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const followStatsAPIResponse = await userFeed.followStats();
+
+    try {
+        return res.send(followStatsAPIResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });
 
-exports.isFollowing = functions.https.onRequest((req, res) => {
+exports.isFollowing = functions.https.onRequest(async (req, res) => {
     const myUID = req.body.myUID;
     const theirUID = req.body.theirUID;
 
     const myUserFeed = streamioClient.feed('Critiques', myUID);
 
-    myUserFeed.following({ offset: 0, limit: 1, filter: ['Critiques:' + theirUID] }).then((result) => {
-        return res.send(result);
-    }).catch((error) => {
+    const getFollowAPIResponse = await myUserFeed.following({ offset: 0, limit: 1, filter: ['Critiques:' + theirUID] });
+
+    try {
+        return res.send(getFollowAPIResponse);
+    } catch (error) {
         return res.send(error);
-    });
+    }
 });

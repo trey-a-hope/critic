@@ -72,8 +72,16 @@ class _SearchBody extends StatelessWidget {
       builder: (BuildContext context, SearchMoviesState state) {
         if (state is SearchMoviesStateEmpty) {
           return Expanded(
-            child: Center(
-              child: Text('Please enter a movie name to begin...'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.local_movies,
+                  color: Colors.grey,
+                  size: 100,
+                ),
+                Text('Please enter a movie name to begin...')
+              ],
             ),
           );
         }
