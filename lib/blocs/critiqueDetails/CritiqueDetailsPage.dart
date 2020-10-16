@@ -153,14 +153,26 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         '${timeago.format(critique.created, allowFromNow: true)}',
                       ),
                     ),
+                    SizedBox(height: 10),
+
                     Container(
-                      color: COLOR_NAVY,
-                      width: double.infinity,
+                      width: MediaQuery.of(context).size.width * 0.80,
                       height: 100,
+                      decoration: BoxDecoration(
+                        color: COLOR_NAVY,
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(5.0, 5.0),
+                              blurRadius: 10.0)
+                        ],
+                      ),
                       child: Center(
                         child: Padding(
                           child: Text(
                             '\"${critique.message}\"',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
