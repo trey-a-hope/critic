@@ -3,11 +3,11 @@ import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/MovieView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
@@ -21,6 +21,7 @@ class CritiqueDetailsPage extends StatefulWidget {
 class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     implements CritiqueDetailsBlocDelegate {
   CritiqueDetailsBloc _critiqueDetailsBloc;
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -51,120 +52,169 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
           final UserModel critiqueUser = state.critiqueUser;
           final MovieModel movie = state.movieModel;
 
+          bool liked = false;
+
           return Scaffold(
-            appBar: AppBar(
-              title: Text('${critique.movieTitle}'),
-            ),
-            body: Column(
-              children: [
-                SizedBox(height: 10),
-                MovieView(
-                  movieModel: movie,
-                ),
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+              appBar: AppBar(
+                title: Text('${critique.movieTitle}'),
+              ),
+              floatingActionButton: SpeedDial(
+                animatedIcon: AnimatedIcons.menu_close,
+                animatedIconTheme: IconThemeData(size: 22.0),
+                // child: Icon(Icons.add),
+                onOpen: () => print('OPENING DIAL'),
+                onClose: () => print('DIAL CLOSED'),
+                // visible: dialVisible,
+                curve: Curves.bounceIn,
+                children: [
+                  SpeedDialChild(
+                    child: Icon(Icons.favorite, color: Colors.white),
+                    backgroundColor: Colors.red,
+                    onTap: () => print('FIRST CHILD'),
+                    label: 'Like',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    labelBackgroundColor: Colors.red,
                   ),
-                  title: Text('${critiqueUser.username}'),
-                  trailing: Text(
-                    '${timeago.format(critique.created, allowFromNow: true)}',
+                  SpeedDialChild(
+                    child: Icon(Icons.comment, color: Colors.white),
+                    backgroundColor: Colors.blue,
+                    onTap: () => print('SECOND CHILD'),
+                    label: 'Post Comment',
+                    labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                    labelBackgroundColor: Colors.blue,
                   ),
-                ),
-                Row(
+                  currentUser.uid != critique.uid
+                      ? SpeedDialChild(
+                          child: Icon(Icons.delete, color: Colors.white),
+                          backgroundColor: Colors.black,
+                          onTap: () async {
+                            final bool confirm = await locator<ModalService>()
+                                .showConfirmation(
+                                    context: context,
+                                    title: 'Delete Critique',
+                                    message: 'Are you sure?');
+
+                            if (!confirm) return;
+
+                            _critiqueDetailsBloc.add(
+                              DeleteCritiqueEvent(),
+                            );
+                          },
+                          label: 'Delete',
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          labelBackgroundColor: Colors.black,
+                        )
+                      : SpeedDialChild(
+                          child: Icon(Icons.report, color: Colors.white),
+                          backgroundColor: Colors.black,
+                          onTap: () async {
+                            bool confirm = await locator<ModalService>()
+                                .showConfirmation(
+                                    context: context,
+                                    title: 'Report Critique',
+                                    message:
+                                        'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+
+                            if (!confirm) return;
+
+                            _critiqueDetailsBloc.add(
+                              ReportCritiqueEvent(),
+                            );
+                          },
+                          label: 'Report',
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          labelBackgroundColor: Colors.black,
+                        ),
+                ],
+              ),
+              body: SafeArea(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: currentUser.uid == critique.uid
-                            ? FullWidthButton(
-                                buttonColor: Colors.red,
-                                textColor: Colors.white,
-                                text: 'Delete Critique',
-                                onPressed: () async {
-                                  final bool confirm =
-                                      await locator<ModalService>()
-                                          .showConfirmation(
-                                              context: context,
-                                              title: 'Delete Critique',
-                                              message: 'Are you sure?');
-
-                                  if (!confirm) return;
-
-                                  _critiqueDetailsBloc.add(
-                                    DeleteCritiqueEvent(),
-                                  );
-                                },
-                              )
-                            : FullWidthButton(
-                                buttonColor: Colors.grey,
-                                textColor: Colors.white,
-                                text: 'Report',
-                                onPressed: () async {
-                                  bool confirm = await locator<ModalService>()
-                                      .showConfirmation(
-                                          context: context,
-                                          title: 'Report Critique',
-                                          message:
-                                              'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
-
-                                  if (!confirm) return;
-
-                                  _critiqueDetailsBloc.add(
-                                    ReportCritiqueEvent(),
-                                  );
-                                },
-                              ),
+                    SizedBox(height: 10),
+                    MovieView(
+                      movieModel: movie,
+                    ),
+                    ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                      ),
+                      title: Text('${critiqueUser.username}'),
+                      trailing: Text(
+                        '${timeago.format(critique.created, allowFromNow: true)}',
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: currentUser.uid == critique.uid
-                            ? FullWidthButton(
-                                buttonColor: COLOR_NAVY,
-                                textColor: Colors.white,
-                                text: 'Like',
-                                onPressed: () async {
-                                  // final bool confirm =
-                                  //     await locator<ModalService>()
-                                  //         .showConfirmation(
-                                  //             context: context,
-                                  //             title: 'Delete Critique',
-                                  //             message: 'Are you sure?');
-
-                                  // if (!confirm) return;
-
-                                  // _critiqueDetailsBloc.add(
-                                  //   DeleteCritiqueEvent(),
-                                  // );
-                                },
-                              )
-                            : FullWidthButton(
-                                buttonColor: Colors.red,
-                                textColor: Colors.white,
-                                text: 'Unlike',
-                                onPressed: () async {
-                                  // bool confirm = await locator<ModalService>()
-                                  //     .showConfirmation(
-                                  //         context: context,
-                                  //         title: 'Report Critique',
-                                  //         message:
-                                  //             'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
-
-                                  // if (!confirm) return;
-
-                                  // _critiqueDetailsBloc.add(
-                                  //   ReportCritiqueEvent(),
-                                  // );
-                                },
-                              ),
+                    Container(
+                      color: COLOR_NAVY,
+                      width: double.infinity,
+                      height: 100,
+                      child: Center(
+                        child: Padding(
+                          child: Text(
+                            '\"${critique.message}\"',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          padding: EdgeInsets.all(10),
+                        ),
                       ),
                     ),
+
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            child: Text(
+                              'View All Comments',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onTap: () {
+                              locator<ModalService>().showAlert(
+                                  context: context,
+                                  title: 'todo',
+                                  message: 'todo');
+                            },
+                          )
+                        ],
+                      ),
+                    )
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 40),
+                    //   child: TextFormField(
+                    //     controller: _commentController,
+                    //     keyboardType: TextInputType.text,
+                    //     textInputAction: TextInputAction.done,
+                    //     validator: locator<ValidationService>().isEmpty,
+                    //     maxLines: 2,
+                    //     maxLength: 150,
+                    //     maxLengthEnforced: true,
+                    //     decoration: InputDecoration(
+                    //         hintText:
+                    //             'What do you think about ${critiqueUser.username}\'s critique?'),
+                    //   ),
+                    // ),
+                    // FullWidthButton(
+                    //   text: 'Post Comment',
+                    //   buttonColor: Colors.grey,
+                    //   textColor: Colors.white,
+                    //   onPressed: () {},
+                    // )
                   ],
                 ),
-              ],
-            ),
-          );
+              ));
         }
 
         if (state is ErrorState) {

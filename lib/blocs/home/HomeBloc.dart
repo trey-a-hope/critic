@@ -26,7 +26,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   UserModel currentUser;
 
-  int limit = 10;
+  int limit = 25;
 
   void setDelegate({@required HomeBlocDelegate delegate}) {
     this._homeBlocDelegate = delegate;

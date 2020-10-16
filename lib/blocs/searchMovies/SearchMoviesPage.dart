@@ -2,7 +2,6 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/SearchMoviesResultItem.dart';
-import 'package:critic/pages/MovieDetailsPage.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
@@ -135,13 +134,6 @@ class _SearchBody extends StatelessWidget {
                     );
 
                     Navigator.push(context, route);
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MovieDetailsPage(
-                    //       imdbID: movie.imdbID,
-                    //     ),
-                    //   ),
-                    // );
                   },
                 );
               },
