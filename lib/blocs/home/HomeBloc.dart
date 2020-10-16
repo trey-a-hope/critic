@@ -81,6 +81,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield LoadingState();
 
       try {
+        //todo: This is only used to updated properties on all documents.
+        // List<UserModel> allUsers =
+        //     await locator<UserService>().retrieveAllUsers();
+        // for (var i = 0; i < allUsers.length; i++) {
+        //   UserModel user = allUsers[i];
+
+        //   await locator<UserService>().updateUser(
+        //     uid: user.uid,
+        //     data: {'blockedUsers': []},
+        //   );
+        // }
+
         currentUser = await locator<AuthService>().getCurrentUser();
 
         _setUpFirebaseMessaging();

@@ -5,7 +5,7 @@ import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/BlockUserService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';

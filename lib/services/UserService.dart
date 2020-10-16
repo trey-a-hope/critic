@@ -32,8 +32,6 @@ class UserService extends IUserService {
       FirebaseFirestore.instance.collection('Users');
   final CollectionReference _dataDB =
       FirebaseFirestore.instance.collection('Data');
-  final CollectionReference _followersDB =
-      FirebaseFirestore.instance.collection('Followers');
 
   @override
   Future<void> createUser({@required UserModel user}) async {
@@ -41,21 +39,17 @@ class UserService extends IUserService {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
       final DocumentReference userDocRef = _usersDB.doc(user.uid);
+
+      Map userMap = user.toMap();
+      userMap['blockedUsers'] = [];
+
       batch.set(
         userDocRef,
-        user.toMap(),
+        userMap,
       );
 
       final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
       batch.update(tableCountsDocRef, {'users': FieldValue.increment(1)});
-
-      final DocumentReference followerDocRef = _followersDB.doc(user.uid);
-      batch.set(followerDocRef, {
-        'lastPost': null,
-        'recentPosts': [],
-        'users': [],
-        'blockedUsers': [],
-      });
 
       await batch.commit();
       return;

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/BlockUserService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/UserService.dart';
@@ -112,29 +113,29 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
     }
 
     if (event is BlockUserEvent) {
-      // if (_otherUser.uid == _currentUser.uid) {
-      //   _otherProfileBlocDelegate.showMessage(
-      //     message: 'Sorry, you can\'t block yourself.',
-      //   );
-      //   return;
-      // }
+      if (otherUser.uid == currentUser.uid) {
+        _otherProfileBlocDelegate.showMessage(
+          message: 'Sorry, you can\'t block yourself.',
+        );
+        return;
+      }
 
-      // locator<FollowerService>().unfollow(
-      //   followed: _otherUser.uid,
-      //   follower: _currentUser.uid,
-      // );
+      await locator<CritiqueService>().unfollowUser(
+        myUID: currentUser.uid,
+        theirUID: otherUser.uid,
+      );
 
-      // locator<FollowerService>().unfollow(
-      //   followed: _currentUser.uid,
-      //   follower: _otherUser.uid,
-      // );
+      await locator<CritiqueService>().unfollowUser(
+        myUID: otherUser.uid,
+        theirUID: currentUser.uid,
+      );
 
-      // locator<FollowerService>().block(
-      //   blockerID: _currentUser.uid,
-      //   blockeeID: _otherUser.uid,
-      // );
+      locator<BlockUserService>().block(
+        blockerID: currentUser.uid,
+        blockeeID: otherUser.uid,
+      );
 
-      // _otherProfileBlocDelegate.navigateHome();
+      _otherProfileBlocDelegate.navigateHome();
     }
   }
 }

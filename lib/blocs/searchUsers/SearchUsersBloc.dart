@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/BlockUserService.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
@@ -54,10 +54,10 @@ class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
     if (event is SEARCH_USERS_BP.LoadPageEvent) {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
-        _usersIBlockedIDs = await locator<FollowerService>()
+        _usersIBlockedIDs = await locator<BlockUserService>()
             .getUsersIBlockedIDs(userID: _currentUser.uid);
 
-        _usersWhoBlockedMeIDs = await locator<FollowerService>()
+        _usersWhoBlockedMeIDs = await locator<BlockUserService>()
             .getUsersWhoBlockedMeIDs(userID: _currentUser.uid);
       } catch (error) {
         print(error.toString()); //todo: Display error message.

@@ -1,8 +1,7 @@
-
 import 'package:critic/blocs/blockedUsers/Bloc.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/BlockUserService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
@@ -29,7 +28,7 @@ class BlockedUsersBloc extends Bloc<BlockedUsersEvent, BlockedUsersState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        final List<String> blockedUsersIDs = await locator<FollowerService>()
+        final List<String> blockedUsersIDs = await locator<BlockUserService>()
             .getUsersIBlockedIDs(userID: _currentUser.uid);
         List<UserModel> users = List<UserModel>();
 
@@ -51,7 +50,7 @@ class BlockedUsersBloc extends Bloc<BlockedUsersEvent, BlockedUsersState> {
     }
 
     if (event is UnblockUserEvent) {
-      locator<FollowerService>().unblock(
+      locator<BlockUserService>().unblock(
         blockerID: _currentUser.uid,
         blockeeID: event.userID,
       );

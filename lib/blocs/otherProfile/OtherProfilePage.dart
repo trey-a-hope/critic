@@ -239,7 +239,21 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                       buttonColor: Colors.red,
                                       text: 'Block Me',
                                       textColor: Colors.white,
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        final bool confirm = await locator<
+                                                ModalService>()
+                                            .showConfirmation(
+                                                context: context,
+                                                title:
+                                                    'Block ${otherUser.username}?',
+                                                message: 'Are you sure?');
+
+                                        if (!confirm) return;
+
+                                        _otherProfileBloc.add(
+                                          OTHER_PROFILE_BP.BlockUserEvent(),
+                                        );
+                                      },
                                     ),
                                   ),
                                 )
