@@ -87,7 +87,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         fontWeight: FontWeight.bold, color: Colors.white),
                     labelBackgroundColor: Colors.blue,
                   ),
-                  currentUser.uid != critique.uid
+                  currentUser.uid == critique.uid
                       ? SpeedDialChild(
                           child: Icon(Icons.delete, color: Colors.white),
                           backgroundColor: Colors.black,

@@ -1,13 +1,12 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/critiqueDetails/Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/UserService.dart';
-import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:getwidget/getwidget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CritiqueView extends StatefulWidget {
@@ -43,21 +42,25 @@ class CritiqueViewState extends State<CritiqueView> {
 
   @override
   Widget build(BuildContext context) {
-    Future getUserWhoPostedCritiqueFuture =
-        locator<UserService>().retrieveUser(uid: critique.uid);
-
-    Future futures = Future.wait(
-      [
-        getUserWhoPostedCritiqueFuture,
-      ],
-    );
 
     return FutureBuilder(
-      future: futures,
+      future: locator<UserService>().retrieveUser(uid: critique.uid),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return Spinner();
+            return critiqueView(
+              context: context,
+              userWhoPosted: UserModel(
+                imgUrl: DUMMY_PROFILE_PHOTO_URL,
+                email: null,
+                modified: null,
+                created: null,
+                uid: null,
+                username: 'John Doe',
+                critiqueCount: null,
+                fcmToken: null,
+              ),
+            );
             break;
           default:
             if (snapshot.hasError) {
@@ -66,7 +69,7 @@ class CritiqueViewState extends State<CritiqueView> {
               );
             }
 
-            UserModel userWhoPosted = snapshot.data[0];
+            UserModel userWhoPosted = snapshot.data;
 
             return critiqueView(
               context: context,
@@ -81,42 +84,6 @@ class CritiqueViewState extends State<CritiqueView> {
     @required BuildContext context,
     @required UserModel userWhoPosted,
   }) {
-    // return GFListTile(
-    //   onTap: () {
-    //     Route route = MaterialPageRoute(
-    //       builder: (context) => BlocProvider(
-    //         create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-    //           critiqueModel: critique,
-    //         )..add(
-    //             CRITIQUE_DETAILS_BP.LoadPageEvent(),
-    //           ),
-    //         child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
-    //       ),
-    //     );
-
-    //     Navigator.push(context, route);
-    //   },
-    //   avatar: Image.network(
-    //     '${critique.moviePoster}',
-    //     height: 120,
-    //   ),
-    //   titleText: '${critique.movieTitle}',
-    //   subtitleText: '\"${critique.message}\"',
-    //   description: Padding(
-    //     padding: EdgeInsets.all(10),
-    //     child: Row(
-    //       children: [
-    //         CircleAvatar(
-    //           backgroundImage: NetworkImage(userWhoPosted.imgUrl),
-    //         ),
-    //         SizedBox(width: 10),
-    //         Text(userWhoPosted.username),
-    //         Spacer(),
-    //       ],
-    //     ),
-    //   ),
-    //   icon: Icon(Icons.chevron_right),
-    // );
     return InkWell(
       onTap: () {
         Route route = MaterialPageRoute(

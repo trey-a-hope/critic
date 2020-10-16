@@ -55,72 +55,75 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
             final MovieModel movie = state.movie;
 
             return SafeArea(
-              child: Center(
-                child: Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
-                      MovieView(
-                        movieModel: movie,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
-                          movie.plot,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+              child: Form(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          SizedBox(
+                            height: 10,
                           ),
-                        ),
-                      ),
-                      Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
-                          controller: _critiqueController,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
-                          validator: locator<ValidationService>().isEmpty,
-                          maxLines: 5,
-                          maxLength: 150,
-                          maxLengthEnforced: true,
-                          decoration: InputDecoration(
-                              hintText:
-                                  'What do you think about this movie/show?'),
-                        ),
-                      ),
-                      Spacer(),
-                      FullWidthButton(
-                        buttonColor: Colors.red,
-                        textColor: Colors.white,
-                        onPressed: () async {
-                          if (!_formKey.currentState.validate()) {
-                            return;
-                          }
-
-                          bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Submit',
-                                  message: 'Are you sure?');
-
-                          if (!confirm) return;
-
-                          _createCritiqueBloc.add(
-                            SubmitEvent(
-                              critique: _critiqueController.text,
+                          MovieView(
+                            movieModel: movie,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              movie.plot,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          );
-                        },
-                        text: 'Submit',
-                      )
-                    ],
-                  ),
+                          ),
+                          Divider(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            child: TextFormField(
+                              controller: _critiqueController,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              validator: locator<ValidationService>().isEmpty,
+                              maxLines: 5,
+                              maxLength: 150,
+                              maxLengthEnforced: true,
+                              decoration: InputDecoration(
+                                  hintText:
+                                      'What do you think about this movie/show?'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    FullWidthButton(
+                      buttonColor: Colors.red,
+                      textColor: Colors.white,
+                      onPressed: () async {
+                        if (!_formKey.currentState.validate()) {
+                          return;
+                        }
+
+                        bool confirm = await locator<ModalService>()
+                            .showConfirmation(
+                                context: context,
+                                title: 'Submit',
+                                message: 'Are you sure?');
+
+                        if (!confirm) return;
+
+                        _createCritiqueBloc.add(
+                          SubmitEvent(
+                            critique: _critiqueController.text,
+                          ),
+                        );
+                      },
+                      text: 'Submit',
+                    )
+                  ],
                 ),
               ),
             );
