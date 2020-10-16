@@ -1,4 +1,5 @@
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,23 @@ class LoadingState extends CritiqueDetailsState {}
 
 class LoadedState extends CritiqueDetailsState {
   final UserModel currentUser;
+  final UserModel critiqueUser;
   final CritiqueModel critiqueModel;
+  final MovieModel movieModel;
 
   LoadedState({
     @required this.currentUser,
+    @required this.critiqueUser,
     @required this.critiqueModel,
+    @required this.movieModel,
   });
 
   @override
   List<Object> get props => [
         currentUser,
+        critiqueUser,
         critiqueModel,
+        movieModel,
       ];
 }
 

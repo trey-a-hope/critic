@@ -1,11 +1,15 @@
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/SearchMoviesResultItem.dart';
 import 'package:critic/pages/MovieDetailsPage.dart';
+import 'package:critic/services/MovieService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'SearchMoviesEvent.dart';
 import 'SearchMoviesState.dart';
+import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 
 class SearchMoviesPage extends StatelessWidget {
   @override
@@ -114,14 +118,30 @@ class _SearchBody extends StatelessWidget {
                   title: Text('${movie.title}'),
                   subtitle: Text('Year: ${movie.year}'),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => MovieDetailsPage(
-                          imdbID: movie.imdbID,
-                        ),
+                  onTap: () async {
+                    final MovieModel movieModel = await locator<MovieService>()
+                        .getMovieByID(id: movie.imdbID);
+
+                    Route route = MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) =>
+                            CREATE_CRITIQUE_BP.CreateCritiqueBloc(
+                                movie: movieModel)
+                              ..add(
+                                CREATE_CRITIQUE_BP.LoadPageEvent(),
+                              ),
+                        child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
                       ),
                     );
+
+                    Navigator.push(context, route);
+                    // Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MovieDetailsPage(
+                    //       imdbID: movie.imdbID,
+                    //     ),
+                    //   ),
+                    // );
                   },
                 );
               },

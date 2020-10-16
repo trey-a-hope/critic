@@ -2,9 +2,11 @@ import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
+import 'package:critic/widgets/MovieView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,6 +52,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
           }
 
           if (state is CreateCritiqueStartState) {
+            final MovieModel movie = state.movie;
+
             return SafeArea(
               child: Center(
                 child: Form(
@@ -58,8 +62,25 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      MovieView(
+                        movieModel: movie,
+                      ),
                       Padding(
-                        padding: EdgeInsets.all(40),
+                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                          movie.plot,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40),
                         child: TextFormField(
                           controller: _critiqueController,
                           keyboardType: TextInputType.text,

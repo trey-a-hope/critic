@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FollowerService.dart';
+import 'package:critic/services/MovieService.dart';
+import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
@@ -20,10 +23,15 @@ class CritiqueDetailsBloc
   }) : super(
           CritiqueDetailsState(),
         );
+  final CritiqueModel critiqueModel;
 
   CritiqueDetailsBlocDelegate _critiqueDetailsBlocDelegate;
+
   UserModel _currentUser;
-  final CritiqueModel critiqueModel;
+
+  UserModel _critiqueUser;
+
+  MovieModel movieModel;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
     this._critiqueDetailsBlocDelegate = delegate;
@@ -38,9 +46,18 @@ class CritiqueDetailsBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
+        _critiqueUser = await locator<UserService>().retrieveUser(
+          uid: critiqueModel.uid,
+        );
+
+        movieModel = await locator<MovieService>()
+            .getMovieByID(id: critiqueModel.imdbID);
+
         yield LoadedState(
           currentUser: _currentUser,
+          critiqueUser: _critiqueUser,
           critiqueModel: critiqueModel,
+          movieModel: movieModel,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
@@ -72,7 +89,8 @@ class CritiqueDetailsBloc
         );
 
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Critique reported, you will no longer see this critique.');
+            message:
+                'Critique reported, you will no longer see this critique.');
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');

@@ -1,13 +1,17 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
+import 'package:critic/widgets/MovieView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class CritiqueDetailsPage extends StatefulWidget {
   @override
@@ -44,6 +48,8 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
         if (state is LoadedState) {
           final CritiqueModel critique = state.critiqueModel;
           final UserModel currentUser = state.currentUser;
+          final UserModel critiqueUser = state.critiqueUser;
+          final MovieModel movie = state.movieModel;
 
           return Scaffold(
             appBar: AppBar(
@@ -51,44 +57,111 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
             ),
             body: Column(
               children: [
-                FullWidthButton(
-                  buttonColor: Colors.grey,
-                  textColor: Colors.white,
-                  text: 'Report',
-                  onPressed: () async {
-                    bool confirm = await locator<ModalService>().showConfirmation(
-                        context: context,
-                        title: 'Report Critique',
-                        message:
-                            'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
-
-                    if (!confirm) return;
-
-                    _critiqueDetailsBloc.add(
-                      ReportCritiqueEvent(),
-                    );
-                  },
+                SizedBox(height: 10),
+                MovieView(
+                  movieModel: movie,
                 ),
-                currentUser.uid == critique.uid
-                    ? FullWidthButton(
-                        buttonColor: Colors.red,
-                        textColor: Colors.white,
-                        text: 'Delete Critique',
-                        onPressed: () async {
-                          final bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Delete Critique',
-                                  message: 'Are you sure?');
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                  ),
+                  title: Text('${critiqueUser.username}'),
+                  trailing: Text(
+                    '${timeago.format(critique.created, allowFromNow: true)}',
+                  ),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: currentUser.uid == critique.uid
+                            ? FullWidthButton(
+                                buttonColor: Colors.red,
+                                textColor: Colors.white,
+                                text: 'Delete Critique',
+                                onPressed: () async {
+                                  final bool confirm =
+                                      await locator<ModalService>()
+                                          .showConfirmation(
+                                              context: context,
+                                              title: 'Delete Critique',
+                                              message: 'Are you sure?');
 
-                          if (!confirm) return;
+                                  if (!confirm) return;
 
-                          _critiqueDetailsBloc.add(
-                            DeleteCritiqueEvent(),
-                          );
-                        },
-                      )
-                    : SizedBox.shrink(),
+                                  _critiqueDetailsBloc.add(
+                                    DeleteCritiqueEvent(),
+                                  );
+                                },
+                              )
+                            : FullWidthButton(
+                                buttonColor: Colors.grey,
+                                textColor: Colors.white,
+                                text: 'Report',
+                                onPressed: () async {
+                                  bool confirm = await locator<ModalService>()
+                                      .showConfirmation(
+                                          context: context,
+                                          title: 'Report Critique',
+                                          message:
+                                              'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+
+                                  if (!confirm) return;
+
+                                  _critiqueDetailsBloc.add(
+                                    ReportCritiqueEvent(),
+                                  );
+                                },
+                              ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: currentUser.uid == critique.uid
+                            ? FullWidthButton(
+                                buttonColor: COLOR_NAVY,
+                                textColor: Colors.white,
+                                text: 'Like',
+                                onPressed: () async {
+                                  // final bool confirm =
+                                  //     await locator<ModalService>()
+                                  //         .showConfirmation(
+                                  //             context: context,
+                                  //             title: 'Delete Critique',
+                                  //             message: 'Are you sure?');
+
+                                  // if (!confirm) return;
+
+                                  // _critiqueDetailsBloc.add(
+                                  //   DeleteCritiqueEvent(),
+                                  // );
+                                },
+                              )
+                            : FullWidthButton(
+                                buttonColor: Colors.red,
+                                textColor: Colors.white,
+                                text: 'Unlike',
+                                onPressed: () async {
+                                  // bool confirm = await locator<ModalService>()
+                                  //     .showConfirmation(
+                                  //         context: context,
+                                  //         title: 'Report Critique',
+                                  //         message:
+                                  //             'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+
+                                  // if (!confirm) return;
+
+                                  // _critiqueDetailsBloc.add(
+                                  //   ReportCritiqueEvent(),
+                                  // );
+                                },
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           );

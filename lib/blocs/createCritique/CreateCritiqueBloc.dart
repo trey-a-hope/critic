@@ -35,7 +35,7 @@ class CreateCritiqueBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        yield CreateCritiqueStartState();
+        yield CreateCritiqueStartState(movie: movie);
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
@@ -73,12 +73,12 @@ class CreateCritiqueBloc
         _createCritiqueBlocDelegate.showMessage(
             message: 'Critique added, check it out on the home page.');
 
-        yield CreateCritiqueStartState();
+        yield CreateCritiqueStartState(movie: movie);
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error ${error.toString()}!');
 
-        yield CreateCritiqueStartState();
+        yield CreateCritiqueStartState(movie: movie);
       }
     }
   }
