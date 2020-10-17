@@ -53,10 +53,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
         if (state is CRITIQUE_DETAILS_BP.LoadedState) {
           final CritiqueModel critique = state.critiqueModel;
+          final MovieModel movie = state.movieModel;
           final UserModel currentUser = state.currentUser;
           final UserModel critiqueUser = state.critiqueUser;
-          final MovieModel movie = state.movieModel;
           final bool isLiked = state.isLiked;
+          final int likeCount = state.likeCount;
 
           return Scaffold(
             appBar: AppBar(
@@ -65,10 +66,6 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
             floatingActionButton: SpeedDial(
               animatedIcon: AnimatedIcons.menu_close,
               animatedIconTheme: IconThemeData(size: 22.0),
-              // child: Icon(Icons.add),
-              onOpen: () => print('OPENING DIAL'),
-              onClose: () => print('DIAL CLOSED'),
-              // visible: dialVisible,
               curve: Curves.bounceIn,
               children: [
                 isLiked
@@ -254,7 +251,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                '${critique.likeCount}',
+                                '$likeCount',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red),

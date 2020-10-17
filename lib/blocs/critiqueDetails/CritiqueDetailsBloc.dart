@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/CritiqueStatsModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
@@ -33,6 +34,8 @@ class CritiqueDetailsBloc
 
   bool _isLiked = false;
 
+  int _likeCount = 0;
+
   MovieModel movieModel;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
@@ -55,10 +58,14 @@ class CritiqueDetailsBloc
         movieModel = await locator<MovieService>()
             .getMovieByID(id: critiqueModel.imdbID);
 
-        _isLiked = await locator<CritiqueService>().isLiked(
+        CritiqueStatsModel critiqueStats =
+            await locator<CritiqueService>().critiqueStats(
           uid: _currentUser.uid,
           critiqueID: critiqueModel.id,
         );
+
+        _isLiked = critiqueStats.isLiked;
+        _likeCount = critiqueStats.likeCount;
 
         yield LoadedState(
           currentUser: _currentUser,
@@ -66,6 +73,7 @@ class CritiqueDetailsBloc
           critiqueModel: critiqueModel,
           movieModel: movieModel,
           isLiked: _isLiked,
+          likeCount: _likeCount,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(

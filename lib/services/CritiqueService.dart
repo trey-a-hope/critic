@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
+import 'package:critic/models/CritiqueStatsModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -69,7 +70,7 @@ abstract class ICritiqueService {
     @required String critiqueID,
   });
 
-  Future<bool> isLiked({
+  Future<CritiqueStatsModel> critiqueStats({
     @required String uid,
     @required String critiqueID,
   });
@@ -566,7 +567,7 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<bool> isLiked(
+  Future<CritiqueStatsModel> critiqueStats(
       {@required String uid, @required String critiqueID}) async {
     try {
       final DocumentSnapshot critiqueDocSnap =
@@ -574,12 +575,22 @@ class CritiqueService extends ICritiqueService {
 
       final dynamic likeUIDs = critiqueDocSnap.data()['likes'];
 
-      for (int i = 0; i < likeUIDs.length; i++) {
+      final int likeCount = likeUIDs.length;
+
+      bool isLiked = false;
+
+      for (int i = 0; i < likeCount; i++) {
         final String likeUID = likeUIDs[i];
-        if (likeUID == uid) return true;
+        if (likeUID == uid) {
+          isLiked = true;
+          break;
+        }
       }
 
-      return false;
+      CritiqueStatsModel critiqueStats =
+          CritiqueStatsModel(likeCount: likeCount, isLiked: isLiked);
+
+      return critiqueStats;
     } catch (error) {
       throw Exception(
         error.toString(),
