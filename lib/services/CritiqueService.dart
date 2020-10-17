@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
+import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show Encoding, json;
 
 abstract class ICritiqueService {
-  //complete
   Future<void> createCritique({@required CritiqueModel critique});
   Future<List<CritiqueModel>> retrieveCritiquesFromStream({
     @required String uid,
@@ -43,13 +43,10 @@ abstract class ICritiqueService {
     @required String uid,
   });
 
-  //not complete
-  // Future<CritiqueModel> getCritique({@required String critiqueID});
-  // Future<List<CritiqueModel>> retrieveCritiquesForUser({
-  //   @required String userID,
-  // });
-  // Future<void> updateCritique(
-  //     {@required String critiqueID, @required dynamic data});
+  Future<void> createComment({
+    @required String critiqueID,
+    @required CommentModel comment,
+  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -377,6 +374,41 @@ class CritiqueService extends ICritiqueService {
       final List<dynamic> results = map['results'];
 
       return results.length > 0;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> createComment({
+    @required String critiqueID,
+    @required CommentModel comment,
+  }) async {
+    try {
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      final DocumentReference commentDocRef =
+          critiqueDocRef.collection('comments').doc();
+      comment.id = commentDocRef.id;
+
+      batch.set(
+        commentDocRef,
+        comment.toMap(),
+      );
+
+      batch.update(
+        critiqueDocRef,
+        {
+          'commentCount': FieldValue.increment(1),
+        },
+      );
+
+      await batch.commit();
+      return;
     } catch (error) {
       throw Exception(
         error.toString(),

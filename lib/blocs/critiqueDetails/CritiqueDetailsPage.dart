@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
-import 'Bloc.dart';
+import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
+import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
+
 import 'package:timeago/timeago.dart' as timeago;
 
 class CritiqueDetailsPage extends StatefulWidget {
@@ -19,13 +21,14 @@ class CritiqueDetailsPage extends StatefulWidget {
 }
 
 class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
-    implements CritiqueDetailsBlocDelegate {
-  CritiqueDetailsBloc _critiqueDetailsBloc;
+    implements CRITIQUE_DETAILS_BP.CritiqueDetailsBlocDelegate {
+  CRITIQUE_DETAILS_BP.CritiqueDetailsBloc _critiqueDetailsBloc;
   final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
-    _critiqueDetailsBloc = BlocProvider.of<CritiqueDetailsBloc>(context);
+    _critiqueDetailsBloc =
+        BlocProvider.of<CRITIQUE_DETAILS_BP.CritiqueDetailsBloc>(context);
     _critiqueDetailsBloc.setDelegate(delegate: this);
     super.initState();
   }
@@ -37,16 +40,18 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CritiqueDetailsBloc, CritiqueDetailsState>(
-      builder: (BuildContext context, CritiqueDetailsState state) {
-        if (state is LoadingState) {
+    return BlocBuilder<CRITIQUE_DETAILS_BP.CritiqueDetailsBloc,
+        CRITIQUE_DETAILS_BP.CritiqueDetailsState>(
+      builder: (BuildContext context,
+          CRITIQUE_DETAILS_BP.CritiqueDetailsState state) {
+        if (state is CRITIQUE_DETAILS_BP.LoadingState) {
           return Scaffold(
             appBar: AppBar(),
             body: Spinner(),
           );
         }
 
-        if (state is LoadedState) {
+        if (state is CRITIQUE_DETAILS_BP.LoadedState) {
           final CritiqueModel critique = state.critiqueModel;
           final UserModel currentUser = state.currentUser;
           final UserModel critiqueUser = state.critiqueUser;
@@ -55,181 +60,185 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
           bool liked = false;
 
           return Scaffold(
-              appBar: AppBar(
-                title: Text('${critique.movieTitle}'),
-              ),
-              floatingActionButton: SpeedDial(
-                animatedIcon: AnimatedIcons.menu_close,
-                animatedIconTheme: IconThemeData(size: 22.0),
-                // child: Icon(Icons.add),
-                onOpen: () => print('OPENING DIAL'),
-                onClose: () => print('DIAL CLOSED'),
-                // visible: dialVisible,
-                curve: Curves.bounceIn,
-                children: [
-                  SpeedDialChild(
-                    child: Icon(Icons.favorite, color: Colors.white),
-                    backgroundColor: Colors.red,
-                    onTap: () => print('FIRST CHILD'),
-                    label: 'Like',
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    labelBackgroundColor: Colors.red,
+            appBar: AppBar(
+              title: Text('${critique.movieTitle}'),
+            ),
+            floatingActionButton: SpeedDial(
+              animatedIcon: AnimatedIcons.menu_close,
+              animatedIconTheme: IconThemeData(size: 22.0),
+              // child: Icon(Icons.add),
+              onOpen: () => print('OPENING DIAL'),
+              onClose: () => print('DIAL CLOSED'),
+              // visible: dialVisible,
+              curve: Curves.bounceIn,
+              children: [
+                SpeedDialChild(
+                  child: Icon(Icons.favorite, color: Colors.white),
+                  backgroundColor: Colors.red,
+                  onTap: () => print('FIRST CHILD'),
+                  label: 'Like',
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  SpeedDialChild(
-                    child: Icon(Icons.comment, color: Colors.white),
-                    backgroundColor: Colors.blue,
-                    onTap: () => print('SECOND CHILD'),
-                    label: 'Post Comment',
-                    labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                    labelBackgroundColor: Colors.blue,
-                  ),
-                  currentUser.uid == critique.uid
-                      ? SpeedDialChild(
-                          child: Icon(Icons.delete, color: Colors.white),
-                          backgroundColor: Colors.black,
-                          onTap: () async {
-                            final bool confirm = await locator<ModalService>()
-                                .showConfirmation(
-                                    context: context,
-                                    title: 'Delete Critique',
-                                    message: 'Are you sure?');
-
-                            if (!confirm) return;
-
-                            _critiqueDetailsBloc.add(
-                              DeleteCritiqueEvent(),
-                            );
-                          },
-                          label: 'Delete',
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                  labelBackgroundColor: Colors.red,
+                ),
+                SpeedDialChild(
+                  child: Icon(Icons.comment, color: Colors.white),
+                  backgroundColor: Colors.blue,
+                  onTap: () {
+                    Route route = MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => POST_COMMENT_BP.PostCommentBloc(
+                          critique: critique,
+                          critiqueUser: critiqueUser,
+                        )..add(
+                            POST_COMMENT_BP.LoadPageEvent(),
                           ),
-                          labelBackgroundColor: Colors.black,
-                        )
-                      : SpeedDialChild(
-                          child: Icon(Icons.report, color: Colors.white),
-                          backgroundColor: Colors.black,
-                          onTap: () async {
-                            bool confirm = await locator<ModalService>()
-                                .showConfirmation(
-                                    context: context,
-                                    title: 'Report Critique',
-                                    message:
-                                        'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+                        child: POST_COMMENT_BP.PostCommentPage(),
+                      ),
+                    );
 
-                            if (!confirm) return;
+                    Navigator.push(context, route);
+                  },
+                  label: 'Post Comment',
+                  labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                  labelBackgroundColor: Colors.blue,
+                ),
+                currentUser.uid == critique.uid
+                    ? SpeedDialChild(
+                        child: Icon(Icons.delete, color: Colors.white),
+                        backgroundColor: Colors.black,
+                        onTap: () async {
+                          final bool confirm = await locator<ModalService>()
+                              .showConfirmation(
+                                  context: context,
+                                  title: 'Delete Critique',
+                                  message: 'Are you sure?');
 
-                            _critiqueDetailsBloc.add(
-                              ReportCritiqueEvent(),
-                            );
-                          },
-                          label: 'Report',
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          labelBackgroundColor: Colors.black,
+                          if (!confirm) return;
+
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.DeleteCritiqueEvent(),
+                          );
+                        },
+                        label: 'Delete',
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
+                        labelBackgroundColor: Colors.black,
+                      )
+                    : SpeedDialChild(
+                        child: Icon(Icons.report, color: Colors.white),
+                        backgroundColor: Colors.black,
+                        onTap: () async {
+                          bool confirm = await locator<ModalService>()
+                              .showConfirmation(
+                                  context: context,
+                                  title: 'Report Critique',
+                                  message:
+                                      'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+
+                          if (!confirm) return;
+
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.ReportCritiqueEvent(),
+                          );
+                        },
+                        label: 'Report',
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        labelBackgroundColor: Colors.black,
+                      ),
+              ],
+            ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  MovieView(
+                    movieModel: movie,
+                  ),
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                    ),
+                    title: Text('${critiqueUser.username}'),
+                    trailing: Text(
+                      '${timeago.format(critique.created, allowFromNow: true)}',
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.80,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade700,
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(5.0, 5.0),
+                            blurRadius: 10.0)
+                      ],
+                    ),
+                    child: Center(
+                      child: Padding(
+                        child: Text(
+                          '\"${critique.message}\"',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        padding: EdgeInsets.all(10),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        FloatingActionButton.extended(
+                          backgroundColor: COLOR_NAVY,
+                          onPressed: () {
+                            locator<ModalService>().showAlert(
+                                context: context,
+                                title: 'todo',
+                                message: 'todo');
+                          },
+                          label: Text(
+                            'View All Comments',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+
+                        // InkWell(
+                        //   child: Text(
+                        //     'View All Comments',
+                        //     style: TextStyle(fontWeight: FontWeight.bold),
+                        //   ),
+                        //   onTap: () {
+
+                        //   },
+                        // )
+                      ],
+                    ),
+                  )
                 ],
               ),
-              body: SafeArea(
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    MovieView(
-                      movieModel: movie,
-                    ),
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
-                      ),
-                      title: Text('${critiqueUser.username}'),
-                      trailing: Text(
-                        '${timeago.format(critique.created, allowFromNow: true)}',
-                      ),
-                    ),
-                    SizedBox(height: 10),
-
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.80,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: COLOR_NAVY,
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(5.0, 5.0),
-                              blurRadius: 10.0)
-                        ],
-                      ),
-                      child: Center(
-                        child: Padding(
-                          child: Text(
-                            '\"${critique.message}\"',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          padding: EdgeInsets.all(10),
-                        ),
-                      ),
-                    ),
-
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            child: Text(
-                              'View All Comments',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            onTap: () {
-                              locator<ModalService>().showAlert(
-                                  context: context,
-                                  title: 'todo',
-                                  message: 'todo');
-                            },
-                          )
-                        ],
-                      ),
-                    )
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 40),
-                    //   child: TextFormField(
-                    //     controller: _commentController,
-                    //     keyboardType: TextInputType.text,
-                    //     textInputAction: TextInputAction.done,
-                    //     validator: locator<ValidationService>().isEmpty,
-                    //     maxLines: 2,
-                    //     maxLength: 150,
-                    //     maxLengthEnforced: true,
-                    //     decoration: InputDecoration(
-                    //         hintText:
-                    //             'What do you think about ${critiqueUser.username}\'s critique?'),
-                    //   ),
-                    // ),
-                    // FullWidthButton(
-                    //   text: 'Post Comment',
-                    //   buttonColor: Colors.grey,
-                    //   textColor: Colors.white,
-                    //   onPressed: () {},
-                    // )
-                  ],
-                ),
-              ));
+            ),
+          );
         }
 
-        if (state is ErrorState) {
+        if (state is CRITIQUE_DETAILS_BP.ErrorState) {
           return Center(
             child: Text('Error: ${state.error.toString()}'),
           );
