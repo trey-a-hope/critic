@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
 class CommentModel {
@@ -6,6 +7,8 @@ class CommentModel {
   String message;
   String uid;
   DateTime created;
+
+  UserModel user;
 
   CommentModel({
     @required this.id,

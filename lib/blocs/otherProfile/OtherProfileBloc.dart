@@ -55,10 +55,6 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
 
         startAfterDocument = null;
 
-        // _isFollowing = await locator<FollowerService>()
-        //     .followerAisFollowingUserB(
-        //         userAID: _currentUser.uid, userBID: _otherUser.uid);
-
         yield LoadedState(otherUser: otherUser, isFollowing: _isFollowing);
       } catch (error) {
         _otherProfileBlocDelegate.showMessage(

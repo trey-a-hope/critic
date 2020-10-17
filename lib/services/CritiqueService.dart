@@ -47,6 +47,17 @@ abstract class ICritiqueService {
     @required String critiqueID,
     @required CommentModel comment,
   });
+
+  Future<void> deleteComment({
+    @required String critiqueID,
+    @required String commentID,
+  });
+
+  Future<List<DocumentSnapshot>> retrieveCommentsFromFirebase({
+    @required String critiqueID,
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -56,8 +67,6 @@ class CritiqueService extends ICritiqueService {
       FirebaseFirestore.instance.collection('Critiques');
   final CollectionReference _dataDB =
       FirebaseFirestore.instance.collection('Data');
-  final CollectionReference _followersDB =
-      FirebaseFirestore.instance.collection('Followers');
 
   @override
   Future<void> createCritique({@required CritiqueModel critique}) async {
@@ -412,6 +421,67 @@ class CritiqueService extends ICritiqueService {
     } catch (error) {
       throw Exception(
         error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteComment(
+      {@required String critiqueID, @required String commentID}) async {
+    try {
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      final DocumentReference commentDocRef =
+          critiqueDocRef.collection('comments').doc(commentID);
+
+      batch.delete(commentDocRef);
+
+      batch.update(
+        critiqueDocRef,
+        {
+          'commentCount': FieldValue.increment(-1),
+        },
+      );
+
+      await batch.commit();
+      return;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<DocumentSnapshot>> retrieveCommentsFromFirebase({
+    @required String critiqueID,
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+  }) async {
+    try {
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      CollectionReference commentsColRef =
+          critiqueDocRef.collection('comments');
+
+      Query query = commentsColRef.orderBy('created', descending: true);
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
+
+      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+
+      return documentSnapshots;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
       );
     }
   }

@@ -68,8 +68,8 @@ class PostCommentBloc extends Bloc<PostCommentEvent, PostCommentState> {
             critiqueUser.fcmToken != null) { 
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: critiqueUser.fcmToken,
-            title: 'Someone commented on your critique.',
-            body: '${_currentUser.username}',
+            title: '${_currentUser.username} commented on your critique.',
+            body: '\"${comment.message}\"',
             notificationData: null,
           );
         }

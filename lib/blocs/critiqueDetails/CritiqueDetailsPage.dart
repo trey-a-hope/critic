@@ -3,7 +3,6 @@ import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/MovieView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
+import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
 
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -207,10 +207,19 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         FloatingActionButton.extended(
                           backgroundColor: COLOR_NAVY,
                           onPressed: () {
-                            locator<ModalService>().showAlert(
-                                context: context,
-                                title: 'todo',
-                                message: 'todo');
+                            Route route = MaterialPageRoute(
+                              builder: (context) => BlocProvider(
+                                create: (context) => COMMENTS_BP.CommentsBloc(
+                                  critique: critique,
+                                  currentUser: currentUser,
+                                )..add(
+                                    COMMENTS_BP.LoadPageEvent(),
+                                  ),
+                                child: COMMENTS_BP.CommentsPage(),
+                              ),
+                            );
+
+                            Navigator.push(context, route);
                           },
                           label: Text(
                             'View All Comments',
@@ -219,16 +228,6 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                             ),
                           ),
                         )
-
-                        // InkWell(
-                        //   child: Text(
-                        //     'View All Comments',
-                        //     style: TextStyle(fontWeight: FontWeight.bold),
-                        //   ),
-                        //   onTap: () {
-
-                        //   },
-                        // )
                       ],
                     ),
                   )
