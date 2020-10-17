@@ -16,12 +16,14 @@ class LoadedState extends CritiqueDetailsState {
   final UserModel critiqueUser;
   final CritiqueModel critiqueModel;
   final MovieModel movieModel;
+  final bool isLiked;
 
   LoadedState({
     @required this.currentUser,
     @required this.critiqueUser,
     @required this.critiqueModel,
     @required this.movieModel,
+    @required this.isLiked,
   });
 
   @override
@@ -30,6 +32,7 @@ class LoadedState extends CritiqueDetailsState {
         critiqueUser,
         critiqueModel,
         movieModel,
+        isLiked,
       ];
 }
 

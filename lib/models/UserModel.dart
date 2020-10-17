@@ -57,10 +57,11 @@ class UserModel {
     return {
       'imgUrl': imgUrl,
       'email': email,
-      'modified': modified,
       'created': created,
+      'modified': modified,
       'uid': uid,
       'username': username,
+      'critiqueCount': critiqueCount,
       'fcmToken': fcmToken,
     };
   }

@@ -64,6 +64,7 @@ class CreateCritiqueBloc
           movieTitle: movie.title,
           movieYear: movie.year,
           movieDirector: movie.director,
+          likeCount: 0,
         );
 
         await locator<CritiqueService>().createCritique(critique: critique);

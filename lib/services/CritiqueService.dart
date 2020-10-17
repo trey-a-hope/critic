@@ -58,6 +58,21 @@ abstract class ICritiqueService {
     @required int limit,
     @required DocumentSnapshot startAfterDocument,
   });
+
+  Future<void> likeCritique({
+    @required String uid,
+    @required String critiqueID,
+  });
+
+  Future<void> unlikeCritique({
+    @required String uid,
+    @required String critiqueID,
+  });
+
+  Future<bool> isLiked({
+    @required String uid,
+    @required String critiqueID,
+  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -482,6 +497,92 @@ class CritiqueService extends ICritiqueService {
     } catch (e) {
       throw Exception(
         e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> likeCritique({
+    @required String uid,
+    @required String critiqueID,
+  }) async {
+    try {
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      critiqueDocRef.update(
+        {
+          'likes': FieldValue.arrayUnion(
+            [
+              uid,
+            ],
+          )
+        },
+      );
+
+      critiqueDocRef.update(
+        {
+          'likeCount': FieldValue.increment(1),
+        },
+      );
+
+      return;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> unlikeCritique({
+    @required String uid,
+    @required String critiqueID,
+  }) async {
+    try {
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      critiqueDocRef.update(
+        {
+          'likes': FieldValue.arrayRemove(
+            [
+              uid,
+            ],
+          )
+        },
+      );
+
+      critiqueDocRef.update(
+        {
+          'likeCount': FieldValue.increment(-1),
+        },
+      );
+
+      return;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<bool> isLiked(
+      {@required String uid, @required String critiqueID}) async {
+    try {
+      final DocumentSnapshot critiqueDocSnap =
+          await _critiquesDB.doc(critiqueID).get();
+
+      final dynamic likeUIDs = critiqueDocSnap.data()['likes'];
+
+      for (int i = 0; i < likeUIDs.length; i++) {
+        final String likeUID = likeUIDs[i];
+        if (likeUID == uid) return true;
+      }
+
+      return false;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
       );
     }
   }

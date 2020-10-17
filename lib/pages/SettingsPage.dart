@@ -66,7 +66,7 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
         SettingsSection(
-          title: 'ADMIN',
+          title: 'DEMO',
           tiles: [
             SettingsTile(
               title: 'All Users',

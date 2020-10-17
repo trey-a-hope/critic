@@ -134,7 +134,7 @@ class UserService extends IUserService {
       List<UserModel> users = List<UserModel>();
 
       for (int i = 0; i < results.length; i++) {
-        dynamic result = results[0];
+        dynamic result = results[i];
 
         final String uid = result['feed_id'].replaceAll('Critiques:', '');
 

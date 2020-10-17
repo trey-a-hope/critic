@@ -31,6 +31,8 @@ class CritiqueDetailsBloc
 
   UserModel _critiqueUser;
 
+  bool _isLiked = false;
+
   MovieModel movieModel;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
@@ -53,11 +55,17 @@ class CritiqueDetailsBloc
         movieModel = await locator<MovieService>()
             .getMovieByID(id: critiqueModel.imdbID);
 
+        _isLiked = await locator<CritiqueService>().isLiked(
+          uid: _currentUser.uid,
+          critiqueID: critiqueModel.id,
+        );
+
         yield LoadedState(
           currentUser: _currentUser,
           critiqueUser: _critiqueUser,
           critiqueModel: critiqueModel,
           movieModel: movieModel,
+          isLiked: _isLiked,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
@@ -91,6 +99,42 @@ class CritiqueDetailsBloc
         _critiqueDetailsBlocDelegate.showMessage(
             message:
                 'Critique reported, you will no longer see this critique.');
+      } catch (error) {
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Error: ${error.toString()}');
+      }
+    }
+
+    if (event is LikeCritiqueEvent) {
+      try {
+        await locator<CritiqueService>().likeCritique(
+          uid: _currentUser.uid,
+          critiqueID: critiqueModel.id,
+        );
+
+        critiqueModel.likeCount++;
+
+        add(
+          LoadPageEvent(),
+        );
+      } catch (error) {
+        _critiqueDetailsBlocDelegate.showMessage(
+            message: 'Error: ${error.toString()}');
+      }
+    }
+
+    if (event is UnlikeCritiqueEvent) {
+      try {
+        await locator<CritiqueService>().unlikeCritique(
+          uid: _currentUser.uid,
+          critiqueID: critiqueModel.id,
+        );
+
+        critiqueModel.likeCount--;
+
+        add(
+          LoadPageEvent(),
+        );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');

@@ -56,8 +56,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
           final UserModel currentUser = state.currentUser;
           final UserModel critiqueUser = state.critiqueUser;
           final MovieModel movie = state.movieModel;
-
-          bool liked = false;
+          final bool isLiked = state.isLiked;
 
           return Scaffold(
             appBar: AppBar(
@@ -72,17 +71,37 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
               // visible: dialVisible,
               curve: Curves.bounceIn,
               children: [
-                SpeedDialChild(
-                  child: Icon(Icons.favorite, color: Colors.white),
-                  backgroundColor: Colors.red,
-                  onTap: () => print('FIRST CHILD'),
-                  label: 'Like',
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  labelBackgroundColor: Colors.red,
-                ),
+                isLiked
+                    ? SpeedDialChild(
+                        child: Icon(Icons.favorite, color: Colors.red),
+                        backgroundColor: Colors.white,
+                        onTap: () {
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.UnlikeCritiqueEvent(),
+                          );
+                        },
+                        label: 'Unlike',
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                        labelBackgroundColor: Colors.white,
+                      )
+                    : SpeedDialChild(
+                        child: Icon(Icons.favorite, color: Colors.white),
+                        backgroundColor: Colors.red,
+                        onTap: () {
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.LikeCritiqueEvent(),
+                          );
+                        },
+                        label: 'Like',
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        labelBackgroundColor: Colors.red,
+                      ),
                 SpeedDialChild(
                   child: Icon(Icons.comment, color: Colors.white),
                   backgroundColor: Colors.blue,
@@ -198,6 +217,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       ),
                     ),
                   ),
+                  SizedBox(height: 10),
                   Spacer(),
                   Padding(
                     padding: EdgeInsets.only(left: 30),
@@ -226,6 +246,24 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
+                          ),
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${critique.likeCount}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red),
+                              ),
+                              Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                              )
+                            ],
                           ),
                         )
                       ],

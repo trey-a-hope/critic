@@ -22,3 +22,15 @@ class ReportCritiqueEvent extends CritiqueDetailsEvent {
 
   List<Object> get props => [];
 }
+
+class LikeCritiqueEvent extends CritiqueDetailsEvent {
+  LikeCritiqueEvent();
+
+  List<Object> get props => [];
+}
+
+class UnlikeCritiqueEvent extends CritiqueDetailsEvent {
+  UnlikeCritiqueEvent();
+
+  List<Object> get props => [];
+}

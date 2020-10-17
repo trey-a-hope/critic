@@ -75,34 +75,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
         yield LoadingState();
 
-        //loadingText = 'Saving image...';
 
-        //Start loading indicator.
-        // setState(() {
-        //   isLoading = true;
-        // });
-
-        //Update image variables.
-        //profileImage = image;
-
-        //Get image upload url.
         final String newImgUrl = await locator<StorageService>().uploadImage(
             file: image, imgPath: 'Images/Users/${currentUser.uid}/Profile');
 
-        //Save image upload url.
         await locator<UserService>()
             .updateUser(uid: currentUser.uid, data: {'imgUrl': newImgUrl});
-
-        // //Update image url on user.
-        // currentUser.imgUrl = newImgUrl;
-
-        // //Update loading text, probably don't need it here again...
-        // loadingText = null;
-
-        // //Stop loading indicator.
-        // setState(() {
-        //   isLoading = false;
-        // });
 
         add(LoadPageEvent());
       } catch (error) {

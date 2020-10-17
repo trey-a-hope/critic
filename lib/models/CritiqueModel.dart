@@ -16,6 +16,7 @@ class CritiqueModel {
   String movieDirector;
   String imdbRating;
   String imdbVotes;
+  int likeCount;
 
   CritiqueModel({
     @required this.imdbID,
@@ -31,6 +32,7 @@ class CritiqueModel {
     @required this.movieDirector,
     @required this.imdbRating,
     @required this.imdbVotes,
+    @required this.likeCount,
   });
 
   factory CritiqueModel.fromJSON({@required Map map}) {
@@ -50,6 +52,7 @@ class CritiqueModel {
       movieDirector: map['movieDirector'],
       imdbRating: map['imdbRating'],
       imdbVotes: map['imdbVotes'],
+      likeCount: 0, //todo: this should be updated on the activity as well.
     );
   }
 
@@ -69,6 +72,7 @@ class CritiqueModel {
       imdbRating: data['imdbRating'],
       imdbVotes: data['imdbVotes'],
       created: data['created'].toDate(),
+      likeCount: data['likeCount'],
     );
   }
 
@@ -87,5 +91,4 @@ class CritiqueModel {
       'imdbVotes': imdbVotes,
     };
   }
-
 }
