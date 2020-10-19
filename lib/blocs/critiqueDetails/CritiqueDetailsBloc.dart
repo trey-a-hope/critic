@@ -6,7 +6,7 @@ import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/BlockUserService.dart';
+import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
@@ -119,6 +119,16 @@ class CritiqueDetailsBloc
           uid: _currentUser.uid,
           critiqueID: critiqueModel.id,
         );
+
+        if (_critiqueUser.fcmToken != null) {
+          //Send notification to user.
+          await locator<FCMNotificationService>().sendNotificationToUser(
+            fcmToken: _critiqueUser.fcmToken,
+            title: '${_currentUser.username} liked your critique!',
+            body: '${critiqueModel.movieTitle}',
+            notificationData: null,
+          );
+        }
 
         critiqueModel.likeCount++;
 

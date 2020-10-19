@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/CritiqueStatsModel.dart';
+import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -72,6 +75,10 @@ abstract class ICritiqueService {
 
   Future<CritiqueStatsModel> critiqueStats({
     @required String uid,
+    @required String critiqueID,
+  });
+
+  Future<List<UserModel>> retrieveLikeUsers({
     @required String critiqueID,
   });
 }
@@ -591,6 +598,34 @@ class CritiqueService extends ICritiqueService {
           CritiqueStatsModel(likeCount: likeCount, isLiked: isLiked);
 
       return critiqueStats;
+    } catch (error) {
+      throw Exception(
+        error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> retrieveLikeUsers(
+      {@required String critiqueID}) async {
+    try {
+      final DocumentSnapshot critiqueDocSnap =
+          await _critiquesDB.doc(critiqueID).get();
+
+      final dynamic likeUIDs = critiqueDocSnap.data()['likes'];
+
+      final int likeCount = likeUIDs.length;
+
+      List<UserModel> likeUsers = List<UserModel>();
+
+      for (int i = 0; i < likeCount; i++) {
+        final String likeUID = likeUIDs[i];
+        final UserModel likeUser =
+            await locator<UserService>().retrieveUser(uid: likeUID);
+        likeUsers.add(likeUser);
+      }
+
+      return likeUsers;
     } catch (error) {
       throw Exception(
         error.toString(),

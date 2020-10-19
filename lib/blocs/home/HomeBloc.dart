@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
@@ -81,24 +80,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield LoadingState();
 
       try {
-        //todo: This is only used to updated properties on all documents.
-        // List<UserModel> allUsers =
-        //     await locator<UserService>().retrieveAllUsers();
-        // for (var i = 0; i < allUsers.length; i++) {
-        //   UserModel user = allUsers[i];
-
-        //   await locator<UserService>().updateUser(
-        //     uid: user.uid,
-        //     data: {'blockedUsers': []},
-        //   );
-        // }
-
         currentUser = await locator<AuthService>().getCurrentUser();
 
         _setUpFirebaseMessaging();
-
-        locator<CritiqueService>().followStats(uid: currentUser.uid);
-
         yield LoadedState(currentUser: currentUser);
       } catch (error) {
         _homeBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
