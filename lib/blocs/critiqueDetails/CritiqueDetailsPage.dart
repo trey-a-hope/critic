@@ -12,6 +12,7 @@ import '../../ServiceLocator.dart';
 import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
 import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
+import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
 
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -23,7 +24,6 @@ class CritiqueDetailsPage extends StatefulWidget {
 class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     implements CRITIQUE_DETAILS_BP.CritiqueDetailsBlocDelegate {
   CRITIQUE_DETAILS_BP.CritiqueDetailsBloc _critiqueDetailsBloc;
-  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -247,20 +247,36 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         ),
                         SizedBox(width: 20),
                         Expanded(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                '$likeCount',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red),
-                              ),
-                              Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              )
-                            ],
+                          child: InkWell(
+                            onTap: () {
+                              Route route = MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (context) => LIKES_BP.LikesBloc(
+                                    critique: critique,
+                                  )..add(
+                                      LIKES_BP.LoadPageEvent(),
+                                    ),
+                                  child: LIKES_BP.LikesPage(),
+                                ),
+                              );
+
+                              Navigator.push(context, route);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '$likeCount',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red),
+                                ),
+                                Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
