@@ -141,7 +141,9 @@ exports.getUsersFollowees = functions.https.onRequest(async (req, res) => {
 exports.getFollowStats = functions.https.onRequest(async (req, res) => {
     const uid = req.body.myUID;
 
-    const userFeed = streamioClient.feed('Critiques', uid);
+    const token = streamioClient.createUserToken(uid);
+
+    const userFeed = streamioClient.feed('Critiques', uid, token);
 
     const followStatsAPIResponse = await userFeed.followStats();
 
