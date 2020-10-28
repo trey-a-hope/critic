@@ -76,6 +76,8 @@ class ProfilePageState extends State<ProfilePage>
 
         if (state is PROFILE_BP.LoadedState) {
           final UserModel currentUser = state.currentUser;
+          final int followerCount = state.followerCount;
+          final int followingCount = state.followingCount;
 
           return Scaffold(
             backgroundColor: Colors.white,
@@ -161,7 +163,7 @@ class ProfilePageState extends State<ProfilePage>
                                   child: Center(
                                     child: InkWell(
                                       child: Text(
-                                        '? Followers',
+                                        '$followerCount Followers',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12.0,
@@ -190,7 +192,7 @@ class ProfilePageState extends State<ProfilePage>
                                   child: Center(
                                     child: InkWell(
                                       child: Text(
-                                        '? Following',
+                                        '$followingCount Followings',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12.0,

@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:critic/models/FollowStatsModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
 
-
 abstract class ProfileBlocDelegate {
   void showMessage({@required String message});
 }
@@ -24,10 +25,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBlocDelegate _profileBlocDelegate;
 
   UserModel currentUser;
-
-  List<String> _followersIDs;
-
-  List<String> _followingsIDs;
 
   int limit = 10;
 
@@ -45,16 +42,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         currentUser = await locator<AuthService>().getCurrentUser();
 
-        _followersIDs = [];
-
-        _followingsIDs = [];
-
         startAfterDocument = null;
+
+        FollowStatsModel followStatsModel =
+            await locator<CritiqueService>().followStats(uid: currentUser.uid);
 
         yield LoadedState(
           currentUser: currentUser,
-          followers: _followersIDs,
-          followings: _followingsIDs,
+          followerCount: followStatsModel.followers,
+          followingCount: followStatsModel.followees,
         );
       } catch (error) {
         _profileBlocDelegate.showMessage(message: error.toString());
@@ -74,7 +70,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (image == null) return;
 
         yield LoadingState();
-
 
         final String newImgUrl = await locator<StorageService>().uploadImage(
             file: image, imgPath: 'Images/Users/${currentUser.uid}/Profile');

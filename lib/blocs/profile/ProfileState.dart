@@ -12,20 +12,20 @@ class LoadingState extends ProfileState {}
 
 class LoadedState extends ProfileState {
   final UserModel currentUser;
-  final List<String> followers;
-  final List<String> followings;
+  final int followerCount;
+  final int followingCount;
 
   LoadedState({
     @required this.currentUser,
-    @required this.followers,
-    @required this.followings,
+    @required this.followerCount,
+    @required this.followingCount,
   });
 
   @override
   List<Object> get props => [
         currentUser,
-        followers,
-        followings,
+        followerCount,
+        followingCount,
       ];
 }
 

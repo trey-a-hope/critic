@@ -4,6 +4,7 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/CritiqueStatsModel.dart';
+import 'package:critic/models/FollowStatsModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ abstract class ICritiqueService {
     @required String theirUID,
   });
 
-  Future<dynamic> followStats({
+  Future<FollowStatsModel> followStats({
     @required String uid,
   });
 
@@ -384,12 +385,12 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<dynamic> followStats({@required String uid}) async {
+  Future<FollowStatsModel> followStats({@required String uid}) async {
     try {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}GetFollowStats',
         body: {
-          'uid': uid,
+          'myUID': uid,
         },
         headers: {'content-type': 'application/x-www-form-urlencoded'},
       );
@@ -403,9 +404,12 @@ class CritiqueService extends ICritiqueService {
         );
       }
 
-      final List<dynamic> results = map['results'];
+      FollowStatsModel followStats = FollowStatsModel(
+        followees: map['results']['following']['count'],
+        followers: map['results']['followers']['count'],
+      );
 
-      return results.length > 0;
+      return followStats;
     } catch (error) {
       throw Exception(
         error.toString(),
