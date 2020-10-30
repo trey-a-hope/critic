@@ -120,7 +120,8 @@ class CritiqueDetailsBloc
           critiqueID: critiqueModel.id,
         );
 
-        if (_critiqueUser.fcmToken != null) {
+        if (_currentUser.uid != _critiqueUser.uid &&
+            _critiqueUser.fcmToken != null) {
           //Send notification to user.
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: _critiqueUser.fcmToken,

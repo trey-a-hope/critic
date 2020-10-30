@@ -70,7 +70,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
       },
-      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+      onBackgroundMessage: myBackgroundMessageHandler,
     );
   }
 
