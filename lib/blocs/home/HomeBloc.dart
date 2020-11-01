@@ -10,7 +10,10 @@ import 'Bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 abstract class HomeBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({
+    @required String title,
+    @required String body,
+  });
 }
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
@@ -63,6 +66,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+        _homeBlocDelegate.showMessage(
+          title: '${message['aps']['alert']['title']}',
+          body: '${message['aps']['alert']['body']}',
+        );
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
@@ -85,7 +92,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         _setUpFirebaseMessaging();
         yield LoadedState(currentUser: currentUser);
       } catch (error) {
-        _homeBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+        _homeBlocDelegate.showMessage(
+          title: 'Error',
+          body: error.toString(),
+        );
         yield ErrorState(error: error);
       }
     }

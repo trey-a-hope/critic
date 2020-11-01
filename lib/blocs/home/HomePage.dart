@@ -122,52 +122,6 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
           );
         }
 
-        // if (state is NoCritiquesState) {
-        //   return Center(
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Icon(
-        //           MdiIcons.movieEdit,
-        //           size: 100,
-        //           color: Colors.grey,
-        //         ),
-        //         Text(
-        //           'No critiques at this moment.',
-        //           style: TextStyle(
-        //             fontWeight: FontWeight.bold,
-        //           ),
-        //         ),
-        //         Text('Create your own or follow someone.')
-        //       ],
-        //     ),
-        //   );
-        // }
-
-        // if (state is FoundCritiquesState) {
-        //   return RefreshIndicator(
-        //     child: ListView.builder(
-        //       addAutomaticKeepAlives: true,
-        //       itemCount: state.critiques.length,
-        //       itemBuilder: (BuildContext context, int index) {
-        //         final CritiqueModel critique = state.critiques[index];
-
-        //         return CritiqueView(
-        //           critique: critique,
-        //           currentUser: state.currentUser,
-        //         );
-        //       },
-        //     ),
-        //     onRefresh: () {
-        //       _homeBloc.add(
-        //         LoadPageEvent(),
-        //       );
-
-        //       return;
-        //     },
-        //   );
-        // }
-
         if (state is ErrorState) {
           return Center(
             child: Text('Error: ${state.error.toString()}'),
@@ -179,8 +133,14 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
   }
 
   @override
-  void showMessage({String message}) {
-    locator<ModalService>()
-        .showAlert(context: context, title: '', message: message);
+  void showMessage({
+    @required String title,
+    @required String body,
+  }) {
+    locator<ModalService>().showAlert(
+      context: context,
+      title: title,
+      message: body,
+    );
   }
 }
