@@ -3,7 +3,7 @@ import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/CritiqueView.dart';
+import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,12 +61,9 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
               onPageLoading: Spinner(),
               separatorWidget: Divider(),
               itemBuilder: (BuildContext context, CritiqueModel critique) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: CritiqueView(
-                    critique: critique,
-                    currentUser: currentUser,
-                  ),
+                return SmallCritiqueView(
+                  critique: critique,
+                  currentUser: currentUser,
                 );
               },
               pageFetch: pageFetch,

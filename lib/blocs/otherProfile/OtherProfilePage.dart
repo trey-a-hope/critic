@@ -78,6 +78,8 @@ class OtherProfilePageState extends State<OtherProfilePage>
         if (state is OTHER_PROFILE_BP.LoadedState) {
           final UserModel otherUser = state.otherUser;
           final bool isFollowing = state.isFollowing;
+          final int followerCount = state.followerCount;
+          final int followingCount = state.followingCount;
 
           return Scaffold(
             key: _scaffoldKey,
@@ -139,7 +141,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                   child: Center(
                                     child: InkWell(
                                       child: Text(
-                                        '? Followers',
+                                        '$followerCount Followers',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12.0,
@@ -169,7 +171,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                   child: Center(
                                     child: InkWell(
                                       child: Text(
-                                        '? Following',
+                                        '$followingCount Following',
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12.0,

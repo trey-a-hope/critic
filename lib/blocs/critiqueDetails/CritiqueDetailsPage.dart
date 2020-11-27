@@ -13,6 +13,7 @@ import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
 import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
 import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
+import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -180,8 +181,27 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     movieModel: movie,
                   ),
                   ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                    leading: InkWell(
+                      onTap: () {
+                        if (critiqueUser.uid == currentUser.uid) return;
+
+                        Route route = MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) =>
+                                OTHER_PROFILE_BP.OtherProfileBloc(
+                              otherUserID: '${critiqueUser.uid}',
+                            )..add(
+                                    OTHER_PROFILE_BP.LoadPageEvent(),
+                                  ),
+                            child: OTHER_PROFILE_BP.OtherProfilePage(),
+                          ),
+                        );
+
+                        Navigator.push(context, route);
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                      ),
                     ),
                     title: Text('${critiqueUser.username}'),
                     trailing: Text(

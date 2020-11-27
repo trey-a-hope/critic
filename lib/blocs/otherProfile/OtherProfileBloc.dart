@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:critic/models/FollowStatsModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/BlockUserService.dart';
@@ -53,14 +54,27 @@ class OtherProfileBloc extends Bloc<OtherProfileEvent, OtherProfileState> {
           theirUID: otherUser.uid,
         );
 
+        FollowStatsModel followStatsModel =
+            await locator<CritiqueService>().followStats(uid: otherUser.uid);
+
         startAfterDocument = null;
 
-        yield LoadedState(otherUser: otherUser, isFollowing: _isFollowing);
+        yield LoadedState(
+          otherUser: otherUser,
+          isFollowing: _isFollowing,
+          followerCount: followStatsModel.followers,
+          followingCount: followStatsModel.followees,
+        );
       } catch (error) {
         _otherProfileBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
 
-        yield LoadedState(otherUser: otherUser, isFollowing: _isFollowing);
+        yield LoadedState(
+          otherUser: otherUser,
+          isFollowing: _isFollowing,
+          followerCount: 0,
+          followingCount: 0,
+        );
       }
     }
 
