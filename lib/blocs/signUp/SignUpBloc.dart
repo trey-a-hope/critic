@@ -4,6 +4,8 @@ import 'package:critic/blocs/signUp/SignUpEvent.dart';
 import 'package:critic/blocs/signUp/SignUpState.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,16 +37,18 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   Stream<SignUpState> mapEventToState(SignUpEvent event) async* {
     if (event is SignUp) {
       try {
+        yield LoadingState();
+
         final String email = event.email;
         final String password = event.password;
         final String username = event.username;
 
-        UserCredential userCredential = await locator<AuthService>()
+        final UserCredential userCredential = await locator<AuthService>()
             .createUserWithEmailAndPassword(email: email, password: password);
 
         final User firebaseUser = userCredential.user;
 
-        UserModel user = UserModel(
+        UserModel newUser = UserModel(
           imgUrl: DUMMY_PROFILE_PHOTO_URL,
           email: email,
           created: DateTime.now(),
@@ -55,9 +59,25 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           fcmToken: null,
         );
 
-        //await locator<UserService>().createUser(user: user);
+        await locator<UserService>().createUser(user: newUser);
 
-        //_signUpBlocDelegate.navigateHome();
+        final UserModel treyHopeUser =
+            await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
+
+        //Follow Trey Hope.
+        await locator<CritiqueService>()
+            .followUser(myUID: newUser.uid, theirUID: treyHopeUser.uid);
+        await locator<CritiqueService>()
+            .followUser(myUID: treyHopeUser.uid, theirUID: newUser.uid);
+
+        await locator<FCMNotificationService>().sendNotificationToUser(
+          fcmToken: treyHopeUser.fcmToken,
+          title: 'New Follower',
+          body: newUser.username,
+          notificationData: null,
+        );
+
+        _signUpBlocDelegate.navigateHome();
 
         yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
       } catch (error) {

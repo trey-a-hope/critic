@@ -21,3 +21,5 @@ final HexColor COLOR_NAVY = HexColor('#09487e');
 
 final String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
 final String ASSET_APP_ICON = 'assets/images/app_icon.png';
+
+final String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
