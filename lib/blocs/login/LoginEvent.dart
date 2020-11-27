@@ -9,17 +9,14 @@ class LoginEvent extends Equatable {
 class Login extends LoginEvent {
   final String email;
   final String password;
-  final GlobalKey<FormState> formKey;
 
   Login({
     @required this.email,
     @required this.password,
-    @required this.formKey,
   });
 
   List<Object> get props => [
         email,
         password,
-        formKey,
       ];
 }

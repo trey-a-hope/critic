@@ -7,21 +7,15 @@ class SignUpState extends Equatable {
 }
 
 class SignUpStartState extends SignUpState {
-  final bool autoValidate;
-  final GlobalKey<FormState> formKey;
   final bool termsServicesChecked;
 
   SignUpStartState({
-    @required this.autoValidate,
-    @required this.formKey,
     @required this.termsServicesChecked,
   });
 
   @override
   List<Object> get props => [
-        autoValidate,
-        formKey,
-        termsServicesChecked
+        termsServicesChecked,
       ];
 }
 

@@ -10,20 +10,17 @@ class SignUp extends SignUpEvent {
   final String username;
   final String email;
   final String password;
-  final GlobalKey<FormState> formKey;
 
   SignUp({
     @required this.username,
     @required this.email,
     @required this.password,
-    @required this.formKey,
   });
 
   List<Object> get props => [
         username,
         email,
         password,
-        formKey,
       ];
 }
 
@@ -33,15 +30,12 @@ class NavigateToTermsServicePageEvent extends SignUpEvent {
 
 class TermsServiceCheckboxEvent extends SignUpEvent {
   final bool checked;
-  final GlobalKey<FormState> formKey;
 
   TermsServiceCheckboxEvent({
     @required this.checked,
-    @required this.formKey,
   });
 
   List<Object> get props => [
         checked,
-        formKey,
       ];
 }

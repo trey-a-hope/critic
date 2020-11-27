@@ -8,6 +8,8 @@ const String DUMMY_PROFILE_PHOTO_URL =
 //These are set in main().
 String version;
 String buildNumber;
+double screenWidth;
+double screenHeight;
 
 const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
 const String ALGOLIA_SEARCH_API_KEY = '01be9bb46f445fa21cdba2c7197d84bf';
@@ -16,3 +18,6 @@ const String CLOUD_FUNCTIONS_ENDPOINT =
     'https://us-central1-critic-a9e44.cloudfunctions.net/';
 
 final HexColor COLOR_NAVY = HexColor('#09487e');
+
+final String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
+final String ASSET_APP_ICON = 'assets/images/app_icon.png';

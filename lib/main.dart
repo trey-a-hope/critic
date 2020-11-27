@@ -51,6 +51,9 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           final User firebaseUser = snapshot.data;
 
+          screenWidth = MediaQuery.of(context).size.width;
+          screenHeight = MediaQuery.of(context).size.height;
+
           return firebaseUser == null
               ? BlocProvider(
                   create: (BuildContext context) => LOGIN_BP.LoginBloc(),

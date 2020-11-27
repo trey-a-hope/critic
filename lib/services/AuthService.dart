@@ -14,19 +14,20 @@ abstract class IAuthService {
       {@required String email, @required String password});
   void updatePassword({@required String password});
   Future<void> deleteUser({@required String userID});
+  Future<void> resetPassword({@required String email});
 }
 
 class AuthService extends IAuthService {
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  final CollectionReference usersDB =
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('Users');
 
   @override
   Future<UserModel> getCurrentUser() async {
     try {
-      final User firebaseUser = auth.currentUser;
+      final User firebaseUser = _auth.currentUser;
       final DocumentSnapshot documentSnapshot =
-          await usersDB.doc(firebaseUser.uid).get();
+          await _usersDB.doc(firebaseUser.uid).get();
       return UserModel.fromDoc(ds: documentSnapshot);
     } catch (e) {
       throw Exception('Could not fetch user at this time.');
@@ -35,31 +36,31 @@ class AuthService extends IAuthService {
 
   @override
   Future<void> signOut() {
-    return auth.signOut();
+    return _auth.signOut();
   }
 
   @override
   Stream<User> onAuthStateChanged() {
-    return auth.authStateChanges();
+    return _auth.authStateChanges();
   }
 
   @override
   Future<UserCredential> signInWithEmailAndPassword(
       {@required String email, @required String password}) {
-    return auth.signInWithEmailAndPassword(email: email, password: password);
+    return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   @override
   Future<UserCredential> createUserWithEmailAndPassword(
       {@required String email, @required String password}) {
-    return auth.createUserWithEmailAndPassword(
+    return _auth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 
   @override
   void updatePassword({String password}) async {
     try {
-      User firebaseUser = auth.currentUser;
+      User firebaseUser = _auth.currentUser;
       firebaseUser.updatePassword(password);
       return;
     } catch (e) {
@@ -72,10 +73,21 @@ class AuthService extends IAuthService {
   @override
   Future<void> deleteUser({String userID}) async {
     try {
-      User firebaseUser = auth.currentUser;
+      User firebaseUser = _auth.currentUser;
       await firebaseUser.delete();
-      await usersDB.doc(userID).delete();
+      await _usersDB.doc(userID).delete();
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> resetPassword({@required String email}) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       throw Exception(
         e.toString(),

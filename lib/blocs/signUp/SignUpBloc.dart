@@ -20,8 +20,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc()
       : super(
           SignUpStartState(
-            autoValidate: false,
-            formKey: GlobalKey<FormState>(),
             termsServicesChecked: false,
           ),
         );
@@ -36,45 +34,35 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   @override
   Stream<SignUpState> mapEventToState(SignUpEvent event) async* {
     if (event is SignUp) {
-      if (event.formKey.currentState.validate()) {
-        yield LoadingState();
-        try {
-          final String email = event.email;
-          final String password = event.password;
-          final String username = event.username;
+      try {
+        final String email = event.email;
+        final String password = event.password;
+        final String username = event.username;
 
-          UserCredential userCredential = await locator<AuthService>()
-              .createUserWithEmailAndPassword(email: email, password: password);
+        UserCredential userCredential = await locator<AuthService>()
+            .createUserWithEmailAndPassword(email: email, password: password);
 
-          final User firebaseUser = userCredential.user;
+        final User firebaseUser = userCredential.user;
 
-          UserModel user = UserModel(
-            imgUrl: DUMMY_PROFILE_PHOTO_URL,
-            email: email,
-            created: DateTime.now(),
-            modified: DateTime.now(),
-            uid: firebaseUser.uid,
-            username: username,
-            critiqueCount: 0,
-            fcmToken: null,
-          );
+        UserModel user = UserModel(
+          imgUrl: DUMMY_PROFILE_PHOTO_URL,
+          email: email,
+          created: DateTime.now(),
+          modified: DateTime.now(),
+          uid: firebaseUser.uid,
+          username: username,
+          critiqueCount: 0,
+          fcmToken: null,
+        );
 
-          await locator<UserService>().createUser(user: user);
+        //await locator<UserService>().createUser(user: user);
 
-          _signUpBlocDelegate.navigateHome();
+        //_signUpBlocDelegate.navigateHome();
 
-          yield SignUpStartState(
-              autoValidate: true,
-              formKey: event.formKey,
-              termsServicesChecked: _termsServicesChecked);
-        } catch (error) {
-          _signUpBlocDelegate.showMessage(
-              message: 'Error: ${error.toString()}');
-          yield SignUpStartState(
-              autoValidate: true,
-              formKey: event.formKey,
-              termsServicesChecked: _termsServicesChecked);
-        }
+        yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
+      } catch (error) {
+        _signUpBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+        yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
       }
     }
 
@@ -86,9 +74,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       _termsServicesChecked = event.checked;
 
       yield SignUpStartState(
-          autoValidate: true,
-          formKey: event.formKey,
-          termsServicesChecked: _termsServicesChecked);
+        termsServicesChecked: _termsServicesChecked,
+      );
     }
   }
 }
