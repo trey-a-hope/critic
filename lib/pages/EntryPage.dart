@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
 import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
+import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -21,18 +23,18 @@ class EntryPage extends StatefulWidget {
 }
 
 class EntryPageState extends State<EntryPage> {
-  static GlobalKey homeGlobalKey = GlobalKey();
+  static GlobalKey exploreGlobalKey = GlobalKey();
   static GlobalKey critiqueGlobalKey = GlobalKey();
-  static GlobalKey searchGlobalKey = GlobalKey();
+  static GlobalKey watchlistGlobalKey = GlobalKey();
   static GlobalKey profileGlobalKey = GlobalKey();
   static GlobalKey settingsGlobalKey = GlobalKey();
 
   int currentIndex = 0;
 
   final List<String> childrenTitle = [
-    'Home',
+    'Explore',
     'Critique',
-    'Search',
+    'Watchlist',
     'Profile',
     'Settings',
   ];
@@ -55,15 +57,21 @@ class EntryPageState extends State<EntryPage> {
       ),
       child: SearchMoviesPage(),
     ),
-    //Search Users Page
+    //Watchlist Page
     BlocProvider(
-      create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
-        searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
-          cache: SEARCH_USERS_BP.SearchUsersCache(),
-        ),
-      )..add(SEARCH_USERS_BP.LoadPageEvent()),
-      child: SEARCH_USERS_BP.SearchUsersPage(),
+      create: (context) =>
+          WATCHLIST_BP.WatchlistBloc()..add(WATCHLIST_BP.LoadPageEvent()),
+      child: WATCHLIST_BP.WatchlistPage(),
     ),
+    //Search Users Page
+    // BlocProvider(
+    //   create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
+    //     searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
+    //       cache: SEARCH_USERS_BP.SearchUsersCache(),
+    //     ),
+    //   )..add(SEARCH_USERS_BP.LoadPageEvent()),
+    //   child: SEARCH_USERS_BP.SearchUsersPage(),
+    // ),
     //Profile Page
     BlocProvider(
       create: (BuildContext context) => PROFILE_BP.ProfileBloc()
@@ -79,11 +87,11 @@ class EntryPageState extends State<EntryPage> {
   final List<BottomNavyBarItem> items = [
     BottomNavyBarItem(
       icon: Icon(
-        Icons.home,
-        key: homeGlobalKey,
+        Icons.explore,
+        key: exploreGlobalKey,
       ),
       title: Text(
-        'Home',
+        'Explore',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       activeColor: COLOR_NAVY,
@@ -103,16 +111,28 @@ class EntryPageState extends State<EntryPage> {
     ),
     BottomNavyBarItem(
       icon: Icon(
-        Icons.search,
-        key: searchGlobalKey,
+        MdiIcons.bookmark,
+        key: watchlistGlobalKey,
       ),
       title: Text(
-        'Search',
+        'Watchlist',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
+    // BottomNavyBarItem(
+    //   icon: Icon(
+    //     Icons.search,
+    //     key: searchGlobalKey,
+    //   ),
+    //   title: Text(
+    //     'Search',
+    //     style: TextStyle(fontWeight: FontWeight.bold),
+    //   ),
+    //   activeColor: COLOR_NAVY,
+    //   textAlign: TextAlign.center,
+    // ),
     BottomNavyBarItem(
       icon: Icon(
         Icons.person,
@@ -147,7 +167,7 @@ class EntryPageState extends State<EntryPage> {
           TargetFocus(
             enableOverlayTab: true,
             identify: "Target 1",
-            keyTarget: homeGlobalKey,
+            keyTarget: exploreGlobalKey,
             contents: [
               ContentTarget(
                 align: AlignContent.top,
@@ -157,7 +177,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Home Page",
+                        "Explore",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -189,7 +209,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Create Critique Page",
+                        "Search",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -198,7 +218,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "This is where you search a movie/tv show that you want to critique.",
+                          "Find a movie/tv show that you want to critique.",
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -211,7 +231,7 @@ class EntryPageState extends State<EntryPage> {
           TargetFocus(
             enableOverlayTab: true,
             identify: "Target 3",
-            keyTarget: searchGlobalKey,
+            keyTarget: watchlistGlobalKey,
             contents: [
               ContentTarget(
                 align: AlignContent.top,
@@ -221,7 +241,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Search Users Page",
+                        "Watchlist",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -230,7 +250,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Search for other users to follow in the app.",
+                          'Save movies here as a reminder to watch later.',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -253,7 +273,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Profile Page",
+                        "Profile",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -285,7 +305,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Settings Page",
+                        "Settings",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -316,10 +336,10 @@ class EntryPageState extends State<EntryPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool seenTutorial = prefs.getBool('seenTutorial') ?? false;
 
-    if (!seenTutorial) {
-      tutorial.show();
-      prefs.setBool('seenTutorial', true);
-    }
+    // if (!seenTutorial) {
+    tutorial.show();
+    prefs.setBool('seenTutorial', true);
+    // }
   }
 
   @override
@@ -351,21 +371,27 @@ class EntryPageState extends State<EntryPage> {
       case 0:
         return AppBar(
           title: Text(
-            'Home',
+            'Explore',
           ),
         );
       case 1:
         return AppBar(
           title: Text(
-            'Create Critique',
+            'Search',
           ),
         );
       case 2:
         return AppBar(
           title: Text(
-            'Search Users',
+            'Watchlist',
           ),
         );
+      // case 4:
+      //   return AppBar(
+      //     title: Text(
+      //       'Search Users',
+      //     ),
+      //   );
       case 3:
         return AppBar(
           title: Text('Profile'),
