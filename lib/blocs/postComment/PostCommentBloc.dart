@@ -64,14 +64,23 @@ class PostCommentBloc extends Bloc<PostCommentEvent, PostCommentState> {
           comment: comment,
         );
 
-        if (_currentUser.uid != critiqueUser.uid &&
-            critiqueUser.fcmToken != null) { 
-          await locator<FCMNotificationService>().sendNotificationToUser(
-            fcmToken: critiqueUser.fcmToken,
-            title: '${_currentUser.username} commented on your critique.',
-            body: '\"${comment.message}\"',
-            notificationData: null,
-          );
+        final List<UserModel> usersWhoCommented =
+            await locator<CritiqueService>()
+                .retrieveUsersWhoCommentedOnCritique(critiqueID: critique.id);
+
+        for (int i = 0; i < usersWhoCommented.length; i++) {
+          final UserModel userWhoCommented = usersWhoCommented[i];
+
+          if (_currentUser.uid != userWhoCommented.uid &&
+              userWhoCommented.fcmToken != null) {
+            await locator<FCMNotificationService>().sendNotificationToUser(
+              fcmToken: userWhoCommented.fcmToken,
+              title:
+                  '${_currentUser.username} commented on the ${critique.movieTitle} critique.',
+              body: '\"${comment.message}\"',
+              notificationData: null,
+            );
+          }
         }
 
         _postCommentBlocDelegate.clearText();

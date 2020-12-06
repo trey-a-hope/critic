@@ -33,18 +33,6 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
     super.dispose();
   }
 
-  Future<List<CritiqueModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<CritiqueModel> critiques =
-        await locator<CritiqueService>().retrieveCritiquesFromStream(
-      limit: _homeBloc.limit,
-      offset: offset,
-      uid: _homeBloc.currentUser.uid,
-    );
-
-    return critiques;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
@@ -55,6 +43,8 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
 
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
+          final int pageFetchLimit = state.pageFetchLimit;
+
           return RefreshIndicator(
             child: PaginationList<CritiqueModel>(
               onLoading: Spinner(),
@@ -66,7 +56,17 @@ class HomePageState extends State<HomePage> implements HomeBlocDelegate {
                   currentUser: currentUser,
                 );
               },
-              pageFetch: pageFetch,
+              pageFetch: (int offset) async {
+                //Fetch template documents.
+                List<CritiqueModel> critiques = await locator<CritiqueService>()
+                    .retrieveCritiquesFromStream(
+                  limit: pageFetchLimit,
+                  offset: offset,
+                  uid: currentUser.uid,
+                );
+
+                return critiques;
+              },
               onError: (dynamic error) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -28,8 +28,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   UserModel currentUser;
 
-  int limit = 25;
-
   void setDelegate({@required HomeBlocDelegate delegate}) {
     this._homeBlocDelegate = delegate;
   }
@@ -90,7 +88,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         currentUser = await locator<AuthService>().getCurrentUser();
 
         _setUpFirebaseMessaging();
-        yield LoadedState(currentUser: currentUser);
+        yield LoadedState(
+          currentUser: currentUser,
+          pageFetchLimit: 25,
+        );
       } catch (error) {
         _homeBlocDelegate.showMessage(
           title: 'Error',

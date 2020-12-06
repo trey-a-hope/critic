@@ -64,6 +64,10 @@ abstract class ICritiqueService {
     @required DocumentSnapshot startAfterDocument,
   });
 
+  Future<List<UserModel>> retrieveUsersWhoCommentedOnCritique({
+    @required String critiqueID,
+  });
+
   Future<void> likeCritique({
     @required String uid,
     @required String critiqueID,
@@ -493,7 +497,10 @@ class CritiqueService extends ICritiqueService {
       CollectionReference commentsColRef =
           critiqueDocRef.collection('comments');
 
-      Query query = commentsColRef.orderBy('created', descending: true);
+      Query query = commentsColRef.orderBy(
+        'created',
+        descending: false,
+      );
 
       if (limit != null) {
         query = query.limit(limit);
@@ -633,6 +640,45 @@ class CritiqueService extends ICritiqueService {
     } catch (error) {
       throw Exception(
         error.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<UserModel>> retrieveUsersWhoCommentedOnCritique(
+      {@required String critiqueID}) async {
+    try {
+      final DocumentReference critiqueDocRef = _critiquesDB.doc(critiqueID);
+
+      CollectionReference commentsColRef =
+          critiqueDocRef.collection('comments');
+
+      Query query = commentsColRef.orderBy(
+        'created',
+        descending: false,
+      );
+
+      List<DocumentSnapshot> commentDocSnapshots = (await query.get()).docs;
+
+      List<CommentModel> comments = commentDocSnapshots
+          .map((docSnapshot) => CommentModel.fromDoc(ds: docSnapshot))
+          .toList();
+
+      List<UserModel> users = List<UserModel>();
+
+      for (int i = 0; i < comments.length; i++) {
+        final CommentModel comment = comments[i];
+
+        final UserModel user =
+            await locator<UserService>().retrieveUser(uid: comment.uid);
+
+        users.add(user);
+      }
+
+      return users;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
       );
     }
   }

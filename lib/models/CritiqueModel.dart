@@ -1,4 +1,3 @@
-import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -43,7 +42,7 @@ class CritiqueModel {
       message: map['message'],
       modified: map['modified'],
       created: DateTime.parse(map['time']).subtract(
-        Duration(hours: 4),
+        Duration(hours: 5),
       ), //time is 4 hours fast, I might have selected the wrong region for Stream.
       movieTitle: map['movieTitle'],
       moviePoster: map['moviePoster'],

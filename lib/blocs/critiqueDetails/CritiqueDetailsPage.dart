@@ -209,31 +209,20 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     ),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.80,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade700,
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0)
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        child: Text(
-                          '\"${critique.message}\"',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        padding: EdgeInsets.all(10),
+                  Divider(),
+                  Padding(
+                    child: Text(
+                      '\"${critique.message}\"',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: COLOR_NAVY,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
+                    padding: EdgeInsets.all(15),
                   ),
+                  Divider(),
                   SizedBox(height: 10),
                   Spacer(),
                   Padding(

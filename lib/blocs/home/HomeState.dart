@@ -11,23 +11,19 @@ class HomeState extends Equatable {
 
 class LoadingState extends HomeState {}
 
-// class NoCritiquesState extends HomeState {
-//   NoCritiquesState();
-
-//   @override
-//   List<Object> get props => [];
-// }
-
 class LoadedState extends HomeState {
   final UserModel currentUser;
+  final int pageFetchLimit;
 
   LoadedState({
     @required this.currentUser,
+    @required this.pageFetchLimit,
   });
 
   @override
   List<Object> get props => [
         currentUser,
+        pageFetchLimit,
       ];
 }
 
