@@ -24,6 +24,10 @@ abstract class ICritiqueService {
     @required int limit,
     @required DocumentSnapshot startAfterDocument,
   });
+  Future<List<DocumentSnapshot>> retrieveAllCritiquesFromFirebase({
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+  });
   Future<void> deleteCritique({
     @required String critiqueID,
     @required String uid,
@@ -676,6 +680,31 @@ class CritiqueService extends ICritiqueService {
       }
 
       return users;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<DocumentSnapshot>> retrieveAllCritiquesFromFirebase(
+      {@required int limit,
+      @required DocumentSnapshot startAfterDocument}) async {
+    try {
+      Query query = _critiquesDB.orderBy('created', descending: true);
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
+
+      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+
+      return documentSnapshots;
     } catch (e) {
       throw Exception(
         e.toString(),

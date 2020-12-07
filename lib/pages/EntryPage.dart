@@ -9,7 +9,7 @@ import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
-import 'package:critic/blocs/home/Bloc.dart' as HOME_BP;
+import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
 
@@ -42,11 +42,11 @@ class EntryPageState extends State<EntryPage> {
   final List<Widget> children = [
     //Home Page
     BlocProvider(
-      create: (BuildContext context) => HOME_BP.HomeBloc()
+      create: (BuildContext context) => EXPLORE_BP.ExploreBloc()
         ..add(
-          HOME_BP.LoadPageEvent(),
+          EXPLORE_BP.LoadPageEvent(),
         ),
-      child: HOME_BP.HomePage(),
+      child: EXPLORE_BP.ExplorePage(),
     ),
     //Critique Page
     BlocProvider(
@@ -63,15 +63,6 @@ class EntryPageState extends State<EntryPage> {
           WATCHLIST_BP.WatchlistBloc()..add(WATCHLIST_BP.LoadPageEvent()),
       child: WATCHLIST_BP.WatchlistPage(),
     ),
-    //Search Users Page
-    // BlocProvider(
-    //   create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
-    //     searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
-    //       cache: SEARCH_USERS_BP.SearchUsersCache(),
-    //     ),
-    //   )..add(SEARCH_USERS_BP.LoadPageEvent()),
-    //   child: SEARCH_USERS_BP.SearchUsersPage(),
-    // ),
     //Profile Page
     BlocProvider(
       create: (BuildContext context) => PROFILE_BP.ProfileBloc()
@@ -121,18 +112,6 @@ class EntryPageState extends State<EntryPage> {
       activeColor: COLOR_NAVY,
       textAlign: TextAlign.center,
     ),
-    // BottomNavyBarItem(
-    //   icon: Icon(
-    //     Icons.search,
-    //     key: searchGlobalKey,
-    //   ),
-    //   title: Text(
-    //     'Search',
-    //     style: TextStyle(fontWeight: FontWeight.bold),
-    //   ),
-    //   activeColor: COLOR_NAVY,
-    //   textAlign: TextAlign.center,
-    // ),
     BottomNavyBarItem(
       icon: Icon(
         Icons.person,
@@ -386,12 +365,6 @@ class EntryPageState extends State<EntryPage> {
             'Watchlist',
           ),
         );
-      // case 4:
-      //   return AppBar(
-      //     title: Text(
-      //       'Search Users',
-      //     ),
-      //   );
       case 3:
         return AppBar(
           title: Text('Profile'),

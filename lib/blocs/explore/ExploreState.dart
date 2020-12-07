@@ -4,14 +4,14 @@ import 'package:critic/models/UserModel.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class HomeState extends Equatable {
+class ExploreState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class LoadingState extends HomeState {}
+class LoadingState extends ExploreState {}
 
-class LoadedState extends HomeState {
+class LoadedState extends ExploreState {
   final UserModel currentUser;
   final int pageFetchLimit;
 
@@ -27,7 +27,7 @@ class LoadedState extends HomeState {
       ];
 }
 
-class ErrorState extends HomeState {
+class ErrorState extends ExploreState {
   final dynamic error;
 
   ErrorState({

@@ -1,25 +1,24 @@
 import 'package:equatable/equatable.dart';
 
-class HomeEvent extends Equatable {
+class ExploreEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
 //Event: User selects login.
-class LoadPageEvent extends HomeEvent {
+class LoadPageEvent extends ExploreEvent {
   LoadPageEvent();
 
   List<Object> get props => [];
 }
 
-class RequestNextPageEvent extends HomeEvent {
+class RequestNextPageEvent extends ExploreEvent {
   RequestNextPageEvent();
 
   List<Object> get props => [];
 }
 
-
-class AddCritiqueEvent extends HomeEvent {
+class AddCritiqueEvent extends ExploreEvent {
   AddCritiqueEvent();
 
   List<Object> get props => [];

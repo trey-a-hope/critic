@@ -8,28 +8,33 @@ import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-abstract class HomeBlocDelegate {
+abstract class ExploreBlocDelegate {
   void showMessage({
     @required String title,
     @required String body,
   });
 }
 
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc()
+class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
+  ExploreBloc()
       : super(
-          HomeState(),
+          ExploreState(),
         );
 
   final FirebaseMessaging _fcm = FirebaseMessaging();
 
-  HomeBlocDelegate _homeBlocDelegate;
+  ExploreBlocDelegate _exploreBlocDelegate;
 
   UserModel currentUser;
 
-  void setDelegate({@required HomeBlocDelegate delegate}) {
-    this._homeBlocDelegate = delegate;
+  int limit = 25;
+
+  DocumentSnapshot startAfterDocument;
+
+  void setDelegate({@required ExploreBlocDelegate delegate}) {
+    this._exploreBlocDelegate = delegate;
   }
 
   static Future<dynamic> myBackgroundMessageHandler(
@@ -64,7 +69,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
-        _homeBlocDelegate.showMessage(
+        _exploreBlocDelegate.showMessage(
           title: '${message['aps']['alert']['title']}',
           body: '${message['aps']['alert']['body']}',
         );
@@ -80,11 +85,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   @override
-  Stream<HomeState> mapEventToState(HomeEvent event) async* {
+  Stream<ExploreState> mapEventToState(ExploreEvent event) async* {
     if (event is LoadPageEvent) {
       yield LoadingState();
 
       try {
+        startAfterDocument = null;
+
         currentUser = await locator<AuthService>().getCurrentUser();
 
         _setUpFirebaseMessaging();
@@ -93,7 +100,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           pageFetchLimit: 25,
         );
       } catch (error) {
-        _homeBlocDelegate.showMessage(
+        _exploreBlocDelegate.showMessage(
           title: 'Error',
           body: error.toString(),
         );
