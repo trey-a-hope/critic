@@ -84,60 +84,63 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
     @required UserModel userWhoPosted,
   }) {
     return ListTile(
-      onTap: () {
-        Route route = MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-              critiqueModel: critique,
-            )..add(
-                CRITIQUE_DETAILS_BP.LoadPageEvent(),
-              ),
-            child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
-          ),
-        );
-
-        Navigator.push(context, route);
-      },
-      title: Text(
-        '\"${critique.message}\"',
-        style: TextStyle(fontSize: 14, color: Colors.grey),
-      ),
-      subtitle: Text(
-        '${critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(critique.created, allowFromNow: true)}',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      trailing: InkWell(
         onTap: () {
-          if (userWhoPosted.uid == currentUser.uid) return;
-
           Route route = MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                otherUserID: '${userWhoPosted.uid}',
+              create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
+                critiqueModel: critique,
               )..add(
-                  OTHER_PROFILE_BP.LoadPageEvent(),
+                  CRITIQUE_DETAILS_BP.LoadPageEvent(),
                 ),
-              child: OTHER_PROFILE_BP.OtherProfilePage(),
+              child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
             ),
           );
 
           Navigator.push(context, route);
         },
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(
-            '${userWhoPosted.imgUrl}',
+        title: Text(
+          '\"${critique.message}\"',
+          style: TextStyle(fontSize: 14, color: Colors.black),
+        ),
+        subtitle: Text(
+          '\n${critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(critique.created, allowFromNow: true)}',
+          style: TextStyle(
+              fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+        ),
+        trailing: InkWell(
+          onTap: () {
+            if (userWhoPosted.uid == currentUser.uid) return;
+
+            Route route = MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
+                  otherUserID: '${userWhoPosted.uid}',
+                )..add(
+                    OTHER_PROFILE_BP.LoadPageEvent(),
+                  ),
+                child: OTHER_PROFILE_BP.OtherProfilePage(),
+              ),
+            );
+
+            Navigator.push(context, route);
+          },
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              '${userWhoPosted.imgUrl}',
+            ),
           ),
         ),
-      ),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-          '${critique.moviePoster}',
-        ),
-      ),
-    );
+        leading: Image.network(
+          critique.moviePoster,
+          height: 100,
+        )
+
+        // CircleAvatar(
+        //   backgroundImage: NetworkImage(
+        //     '${critique.moviePoster}',
+        //   ),
+        // ),
+        );
     // InkWell(
     //   onTap: () {
     //     Route route = MaterialPageRoute(
