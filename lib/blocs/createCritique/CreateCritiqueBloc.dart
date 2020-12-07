@@ -4,6 +4,7 @@ import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'CreateCritiqueEvent.dart';
@@ -22,6 +23,8 @@ class CreateCritiqueBloc
   CreateCritiqueBlocDelegate _createCritiqueBlocDelegate;
   UserModel _currentUser;
 
+  bool watchListHasMovie = false;
+
   void setDelegate({@required CreateCritiqueBlocDelegate delegate}) {
     this._createCritiqueBlocDelegate = delegate;
   }
@@ -35,10 +38,56 @@ class CreateCritiqueBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        yield CreateCritiqueStartState(movie: movie);
+        watchListHasMovie = await locator<UserService>().watchListHasMovie(
+          uid: _currentUser.uid,
+          imdbID: movie.imdbID,
+        );
+
+        yield CreateCritiqueStartState(
+          movie: movie,
+          watchListHasMovie: watchListHasMovie,
+        );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error: ${error.toString()}');
+      }
+    }
+
+    if (event is AddMovieToWatchlistEvent) {
+      try {
+        await locator<UserService>()
+            .addMovieToWatchList(uid: _currentUser.uid, movie: movie);
+
+        watchListHasMovie = true;
+
+        yield CreateCritiqueStartState(
+          movie: movie,
+          watchListHasMovie: watchListHasMovie,
+        );
+      } catch (error) {
+        _createCritiqueBlocDelegate.showMessage(
+          message: error.toString(),
+        );
+      }
+    }
+
+    if (event is RemoveMovieFromWatchlistEvent) {
+      try {
+        await locator<UserService>().removeMovieFromWatchList(
+          uid: _currentUser.uid,
+          imdbID: movie.imdbID,
+        );
+
+        watchListHasMovie = false;
+
+        yield CreateCritiqueStartState(
+          movie: movie,
+          watchListHasMovie: watchListHasMovie,
+        );
+      } catch (error) {
+        _createCritiqueBlocDelegate.showMessage(
+          message: error.toString(),
+        );
       }
     }
 
@@ -74,12 +123,18 @@ class CreateCritiqueBloc
         _createCritiqueBlocDelegate.showMessage(
             message: 'Critique added, check it out on the home page.');
 
-        yield CreateCritiqueStartState(movie: movie);
+        yield CreateCritiqueStartState(
+          movie: movie,
+          watchListHasMovie: watchListHasMovie,
+        );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error ${error.toString()}!');
 
-        yield CreateCritiqueStartState(movie: movie);
+        yield CreateCritiqueStartState(
+          movie: movie,
+          watchListHasMovie: watchListHasMovie,
+        );
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
+import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,31 @@ abstract class IUserService {
     @required String uid,
     @required int limit,
     @required int offset,
+  });
+
+  Future<void> addMovieToWatchList({
+    @required String uid,
+    @required MovieModel movie,
+  });
+
+  Future<void> removeMovieFromWatchList({
+    @required String uid,
+    @required String imdbID,
+  });
+
+  Future<bool> watchListHasMovie({
+    @required String uid,
+    @required String imdbID,
+  });
+
+  Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
+    @required String uid,
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+  });
+
+  Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist({
+    @required String uid,
   });
 }
 
@@ -196,6 +222,150 @@ class UserService extends IUserService {
       }
 
       return users;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> addMovieToWatchList({
+    @required String uid,
+    @required MovieModel movie,
+  }) async {
+    try {
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+
+      final CollectionReference watchListColRef =
+          userDocRef.collection('watchList');
+
+      final DocumentReference watchListDocRef = watchListColRef.doc();
+
+      movie.addedToWatchList = DateTime.now();
+
+      batch.set(
+        watchListDocRef,
+        movie.toMap(),
+      );
+
+      batch.update(userDocRef, {'watchListCount': FieldValue.increment(1)});
+
+      await batch.commit();
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> removeMovieFromWatchList({
+    @required String uid,
+    @required String imdbID,
+  }) async {
+    try {
+      final WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+
+      final CollectionReference watchListColRef =
+          userDocRef.collection('watchList');
+
+      final List<QueryDocumentSnapshot> watchListQuerySnap =
+          (await watchListColRef.where('imdbID', isEqualTo: imdbID).get()).docs;
+
+      if (watchListQuerySnap.isEmpty) {
+        return;
+      }
+
+      final DocumentReference watchListDocRef =
+          watchListQuerySnap.first.reference;
+
+      batch.delete(
+        watchListDocRef,
+      );
+
+      batch.update(userDocRef, {'watchListCount': FieldValue.increment(-1)});
+
+      await batch.commit();
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<bool> watchListHasMovie({
+    @required String uid,
+    @required String imdbID,
+  }) async {
+    try {
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+
+      final CollectionReference watchListColRef =
+          userDocRef.collection('watchList');
+
+      final List<QueryDocumentSnapshot> watchListQuerySnap =
+          (await watchListColRef.where('imdbID', isEqualTo: imdbID).get()).docs;
+
+      return watchListQuerySnap.isNotEmpty;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
+    @required String uid,
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+  }) async {
+    try {
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+
+      final CollectionReference watchListColRef =
+          userDocRef.collection('watchList');
+      Query query = watchListColRef.orderBy(
+        'addedToWatchList',
+        descending: true,
+      );
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
+
+      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+
+      return documentSnapshots;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist(
+      {@required String uid}) async {
+    try {
+      final DocumentReference userDocRef = _usersDB.doc(uid);
+
+      final CollectionReference watchListColRef =
+          userDocRef.collection('watchList');
+
+      return watchListColRef.snapshots();
     } catch (e) {
       throw Exception(
         e.toString(),

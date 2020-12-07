@@ -3,7 +3,7 @@ import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/MovieView.dart';
+import 'package:critic/services/MovieService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -13,6 +13,7 @@ import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
 import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
 import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
+import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 
 import 'package:timeago/timeago.dart' as timeago;
@@ -177,12 +178,94 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
               child: Column(
                 children: [
                   SizedBox(height: 10),
-                  MovieView(
-                    movieModel: movie,
+                  Container(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    height: 300,
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: InkWell(
+                          onTap: () async {},
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage('${movie.poster}'),
+                                  fit: BoxFit.cover),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(5.0, 5.0),
+                                    blurRadius: 10.0)
+                              ],
+                            ),
+                          ),
+                        )),
+                        Expanded(
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  '\"${critique.message}\"',
+                                  style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                                Spacer(),
+                                RaisedButton(
+                                    color: COLOR_NAVY,
+                                    textColor: Colors.white,
+                                    child: Text('View Details'),
+                                    onPressed: () async {
+                                      final MovieModel movieModel =
+                                          await locator<MovieService>()
+                                              .getMovieByID(id: movie.imdbID);
+
+                                      Route route = MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              CREATE_CRITIQUE_BP
+                                                  .CreateCritiqueBloc(
+                                                      movie: movieModel)
+                                                ..add(
+                                                  CREATE_CRITIQUE_BP
+                                                      .LoadPageEvent(),
+                                                ),
+                                          child: CREATE_CRITIQUE_BP
+                                              .CreateCritiquePage(),
+                                        ),
+                                      );
+
+                                      Navigator.push(context, route);
+                                    })
+                              ],
+                            ),
+                            margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(10.0),
+                                topRight: Radius.circular(10.0),
+                              ),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey,
+                                    offset: Offset(5.0, 5.0),
+                                    blurRadius: 10.0)
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   ListTile(
                     leading: InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (critiqueUser.uid == currentUser.uid) return;
 
                         Route route = MaterialPageRoute(
@@ -208,21 +291,6 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       '${timeago.format(critique.created, allowFromNow: true)}',
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Divider(),
-                  Padding(
-                    child: Text(
-                      '\"${critique.message}\"',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: COLOR_NAVY,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    padding: EdgeInsets.all(15),
-                  ),
-                  Divider(),
                   SizedBox(height: 10),
                   Spacer(),
                   Padding(

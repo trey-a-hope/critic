@@ -57,6 +57,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           username: username,
           critiqueCount: 0,
           fcmToken: null,
+          watchListCount: 0,
         );
 
         await locator<UserService>().createUser(user: newUser);

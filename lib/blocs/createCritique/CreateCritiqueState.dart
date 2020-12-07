@@ -11,12 +11,15 @@ class LoadingState extends CreateCritiqueState {}
 
 class CreateCritiqueStartState extends CreateCritiqueState {
   final MovieModel movie;
+  final bool watchListHasMovie;
   CreateCritiqueStartState({
     @required this.movie,
+    @required this.watchListHasMovie,
   });
 
   @override
   List<Object> get props => [
         movie,
+        watchListHasMovie,
       ];
 }

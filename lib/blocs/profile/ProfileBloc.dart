@@ -26,7 +26,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   UserModel currentUser;
 
-  int limit = 10;
+  int limit = 25;
 
   DocumentSnapshot startAfterDocument;
 

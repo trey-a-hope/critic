@@ -5,8 +5,6 @@ import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
-import 'package:critic/widgets/MovieView.dart';
-import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -123,62 +121,156 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      bottomSheet: InkWell(
-        onTap: () {
-          var bottomSheetController = showModalBottomSheet(
-            isDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return _buildBottomSheetForm();
-            },
-          );
-        },
-        child: Container(
-          color: Colors.red,
-          height: 60,
-          width: double.infinity,
-          child: Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Text(
-              'Write Critique About Movie',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+    return BlocBuilder<CreateCritiqueBloc, CreateCritiqueState>(
+      builder: (context, state) {
+        if (state is LoadingState) {
+          return Scaffold(
+            key: _scaffoldKey,
+            bottomSheet: InkWell(
+              onTap: () {
+                var bottomSheetController = showModalBottomSheet(
+                  isDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return _buildBottomSheetForm();
+                  },
+                );
+              },
+              child: Container(
+                color: Colors.red,
+                height: 60,
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Write Critique About Movie',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
-      appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
-        title: Text(
-          'Movie Details',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              icon: Icon(
-                Icons.bookmark,
-                color: Colors.white,
+            appBar: AppBar(
+              backgroundColor: COLOR_NAVY,
+              title: Text(
+                '',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onPressed: null)
-        ],
-      ),
-      body: BlocBuilder<CreateCritiqueBloc, CreateCritiqueState>(
-        builder: (context, state) {
-          if (state is LoadingState) {
-            return Spinner();
-          }
+              centerTitle: true,
+              actions: [
+                IconButton(
+                    icon: Icon(
+                      Icons.bookmark_outline,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _createCritiqueBloc.add(
+                        AddMovieToWatchlistEvent(),
+                      );
+                    })
+              ],
+            ),
+            body: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Container(
+                            height: 300,
+                            width: double.infinity,
+                            // color: Colors.black,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.3),
+                                    BlendMode.darken),
+                                image: AssetImage('assets/images/theater.jpeg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Container()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
 
-          if (state is CreateCritiqueStartState) {
-            final MovieModel movie = state.movie;
+        if (state is CreateCritiqueStartState) {
+          final MovieModel movie = state.movie;
+          final bool watchListHasMovie = state.watchListHasMovie;
 
-            return SafeArea(
+          return Scaffold(
+            key: _scaffoldKey,
+            bottomSheet: InkWell(
+              onTap: () {
+                var bottomSheetController = showModalBottomSheet(
+                  isDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return _buildBottomSheetForm();
+                  },
+                );
+              },
+              child: Container(
+                color: Colors.red,
+                height: 60,
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Write Critique About Movie',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            appBar: AppBar(
+              backgroundColor: COLOR_NAVY,
+              title: Text(
+                movie.title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              centerTitle: true,
+              actions: [
+                watchListHasMovie
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.bookmark,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          _createCritiqueBloc.add(
+                            RemoveMovieFromWatchlistEvent(),
+                          );
+                        },
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          Icons.bookmark_outline,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          _createCritiqueBloc.add(
+                            AddMovieToWatchlistEvent(),
+                          );
+                        })
+              ],
+            ),
+            body: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -223,9 +315,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             ),
                           ),
                         ),
-                        // MovieView(
-                        //   movieModel: movie,
-                        // ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 20, 20, 100),
                           child: Column(
@@ -345,15 +434,79 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   ),
                 ],
               ),
-            );
-          }
-
-          return Center(
-            child: Text('You should NEVER see this.'),
+            ),
           );
-        },
-      ),
+        }
+
+        return Center(
+          child: Text('You should NEVER see this.'),
+        );
+      },
     );
+    // return Scaffold(
+    //   key: _scaffoldKey,
+    //   bottomSheet: InkWell(
+    //     onTap: () {
+    //       var bottomSheetController = showModalBottomSheet(
+    //         isDismissible: false,
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           return _buildBottomSheetForm();
+    //         },
+    //       );
+    //     },
+    //     child: Container(
+    //       color: Colors.red,
+    //       height: 60,
+    //       width: double.infinity,
+    //       child: Padding(
+    //         padding: EdgeInsets.only(top: 10),
+    //         child: Text(
+    //           'Write Critique About Movie',
+    //           textAlign: TextAlign.center,
+    //           style: TextStyle(
+    //             color: Colors.white,
+    //             fontWeight: FontWeight.bold,
+    //             fontSize: 16,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    //   appBar: AppBar(
+    //     backgroundColor: COLOR_NAVY,
+    //     title: Text(
+    //       'Movie Details',
+    //       style: TextStyle(fontWeight: FontWeight.bold),
+    //     ),
+    //     centerTitle: true,
+    //     actions: [
+    //       _createCritiqueBloc.watchListHasMovie
+    //           ? IconButton(
+    //               icon: Icon(
+    //                 Icons.bookmark,
+    //                 color: Colors.white,
+    //               ),
+    //               onPressed: () {
+    //                 _createCritiqueBloc.add(
+    //                   RemoveMovieFromWatchlistEvent(),
+    //                 );
+    //               },
+    //             )
+    //           : IconButton(
+    //               icon: Icon(
+    //                 Icons.bookmark_outline,
+    //                 color: Colors.white,
+    //               ),
+    //               onPressed: () {
+    //                 _createCritiqueBloc.add(
+    //                   AddMovieToWatchlistEvent(),
+    //                 );
+    //               })
+    //     ],
+    //   ),
+    //   body:
+    // );
   }
 
   @override

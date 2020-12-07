@@ -11,6 +11,7 @@ class UserModel {
   String username;
   int critiqueCount;
   String fcmToken;
+  int watchListCount;
 
   UserModel({
     @required this.imgUrl,
@@ -21,6 +22,7 @@ class UserModel {
     @required this.username,
     @required this.critiqueCount,
     @required this.fcmToken,
+    @required this.watchListCount,
   });
 
   factory UserModel.fromDoc({@required DocumentSnapshot ds}) {
@@ -34,6 +36,7 @@ class UserModel {
       username: data['username'],
       critiqueCount: data['critiqueCount'],
       fcmToken: data['fcmToken'],
+      watchListCount: data['watchListCount'],
     );
   }
 
@@ -50,6 +53,7 @@ class UserModel {
       username: data['username'],
       critiqueCount: data['critiqueCount'],
       fcmToken: data['fcmToken'],
+      watchListCount: data['watchListCount'],
     );
   }
 
@@ -63,6 +67,7 @@ class UserModel {
       'username': username,
       'critiqueCount': critiqueCount,
       'fcmToken': fcmToken,
+      'watchListCount': watchListCount,
     };
   }
 }
