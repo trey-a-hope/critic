@@ -62,7 +62,7 @@ class CreateCritiqueBloc
           moviePlot: movie.plot,
           moviePoster: movie.poster,
           movieTitle: movie.title,
-          movieYear: movie.year,
+          movieYear: movie.released,
           movieDirector: movie.director,
           likeCount: 0,
         );

@@ -186,7 +186,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "This is where you can view your timeline. Your feed consists of you and people you follow.",
+                          "View the most recent critiques from everyone or people you follow.",
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -336,10 +336,10 @@ class EntryPageState extends State<EntryPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final bool seenTutorial = prefs.getBool('seenTutorial') ?? false;
 
-    // if (!seenTutorial) {
-    tutorial.show();
-    prefs.setBool('seenTutorial', true);
-    // }
+    if (!seenTutorial) {
+      tutorial.show();
+      prefs.setBool('seenTutorial', true);
+    }
   }
 
   @override

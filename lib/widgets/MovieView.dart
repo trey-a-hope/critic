@@ -75,7 +75,7 @@ class MovieViewState extends State<MovieView> {
                     height: 10.0,
                   ),
                   Text(
-                    "Released: ${movieModel.year}",
+                    "Released: ${movieModel.released}",
                     style:
                         TextStyle(color: Colors.grey.shade900, fontSize: 12.0),
                   ),

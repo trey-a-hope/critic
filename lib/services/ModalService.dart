@@ -357,19 +357,19 @@ class ModalService extends IModalService {
             content: Text(message),
             actions: [
               CupertinoDialogAction(
+                isDefaultAction: false,
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              CupertinoDialogAction(
                 isDefaultAction: true,
                 child: Text('Yes'),
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
               ),
-              CupertinoDialogAction(
-                isDefaultAction: false,
-                child: Text('No'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              )
             ],
           );
         } else {
@@ -378,15 +378,15 @@ class ModalService extends IModalService {
             content: Text(message),
             actions: <Widget>[
               FlatButton(
-                child: const Text('YES', style: TextStyle(color: Colors.black)),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-              FlatButton(
                 child: const Text('NO', style: TextStyle(color: Colors.black)),
                 onPressed: () {
                   Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: const Text('YES', style: TextStyle(color: Colors.black)),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
                 },
               ),
             ],
