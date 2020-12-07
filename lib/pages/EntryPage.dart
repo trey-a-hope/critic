@@ -368,6 +368,25 @@ class EntryPageState extends State<EntryPage> {
       case 3:
         return AppBar(
           title: Text('Profile'),
+          centerTitle: true,
+          // leading: IconButton(
+          //   icon: Icon(Icons.search),
+          //   onPressed: () {
+          //     Route route = MaterialPageRoute(
+          //       builder: (context) => BlocProvider(
+          //         create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
+          //           searchUsersRepository:
+          //               SEARCH_USERS_BP.SearchUsersRepository(
+          //             cache: SEARCH_USERS_BP.SearchUsersCache(),
+          //           ),
+          //         )..add(SEARCH_USERS_BP.LoadPageEvent()),
+          //         child: SEARCH_USERS_BP.SearchUsersPage(),
+          //       ),
+          //     );
+
+          //     Navigator.push(context, route);
+          //   },
+          // ),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.edit),
@@ -384,7 +403,7 @@ class EntryPageState extends State<EntryPage> {
 
                 Navigator.push(context, route);
               },
-            )
+            ),
           ],
         );
       case 4:

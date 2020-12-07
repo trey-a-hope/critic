@@ -13,8 +13,10 @@ import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 class SearchMoviesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[_SearchBar(), _SearchBody()],
+    return Scaffold(
+      body: Column(
+        children: [_SearchBar(), _SearchBody()],
+      ),
     );
   }
 }
