@@ -9,8 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SearchUsersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[_SearchBar(), _SearchBody()],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Search Users'),
+      ),
+      body: Column(
+        children: <Widget>[_SearchBar(), _SearchBody()],
+      ),
     );
   }
 }
