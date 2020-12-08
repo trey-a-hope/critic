@@ -65,27 +65,27 @@ class SettingsPage extends StatelessWidget {
             ),
           ],
         ),
-        SettingsSection(
-          title: 'DEMO',
-          tiles: [
-            SettingsTile(
-              title: 'All Users',
-              onTap: () {
-                Route route = MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => ALL_USERS_BP.AllUsersBloc()
-                      ..add(
-                        ALL_USERS_BP.LoadPageEvent(),
-                      ),
-                    child: ALL_USERS_BP.AllUsersPage(),
-                  ),
-                );
+        // SettingsSection(
+        //   title: 'DEMO',
+        //   tiles: [
+        //     SettingsTile(
+        //       title: 'All Users',
+        //       onTap: () {
+        //         Route route = MaterialPageRoute(
+        //           builder: (context) => BlocProvider(
+        //             create: (context) => ALL_USERS_BP.AllUsersBloc()
+        //               ..add(
+        //                 ALL_USERS_BP.LoadPageEvent(),
+        //               ),
+        //             child: ALL_USERS_BP.AllUsersPage(),
+        //           ),
+        //         );
 
-                Navigator.push(context, route);
-              },
-            ),
-          ],
-        ),
+        //         Navigator.push(context, route);
+        //       },
+        //     ),
+        //   ],
+        // ),
         SettingsSection(
           tiles: [
             SettingsTile(
