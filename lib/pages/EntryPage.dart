@@ -4,6 +4,8 @@ import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
+import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -24,7 +26,6 @@ class EntryPage extends StatefulWidget {
 
 class EntryPageState extends State<EntryPage> {
   static GlobalKey exploreGlobalKey = GlobalKey();
-  static GlobalKey critiqueGlobalKey = GlobalKey();
   static GlobalKey watchlistGlobalKey = GlobalKey();
   static GlobalKey profileGlobalKey = GlobalKey();
   static GlobalKey settingsGlobalKey = GlobalKey();
@@ -33,29 +34,19 @@ class EntryPageState extends State<EntryPage> {
 
   final List<String> childrenTitle = [
     'Explore',
-    'Critique',
     'Watchlist',
     'Profile',
     'Settings',
   ];
 
   final List<Widget> children = [
-    //Home Page
+    //Explore Page
     BlocProvider(
       create: (BuildContext context) => EXPLORE_BP.ExploreBloc()
         ..add(
           EXPLORE_BP.LoadPageEvent(),
         ),
       child: EXPLORE_BP.ExplorePage(),
-    ),
-    //Critique Page
-    BlocProvider(
-      create: (context) => SearchMoviesBloc(
-        searchMoviesRepository: SearchMoviesRepository(
-          cache: SearchMoviesCache(),
-        ),
-      ),
-      child: SearchMoviesPage(),
     ),
     //Watchlist Page
     BlocProvider(
@@ -83,18 +74,6 @@ class EntryPageState extends State<EntryPage> {
       ),
       title: Text(
         'Explore',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      activeColor: COLOR_NAVY,
-      textAlign: TextAlign.center,
-    ),
-    BottomNavyBarItem(
-      icon: Icon(
-        MdiIcons.movieEdit,
-        key: critiqueGlobalKey,
-      ),
-      title: Text(
-        'Critique',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       activeColor: COLOR_NAVY,
@@ -165,39 +144,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "View the most recent critiques from everyone or people you follow.",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-          TargetFocus(
-            enableOverlayTab: true,
-            identify: "Target 2",
-            keyTarget: critiqueGlobalKey,
-            contents: [
-              ContentTarget(
-                align: AlignContent.top,
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Search",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20.0),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          "Find a movie/tv show that you want to critique.",
+                          "View the most recent critiques and create your own.",
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -352,20 +299,34 @@ class EntryPageState extends State<EntryPage> {
           title: Text(
             'Explore',
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Route route = MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => SEARCH_MOVIES_BP.SearchMoviesBloc(
+                      searchMoviesRepository:
+                          SEARCH_MOVIES_BP.SearchMoviesRepository(
+                        cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
+                      ),
+                    ),
+                    child: SEARCH_MOVIES_BP.SearchMoviesPage(),
+                  ),
+                );
+
+                Navigator.push(context, route);
+              },
+            )
+          ],
         );
       case 1:
-        return AppBar(
-          title: Text(
-            'Search',
-          ),
-        );
-      case 2:
         return AppBar(
           title: Text(
             'Watchlist',
           ),
         );
-      case 3:
+      case 2:
         return AppBar(
           title: Text('Profile'),
           centerTitle: true,
@@ -406,7 +367,7 @@ class EntryPageState extends State<EntryPage> {
             ),
           ],
         );
-      case 4:
+      case 3:
         return AppBar(
           title: Text(
             'Settings',
