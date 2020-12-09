@@ -287,7 +287,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       ),
                     ),
                     title: Text('${critiqueUser.username}'),
-                    trailing: Text(
+                    subtitle: Text(
                       '${timeago.format(critique.created, allowFromNow: true)}',
                     ),
                   ),

@@ -113,8 +113,9 @@ class _SearchBody extends StatelessWidget {
                 final SearchMoviesResultItemModel movie = movies[index];
 
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(movie.poster),
+                  leading: Image.network(
+                    movie.poster,
+                    height: 100,
                   ),
                   title: Text('${movie.title}'),
                   subtitle: Text('Year: ${movie.year}'),
