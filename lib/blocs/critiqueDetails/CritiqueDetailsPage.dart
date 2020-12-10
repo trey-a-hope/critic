@@ -15,8 +15,9 @@ import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
 import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
-
+import 'package:share/share.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
 
 class CritiqueDetailsPage extends StatefulWidget {
   @override
@@ -63,7 +64,8 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('${critique.movieTitle}'),
+              centerTitle: true,
+              title: Text('${critiqueUser.username} says...'),
             ),
             floatingActionButton: SpeedDial(
               animatedIcon: AnimatedIcons.menu_close,
@@ -124,6 +126,31 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       fontWeight: FontWeight.bold, color: Colors.white),
                   labelBackgroundColor: Colors.blue,
                 ),
+                // SpeedDialChild(
+                //   child: Icon(Icons.share, color: Colors.white),
+                //   backgroundColor: Colors.green,
+                //   onTap: () async {
+                //     try {
+                //       await Share.share(
+                //         // [critique.moviePoster],
+                //         'I just saw the movie ${critique.moviePoster}',
+                //         // '${critiqueUser.username} saw ${movie.title}',
+                //       );
+                //     } catch (error) {
+                //       locator<ModalService>().showAlert(
+                //         context: context,
+                //         title: 'Error',
+                //         message: error.toString(),
+                //       );
+                //     }
+                //   },
+                //   label: 'Share',
+                //   labelStyle: TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.white,
+                //   ),
+                //   labelBackgroundColor: Colors.green,
+                // ),
                 currentUser.uid == critique.uid
                     ? SpeedDialChild(
                         child: Icon(Icons.delete, color: Colors.white),
@@ -212,7 +239,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 SelectableText(
                                   '\"${critique.message}\"',
                                   style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 14.0,
                                       fontWeight: FontWeight.w700),
                                 ),
                                 Spacer(),
@@ -288,8 +315,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     ),
                     title: Text('${critiqueUser.username}'),
                     subtitle: Text(
-                      '${timeago.format(critique.created, allowFromNow: true)}',
-                    ),
+                        '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}'),
                   ),
                   SizedBox(height: 10),
                   Spacer(),
