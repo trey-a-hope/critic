@@ -209,7 +209,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(
+                                SelectableText(
                                   '\"${critique.message}\"',
                                   style: TextStyle(
                                       fontSize: 16.0,
