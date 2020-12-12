@@ -9,10 +9,11 @@ class CreateCritiqueState extends Equatable {
 
 class LoadingState extends CreateCritiqueState {}
 
-class CreateCritiqueStartState extends CreateCritiqueState {
+class LoadedState extends CreateCritiqueState {
   final MovieModel movie;
   final bool watchListHasMovie;
-  CreateCritiqueStartState({
+
+  LoadedState({
     @required this.movie,
     @required this.watchListHasMovie,
   });

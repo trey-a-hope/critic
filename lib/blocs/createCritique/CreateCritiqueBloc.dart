@@ -43,7 +43,7 @@ class CreateCritiqueBloc
           imdbID: movie.imdbID,
         );
 
-        yield CreateCritiqueStartState(
+        yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
         );
@@ -60,7 +60,7 @@ class CreateCritiqueBloc
 
         watchListHasMovie = true;
 
-        yield CreateCritiqueStartState(
+        yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
         );
@@ -80,7 +80,7 @@ class CreateCritiqueBloc
 
         watchListHasMovie = false;
 
-        yield CreateCritiqueStartState(
+        yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
         );
@@ -123,7 +123,7 @@ class CreateCritiqueBloc
         _createCritiqueBlocDelegate.showMessage(
             message: 'Critique added, check it out on the home page.');
 
-        yield CreateCritiqueStartState(
+        yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
         );
@@ -131,7 +131,7 @@ class CreateCritiqueBloc
         _createCritiqueBlocDelegate.showMessage(
             message: 'Error ${error.toString()}!');
 
-        yield CreateCritiqueStartState(
+        yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
         );
