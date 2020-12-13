@@ -261,7 +261,6 @@ class LoginPageState extends State<LoginPage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

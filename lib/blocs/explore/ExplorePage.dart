@@ -41,13 +41,13 @@ class ExplorePageState extends State<ExplorePage>
 
     //Return an empty list if there are no new documents.
     if (documentSnapshots.isEmpty) {
-      return List<CritiqueModel>();
+      return [];
     }
 
     _exploreBloc.startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
-    List<CritiqueModel> critiques = List<CritiqueModel>();
+    List<CritiqueModel> critiques = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
@@ -87,14 +87,14 @@ class ExplorePageState extends State<ExplorePage>
                       children: [
                         Icon(
                           Icons.people,
-                          color: COLOR_NAVY,
+                          color: colorNavy,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
                           'Everyone',
-                          style: TextStyle(color: COLOR_NAVY),
+                          style: TextStyle(color: colorNavy),
                         )
                       ],
                     ),
@@ -105,14 +105,14 @@ class ExplorePageState extends State<ExplorePage>
                       children: [
                         Icon(
                           Icons.emoji_people,
-                          color: COLOR_NAVY,
+                          color: colorNavy,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         Text(
                           'Following',
-                          style: TextStyle(color: COLOR_NAVY),
+                          style: TextStyle(color: colorNavy),
                         )
                       ],
                     ),

@@ -1,10 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:critic/blocs/followings/Bloc.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
-import '../../ServiceLocator.dart';
 
 abstract class FollowingsBlocDelegate {
   void showMessage({@required String message});

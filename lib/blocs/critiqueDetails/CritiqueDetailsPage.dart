@@ -15,7 +15,6 @@ import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
 import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
-import 'package:share/share.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
@@ -244,7 +243,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 ),
                                 Spacer(),
                                 RaisedButton(
-                                    color: COLOR_NAVY,
+                                    color: colorNavy,
                                     textColor: Colors.white,
                                     child: Text('View Details'),
                                     onPressed: () async {
@@ -325,7 +324,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         FloatingActionButton.extended(
-                          backgroundColor: COLOR_NAVY,
+                          backgroundColor: colorNavy,
                           onPressed: () {
                             Route route = MaterialPageRoute(
                               builder: (context) => BlocProvider(

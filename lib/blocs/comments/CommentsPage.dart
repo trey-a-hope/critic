@@ -42,13 +42,13 @@ class CommentsPageState extends State<CommentsPage>
 
     //Return an empty list if there are no new documents.
     if (documentSnapshots.isEmpty) {
-      return List<CommentModel>();
+      return [];
     }
 
     _commentsBloc.startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
-    List<CommentModel> comments = List<CommentModel>();
+    List<CommentModel> comments = [];
 
     //Convert documents to template models.
 
@@ -72,7 +72,7 @@ class CommentsPageState extends State<CommentsPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Comments',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -143,7 +143,8 @@ class CommentsPageState extends State<CommentsPage>
                                 .showConfirmation(
                                     context: context,
                                     title: 'Report Comment',
-                                    message: 'If this material was abusive, disrespectful, or uncomfortable, let us know please. This comment will become flagged and removed from your timeline.');
+                                    message:
+                                        'If this material was abusive, disrespectful, or uncomfortable, let us know please. This comment will become flagged and removed from your timeline.');
 
                             if (!confirm) return;
 
@@ -211,9 +212,6 @@ class CommentsPageState extends State<CommentsPage>
 
   @override
   void showMessage({@required String message}) {
-    locator<ModalService>().showInSnackBar(
-      scaffoldKey: _scaffoldKey,
-      message: message,
-    );
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

@@ -34,7 +34,7 @@ class PostCommentPageState extends State<PostCommentPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Post Comment',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -63,8 +63,8 @@ class PostCommentPageState extends State<PostCommentPage>
                         textInputAction: TextInputAction.done,
                         maxLines: 5,
                         maxLength: 150,
-                        maxLengthEnforced: true,
-                        decoration: InputDecoration(hintText: 'What do you think about this critique?'),
+                        decoration: InputDecoration(
+                            hintText: 'What do you think about this critique?'),
                       ),
                     ),
                     Spacer(),
@@ -108,8 +108,7 @@ class PostCommentPageState extends State<PostCommentPage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 
   @override

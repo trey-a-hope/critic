@@ -51,7 +51,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                       validator: locator<ValidationService>().isEmpty,
                       maxLines: 5,
                       maxLength: 150,
-                      maxLengthEnforced: true,
                       decoration: InputDecoration(
                           hintText: 'What do you think about this movie/show?'),
                     ),
@@ -139,7 +138,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
             key: _scaffoldKey,
             bottomSheet: InkWell(
               onTap: () {
-                var bottomSheetController = showModalBottomSheet(
+                showModalBottomSheet(
                   isDismissible: false,
                   context: context,
                   builder: (BuildContext context) {
@@ -166,7 +165,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
               ),
             ),
             appBar: AppBar(
-              backgroundColor: COLOR_NAVY,
+              backgroundColor: colorNavy,
               title: Text(
                 movie.title,
                 style: TextStyle(fontWeight: FontWeight.bold),

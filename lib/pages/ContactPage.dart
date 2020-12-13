@@ -32,7 +32,7 @@ class ContactPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
       ),
       body: SafeArea(
         child: Padding(

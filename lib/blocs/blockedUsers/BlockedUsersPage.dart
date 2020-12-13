@@ -29,7 +29,7 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Blocked Users',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -104,7 +104,6 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
   void showMessage({
     @required String message,
   }) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

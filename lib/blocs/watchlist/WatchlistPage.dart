@@ -19,7 +19,6 @@ class WatchlistPage extends StatefulWidget {
 
 class WatchlistPageState extends State<WatchlistPage>
     implements WatchlistBlocDelegate {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   WatchlistBloc _watchlistBloc;
 
   @override
@@ -40,13 +39,13 @@ class WatchlistPageState extends State<WatchlistPage>
 
     //Return an empty list if there are no new documents.
     if (documentSnapshots.isEmpty) {
-      return List<MovieModel>();
+      return [];
     }
 
     _watchlistBloc.startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
-    List<MovieModel> movies = List<MovieModel>();
+    List<MovieModel> movies = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
@@ -146,7 +145,6 @@ class WatchlistPageState extends State<WatchlistPage>
   void showMessage({
     @required String message,
   }) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

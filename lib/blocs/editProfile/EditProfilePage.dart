@@ -39,7 +39,7 @@ class EditProfilePageState extends State<EditProfilePage>
           'Edit Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
       ),
       body: BlocBuilder<EditProfileBloc, EditProfileState>(
         builder: (BuildContext context, EditProfileState state) {
@@ -62,7 +62,6 @@ class EditProfilePageState extends State<EditProfilePage>
                         validator: locator<ValidationService>().isEmpty,
                         textInputAction: TextInputAction.done,
                         maxLines: 1,
-                        maxLengthEnforced: true,
                         decoration: InputDecoration(hintText: 'Username'),
                       ),
                     ),
@@ -105,8 +104,7 @@ class EditProfilePageState extends State<EditProfilePage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 
   @override

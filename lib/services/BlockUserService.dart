@@ -67,7 +67,7 @@ class BlockUserService extends IBlockUserService {
 
     dynamic blockedUsers = followerDocSnapshot.data()['blockedUsers'];
 
-    List<String> blockedUsersIDS = List<String>();
+    List<String> blockedUsersIDS = [];
 
     for (dynamic blockedUserID in blockedUsers) {
       blockedUsersIDS.add(blockedUserID);

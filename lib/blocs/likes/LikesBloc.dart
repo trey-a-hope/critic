@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +20,7 @@ class LikesBloc extends Bloc<LikesEvent, LikesState> {
 
   LikesBlocDelegate _likesBlocDelegate;
 
-  UserModel _currentUser;
-
-  List<UserModel> _likeUsers = List<UserModel>();
+  List<UserModel> _likeUsers = [];
 
   void setDelegate({@required LikesBlocDelegate delegate}) {
     this._likesBlocDelegate = delegate;
@@ -35,8 +32,6 @@ class LikesBloc extends Bloc<LikesEvent, LikesState> {
       yield LoadingState();
 
       try {
-        _currentUser = await locator<AuthService>().getCurrentUser();
-
         _likeUsers = await locator<CritiqueService>()
             .retrieveLikeUsers(critiqueID: critique.id);
 

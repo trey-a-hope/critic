@@ -14,10 +14,10 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:pagination/pagination.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -27,7 +27,6 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage>
     implements PROFILE_BP.ProfileBlocDelegate {
-  final String _timeFormat = 'MMM d, yyyy @ h:mm a';
   PROFILE_BP.ProfileBloc _profileBloc;
 
   @override
@@ -49,13 +48,13 @@ class ProfilePageState extends State<ProfilePage>
 
     //Return an empty list if there are no new documents.
     if (documentSnapshots.isEmpty) {
-      return List<CritiqueModel>();
+      return [];
     }
 
     _profileBloc.startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
-    List<CritiqueModel> critiques = List<CritiqueModel>();
+    List<CritiqueModel> critiques = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
@@ -86,7 +85,7 @@ class ProfilePageState extends State<ProfilePage>
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
-                    backgroundColor: COLOR_NAVY,
+                    backgroundColor: colorNavy,
                     expandedHeight: 200.0,
                     floating: false,
                     pinned: true,

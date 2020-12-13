@@ -23,7 +23,6 @@ class OtherProfilePage extends StatefulWidget {
 
 class OtherProfilePageState extends State<OtherProfilePage>
     implements OTHER_PROFILE_BP.OtherProfileBlocDelegate {
-  final String _timeFormat = 'MMM d, yyyy @ h:mm a';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   OTHER_PROFILE_BP.OtherProfileBloc _otherProfileBloc;
 
@@ -46,13 +45,13 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
     //Return an empty list if there are no new documents.
     if (documentSnapshots.isEmpty) {
-      return List<CritiqueModel>();
+      return [];
     }
 
     _otherProfileBloc.startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
-    List<CritiqueModel> critiques = List<CritiqueModel>();
+    List<CritiqueModel> critiques = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
@@ -88,7 +87,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
-                    backgroundColor: COLOR_NAVY,
+                    backgroundColor: colorNavy,
                     expandedHeight: 300.0,
                     floating: false,
                     pinned: true,
@@ -341,10 +340,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>().showInSnackBar(
-      scaffoldKey: _scaffoldKey,
-      message: message,
-    );
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 
   @override

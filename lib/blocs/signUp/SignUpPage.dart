@@ -9,7 +9,6 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Bloc.dart';
-import 'package:critic/blocs/login/Bloc.dart' as LOGIN_BP;
 import 'package:critic/blocs/signUp/Bloc.dart' as SIGN_UP_BP;
 
 class SignUpPage extends StatefulWidget {
@@ -436,8 +435,7 @@ class SignUpPageState extends State<SignUpPage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 
   @override

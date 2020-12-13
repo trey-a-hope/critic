@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
-
 import 'package:pagination/pagination.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class FollowersPage extends StatefulWidget {
   @override
@@ -46,7 +44,7 @@ class FollowersPageState extends State<FollowersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Followers',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -146,7 +144,6 @@ class FollowersPageState extends State<FollowersPage>
   void showMessage({
     @required String message,
   }) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

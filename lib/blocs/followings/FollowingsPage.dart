@@ -44,15 +44,15 @@ class FollowingsPageState extends State<FollowingsPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Following',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body:
-          BlocBuilder<FOLLOWINGS_BP.FollowingsBloc, FOLLOWINGS_BP.FollowingsState>(
+      body: BlocBuilder<FOLLOWINGS_BP.FollowingsBloc,
+          FOLLOWINGS_BP.FollowingsState>(
         builder: (context, state) {
           if (state is FOLLOWINGS_BP.LoadingState) {
             return Spinner();
@@ -142,9 +142,6 @@ class FollowingsPageState extends State<FollowingsPage>
 
   @override
   void showMessage({@required String message}) {
-    locator<ModalService>().showInSnackBar(
-      scaffoldKey: _scaffoldKey,
-      message: message,
-    );
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

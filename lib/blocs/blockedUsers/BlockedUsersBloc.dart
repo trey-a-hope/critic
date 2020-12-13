@@ -30,7 +30,7 @@ class BlockedUsersBloc extends Bloc<BlockedUsersEvent, BlockedUsersState> {
 
         final List<String> blockedUsersIDs = await locator<BlockUserService>()
             .getUsersIBlockedIDs(userID: _currentUser.uid);
-        List<UserModel> users = List<UserModel>();
+        List<UserModel> users = [];
 
         for (var i = 0; i < blockedUsersIDs.length; i++) {
           UserModel user = await locator<UserService>()

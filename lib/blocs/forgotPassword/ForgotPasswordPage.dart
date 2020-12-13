@@ -139,7 +139,6 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage>
 
   @override
   void showMessage({String message}) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

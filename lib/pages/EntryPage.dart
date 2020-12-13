@@ -1,11 +1,6 @@
 import 'package:critic/Constants.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesCache.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesPage.dart';
-import 'package:critic/blocs/searchMovies/SearchMoviesRepository.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -14,7 +9,6 @@ import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -76,7 +70,7 @@ class EntryPageState extends State<EntryPage> {
         'Explore',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: COLOR_NAVY,
+      activeColor: colorNavy,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -88,7 +82,7 @@ class EntryPageState extends State<EntryPage> {
         'Watchlist',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: COLOR_NAVY,
+      activeColor: colorNavy,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -100,7 +94,7 @@ class EntryPageState extends State<EntryPage> {
         'Profile',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: COLOR_NAVY,
+      activeColor: colorNavy,
       textAlign: TextAlign.center,
     ),
     BottomNavyBarItem(
@@ -112,7 +106,7 @@ class EntryPageState extends State<EntryPage> {
         'Settings',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      activeColor: COLOR_NAVY,
+      activeColor: colorNavy,
       textAlign: TextAlign.center,
     ),
   ];

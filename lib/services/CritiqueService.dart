@@ -10,7 +10,7 @@ import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show Encoding, json;
+import 'dart:convert' show json;
 
 abstract class ICritiqueService {
   Future<void> createCritique({@required CritiqueModel critique});
@@ -631,7 +631,7 @@ class CritiqueService extends ICritiqueService {
 
       final int likeCount = likeUIDs.length;
 
-      List<UserModel> likeUsers = List<UserModel>();
+      List<UserModel> likeUsers = [];
 
       for (int i = 0; i < likeCount; i++) {
         final String likeUID = likeUIDs[i];
@@ -668,7 +668,7 @@ class CritiqueService extends ICritiqueService {
           .map((docSnapshot) => CommentModel.fromDoc(ds: docSnapshot))
           .toList();
 
-      List<UserModel> users = List<UserModel>();
+      List<UserModel> users = [];
 
       for (int i = 0; i < comments.length; i++) {
         final CommentModel comment = comments[i];

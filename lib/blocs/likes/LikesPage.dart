@@ -30,7 +30,7 @@ class LikesPageState extends State<LikesPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'Likes',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -111,7 +111,6 @@ class LikesPageState extends State<LikesPage>
   void showMessage({
     @required String message,
   }) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

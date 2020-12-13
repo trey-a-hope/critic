@@ -5,10 +5,9 @@ import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' show Encoding, json;
+import 'dart:convert' show json;
 
 abstract class IUserService {
-  //Users
   Future<void> createUser({@required UserModel user});
   Future<UserModel> retrieveUser({@required String uid});
   Future<List<UserModel>> retrieveAllUsers();
@@ -157,7 +156,7 @@ class UserService extends IUserService {
 
       final List<dynamic> results = map['results'];
 
-      List<UserModel> users = List<UserModel>();
+      List<UserModel> users = [];
 
       for (int i = 0; i < results.length; i++) {
         dynamic result = results[i];
@@ -207,7 +206,7 @@ class UserService extends IUserService {
 
       final List<dynamic> results = map['results'];
 
-      List<UserModel> users = List<UserModel>();
+      List<UserModel> users = [];
 
       for (int i = 0; i < results.length; i++) {
         dynamic result = results[i];

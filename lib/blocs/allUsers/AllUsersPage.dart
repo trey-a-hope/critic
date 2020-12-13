@@ -30,7 +30,7 @@ class AllUsersPageState extends State<AllUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: COLOR_NAVY,
+        backgroundColor: colorNavy,
         title: Text(
           'All Users',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -91,7 +91,6 @@ class AllUsersPageState extends State<AllUsersPage>
   void showMessage({
     @required String message,
   }) {
-    locator<ModalService>()
-        .showInSnackBar(scaffoldKey: _scaffoldKey, message: message);
+    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

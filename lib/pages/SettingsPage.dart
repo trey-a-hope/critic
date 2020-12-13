@@ -6,12 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
-import 'package:critic/blocs/allUsers/Bloc.dart' as ALL_USERS_BP;
 import '../ServiceLocator.dart';
 
 class SettingsPage extends StatelessWidget {
-  final Color _iconColor = Colors.green;
-
   @override
   Widget build(BuildContext context) {
     return SettingsList(
@@ -21,7 +18,7 @@ class SettingsPage extends StatelessWidget {
           tiles: [
             SettingsTile(
               title: 'Blocked Users',
-              onTap: () {
+              onPressed: (BuildContext context) {
                 Route route = MaterialPageRoute(
                   builder: (context) => BlocProvider(
                     create: (context) => BLOCKED_USERS_BP.BlockedUsersBloc()
@@ -42,7 +39,7 @@ class SettingsPage extends StatelessWidget {
           tiles: [
             SettingsTile(
               title: 'Email',
-              onTap: () {
+              onPressed: (BuildContext context) {
                 Route route = MaterialPageRoute(
                   builder: (BuildContext context) => ContactPage(),
                 );
@@ -56,7 +53,7 @@ class SettingsPage extends StatelessWidget {
           tiles: [
             SettingsTile(
               title: 'Terms of Service',
-              onTap: () {
+              onPressed: (BuildContext context) {
                 Route route = MaterialPageRoute(
                   builder: (BuildContext context) => TermsServicePage(),
                 );
@@ -65,32 +62,11 @@ class SettingsPage extends StatelessWidget {
             ),
           ],
         ),
-        // SettingsSection(
-        //   title: 'DEMO',
-        //   tiles: [
-        //     SettingsTile(
-        //       title: 'All Users',
-        //       onTap: () {
-        //         Route route = MaterialPageRoute(
-        //           builder: (context) => BlocProvider(
-        //             create: (context) => ALL_USERS_BP.AllUsersBloc()
-        //               ..add(
-        //                 ALL_USERS_BP.LoadPageEvent(),
-        //               ),
-        //             child: ALL_USERS_BP.AllUsersPage(),
-        //           ),
-        //         );
-
-        //         Navigator.push(context, route);
-        //       },
-        //     ),
-        //   ],
-        // ),
         SettingsSection(
           tiles: [
             SettingsTile(
               title: 'Log Out',
-              onTap: () async {
+              onPressed: (BuildContext context) async {
                 bool confirm = await locator<ModalService>().showConfirmation(
                     context: context,
                     title: 'Logout',
