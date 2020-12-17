@@ -62,7 +62,7 @@ class PostCommentPageState extends State<PostCommentPage>
                         validator: locator<ValidationService>().isEmpty,
                         textInputAction: TextInputAction.done,
                         maxLines: 5,
-                        maxLength: 150,
+                        maxLength: CRITIQUE_CHAR_LIMIT,
                         decoration: InputDecoration(
                             hintText: 'What do you think about this critique?'),
                       ),

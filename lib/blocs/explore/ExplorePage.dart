@@ -79,7 +79,7 @@ class ExplorePageState extends State<ExplorePage>
             length: 2,
             child: Scaffold(
               appBar: TabBar(
-                indicatorColor: Colors.red,
+                indicatorColor: Theme.of(context).indicatorColor,
                 tabs: [
                   Tab(
                     child: Row(
@@ -87,15 +87,13 @@ class ExplorePageState extends State<ExplorePage>
                       children: [
                         Icon(
                           Icons.people,
-                          color: colorNavy,
+                          color: Theme.of(context).iconTheme.color,
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          'Everyone',
-                          style: TextStyle(color: colorNavy),
-                        )
+                        Text('Everyone',
+                            style: Theme.of(context).textTheme.headline6),
                       ],
                     ),
                   ),
@@ -105,15 +103,13 @@ class ExplorePageState extends State<ExplorePage>
                       children: [
                         Icon(
                           Icons.emoji_people,
-                          color: colorNavy,
+                          color: Theme.of(context).iconTheme.color,
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          'Following',
-                          style: TextStyle(color: colorNavy),
-                        )
+                        Text('Following',
+                            style: Theme.of(context).textTheme.headline6),
                       ],
                     ),
                   ),
@@ -121,145 +117,146 @@ class ExplorePageState extends State<ExplorePage>
               ),
               body: TabBarView(
                 children: [
+                  Center(),Center()//TODO: Uncomment when done testing.
                   //Everyone
-                  RefreshIndicator(
-                    child: PaginationList<CritiqueModel>(
-                      onLoading: Spinner(),
-                      onPageLoading: Spinner(),
-                      separatorWidget: Divider(),
-                      itemBuilder:
-                          (BuildContext context, CritiqueModel critique) {
-                        return SmallCritiqueView(
-                          critique: critique,
-                          currentUser: currentUser,
-                        );
-                      },
-                      pageFetch: pageFetch,
-                      onError: (dynamic error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'Error',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      onEmpty: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MdiIcons.movieEdit,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'No critiques at this moment.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text('Create your own or follow someone.')
-                          ],
-                        ),
-                      ),
-                    ),
-                    onRefresh: () {
-                      _exploreBloc.add(
-                        LoadPageEvent(),
-                      );
+                  // RefreshIndicator(
+                  //   child: PaginationList<CritiqueModel>(
+                  //     onLoading: Spinner(),
+                  //     onPageLoading: Spinner(),
+                  //     separatorWidget: Divider(),
+                  //     itemBuilder:
+                  //         (BuildContext context, CritiqueModel critique) {
+                  //       return SmallCritiqueView(
+                  //         critique: critique,
+                  //         currentUser: currentUser,
+                  //       );
+                  //     },
+                  //     pageFetch: pageFetch,
+                  //     onError: (dynamic error) => Center(
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Icon(
+                  //             Icons.error,
+                  //             size: 100,
+                  //             color: Colors.grey,
+                  //           ),
+                  //           Text(
+                  //             'Error',
+                  //             style: TextStyle(
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //           Text(
+                  //             error.toString(),
+                  //             textAlign: TextAlign.center,
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     onEmpty: Center(
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Icon(
+                  //             MdiIcons.movieEdit,
+                  //             size: 100,
+                  //             color: Colors.grey,
+                  //           ),
+                  //           Text(
+                  //             'No critiques at this moment.',
+                  //             style: TextStyle(
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //           Text('Create your own or follow someone.')
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   onRefresh: () {
+                  //     _exploreBloc.add(
+                  //       LoadPageEvent(),
+                  //     );
 
-                      return;
-                    },
-                  ),
+                  //     return;
+                  //   },
+                  // ),
                   //Following
-                  RefreshIndicator(
-                    child: PaginationList<CritiqueModel>(
-                      onLoading: Spinner(),
-                      onPageLoading: Spinner(),
-                      separatorWidget: Divider(),
-                      itemBuilder:
-                          (BuildContext context, CritiqueModel critique) {
-                        return SmallCritiqueView(
-                          critique: critique,
-                          currentUser: currentUser,
-                        );
-                      },
-                      pageFetch: (int offset) async {
-                        //Fetch template documents.
-                        List<CritiqueModel> critiques =
-                            await locator<CritiqueService>()
-                                .retrieveCritiquesFromStream(
-                          limit: pageFetchLimit,
-                          offset: offset,
-                          uid: currentUser.uid,
-                        );
+                  // RefreshIndicator(
+                  //   child: PaginationList<CritiqueModel>(
+                  //     onLoading: Spinner(),
+                  //     onPageLoading: Spinner(),
+                  //     separatorWidget: Divider(),
+                  //     itemBuilder:
+                  //         (BuildContext context, CritiqueModel critique) {
+                  //       return SmallCritiqueView(
+                  //         critique: critique,
+                  //         currentUser: currentUser,
+                  //       );
+                  //     },
+                  //     pageFetch: (int offset) async {
+                  //       //Fetch template documents.
+                  //       List<CritiqueModel> critiques =
+                  //           await locator<CritiqueService>()
+                  //               .retrieveCritiquesFromStream(
+                  //         limit: pageFetchLimit,
+                  //         offset: offset,
+                  //         uid: currentUser.uid,
+                  //       );
 
-                        return critiques;
-                      },
-                      onError: (dynamic error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'Error',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      onEmpty: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MdiIcons.movieEdit,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'No critiques at this moment.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text('Create your own or follow someone.')
-                          ],
-                        ),
-                      ),
-                    ),
-                    onRefresh: () {
-                      _exploreBloc.add(
-                        LoadPageEvent(),
-                      );
+                  //       return critiques;
+                  //     },
+                  //     onError: (dynamic error) => Center(
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Icon(
+                  //             Icons.error,
+                  //             size: 100,
+                  //             color: Colors.grey,
+                  //           ),
+                  //           Text(
+                  //             'Error',
+                  //             style: TextStyle(
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //           Text(
+                  //             error.toString(),
+                  //             textAlign: TextAlign.center,
+                  //           )
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     onEmpty: Center(
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Icon(
+                  //             MdiIcons.movieEdit,
+                  //             size: 100,
+                  //             color: Colors.grey,
+                  //           ),
+                  //           Text(
+                  //             'No critiques at this moment.',
+                  //             style: TextStyle(
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //           Text('Create your own or follow someone.')
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  //   onRefresh: () {
+                  //     _exploreBloc.add(
+                  //       LoadPageEvent(),
+                  //     );
 
-                      return;
-                    },
-                  )
+                  //     return;
+                  //   },
+                  // )
                 ],
               ),
             ),

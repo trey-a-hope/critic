@@ -1,56 +1,44 @@
-import 'package:critic/extensions/HexColor.dart';
+import 'package:critic/Constants.dart';
 import 'package:flutter/material.dart';
 
 final String fontFamily = 'Montserrat';
 
-ThemeData themeData = ThemeData(
-  primaryColor: Colors.red,
-  accentColor: Colors.red,
-
-  fontFamily: fontFamily,
-
-  // scaffoldBackgroundColor: Colors.white,
-  // brightness: Brightness.light,
-  // accentColor: Colors.red,
-  accentIconTheme: IconThemeData(color: Colors.white),
-  accentTextTheme: TextTheme(
-    bodyText1: TextStyle(color: Colors.white, fontSize: 20),
-    bodyText2: TextStyle(color: Colors.white, fontSize: 15),
-    button: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-    headline5: TextStyle(
-        color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+ThemeData darkThemeData = ThemeData(
+  textTheme: TextTheme(
     headline4: TextStyle(
-        color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
-    subtitle2: TextStyle(
-        color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-    headline6: TextStyle(
-        color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+        color: Colors.grey.shade200, fontSize: 16, fontWeight: FontWeight.bold),
+    headline5: TextStyle(
+        color: Colors.grey.shade200, fontSize: 14, fontWeight: FontWeight.bold),
+    headline6: TextStyle(color: Colors.white, fontSize: 14),
   ),
-  // floatingActionButtonTheme: FloatingActionButtonThemeData(
-  //     backgroundColor: Colors.blue, elevation: 4.0),
-  // primaryColor: Colors.blue,
-  // primaryIconTheme: IconThemeData(color: Colors.red[700]),
-  // primaryTextTheme: TextTheme(
-  //   body1: TextStyle(color: Colors.black, fontSize: 20),
-  //   body2: TextStyle(color: Colors.black, fontSize: 15),
-  //   button: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-  //   headline: TextStyle(
-  //       color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
-  //   display1: TextStyle(
-  //       color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
-  //   subtitle: TextStyle(
-  //       color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
-  //   title: TextStyle(
-  //       color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
-  // ),
-  // buttonTheme: ButtonThemeData(
-  //     buttonColor: Colors.amber, textTheme: ButtonTextTheme.normal),
- // E83F3F
-  buttonColor: HexColor("E83F3F"),
+  indicatorColor: Colors.white,
+  iconTheme: IconThemeData(color: Colors.white),
+  appBarTheme: AppBarTheme(color: const Color(0xFF253341)),
+  scaffoldBackgroundColor: const Color(0xFF15202B),
+  fontFamily: fontFamily,
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: const Color(0xFF253341),
+  ),
+  canvasColor: const Color(0xFF253341),
+  dividerColor: Colors.white,
+);
 
-  // textTheme: TextTheme(
-  //     headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-  //     title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-  //     body1: TextStyle(fontSize: 14.0, fontFamily: fontFamily),
-  //   ),
+ThemeData themeData = ThemeData(
+  textTheme: TextTheme(
+    headline4: TextStyle(
+        color: Colors.grey.shade800, fontSize: 16, fontWeight: FontWeight.bold),
+    headline5: TextStyle(
+        color: Colors.grey.shade800, fontSize: 14, fontWeight: FontWeight.bold),
+    headline6: TextStyle(color: colorNavy, fontSize: 14),
+  ),
+  indicatorColor: colorNavy,
+  iconTheme: IconThemeData(color: colorNavy),
+  appBarTheme: AppBarTheme(color: Colors.red.shade900),
+  scaffoldBackgroundColor: Colors.white,
+  fontFamily: fontFamily,
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    backgroundColor: Colors.white,
+  ),
+  canvasColor: Colors.white,
+  dividerColor: const Color(0xFF253341),
 );

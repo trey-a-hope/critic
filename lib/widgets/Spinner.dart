@@ -8,13 +8,14 @@ class Spinner extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
+            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).indicatorColor),
             strokeWidth: 3.0,
           ),
           SizedBox(height: 20),
           Text(
-            'Loading',
-            style: TextStyle(fontSize: 15.0, color: Colors.grey),
+            'Loading...',
+            style: Theme.of(context).textTheme.headline5,
           ),
         ],
       ),

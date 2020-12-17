@@ -23,3 +23,5 @@ const String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
 const String ASSET_APP_ICON = 'assets/images/app_icon.png';
 
 const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
+
+const int CRITIQUE_CHAR_LIMIT = 200;

@@ -72,7 +72,7 @@ class CommentsPageState extends State<CommentsPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
+        backgroundColor: Theme.of(context).appBarTheme.color,
         title: Text(
           'Comments',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -165,7 +165,7 @@ class CommentsPageState extends State<CommentsPage>
                     Icon(
                       Icons.error,
                       size: 100,
-                      color: Colors.grey,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                     Text(
                       'Error',
@@ -184,18 +184,12 @@ class CommentsPageState extends State<CommentsPage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.supervised_user_circle,
-                      size: 100,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      'No comments at the moment.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text('Come back later.')
+                    Icon(Icons.supervised_user_circle,
+                        size: 100, color: Theme.of(context).iconTheme.color),
+                    Text('No comments at the moment.',
+                        style: Theme.of(context).textTheme.headline4),
+                    Text('Come back later.',
+                        style: Theme.of(context).textTheme.headline4)
                   ],
                 ),
               ),

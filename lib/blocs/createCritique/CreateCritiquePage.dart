@@ -33,7 +33,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
 
   Widget _buildBottomSheetForm() {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).canvasColor,
       child: Form(
         key: _formKey,
         child: Column(
@@ -44,15 +44,21 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextFormField(
+                      cursorColor: Theme.of(context).textTheme.headline4.color,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: _critiqueController,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       validator: locator<ValidationService>().isEmpty,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.headline4.color,),
                       maxLines: 5,
-                      maxLength: 150,
+                      maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
-                          hintText: 'What do you think about this movie/show?'),
+                          hintText: 'What do you think about this movie/show?',
+                          hintStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline4.color)),
                     ),
                   ),
                 ],

@@ -14,7 +14,6 @@ abstract class IModalService {
       {@required BuildContext context,
       @required String title,
       @required String message});
-  Future<String> showPasswordResetEmail({@required BuildContext context});
   Future<String> showChangeEmail({@required BuildContext context});
   Future<bool> showConfirmation(
       {@required BuildContext context,
@@ -69,54 +68,6 @@ class ModalService extends IModalService {
             ],
           );
         }
-      },
-    );
-  }
-
-  @override
-  Future<String> showPasswordResetEmail({@required BuildContext context}) {
-    final TextEditingController emailController = TextEditingController();
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    return showDialog<String>(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Reset Password'),
-          content: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: TextFormField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term) {},
-              validator: locator<ValidationService>().email,
-              onSaved: (value) {},
-              decoration: InputDecoration(
-                hintText: 'Email',
-                icon: Icon(Icons.email),
-                fillColor: Colors.white,
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text('SUBMIT'),
-              onPressed: () {
-                if (!formKey.currentState.validate()) return;
-                Navigator.of(context).pop(emailController.text);
-              },
-            )
-          ],
-        );
       },
     );
   }
@@ -201,6 +152,7 @@ class ModalService extends IModalService {
           );
         } else {
           return AlertDialog(
+            
             title: Text(title),
             content: Text(message),
             actions: <Widget>[

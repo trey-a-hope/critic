@@ -38,6 +38,8 @@ class BlockedUsersBloc extends Bloc<BlockedUsersEvent, BlockedUsersState> {
           users.add(user);
         }
 
+        users.add(_currentUser);
+
         if (users.isEmpty) {
           yield NoBlockedUsersState();
         } else {

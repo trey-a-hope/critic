@@ -72,15 +72,13 @@ class WatchlistPageState extends State<WatchlistPage>
                 Icon(
                   MdiIcons.movieSearch,
                   size: 100,
-                  color: Colors.grey,
+                  color: Theme.of(context).iconTheme.color,
                 ),
                 Text(
                   'No movies in your watchlist.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.headline4,
                 ),
-                Text('Search some movies to add.')
+                Text('Search some movies to add.',style: Theme.of(context).textTheme.headline4)
               ],
             ),
           );
@@ -113,14 +111,11 @@ class WatchlistPageState extends State<WatchlistPage>
                 },
                 title: Text(
                   '${movie.title}',
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 subtitle: Text(
                   '${timeago.format(movie.addedToWatchList, allowFromNow: true)}',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey),
+                  style: Theme.of(context).textTheme.headline5,
                 ),
                 trailing: Icon(
                   Icons.chevron_right,

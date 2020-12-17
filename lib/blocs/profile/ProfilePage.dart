@@ -233,7 +233,10 @@ class ProfilePageState extends State<ProfilePage>
                 child: PaginationList<CritiqueModel>(
                   onLoading: Spinner(),
                   onPageLoading: Spinner(),
-                  separatorWidget: Divider(),
+                  separatorWidget: Divider(
+                    height: 0,
+                    color: Theme.of(context).dividerColor,
+                  ),
                   itemBuilder: (BuildContext context, CritiqueModel critique) {
                     return SmallCritiqueView(
                       critique: critique,

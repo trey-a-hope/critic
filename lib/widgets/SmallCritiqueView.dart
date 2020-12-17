@@ -88,74 +88,73 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
     @required UserModel userWhoPosted,
   }) {
     return ListTile(
+      tileColor: Theme.of(context).canvasColor,
+      onTap: () {
+        Route route = MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
+              critiqueModel: critique,
+            )..add(
+                CRITIQUE_DETAILS_BP.LoadPageEvent(),
+              ),
+            child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
+          ),
+        );
+
+        Navigator.push(context, route);
+      },
+      title: Text('\"${critique.message}\"',
+          style: Theme.of(context).textTheme.headline6),
+      subtitle: Text(
+        '\n${critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(critique.created, allowFromNow: true)}',
+        style: Theme.of(context).textTheme.headline5,
+      ),
+      trailing: InkWell(
         onTap: () {
+          if (userWhoPosted.uid == currentUser.uid) return;
+
           Route route = MaterialPageRoute(
             builder: (context) => BlocProvider(
-              create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                critiqueModel: critique,
+              create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
+                otherUserID: '${userWhoPosted.uid}',
               )..add(
-                  CRITIQUE_DETAILS_BP.LoadPageEvent(),
+                  OTHER_PROFILE_BP.LoadPageEvent(),
                 ),
-              child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
+              child: OTHER_PROFILE_BP.OtherProfilePage(),
             ),
           );
 
           Navigator.push(context, route);
         },
-        title: Text(
-          '\"${critique.message}\"',
-          style: TextStyle(fontSize: 14, color: Colors.black),
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(
+            '${userWhoPosted.imgUrl}',
+          ),
         ),
-        subtitle: Text(
-          '\n${critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(critique.created, allowFromNow: true)}',
-          style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
-        ),
-        trailing: InkWell(
-          onTap: () {
-            if (userWhoPosted.uid == currentUser.uid) return;
+      ),
+      leading: InkWell(
+        onTap: () async {
+          final MovieModel movieModel =
+              await locator<MovieService>().getMovieByID(id: critique.imdbID);
 
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                  otherUserID: '${userWhoPosted.uid}',
-                )..add(
-                    OTHER_PROFILE_BP.LoadPageEvent(),
-                  ),
-                child: OTHER_PROFILE_BP.OtherProfilePage(),
-              ),
-            );
-
-            Navigator.push(context, route);
-          },
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              '${userWhoPosted.imgUrl}',
+          Route route = MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  CREATE_CRITIQUE_BP.CreateCritiqueBloc(movie: movieModel)
+                    ..add(
+                      CREATE_CRITIQUE_BP.LoadPageEvent(),
+                    ),
+              child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
             ),
-          ),
+          );
+
+          Navigator.push(context, route);
+        },
+        child: Image.network(
+          critique.moviePoster,
+          height: 100,
         ),
-        leading: InkWell(
-          onTap: () async {
-            final MovieModel movieModel =
-                await locator<MovieService>().getMovieByID(id: critique.imdbID);
-
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) =>
-                    CREATE_CRITIQUE_BP.CreateCritiqueBloc(movie: movieModel)
-                      ..add(
-                        CREATE_CRITIQUE_BP.LoadPageEvent(),
-                      ),
-                child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
-              ),
-            );
-
-            Navigator.push(context, route);
-          },
-          child: Image.network(
-            critique.moviePoster,
-            height: 100,
-          ),
-        ));
+      ),
+    );
   }
 }

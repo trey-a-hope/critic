@@ -3,6 +3,7 @@ import 'package:critic/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Constants.dart';
 import 'ServiceLocator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,18 +18,40 @@ void main() async {
 
   await Firebase.initializeApp();
 
+//Prepare services.
   setUpLocater();
 
+//Assign package info.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
   buildNumber = packageInfo.buildNumber;
 
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final bool isDarkModeEnabled = prefs.getBool('isDarkModeEnabled') ?? false;
+
   runApp(
-    MyApp(),
+    MyApp(isDarkModeEnabled: isDarkModeEnabled),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final bool isDarkModeEnabled;
+  MyApp({@required this.isDarkModeEnabled});
+
+  @override
+  State createState() => MyAppState(isDarkModeEnabled: isDarkModeEnabled);
+}
+
+class MyAppState extends State<MyApp> {
+  MyAppState({@required this.isDarkModeEnabled});
+
+  bool isDarkModeEnabled;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
@@ -39,6 +62,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Critic',
       theme: themeData,
+      themeMode: isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+      darkTheme: darkThemeData,
       home: StreamBuilder(
         stream: locator<AuthService>().onAuthStateChanged(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -52,7 +77,7 @@ class MyApp extends StatelessWidget {
                   create: (BuildContext context) => LOGIN_BP.LoginBloc(),
                   child: LOGIN_BP.LoginPage(),
                 )
-              : EntryPage();
+              : EntryPage(myAppState: this);
         },
       ),
     );

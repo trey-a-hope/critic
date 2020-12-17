@@ -29,7 +29,7 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         title: Text(
           'Blocked Users',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -45,7 +45,8 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
 
           if (state is BLOCKED_USERS_BP.NoBlockedUsersState) {
             return Center(
-              child: Text('You have no blocked users...'),
+              child: Text('You have no blocked users...',
+                  style: Theme.of(context).textTheme.headline5),
             );
           }
 
@@ -62,9 +63,18 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
                           leading: CircleAvatar(
                             backgroundImage: NetworkImage(user.imgUrl),
                           ),
-                          title: Text('${user.username}'),
-                          subtitle: Text('${user.email}'),
-                          trailing: Icon(Icons.chevron_right),
+                          title: Text(
+                            '${user.username}',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          subtitle: Text(
+                            '${user.email}',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           onTap: () async {
                             final bool confirm = await locator<ModalService>()
                                 .showConfirmation(
@@ -85,7 +95,7 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
                   ),
                   Text(
                     'These user\s will not show on your timeline.',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Theme.of(context).textTheme.headline6.color),
                   ),
                 ],
               ),

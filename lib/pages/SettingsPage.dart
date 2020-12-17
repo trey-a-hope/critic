@@ -1,19 +1,40 @@
+import 'package:critic/main.dart';
 import 'package:critic/pages/ContactPage.dart';
 import 'package:critic/pages/TermsServicePage.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/ModalService.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../ServiceLocator.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  final MyAppState myAppState;
+  SettingsPage({@required this.myAppState});
+
+  @override
+  State createState() => SettingsPageState(myAppState: myAppState);
+}
+
+class SettingsPageState extends State<SettingsPage> {
+  SettingsPageState({@required this.myAppState});
+  final MyAppState myAppState;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SettingsList(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       sections: [
         SettingsSection(
+          
           title: 'ACCOUNT SETTINGS',
           tiles: [
             SettingsTile(
@@ -32,6 +53,23 @@ class SettingsPage extends StatelessWidget {
                 Navigator.push(context, route);
               },
             ),
+            SettingsTile(
+              title: 'Dark/Light Mode',
+              trailing: DayNightSwitcher(
+                isDarkModeEnabled: this.myAppState.isDarkModeEnabled,
+                onStateChanged: (bool isDarkModeEnabled) async {
+                  print('${this.myAppState.isDarkModeEnabled}');
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+
+                  prefs.setBool('isDarkModeEnabled', isDarkModeEnabled);
+
+                  this.myAppState.setState(() {
+                    this.myAppState.isDarkModeEnabled = isDarkModeEnabled;
+                  });
+                },
+              ),
+            )
           ],
         ),
         SettingsSection(
