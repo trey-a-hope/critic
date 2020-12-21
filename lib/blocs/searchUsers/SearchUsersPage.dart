@@ -45,6 +45,7 @@ class _SearchBarState extends State<_SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      style: TextStyle(color: Theme.of(context).textTheme.headline6.color),
       controller: _textController,
       autocorrect: false,
       onChanged: (text) {
@@ -52,14 +53,23 @@ class _SearchBarState extends State<_SearchBar> {
           SEARCH_USERS_BP.TextChangedEvent(text: text),
         );
       },
+      cursorColor: Theme.of(context).textTheme.headline5.color,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Theme.of(context).iconTheme.color,
+        ),
         suffixIcon: GestureDetector(
-          child: Icon(Icons.clear),
+          child: Icon(
+            Icons.clear,
+            color: Theme.of(context).iconTheme.color,
+          ),
           onTap: _onClearTapped,
         ),
         border: InputBorder.none,
         hintText: 'Enter a search term',
+        hintStyle:
+            TextStyle(color: Theme.of(context).textTheme.headline6.color),
       ),
     );
   }
@@ -86,7 +96,8 @@ class _SearchBody extends StatelessWidget {
                   color: Colors.grey,
                   size: 100,
                 ),
-                Text('Please enter a username...')
+                Text('Please enter a username...',
+                    style: Theme.of(context).textTheme.headline6),
               ],
             ),
           );
@@ -125,9 +136,18 @@ class _SearchBody extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(user.imgUrl),
                   ),
-                  title: Text('${user.username}'),
-                  subtitle: Text('${user.email}'),
-                  trailing: Icon(Icons.chevron_right),
+                  title: Text(
+                    '${user.username}',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  subtitle: Text(
+                    '${user.email}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
                   onTap: () {
                     Route route = MaterialPageRoute(
                       builder: (context) => BlocProvider(

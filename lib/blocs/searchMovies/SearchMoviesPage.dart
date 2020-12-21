@@ -111,7 +111,10 @@ class _SearchBody extends StatelessWidget {
         if (state is SearchMoviesStateError) {
           return Expanded(
             child: Center(
-              child: Text(state.error.message, style: Theme.of(context).textTheme.headline4,),
+              child: Text(
+                state.error.message,
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           );
         }
@@ -134,7 +137,10 @@ class _SearchBody extends StatelessWidget {
                     '${movie.title}',
                     style: Theme.of(context).textTheme.headline4,
                   ),
-                  subtitle: Text('Year: ${movie.year}', style: Theme.of(context).textTheme.headline5),
+                  subtitle: Text(
+                    'Year: ${movie.year}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () async {
                     final MovieModel movieModel = await locator<MovieService>()

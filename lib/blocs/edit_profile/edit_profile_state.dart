@@ -1,18 +1,20 @@
-import 'package:critic/models/UserModel.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'edit_profile_bloc.dart';
 
-class EditProfileState extends Equatable {
+abstract class EditProfileState extends Equatable {
+  const EditProfileState();
+
   @override
   List<Object> get props => [];
 }
 
-class LoadingState extends EditProfileState {}
+class EditProfileInitial extends EditProfileState {}
 
-class EditProfileStartState extends EditProfileState {
+class EditProfileLoading extends EditProfileState {}
+
+class EditProfileLoaded extends EditProfileState {
   final UserModel currentUser;
 
-  EditProfileStartState({
+  EditProfileLoaded({
     @required this.currentUser,
   });
 

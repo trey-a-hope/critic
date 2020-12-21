@@ -7,7 +7,8 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
-import 'package:critic/blocs/editProfile/Bloc.dart' as EDIT_PROFILE_BP;
+import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
+    as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -355,9 +356,9 @@ class EntryPageState extends State<EntryPage> {
                   builder: (context) => BlocProvider(
                     create: (context) => EDIT_PROFILE_BP.EditProfileBloc()
                       ..add(
-                        EDIT_PROFILE_BP.LoadPageEvent(),
+                        EDIT_PROFILE_BP.LoadPage(),
                       ),
-                    child: EDIT_PROFILE_BP.EditProfilePage(),
+                    child: EDIT_PROFILE_BP.EditProfileView(),
                   ),
                 );
 
