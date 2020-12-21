@@ -118,6 +118,7 @@ class WatchlistPageState extends State<WatchlistPage>
                 ),
                 trailing: Icon(
                   Icons.chevron_right,
+                  color: Theme.of(context).iconTheme.color,
                 ),
                 leading: Image.network(
                   movie.poster,

@@ -242,7 +242,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 ),
                                 Spacer(),
                                 RaisedButton(
-                                    color: Theme.of(context).buttonColor,
+                                    color:Colors.red.shade900,
                                     textColor: Colors.white,
                                     child: Text('View Details'),
                                     onPressed: () async {

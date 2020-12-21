@@ -27,3 +27,6 @@ const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
 const int CRITIQUE_CHAR_LIMIT = 200;
 
 const String EMAIL = 'thope@imabigcritic.com';
+
+const String MESSAGE_EMPTY_CRITIQUES = 'Currently no critiques at this moment.';
+const String MESSAGE_EMPTY_WATCHLIST = 'Currently no movies in your watchlist.';

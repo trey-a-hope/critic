@@ -222,8 +222,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                         child: Padding(
                                           padding: EdgeInsets.all(10),
                                           child: FullWidthButton(
-                                            buttonColor:
-                                                Theme.of(context).buttonColor,
+                                            buttonColor: Colors.red,
                                             text: 'Follow Me',
                                             textColor: Colors.white,
                                             onPressed: () {
@@ -312,12 +311,9 @@ class OtherProfilePageState extends State<OtherProfilePage>
                           color: Colors.grey,
                         ),
                         Text(
-                          'No critiques at this moment.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          '$MESSAGE_EMPTY_CRITIQUES',
+                          style: Theme.of(context).textTheme.headline4,
                         ),
-                        Text('Come back later!')
                       ],
                     ),
                   ),

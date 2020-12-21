@@ -7,6 +7,7 @@ import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../Constants.dart';
 import '../../ServiceLocator.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination/pagination.dart';
@@ -165,12 +166,9 @@ class ExplorePageState extends State<ExplorePage>
                               color: Colors.grey,
                             ),
                             Text(
-                              'No critiques at this moment.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              '$MESSAGE_EMPTY_CRITIQUES',
+                              style: Theme.of(context).textTheme.headline4,
                             ),
-                            Text('Create your own or follow someone.')
                           ],
                         ),
                       ),

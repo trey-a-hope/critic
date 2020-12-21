@@ -141,7 +141,10 @@ class _SearchBody extends StatelessWidget {
                     'Year: ${movie.year}',
                     style: Theme.of(context).textTheme.headline5,
                   ),
-                  trailing: Icon(Icons.chevron_right),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
                   onTap: () async {
                     final MovieModel movieModel = await locator<MovieService>()
                         .getMovieByID(id: movie.imdbID);

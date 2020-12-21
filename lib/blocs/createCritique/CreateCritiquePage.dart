@@ -56,6 +56,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
+                          counterStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
                           hintText: 'What do you think about this movie/show?',
                           hintStyle: TextStyle(
                               color:
@@ -154,7 +157,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 );
               },
               child: Container(
-                color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                color:
+                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 height: 60,
                 width: double.infinity,
                 child: Padding(

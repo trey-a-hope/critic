@@ -276,12 +276,9 @@ class ProfilePageState extends State<ProfilePage>
                           color: Colors.grey,
                         ),
                         Text(
-                          'No critiques at this moment.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          '$MESSAGE_EMPTY_CRITIQUES',
+                          style: Theme.of(context).textTheme.headline4,
                         ),
-                        Text('Create your own or follow someone.')
                       ],
                     ),
                   ),
