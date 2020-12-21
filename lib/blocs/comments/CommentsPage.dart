@@ -90,7 +90,7 @@ class CommentsPageState extends State<CommentsPage>
             return PaginationList<CommentModel>(
               onLoading: Spinner(),
               onPageLoading: Spinner(),
-              separatorWidget: Divider(),
+              separatorWidget: Divider(height: 0),
               itemBuilder: (BuildContext context, CommentModel comment) {
                 return ListTile(
                   leading: InkWell(
@@ -113,12 +113,20 @@ class CommentsPageState extends State<CommentsPage>
                       Navigator.push(context, route);
                     },
                   ),
+                  title: Text(
+                    '\"${comment.message}\"',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
                   subtitle: Text(
-                      '${comment.user.username}, ${timeago.format(comment.created, allowFromNow: true)}'),
-                  title: Text('\"${comment.message}\"'),
+                    '${comment.user.username}, ${timeago.format(comment.created, allowFromNow: true)}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                   trailing: currentUser.uid == comment.uid
                       ? IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(
+                            Icons.delete,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           onPressed: () async {
                             bool confirm = await locator<ModalService>()
                                 .showConfirmation(
@@ -136,7 +144,10 @@ class CommentsPageState extends State<CommentsPage>
                           },
                         )
                       : IconButton(
-                          icon: Icon(Icons.report),
+                          icon: Icon(
+                            Icons.report,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
                           onPressed: () async {
                             bool confirm = await locator<ModalService>()
                                 .showConfirmation(

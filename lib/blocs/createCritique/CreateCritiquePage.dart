@@ -154,8 +154,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 );
               },
               child: Container(
-                color:
-                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 height: 60,
                 width: double.infinity,
                 child: Padding(

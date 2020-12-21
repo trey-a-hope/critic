@@ -272,7 +272,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                 child: PaginationList<CritiqueModel>(
                   onLoading: Spinner(),
                   onPageLoading: Spinner(),
-                  separatorWidget: Divider(),
+                  separatorWidget: Divider(height: 0),
                   itemBuilder: (BuildContext context, CritiqueModel critique) {
                     return SmallCritiqueView(
                       critique: critique,

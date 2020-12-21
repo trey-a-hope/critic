@@ -27,7 +27,6 @@ class DemoPageState extends State<DemoPage> implements DemoBlocDelegate {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
         title: Text(
           'Demo',
           style: TextStyle(fontWeight: FontWeight.bold),

@@ -1,8 +1,8 @@
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
 import 'package:critic/main.dart';
+import 'package:critic/pages/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:critic/pages/SettingsPage.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
@@ -218,7 +218,7 @@ class EntryPageState extends State<EntryPage> {
         child: PROFILE_BP.ProfilePage(),
       ),
       //Settings Page
-      SettingsPage(myAppState: myAppState),
+      SettingsView(myAppState: myAppState),
     ];
 
     return Scaffold(

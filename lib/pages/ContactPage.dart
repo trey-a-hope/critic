@@ -4,21 +4,21 @@ import 'package:flutter/material.dart';
 class ContactPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final TextStyle _headerTextStyle = TextStyle(
-    fontSize: 21,
-    fontWeight: FontWeight.bold,
-  );
+  // final TextStyle _headerTextStyle = TextStyle(
+  //   fontSize: 21,
+  //   fontWeight: FontWeight.bold,
+  // );
 
-  final TextStyle _paragraphTextStyle = TextStyle(
-    fontSize: 18,
-  );
+  // final TextStyle _paragraphTextStyle = TextStyle(
+  //   fontSize: 18,
+  // );
 
-  final SizedBox _space = SizedBox(
-    height: 30,
-  );
-  final SizedBox _smallSpace = SizedBox(
-    height: 10,
-  );
+  // final SizedBox _space = SizedBox(
+  //   height: 30,
+  // );
+  // final SizedBox _smallSpace = SizedBox(
+  //   height: 10,
+  // );
 
   @override
   Widget build(BuildContext context) {
@@ -32,38 +32,22 @@ class ContactPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        backgroundColor: colorNavy,
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(20),
           child: ListView(
             children: <Widget>[
-              Text(
-                'Feel free to hit us up anytime about anything.',
-                style: _paragraphTextStyle,
+              Text('Feel free to hit us up anytime with questions, concerns, or comments.',
+                  style: Theme.of(context).textTheme.headline5),
+              SizedBox(
+                height: 30,
               ),
-              _space,
-              Text(
-                'E-Mail',
-                style: _headerTextStyle,
+              Text('E-Mail', style: Theme.of(context).textTheme.headline3),
+              Text('$EMAIL', style: Theme.of(context).textTheme.headline5),
+              SizedBox(
+                height: 30,
               ),
-              _smallSpace,
-              Text(
-                'trey.a.hope@gmail.com',
-                style: _paragraphTextStyle,
-              ),
-              _space,
-              // Text(
-              //   'Phone Number',
-              //   style: _headerTextStyle,
-              // ),
-              // _smallSpace,
-              // Text(
-              //   '111-111-1111',
-              //   style: _paragraphTextStyle,
-              // ),
-              // _space,
             ],
           ),
         ),

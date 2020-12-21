@@ -1,7 +1,7 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart';
-import 'package:critic/pages/TermsServicePage.dart';
+import 'package:critic/pages/terms_service_view.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/FullWidthButton.dart';

@@ -34,7 +34,6 @@ class PostCommentPageState extends State<PostCommentPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
         title: Text(
           'Post Comment',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -57,6 +56,10 @@ class PostCommentPageState extends State<PostCommentPage>
                     Padding(
                       padding: EdgeInsets.all(40),
                       child: TextFormField(
+                        style: TextStyle(
+                            color: Theme.of(context).textTheme.headline6.color),
+                        cursorColor:
+                            Theme.of(context).textTheme.headline5.color,
                         controller: _messageController,
                         keyboardType: TextInputType.text,
                         validator: locator<ValidationService>().isEmpty,
@@ -64,12 +67,22 @@ class PostCommentPageState extends State<PostCommentPage>
                         maxLines: 5,
                         maxLength: CRITIQUE_CHAR_LIMIT,
                         decoration: InputDecoration(
-                            hintText: 'What do you think about this critique?'),
+                          counterStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
+                          errorStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
+                          hintText: 'What do you think about this critique?',
+                          hintStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
+                        ),
                       ),
                     ),
                     Spacer(),
                     FullWidthButton(
-                      buttonColor: Colors.red,
+                      buttonColor: Theme.of(context).buttonColor,
                       textColor: Colors.white,
                       onPressed: () async {
                         if (!_formKey.currentState.validate()) {

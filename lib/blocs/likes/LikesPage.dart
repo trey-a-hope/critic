@@ -3,6 +3,7 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/Spinner.dart';
+import 'package:critic/widgets/UserListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
@@ -30,7 +31,6 @@ class LikesPageState extends State<LikesPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
         title: Text(
           'Likes',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -58,11 +58,8 @@ class LikesPageState extends State<LikesPage>
                     ),
                     Text(
                       'No likes at this moment.',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headline4,
                     ),
-                    Text('Come back later.')
                   ],
                 ),
               );
@@ -71,29 +68,7 @@ class LikesPageState extends State<LikesPage>
                 itemCount: likeUsers.length,
                 itemBuilder: (context, index) {
                   final UserModel likeUser = likeUsers[index];
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(likeUser.imgUrl),
-                    ),
-                    title: Text('${likeUser.username}'),
-                    subtitle: Text('${likeUser.email}'),
-                    trailing: Icon(Icons.chevron_right),
-                    onTap: () {
-                      Route route = MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) =>
-                              OTHER_PROFILE_BP.OtherProfileBloc(
-                            otherUserID: likeUser.uid,
-                          )..add(
-                                  OTHER_PROFILE_BP.LoadPageEvent(),
-                                ),
-                          child: OTHER_PROFILE_BP.OtherProfilePage(),
-                        ),
-                      );
-
-                      Navigator.push(context, route);
-                    },
-                  );
+                  return UserListTile(user: likeUser);
                 },
               );
             }

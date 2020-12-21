@@ -4,6 +4,7 @@ import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/Spinner.dart';
+import 'package:critic/widgets/UserListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
@@ -44,7 +45,6 @@ class FollowersPageState extends State<FollowersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: colorNavy,
         title: Text(
           'Followers',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -64,28 +64,7 @@ class FollowersPageState extends State<FollowersPage>
               onPageLoading: Spinner(),
               separatorWidget: Divider(),
               itemBuilder: (BuildContext context, UserModel user) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.imgUrl),
-                  ),
-                  title: Text('${user.username}'),
-                  subtitle: Text('${user.email}'),
-                  trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    Route route = MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                          otherUserID: user.uid,
-                        )..add(
-                            OTHER_PROFILE_BP.LoadPageEvent(),
-                          ),
-                        child: OTHER_PROFILE_BP.OtherProfilePage(),
-                      ),
-                    );
-
-                    Navigator.push(context, route);
-                  },
-                );
+                return UserListTile(user: user);
               },
               pageFetch: pageFetch,
               onError: (dynamic error) => Center(

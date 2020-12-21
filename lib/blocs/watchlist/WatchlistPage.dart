@@ -75,10 +75,9 @@ class WatchlistPageState extends State<WatchlistPage>
                   color: Theme.of(context).iconTheme.color,
                 ),
                 Text(
-                  'No movies in your watchlist.',
+                  'Currently no movies in your watchlist.',
                   style: Theme.of(context).textTheme.headline4,
                 ),
-                Text('Search some movies to add.',style: Theme.of(context).textTheme.headline4)
               ],
             ),
           );

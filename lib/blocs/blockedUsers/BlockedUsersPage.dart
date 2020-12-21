@@ -28,7 +28,6 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.color,
         title: Text(
           'Blocked Users',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -94,7 +93,8 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
                   ),
                   Text(
                     'These user\s will not show on your timeline.',
-                    style: TextStyle(color: Theme.of(context).textTheme.headline6.color),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.headline6.color),
                   ),
                 ],
               ),
