@@ -7,7 +7,6 @@ abstract class EditProfileEvent extends Equatable {
   List<Object> get props => [];
 }
 
-//Event: User selects login.
 class LoadPage extends EditProfileEvent {
   LoadPage();
 

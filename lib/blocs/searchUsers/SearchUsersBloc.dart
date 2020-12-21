@@ -80,6 +80,8 @@ class SearchUsersBloc extends Bloc<SEARCH_USERS_BP.SearchUsersEvent,
                 _usersWhoBlockedMeIDs.contains(user.uid),
           );
 
+          results.removeWhere((user) => user.uid == _currentUser.uid);
+
           if (results.isEmpty) {
             yield SEARCH_USERS_BP.SearchUsersStateNoResults();
           } else {

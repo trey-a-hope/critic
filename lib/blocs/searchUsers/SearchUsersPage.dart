@@ -149,6 +149,8 @@ class _SearchBody extends StatelessWidget {
                     color: Theme.of(context).iconTheme.color,
                   ),
                   onTap: () {
+
+                    
                     Route route = MaterialPageRoute(
                       builder: (context) => BlocProvider(
                         create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(

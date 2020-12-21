@@ -30,8 +30,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
       _currentUser = await locator<AuthService>().getCurrentUser();
 
-      // _editProfileBlocDelegate.setTextFields(user: _currentUser);
-
       yield EditProfileLoaded(
         currentUser: _currentUser,
       );
@@ -52,19 +50,11 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
         _currentUser.username = username;
 
-        //_editProfileBlocDelegate.showMessage(message: 'Profile updated.');
-
         yield EditProfileLoaded(
           currentUser: _currentUser,
         );
       } catch (error) {
         yield ErrorState(error: error);
-        // _editProfileBlocDelegate.showMessage(
-        //     message: 'Error: ${error.toString()}');
-
-        // yield EditProfileStartState(
-        //   currentUser: _currentUser,
-        // );
       }
     }
   }

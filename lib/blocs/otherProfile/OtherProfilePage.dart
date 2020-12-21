@@ -222,7 +222,8 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                         child: Padding(
                                           padding: EdgeInsets.all(10),
                                           child: FullWidthButton(
-                                            buttonColor: Colors.red,
+                                            buttonColor:
+                                                Theme.of(context).buttonColor,
                                             text: 'Follow Me',
                                             textColor: Colors.white,
                                             onPressed: () {
