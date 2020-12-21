@@ -67,6 +67,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
               title: Text('${critiqueUser.username} says...'),
             ),
             floatingActionButton: SpeedDial(
+              backgroundColor: Theme.of(context).buttonColor,
               animatedIcon: AnimatedIcons.menu_close,
               animatedIconTheme: IconThemeData(size: 22.0),
               curve: Curves.bounceIn,
@@ -237,13 +238,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                               children: <Widget>[
                                 SelectableText(
                                   '\"${critique.message}\"',
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w700),
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                                 Spacer(),
                                 RaisedButton(
-                                    color: colorNavy,
+                                    color: Theme.of(context).buttonColor,
                                     textColor: Colors.white,
                                     child: Text('View Details'),
                                     onPressed: () async {
@@ -276,7 +275,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 bottomRight: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
                               ),
-                              color: Colors.white,
+                              color: Theme.of(context).canvasColor,
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.grey,
@@ -312,9 +311,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
                       ),
                     ),
-                    title: Text('${critiqueUser.username}'),
+                    title: Text('${critiqueUser.username}',
+                        style: Theme.of(context).textTheme.headline4),
                     subtitle: Text(
-                        '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}'),
+                        '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}',
+                        style: Theme.of(context).textTheme.headline6),
                   ),
                   SizedBox(height: 10),
                   Spacer(),
@@ -324,7 +325,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         FloatingActionButton.extended(
-                          backgroundColor: colorNavy,
+                          backgroundColor: Theme.of(context).buttonColor,
                           onPressed: () {
                             Route route = MaterialPageRoute(
                               builder: (context) => BlocProvider(

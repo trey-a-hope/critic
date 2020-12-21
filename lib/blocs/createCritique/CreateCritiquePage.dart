@@ -51,7 +51,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                       textInputAction: TextInputAction.done,
                       validator: locator<ValidationService>().isEmpty,
                       style: TextStyle(
-                          color: Theme.of(context).textTheme.headline4.color,),
+                        color: Theme.of(context).textTheme.headline4.color,
+                      ),
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
@@ -153,7 +154,8 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 );
               },
               child: Container(
-                color: Colors.red,
+                color:
+                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 height: 60,
                 width: double.infinity,
                 child: Padding(
@@ -171,7 +173,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
               ),
             ),
             appBar: AppBar(
-              backgroundColor: colorNavy,
               title: Text(
                 movie.title,
                 style: TextStyle(fontWeight: FontWeight.bold),
@@ -254,16 +255,17 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.note),
+                                  Icon(
+                                    Icons.note,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     'Plot',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 21,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
@@ -272,40 +274,46 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               ),
                               Text(
                                 movie.plot,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                               Divider(),
                               Row(
                                 children: [
-                                  Icon(Icons.person),
+                                  Icon(
+                                    Icons.person,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     'Director & Actors',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 21,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text('${movie.director} - ${movie.actors}'),
+                              Text(
+                                '${movie.director} - ${movie.actors}',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
                               Divider(),
                               Row(
                                 children: [
-                                  Icon(Icons.timer),
+                                  Icon(
+                                    Icons.timer,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     'Released',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 21,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
@@ -314,20 +322,22 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               ),
                               Text(
                                 movie.released,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                               Divider(),
                               Row(
                                 children: [
-                                  Icon(Icons.rate_review),
+                                  Icon(
+                                    Icons.rate_review,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     'IMDB Rating',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 21,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
@@ -335,20 +345,23 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                                 height: 10,
                               ),
                               Text(
-                                  '${movie.imdbRating}/10 (${movie.imdbVotes} votes)'),
+                                '${movie.imdbRating}/10 (${movie.imdbVotes} votes)',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
                               Divider(),
                               Row(
                                 children: [
-                                  Icon(Icons.rate_review),
+                                  Icon(
+                                    Icons.movie_sharp,
+                                    color: Theme.of(context).iconTheme.color,
+                                  ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     'Genre',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 21,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline3,
                                   )
                                 ],
                               ),
@@ -357,6 +370,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               ),
                               Text(
                                 movie.genre,
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                             ],
                           ),

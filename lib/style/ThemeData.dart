@@ -5,6 +5,11 @@ final String fontFamily = 'Montserrat';
 
 ThemeData darkThemeData = ThemeData(
   textTheme: TextTheme(
+    headline3: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 21,
+    ),
     headline4: TextStyle(
         color: Colors.grey.shade200, fontSize: 16, fontWeight: FontWeight.bold),
     headline5: TextStyle(
@@ -26,6 +31,11 @@ ThemeData darkThemeData = ThemeData(
 
 ThemeData themeData = ThemeData(
   textTheme: TextTheme(
+    headline3: TextStyle(
+      color: colorNavy,
+      fontWeight: FontWeight.bold,
+      fontSize: 21,
+    ),
     headline4: TextStyle(
         color: Colors.grey.shade800, fontSize: 16, fontWeight: FontWeight.bold),
     headline5: TextStyle(
