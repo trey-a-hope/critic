@@ -152,7 +152,6 @@ class ModalService extends IModalService {
           );
         } else {
           return AlertDialog(
-            
             title: Text(title),
             content: Text(message),
             actions: <Widget>[

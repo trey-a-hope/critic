@@ -10,7 +10,7 @@ import 'dart:convert' show json;
 abstract class IUserService {
   Future<void> createUser({@required UserModel user});
   Future<UserModel> retrieveUser({@required String uid});
-  Future<List<UserModel>> retrieveAllUsers();
+  Future<List<UserModel>> retrieveUsers({int limit, String orderBy});
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
       {@required String uid, @required Map<String, dynamic> data});
@@ -115,9 +115,19 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<List<UserModel>> retrieveAllUsers() async {
+  Future<List<UserModel>> retrieveUsers({int limit, String orderBy}) async {
     try {
-      return (await _usersDB.get())
+      Query query = _usersDB;
+
+      if (limit != null) {
+        query = query.limit(limit);
+      }
+
+      if (orderBy != null) {
+        query = query.orderBy(orderBy, descending: true);
+      }
+
+      return (await query.get())
           .docs
           .map((doc) => UserModel.fromDoc(ds: doc))
           .toList();

@@ -1,4 +1,3 @@
-import 'package:critic/Constants.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';

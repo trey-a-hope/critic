@@ -1,4 +1,3 @@
-import 'package:critic/Constants.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
 import 'package:critic/main.dart';
