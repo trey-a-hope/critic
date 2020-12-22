@@ -1,5 +1,4 @@
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
-import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/widgets/Spinner.dart';

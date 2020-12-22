@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
@@ -11,8 +12,13 @@ class UserListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(user.imgUrl),
+      leading: CachedNetworkImage(
+        imageUrl: '${user.imgUrl}',
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          backgroundImage: imageProvider,
+        ),
+        placeholder: (context, url) => CircularProgressIndicator(),
+        errorWidget: (context, url, error) => Icon(Icons.error),
       ),
       title: Text(
         '${user.username}',

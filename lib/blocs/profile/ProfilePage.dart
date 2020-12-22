@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
@@ -116,10 +117,17 @@ class ProfilePageState extends State<ProfilePage>
                           children: [
                             Stack(
                               children: <Widget>[
-                                GFAvatar(
-                                  radius: 40,
-                                  backgroundImage:
-                                      NetworkImage(currentUser.imgUrl),
+                                CachedNetworkImage(
+                                  imageUrl: '${currentUser.imgUrl}',
+                                  imageBuilder: (context, imageProvider) =>
+                                      GFAvatar(
+                                    radius: 40,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
                                 ),
                                 Positioned(
                                   bottom: 1,

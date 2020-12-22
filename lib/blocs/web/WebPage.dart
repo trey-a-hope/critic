@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
@@ -90,9 +91,16 @@ class WebPageState extends State<WebPage> implements WEB_BP.WebBlocDelegate {
                                   padding: EdgeInsets.all(10),
                                   child: ListTile(
                                     tileColor: Colors.grey.shade400,
-                                    leading: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(user.imgUrl),
+                                    leading: CachedNetworkImage(
+                                      imageUrl: '${user.imgUrl}',
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
                                     title: Text(user.username),
                                     subtitle: Text(
@@ -116,9 +124,16 @@ class WebPageState extends State<WebPage> implements WEB_BP.WebBlocDelegate {
                                   padding: EdgeInsets.all(10),
                                   child: ListTile(
                                     tileColor: Colors.grey.shade400,
-                                    leading: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(user.imgUrl),
+                                    leading: CachedNetworkImage(
+                                      imageUrl: '${user.imgUrl}',
+                                      imageBuilder: (context, imageProvider) =>
+                                          CircleAvatar(
+                                        backgroundImage: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
                                     title: Text(user.username),
                                     subtitle:

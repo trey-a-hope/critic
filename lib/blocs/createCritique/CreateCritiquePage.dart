@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
@@ -232,7 +233,17 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(20),
-                                  child: Image.network(movie.poster),
+                                  child: CachedNetworkImage(
+                                    imageUrl: '${movie.poster}',
+                                    imageBuilder: (context, imageProvider) =>
+                                        Image(
+                                      image: imageProvider,
+                                    ),
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
                                 ),
                                 Flexible(
                                   child: Padding(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
@@ -58,8 +59,16 @@ class BlockedUsersPageState extends State<BlockedUsersPage>
                       itemBuilder: (BuildContext context, int index) {
                         final UserModel user = state.users[index];
                         return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(user.imgUrl),
+                          leading: CachedNetworkImage(
+                            imageUrl: '${user.imgUrl}',
+                            imageBuilder: (context, imageProvider) =>
+                                CircleAvatar(
+                              backgroundImage: imageProvider,
+                            ),
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                           title: Text(
                             '${user.username}',

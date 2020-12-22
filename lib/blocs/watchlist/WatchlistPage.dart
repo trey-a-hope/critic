@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
@@ -120,9 +121,14 @@ class WatchlistPageState extends State<WatchlistPage>
                   Icons.chevron_right,
                   color: Theme.of(context).iconTheme.color,
                 ),
-                leading: Image.network(
-                  movie.poster,
-                  height: 100,
+                leading: CachedNetworkImage(
+                  imageUrl: '${movie.poster}',
+                  imageBuilder: (context, imageProvider) => Image(
+                    image: imageProvider,
+                    height: 100,
+                  ),
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               );
             },

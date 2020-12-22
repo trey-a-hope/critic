@@ -28,5 +28,6 @@ const int CRITIQUE_CHAR_LIMIT = 200;
 
 const String EMAIL = 'thope@imabigcritic.com';
 
-const String MESSAGE_EMPTY_CRITIQUES = 'Currently no critiques at this moment.';
-const String MESSAGE_EMPTY_WATCHLIST = 'Currently no movies in your watchlist.';
+const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';
+const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
+const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';

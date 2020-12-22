@@ -1,4 +1,3 @@
-import 'package:critic/Constants.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/UserService.dart';
@@ -6,7 +5,6 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:critic/widgets/UserListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import '../../ServiceLocator.dart';
 import 'Bloc.dart' as FOLLOWINGS_BP;
 import 'package:pagination/pagination.dart';

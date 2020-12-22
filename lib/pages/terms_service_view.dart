@@ -1,24 +1,7 @@
-import 'package:critic/Constants.dart';
 import 'package:flutter/material.dart';
 
 class TermsServicePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  // final TextStyle _headerTextStyle = TextStyle(
-  //   fontSize: 21,
-  //   fontWeight: FontWeight.bold,
-  // );
-
-  // final TextStyle _paragraphTextStyle = TextStyle(
-  //   fontSize: 18,
-  // );
-
-  // final SizedBox _space = SizedBox(
-  //   height: 30,
-  // );
-  // final SizedBox _smallSpace = SizedBox(
-  //   height: 10,
-  // );
 
   @override
   Widget build(BuildContext context) {

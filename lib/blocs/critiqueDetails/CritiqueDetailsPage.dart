@@ -1,4 +1,4 @@
-import 'package:critic/Constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
@@ -126,31 +126,6 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       fontWeight: FontWeight.bold, color: Colors.white),
                   labelBackgroundColor: Colors.blue,
                 ),
-                // SpeedDialChild(
-                //   child: Icon(Icons.share, color: Colors.white),
-                //   backgroundColor: Colors.green,
-                //   onTap: () async {
-                //     try {
-                //       await Share.share(
-                //         // [critique.moviePoster],
-                //         'I just saw the movie ${critique.moviePoster}',
-                //         // '${critiqueUser.username} saw ${movie.title}',
-                //       );
-                //     } catch (error) {
-                //       locator<ModalService>().showAlert(
-                //         context: context,
-                //         title: 'Error',
-                //         message: error.toString(),
-                //       );
-                //     }
-                //   },
-                //   label: 'Share',
-                //   labelStyle: TextStyle(
-                //     fontWeight: FontWeight.bold,
-                //     color: Colors.white,
-                //   ),
-                //   labelBackgroundColor: Colors.green,
-                // ),
                 currentUser.uid == critique.uid
                     ? SpeedDialChild(
                         child: Icon(Icons.delete, color: Colors.white),
@@ -212,24 +187,35 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     child: Row(
                       children: <Widget>[
                         Expanded(
-                            child: InkWell(
-                          onTap: () async {},
-                          child: Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: NetworkImage('${movie.poster}'),
-                                  fit: BoxFit.cover),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(5.0, 5.0),
-                                    blurRadius: 10.0)
-                              ],
+                          child: InkWell(
+                            onTap: () async {},
+                            child: CachedNetworkImage(
+                              imageUrl: '${movie.poster}',
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey,
+                                        offset: Offset(5.0, 5.0),
+                                        blurRadius: 10.0)
+                                  ],
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                           ),
-                        )),
+                        ),
                         Expanded(
                           child: Container(
                             padding: EdgeInsets.all(10.0),
@@ -242,7 +228,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 ),
                                 Spacer(),
                                 RaisedButton(
-                                    color:Colors.red.shade900,
+                                    color: Colors.red.shade900,
                                     textColor: Colors.white,
                                     child: Text('View Details'),
                                     onPressed: () async {
@@ -307,8 +293,14 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
                         Navigator.push(context, route);
                       },
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage('${critiqueUser.imgUrl}'),
+                      child: CachedNetworkImage(
+                        imageUrl: '${critiqueUser.imgUrl}',
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundImage: imageProvider,
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
                     title: Text('${critiqueUser.username}',

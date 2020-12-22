@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';
@@ -7,6 +8,7 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
+import '../../Constants.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart' as COMMENTS_BP;
 import 'package:pagination/pagination.dart';
@@ -94,8 +96,14 @@ class CommentsPageState extends State<CommentsPage>
               itemBuilder: (BuildContext context, CommentModel comment) {
                 return ListTile(
                   leading: InkWell(
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(comment.user.imgUrl),
+                    child: CachedNetworkImage(
+                      imageUrl: '${comment.user.imgUrl}',
+                      imageBuilder: (context, imageProvider) => CircleAvatar(
+                        backgroundImage: imageProvider,
+                      ),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
                     ),
                     onTap: () {
                       Route route = MaterialPageRoute(
@@ -196,10 +204,8 @@ class CommentsPageState extends State<CommentsPage>
                   children: [
                     Icon(Icons.supervised_user_circle,
                         size: 100, color: Theme.of(context).iconTheme.color),
-                    Text('No comments at the moment.',
+                    Text('$MESSAGE_EMPTY_COMMENTS',
                         style: Theme.of(context).textTheme.headline4),
-                    Text('Come back later.',
-                        style: Theme.of(context).textTheme.headline4)
                   ],
                 ),
               ),

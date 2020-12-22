@@ -6,7 +6,6 @@ import 'package:critic/services/ModalService.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:settings_ui/settings_ui.dart';
 import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../ServiceLocator.dart';

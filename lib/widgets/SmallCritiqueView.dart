@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/critiqueDetails/Bloc.dart' as CRITIQUE_DETAILS_BP;
@@ -126,10 +127,13 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
 
           Navigator.push(context, route);
         },
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(
-            '${userWhoPosted.imgUrl}',
+        child: CachedNetworkImage(
+          imageUrl: '${userWhoPosted.imgUrl}',
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundImage: imageProvider,
           ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ),
       ),
       leading: InkWell(
@@ -150,9 +154,14 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
 
           Navigator.push(context, route);
         },
-        child: Image.network(
-          critique.moviePoster,
-          height: 100,
+        child: CachedNetworkImage(
+          imageUrl: '${critique.moviePoster}',
+          imageBuilder: (context, imageProvider) => Image(
+            image: imageProvider,
+            height: 100,
+          ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
         ),
       ),
     );

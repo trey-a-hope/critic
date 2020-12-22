@@ -1,4 +1,3 @@
-import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:flutter/material.dart';

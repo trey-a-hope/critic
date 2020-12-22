@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/CritiqueModel.dart';
@@ -116,10 +117,17 @@ class OtherProfilePageState extends State<OtherProfilePage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundImage:
-                                  NetworkImage('${otherUser.imgUrl}'),
+                            CachedNetworkImage(
+                              imageUrl: '${otherUser.imgUrl}',
+                              imageBuilder: (context, imageProvider) =>
+                                  CircleAvatar(
+                                radius: 40,
+                                backgroundImage: imageProvider,
+                              ),
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
                             SizedBox(height: 10),
                             Row(

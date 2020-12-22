@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesBloc.dart';
 import 'package:critic/models/MovieModel.dart';
@@ -129,9 +130,14 @@ class _SearchBody extends StatelessWidget {
                 final SearchMoviesResultItemModel movie = movies[index];
 
                 return ListTile(
-                  leading: Image.network(
-                    movie.poster,
-                    height: 100,
+                  leading: CachedNetworkImage(
+                    imageUrl: '${movie.poster}',
+                    imageBuilder: (context, imageProvider) => Image(
+                      image: imageProvider,
+                      height: 100,
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   title: Text(
                     '${movie.title}',
