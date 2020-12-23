@@ -151,7 +151,6 @@ class SignUpPageState extends State<SignUpPage>
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: locator<ValidationService>().isEmpty,
-                              obscureText: true,
                               controller: _usernameController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
@@ -165,8 +164,6 @@ class SignUpPageState extends State<SignUpPage>
                                       Radius.circular(90.0),
                                     ),
                                     borderSide: BorderSide.none,
-
-                                    //borderSide: const BorderSide(),
                                   ),
                                   hintStyle: TextStyle(
                                       color: Colors.white,
@@ -278,146 +275,6 @@ class SignUpPageState extends State<SignUpPage>
                 )
               ],
             );
-
-            // return SafeArea(
-            //   child: Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: 40),
-            //     child: Form(
-            //       key: state.formKey,
-            //       autovalidate: state.autoValidate,
-            //       child: Column(
-            //         crossAxisAlignment: CrossAxisAlignment.start,
-            //         children: [
-            //           Container(
-            //             margin: EdgeInsets.only(top: 30, left: 10, right: 10),
-            //             child: TextFormField(
-            //               controller: _usernameController,
-            //               keyboardType: TextInputType.text,
-            //               textInputAction: TextInputAction.next,
-            //               maxLengthEnforced: true,
-            //               // maxLength: MyFormData.nameCharLimit,
-            //               onFieldSubmitted: (term) {},
-            //               validator: locator<ValidationService>().isEmpty,
-            //               onSaved: (value) {},
-            //               decoration: InputDecoration(
-            //                 focusedBorder: UnderlineInputBorder(
-            //                   borderSide: BorderSide(color: Colors.red),
-            //                 ),
-            //                 hintText: 'Username',
-            //                 // icon: Icon(Icons.email),
-            //                 fillColor: Colors.white,
-            //               ),
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.only(top: 30, left: 10, right: 10),
-            //             child: TextFormField(
-            //               controller: _emailController,
-            //               keyboardType: TextInputType.emailAddress,
-            //               textInputAction: TextInputAction.next,
-            //               maxLengthEnforced: true,
-            //               // maxLength: MyFormData.nameCharLimit,
-            //               onFieldSubmitted: (term) {},
-            //               validator: locator<ValidationService>().email,
-            //               onSaved: (value) {},
-            //               decoration: InputDecoration(
-            //                 focusedBorder: UnderlineInputBorder(
-            //                   borderSide: BorderSide(color: Colors.red),
-            //                 ),
-            //                 hintText: 'Email',
-            //                 // icon: Icon(Icons.email),
-            //                 fillColor: Colors.white,
-            //               ),
-            //             ),
-            //           ),
-            //           Container(
-            //             margin: EdgeInsets.only(top: 30, left: 10, right: 10),
-            //             child: TextFormField(
-            //               controller: _passwordController,
-            //               keyboardType: TextInputType.emailAddress,
-            //               textInputAction: TextInputAction.next,
-            //               maxLengthEnforced: true,
-            //               // maxLength: MyFormData.nameCharLimit,
-            //               onFieldSubmitted: (term) {},
-            //               obscureText: true,
-            //               validator: locator<ValidationService>().password,
-            //               // onSaved: (value) {},
-            //               decoration: InputDecoration(
-            //                 focusedBorder: UnderlineInputBorder(
-            //                   borderSide: BorderSide(color: Colors.red),
-            //                 ),
-            //                 hintText: 'Password',
-            //                 // icon: Icon(Icons.email),
-            //                 fillColor: Colors.white,
-            //               ),
-            //             ),
-            //           ),
-            //           CheckboxListTile(
-            //             title: InkWell(
-            //               onTap: () {
-            //                 Route route = MaterialPageRoute(
-            //                   builder: (BuildContext context) =>
-            //                       TermsServicePage(),
-            //                 );
-            //                 Navigator.of(context).push(route);
-            //               },
-            //               child: RichText(
-            //                 text: TextSpan(
-            //                   style:
-            //                       TextStyle(color: Colors.black, fontSize: 12),
-            //                   children: [
-            //                     TextSpan(text: 'I accept and agree to the '),
-            //                     TextSpan(
-            //                       text: 'Terms & Services',
-            //                       style: TextStyle(fontWeight: FontWeight.bold),
-            //                     ),
-            //                     TextSpan(text: ' of Critic.')
-            //                   ],
-            //                 ),
-            //               ),
-            //             ),
-            //             value: state.termsServicesChecked,
-            //             onChanged: (newValue) {
-            //               _signUpBloc.add(
-            //                 TermsServiceCheckboxEvent(
-            //                     formKey: state.formKey, checked: newValue),
-            //               );
-            //             },
-            //           ),
-            //           Spacer(),
-            //           Row(
-            //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //             children: <Widget>[
-            //               RaisedButton(
-            //                 child: Text('SIGN UP'),
-            //                 color: Colors.red,
-            //                 textColor: Colors.white,
-            //                 onPressed: () {
-            //                   if (!state.termsServicesChecked) {
-            //                     locator<ModalService>().showInSnackBar(
-            //                         scaffoldKey: _scaffoldKey,
-            //                         message:
-            //                             'Error: You must check the Terms & Service first.');
-            //                     return;
-            //                   }
-
-            //                   _signUpBloc.add(
-            //                     SignUp(
-            //                       formKey: state.formKey,
-            //                       username: _usernameController.text,
-            //                       password: _passwordController.text,
-            //                       email: _emailController.text,
-            //                     ),
-            //                   );
-            //                 },
-            //               )
-            //             ],
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // );
           }
 
           return Center(
