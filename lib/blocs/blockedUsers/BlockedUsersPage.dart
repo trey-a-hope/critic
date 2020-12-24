@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

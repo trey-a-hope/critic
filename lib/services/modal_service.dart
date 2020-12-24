@@ -25,11 +25,16 @@ class ModalService extends IModalService {
   @override
   void showInSnackBar(
       {@required BuildContext context, @required String message}) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
       ),
     );
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   SnackBar(
+    //     content: Text(message),
+    //   ),
+    // );
   }
 
   @override

@@ -6,7 +6,7 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';

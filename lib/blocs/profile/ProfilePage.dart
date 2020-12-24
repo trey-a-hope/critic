@@ -9,7 +9,7 @@ import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/cupertino.dart';

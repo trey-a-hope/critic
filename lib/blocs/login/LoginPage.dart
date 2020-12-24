@@ -1,7 +1,7 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/signUp/Bloc.dart' as SIGN_UP_BP;
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';

@@ -2,7 +2,7 @@ import 'package:critic/main.dart';
 import 'package:critic/pages/ContactPage.dart';
 import 'package:critic/pages/terms_service_view.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

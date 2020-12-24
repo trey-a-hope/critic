@@ -4,7 +4,7 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
