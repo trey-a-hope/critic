@@ -1,14 +1,4 @@
-import 'package:critic/Constants.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/blocs/signUp/Bloc.dart' as SIGN_UP_BP;
-import 'package:critic/services/modal_service.dart';
-import 'package:critic/services/ValidationService.dart';
-import 'package:critic/widgets/FullWidthButton.dart';
-import 'package:critic/widgets/Spinner.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'Bloc.dart' as LOGIN_BP;
-import 'package:critic/blocs/forgotPassword/Bloc.dart' as FORGOT_PASSWORD_BP;
+part of 'login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,9 +6,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin
-    implements LOGIN_BP.LoginBlocDelegate {
-  LOGIN_BP.LoginBloc _loginBloc;
+    with SingleTickerProviderStateMixin {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -26,78 +14,100 @@ class LoginPageState extends State<LoginPage>
 
   @override
   void initState() {
-    _loginBloc = BlocProvider.of<LOGIN_BP.LoginBloc>(context);
-    _loginBloc.setDelegate(delegate: this);
-
     super.initState();
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _loginBloc.close();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       key: _scaffoldKey,
-      body: BlocBuilder<LOGIN_BP.LoginBloc, LOGIN_BP.LoginState>(
-        builder: (BuildContext context, LOGIN_BP.LoginState state) {
-          if (state is LOGIN_BP.LoadingState) {
-            return Spinner();
-          }
+      body: Stack(
+        children: [
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(ASSET_LOGIN_BG),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    Colors.black.withOpacity(0.9),
+                    Colors.black.withOpacity(0.7)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0, 1]),
+            ),
+          ),
+          SafeArea(
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  SizedBox(
+                    height: 100,
+                  ),
+                  Image.asset(
+                    ASSET_APP_ICON,
+                    height: 100,
+                  ),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  BlocConsumer<LoginBloc, LoginState>(
+                      builder: (context, state) {
+                    if (state is LoginLoading) {
+                      return Spinner();
+                    }
 
-          if (state is LOGIN_BP.LoginStartState) {
-            return Stack(
-              children: [
-                Container(
-                  width: screenWidth,
-                  height: screenHeight,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(ASSET_LOGIN_BG),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.9),
-                          Colors.black.withOpacity(0.7)
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0, 1]),
-                  ),
-                ),
-                SafeArea(
-                  child: Container(
-                    height: screenHeight,
-                    width: screenWidth,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Form(
-                        key: _formKey,
-                        child: ListView(
-                          // crossAxisAlignment: CrossAxisAlignment.center,
-                          // mainAxisAlignment: MainAxisAlignment.center,
+                    if (state is LoginError) {
+                      final String errorMessage = state.error.message ??
+                          'Could not log in at this time.';
+
+                      return Center(
+                        child: Column(
                           children: [
-                            SizedBox(
-                              height: 100,
+                            Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text(
+                                '$errorMessage',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w300),
+                              ),
                             ),
-                            Image.asset(
-                              ASSET_APP_ICON,
-                              height: 100,
+                            RaisedButton(
+                              onPressed: () {
+                                context.read<LoginBloc>().add(
+                                      TryAgain(),
+                                    );
+                              },
+                              child: Text(
+                                'Try Again?',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            SizedBox(
-                              height: 100,
-                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (state is LoginInitial) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
                             TextFormField(
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
@@ -105,6 +115,7 @@ class LoginPageState extends State<LoginPage>
                               controller: _emailController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                  errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.alternate_email,
                                     color: Colors.white,
@@ -134,6 +145,7 @@ class LoginPageState extends State<LoginPage>
                               controller: _passwordController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                  errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.lock,
                                     color: Colors.white,
@@ -162,7 +174,7 @@ class LoginPageState extends State<LoginPage>
                                 child: Text(
                                   'Forgot Password?',
                                   style: TextStyle(
-                                    color: Colors.grey,
+                                    color: Colors.grey.shade100,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -199,12 +211,12 @@ class LoginPageState extends State<LoginPage>
                                 final String password =
                                     _passwordController.text;
 
-                                _loginBloc.add(
-                                  LOGIN_BP.Login(
-                                    email: email,
-                                    password: password,
-                                  ),
-                                );
+                                context.read<LoginBloc>().add(
+                                      Login(
+                                        email: email,
+                                        password: password,
+                                      ),
+                                    );
                               },
                             ),
                             Padding(
@@ -238,29 +250,25 @@ class LoginPageState extends State<LoginPage>
                             )
                           ],
                         ),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            );
-          }
+                      );
+                    }
 
-          return Center(
-            child: Text('You should NEVER see this.'),
-          );
-        },
+                    return Container();
+                  }, listener: (context, state) {
+                    if (state == LoginSuccess()) {
+                      //Navigator.of(context).popUntil((route) => route.isFirst);
+                    }
+                    if (state is LoginError) {
+                      print('failure');
+                      //todo: Report this sign in failure somewhere perhaps?
+                    }
+                  })
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
-  }
-
-  @override
-  void navigateHome() {
-    Navigator.of(context).pop();
-  }
-
-  @override
-  void showMessage({String message}) {
-    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }

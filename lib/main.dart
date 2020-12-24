@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:critic/pages/EntryPage.dart';
+import 'package:critic/pages/entry_page.dart';
 import 'package:critic/style/ThemeData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'Constants.dart';
 import 'ServiceLocator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'blocs/login/Bloc.dart' as LOGIN_BP;
+import 'blocs/login/login_bloc.dart';
 import 'blocs/web/Bloc.dart' as WEB_BP;
 
 import 'package:critic/ServiceLocator.dart';
@@ -118,9 +118,9 @@ class MyAppState extends State<MyApp> {
                 screenHeight = MediaQuery.of(context).size.height;
 
                 return firebaseUser == null
-                    ? BlocProvider(
-                        create: (BuildContext context) => LOGIN_BP.LoginBloc(),
-                        child: LOGIN_BP.LoginPage(),
+                    ? BlocProvider<LoginBloc>(
+                        create: (BuildContext context) => LoginBloc(),
+                        child: LoginPage(),
                       )
                     : EntryPage(myAppState: this);
               },

@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'login_bloc.dart';
 
-class LoginEvent extends Equatable {
+abstract class LoginEvent extends Equatable {
+  const LoginEvent();
+
   @override
   List<Object> get props => [];
 }
@@ -20,3 +21,5 @@ class Login extends LoginEvent {
         password,
       ];
 }
+
+class TryAgain extends LoginEvent {}

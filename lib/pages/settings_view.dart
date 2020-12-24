@@ -1,5 +1,5 @@
 import 'package:critic/main.dart';
-import 'package:critic/pages/ContactPage.dart';
+import 'package:critic/pages/contact_page.dart';
 import 'package:critic/pages/terms_service_view.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/modal_service.dart';
