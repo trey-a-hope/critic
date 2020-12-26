@@ -167,11 +167,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   child: Text(
                     'Write Critique About Movie',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    style: Theme.of(context).textTheme.headline6
                   ),
                 ),
               ),
