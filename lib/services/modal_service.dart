@@ -99,6 +99,7 @@ class ModalService extends IModalService {
               validator: locator<ValidationService>().email,
               onSaved: (value) {},
               decoration: InputDecoration(
+                errorStyle: TextStyle(color: Colors.white),
                 hintText: 'New Email',
                 icon: Icon(Icons.email),
                 fillColor: Colors.white,

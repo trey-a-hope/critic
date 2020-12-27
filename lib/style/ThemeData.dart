@@ -27,6 +27,7 @@ ThemeData darkThemeData = ThemeData(
   canvasColor: const Color(0xFF253341),
   dividerColor: Colors.white,
   buttonColor: const Color(0xFF253341),
+  cardColor: const Color(0xFF253341),
 );
 
 ThemeData themeData = ThemeData(
@@ -53,4 +54,5 @@ ThemeData themeData = ThemeData(
   canvasColor: Colors.white,
   dividerColor: const Color(0xFF253341),
   buttonColor: Colors.red.shade900,
+  cardColor: Colors.red.shade900,
 );

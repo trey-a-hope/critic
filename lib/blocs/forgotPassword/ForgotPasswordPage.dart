@@ -82,6 +82,11 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage>
                             style: TextStyle(
                                 color: Colors.black, fontFamily: 'SFUIDisplay'),
                             decoration: InputDecoration(
+                              errorStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .color),
                               border: OutlineInputBorder(),
                               labelText: 'Email',
                               prefixIcon: Icon(Icons.email),

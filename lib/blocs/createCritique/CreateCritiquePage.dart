@@ -57,6 +57,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
+                                                  errorStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
                           counterStyle: TextStyle(
                               color:
                                   Theme.of(context).textTheme.headline6.color),
@@ -117,7 +120,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               ),
                             );
                           },
-                          color: Colors.red,
+                          color: Theme.of(context).buttonColor,
                           textColor: Colors.white,
                         )),
                   ),
@@ -158,8 +161,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 );
               },
               child: Container(
-                color:
-                    Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                color: Theme.of(context).cardColor,
                 height: 60,
                 width: double.infinity,
                 child: Padding(
@@ -167,7 +169,10 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   child: Text(
                     'Write Critique About Movie',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline6
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

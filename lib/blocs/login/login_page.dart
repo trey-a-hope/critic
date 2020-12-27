@@ -145,6 +145,7 @@ class LoginPageState extends State<LoginPage>
                               controller: _passwordController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                
                                   errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.lock,

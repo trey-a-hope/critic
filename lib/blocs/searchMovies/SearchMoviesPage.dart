@@ -59,6 +59,7 @@ class _SearchBarState extends State<_SearchBar> {
       },
       cursorColor: Theme.of(context).textTheme.headline5.color,
       decoration: InputDecoration(
+          errorStyle: TextStyle(color: Colors.white),
           prefixIcon: Icon(
             Icons.search,
             color: Theme.of(context).iconTheme.color,

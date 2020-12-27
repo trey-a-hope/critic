@@ -97,6 +97,7 @@ class SignUpPageState extends State<SignUpPage>
                               controller: _emailController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                  errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.alternate_email,
                                     color: Colors.white,
@@ -126,6 +127,7 @@ class SignUpPageState extends State<SignUpPage>
                               controller: _passwordController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                  errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.lock,
                                     color: Colors.white,
@@ -154,6 +156,7 @@ class SignUpPageState extends State<SignUpPage>
                               controller: _usernameController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
+                                  errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.person,
                                     color: Colors.white,
