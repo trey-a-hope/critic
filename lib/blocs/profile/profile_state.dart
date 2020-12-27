@@ -1,9 +1,8 @@
-//import 'package:bloc/bloc.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+part of 'profile_bloc.dart';
 
-class ProfileState extends Equatable {
+abstract class ProfileState extends Equatable {
+  const ProfileState();
+
   @override
   List<Object> get props => [];
 }

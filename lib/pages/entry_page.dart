@@ -5,7 +5,7 @@ import 'package:critic/pages/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
+import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
@@ -211,10 +211,7 @@ class EntryPageState extends State<EntryPage> {
       ),
       //Profile Page
       BlocProvider(
-        create: (BuildContext context) => PROFILE_BP.ProfileBloc()
-          ..add(
-            PROFILE_BP.LoadPageEvent(),
-          ),
+        create: (BuildContext context) => PROFILE_BP.ProfileBloc(),
         child: PROFILE_BP.ProfilePage(),
       ),
       //Settings Page

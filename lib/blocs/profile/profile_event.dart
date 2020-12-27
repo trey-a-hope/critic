@@ -1,12 +1,12 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-class ProfileEvent extends Equatable {
+part of 'profile_bloc.dart';
+
+abstract class ProfileEvent extends Equatable {
+  const ProfileEvent();
+
   @override
   List<Object> get props => [];
 }
 
-//Event: User selects login.
 class LoadPageEvent extends ProfileEvent {
   LoadPageEvent();
 

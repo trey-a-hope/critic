@@ -1,41 +1,22 @@
-import 'dart:io';
+part of 'profile_bloc.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/Constants.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/blocs/followers/Bloc.dart' as FOLLOWERS_BP;
-import 'package:critic/blocs/followings/Bloc.dart' as FOLLOWINGS_BP;
-import 'package:critic/blocs/profile/Bloc.dart' as PROFILE_BP;
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/modal_service.dart';
-import 'package:critic/widgets/SmallCritiqueView.dart';
-import 'package:critic/widgets/Spinner.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:pagination/pagination.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 class ProfilePage extends StatefulWidget {
   @override
   State createState() => ProfilePageState();
 }
 
-class ProfilePageState extends State<ProfilePage>
-    implements PROFILE_BP.ProfileBlocDelegate {
-  PROFILE_BP.ProfileBloc _profileBloc;
+class ProfilePageState extends State<ProfilePage> {
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
-    _profileBloc = BlocProvider.of<PROFILE_BP.ProfileBloc>(context);
-    _profileBloc.setDelegate(delegate: this);
-
     super.initState();
+    _profileBloc = BlocProvider.of<ProfileBloc>(context)
+      ..add(
+        LoadPageEvent(),
+      );
   }
 
   Future<List<CritiqueModel>> pageFetch(int offset) async {
@@ -68,13 +49,13 @@ class ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PROFILE_BP.ProfileBloc, PROFILE_BP.ProfileState>(
-      builder: (BuildContext context, PROFILE_BP.ProfileState state) {
-        if (state is PROFILE_BP.LoadingState) {
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (BuildContext context, ProfileState state) {
+        if (state is LoadingState) {
           return Spinner();
         }
 
-        if (state is PROFILE_BP.LoadedState) {
+        if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
           final int followerCount = state.followerCount;
           final int followingCount = state.followingCount;
@@ -180,8 +161,7 @@ class ProfilePageState extends State<ProfilePage>
                                       onTap: () {
                                         Route route = MaterialPageRoute(
                                           builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWERS_BP
-                                                .FollowersBloc(
+                                            create: (context) => FOLLOWERS_BP.FollowersBloc(
                                                     user: currentUser)
                                               ..add(
                                                 FOLLOWERS_BP.LoadPageEvent(),
@@ -293,7 +273,7 @@ class ProfilePageState extends State<ProfilePage>
                 ),
                 onRefresh: () {
                   _profileBloc.add(
-                    PROFILE_BP.LoadPageEvent(),
+                    LoadPageEvent(),
                   );
 
                   return;
@@ -324,7 +304,7 @@ class ProfilePageState extends State<ProfilePage>
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    PROFILE_BP.UploadImageEvent(
+                    UploadImageEvent(
                         imageSource: ImageSource.camera),
                   );
                 },
@@ -334,7 +314,7 @@ class ProfilePageState extends State<ProfilePage>
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    PROFILE_BP.UploadImageEvent(
+                    UploadImageEvent(
                         imageSource: ImageSource.gallery),
                   );
                 },
@@ -363,7 +343,7 @@ class ProfilePageState extends State<ProfilePage>
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    PROFILE_BP.UploadImageEvent(
+                    UploadImageEvent(
                         imageSource: ImageSource.camera),
                   );
                 },
@@ -373,7 +353,7 @@ class ProfilePageState extends State<ProfilePage>
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    PROFILE_BP.UploadImageEvent(
+                  UploadImageEvent(
                         imageSource: ImageSource.gallery),
                   );
                 },
@@ -388,14 +368,5 @@ class ProfilePageState extends State<ProfilePage>
             ],
           );
         });
-  }
-
-  @override
-  void showMessage({String message}) {
-    locator<ModalService>().showAlert(
-      context: context,
-      title: 'Error',
-      message: message,
-    );
   }
 }
