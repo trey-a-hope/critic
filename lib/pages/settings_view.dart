@@ -1,3 +1,4 @@
+import 'package:critic/blocs/suggestions/suggestions_bloc.dart';
 import 'package:critic/main.dart';
 import 'package:critic/pages/contact_page.dart';
 import 'package:critic/pages/terms_service_view.dart';
@@ -102,6 +103,26 @@ class SettingsViewState extends State<SettingsView> {
               builder: (BuildContext context) => ContactPage(),
             );
             Navigator.of(context).push(route);
+          },
+        ),
+        ListTile(
+          title: Text(
+            'Leave a Suggestion',
+            style: Theme.of(context).textTheme.headline4,
+          ),
+          trailing: Icon(
+            Icons.chevron_right,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          onTap: () {
+            Route route = MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => SuggestionsBloc()..add(LoadPageEvent()),
+                child: SuggestionsView(),
+              ),
+            );
+
+            Navigator.push(context, route);
           },
         ),
         Padding(
