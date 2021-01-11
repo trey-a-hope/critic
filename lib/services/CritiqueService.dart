@@ -90,6 +90,13 @@ abstract class ICritiqueService {
   Future<List<UserModel>> retrieveLikeUsers({
     @required String critiqueID,
   });
+
+  Future<List<DocumentSnapshot>> retrieveSimilarCritiques({
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+    @required String imdbID,
+    @required String uid,
+  });
 }
 
 class CritiqueService extends ICritiqueService {
@@ -706,6 +713,44 @@ class CritiqueService extends ICritiqueService {
 
       return documentSnapshots;
     } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<DocumentSnapshot>> retrieveSimilarCritiques({
+    @required int limit,
+    @required DocumentSnapshot startAfterDocument,
+    @required String imdbID,
+    @required String uid,
+  }) async {
+    try {
+      Query query = _critiquesDB
+          // .orderBy('created', descending: true)
+          .where('imdbID', isEqualTo: imdbID)
+          .where('uid', isNotEqualTo: uid)
+          .limit(limit)
+          .startAfterDocument(startAfterDocument);
+      // // .where(
+      // //   'created',
+      // //   isLessThan: DateTime.now(),
+      // // );
+
+      // if (limit != null) {
+      //   query = query.limit(limit);
+      // }
+
+      // if (startAfterDocument != null) {
+      //   query = query.startAfterDocument(startAfterDocument);
+      // }
+
+      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+
+      return documentSnapshots;
+    } catch (e) {
+      print(e);
       throw Exception(
         e.toString(),
       );

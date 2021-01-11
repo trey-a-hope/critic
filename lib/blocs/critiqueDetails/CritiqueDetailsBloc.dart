@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/CritiqueStatsModel.dart';
 import 'package:critic/models/MovieModel.dart';
@@ -37,6 +38,8 @@ class CritiqueDetailsBloc
   int _likeCount = 0;
 
   MovieModel movieModel;
+
+  DocumentSnapshot similarCritiquesStartAfterDocument;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
     this._critiqueDetailsBlocDelegate = delegate;

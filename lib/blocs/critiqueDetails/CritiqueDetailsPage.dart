@@ -1,13 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/MovieService.dart';
+import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:pagination/pagination.dart';
+import '../../Constants.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
@@ -38,6 +44,38 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<List<CritiqueModel>> fetchSimilarCritiques(int offset) async {
+    //Fetch template documents.
+    List<DocumentSnapshot> documentSnapshots =
+        await locator<CritiqueService>().retrieveSimilarCritiques(
+      limit: 25,
+      startAfterDocument:
+          _critiqueDetailsBloc.similarCritiquesStartAfterDocument,
+      uid: _critiqueDetailsBloc.critiqueModel.uid,
+      imdbID: _critiqueDetailsBloc.critiqueModel.imdbID,
+    );
+
+    //Return an empty list if there are no new documents.
+    if (documentSnapshots.isEmpty) {
+      return [];
+    }
+
+    _critiqueDetailsBloc.similarCritiquesStartAfterDocument =
+        documentSnapshots[documentSnapshots.length - 1];
+
+    List<CritiqueModel> critiques = [];
+
+    //Convert documents to template models.
+    documentSnapshots.forEach((documentSnapshot) {
+      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
+      critiques.add(critiqueModel);
+    });
+
+    //todo: sort critiques client side.
+
+    return critiques;
   }
 
   @override
@@ -177,7 +215,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
               ],
             ),
             body: SafeArea(
-              child: Column(
+              child: ListView(
                 children: [
                   SizedBox(height: 10),
                   Container(
@@ -309,8 +347,80 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}',
                         style: Theme.of(context).textTheme.headline6),
                   ),
+                  Divider(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Similar Critiques',
+                      style: TextStyle(fontSize: 21),
+                    ),
+                  ),
+                  Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: PaginationList<CritiqueModel>(
+                      scrollDirection: Axis.horizontal,
+                      onLoading: Spinner(),
+                      onPageLoading: Spinner(),
+                      separatorWidget: Divider(
+                        height: 0,
+                        color: Theme.of(context).dividerColor,
+                      ),
+                      itemBuilder:
+                          (BuildContext context, CritiqueModel critique) {
+                        return Container(
+                          height: 100,
+                          color: Colors.grey.shade100,
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Container(
+                              height: 100,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              child: Text(critique.movieTitle),
+                            ),
+                          ),
+                        );
+                      },
+                      pageFetch: fetchSimilarCritiques,
+                      onError: (dynamic error) => Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error,
+                              size: 100,
+                              color: Colors.grey,
+                            ),
+                            Text(
+                              'Error',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              error.toString(),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                      onEmpty: Container(
+                        height: 100,
+                        width: 200,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+
                   SizedBox(height: 10),
-                  Spacer(),
+                  // Spacer(),
                   Padding(
                     padding: EdgeInsets.only(left: 30),
                     child: Row(
