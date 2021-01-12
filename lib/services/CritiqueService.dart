@@ -727,26 +727,24 @@ class CritiqueService extends ICritiqueService {
     @required String uid,
   }) async {
     try {
-      Query query = _critiquesDB
-          // .orderBy('created', descending: true)
-          .where('imdbID', isEqualTo: imdbID)
-          .where('uid', isNotEqualTo: uid)
-          .limit(limit)
-          .startAfterDocument(startAfterDocument);
-      // // .where(
-      // //   'created',
-      // //   isLessThan: DateTime.now(),
-      // // );
+      Query query = _critiquesDB.orderBy(
+        'uid',
+        descending: true,
+      );
 
-      // if (limit != null) {
-      //   query = query.limit(limit);
-      // }
+      query = query.where('imdbID', isEqualTo: imdbID);
+      query = query.where('uid',
+          isNotEqualTo:
+              uid); //The second where clause must be the same as the orderBy for some reason.
+      query = query.limit(limit);
 
-      // if (startAfterDocument != null) {
-      //   query = query.startAfterDocument(startAfterDocument);
-      // }
+      if (startAfterDocument != null) {
+        query = query.startAfterDocument(startAfterDocument);
+      }
 
-      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
+      QuerySnapshot querySnapshot = await query.get();
+
+      List<DocumentSnapshot> documentSnapshots = querySnapshot.docs;
 
       return documentSnapshots;
     } catch (e) {

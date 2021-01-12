@@ -33,13 +33,11 @@ class CritiqueDetailsBloc
 
   UserModel _critiqueUser;
 
-  bool _isLiked = false;
-
-  int _likeCount = 0;
-
   MovieModel movieModel;
 
   DocumentSnapshot similarCritiquesStartAfterDocument;
+
+  DocumentSnapshot commentsStartAfterDocument;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
     this._critiqueDetailsBlocDelegate = delegate;
@@ -67,16 +65,16 @@ class CritiqueDetailsBloc
           critiqueID: critiqueModel.id,
         );
 
-        _isLiked = critiqueStats.isLiked;
-        _likeCount = critiqueStats.likeCount;
+        bool isLiked = critiqueStats.isLiked;
+        critiqueModel.likeCount = critiqueStats.likeCount;
 
         yield LoadedState(
           currentUser: _currentUser,
           critiqueUser: _critiqueUser,
           critiqueModel: critiqueModel,
           movieModel: movieModel,
-          isLiked: _isLiked,
-          likeCount: _likeCount,
+          isLiked: isLiked,
+          likeCount: critiqueModel.likeCount,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
@@ -136,8 +134,13 @@ class CritiqueDetailsBloc
 
         critiqueModel.likeCount++;
 
-        add(
-          LoadPageEvent(),
+        yield LoadedState(
+          currentUser: _currentUser,
+          critiqueUser: _critiqueUser,
+          critiqueModel: critiqueModel,
+          movieModel: movieModel,
+          isLiked: true,
+          likeCount: critiqueModel.likeCount,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
@@ -154,8 +157,13 @@ class CritiqueDetailsBloc
 
         critiqueModel.likeCount--;
 
-        add(
-          LoadPageEvent(),
+        yield LoadedState(
+          currentUser: _currentUser,
+          critiqueUser: _critiqueUser,
+          critiqueModel: critiqueModel,
+          movieModel: movieModel,
+          isLiked: false,
+          likeCount: critiqueModel.likeCount,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(

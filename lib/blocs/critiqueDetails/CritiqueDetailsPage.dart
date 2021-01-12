@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
@@ -50,7 +51,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     //Fetch template documents.
     List<DocumentSnapshot> documentSnapshots =
         await locator<CritiqueService>().retrieveSimilarCritiques(
-      limit: 25,
+      limit: 1,
       startAfterDocument:
           _critiqueDetailsBloc.similarCritiquesStartAfterDocument,
       uid: _critiqueDetailsBloc.critiqueModel.uid,
@@ -76,6 +77,34 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     //todo: sort critiques client side.
 
     return critiques;
+  }
+
+  Future<List<CommentModel>> fetchComments(int offset) async {
+    //Fetch template documents.
+    List<DocumentSnapshot> documentSnapshots =
+        await locator<CritiqueService>().retrieveCommentsFromFirebase(
+      limit: 1,
+      startAfterDocument: _critiqueDetailsBloc.commentsStartAfterDocument,
+      critiqueID: _critiqueDetailsBloc.critiqueModel.id,
+    );
+
+    //Return an empty list if there are no new documents.
+    if (documentSnapshots.isEmpty) {
+      return [];
+    }
+
+    _critiqueDetailsBloc.commentsStartAfterDocument =
+        documentSnapshots[documentSnapshots.length - 1];
+
+    List<CommentModel> comments = [];
+
+    //Convert documents to template models.
+    documentSnapshots.forEach((documentSnapshot) {
+      CommentModel comment = CommentModel.fromDoc(ds: documentSnapshot);
+      comments.add(comment);
+    });
+
+    return comments;
   }
 
   @override
@@ -110,37 +139,28 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
               animatedIconTheme: IconThemeData(size: 22.0),
               curve: Curves.bounceIn,
               children: [
-                isLiked
-                    ? SpeedDialChild(
-                        child: Icon(Icons.favorite, color: Colors.red),
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.UnlikeCritiqueEvent(),
-                          );
-                        },
-                        label: 'Unlike',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                SpeedDialChild(
+                    label: 'View Comments',
+                    labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                    labelBackgroundColor: Colors.green,
+                    child: Icon(MdiIcons.eye, color: Colors.white),
+                    backgroundColor: Colors.green,
+                    onTap: () {
+                      Route route = MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => COMMENTS_BP.CommentsBloc(
+                            critique: critique,
+                            currentUser: currentUser,
+                          )..add(
+                              COMMENTS_BP.LoadPageEvent(),
+                            ),
+                          child: COMMENTS_BP.CommentsPage(),
                         ),
-                        labelBackgroundColor: Colors.white,
-                      )
-                    : SpeedDialChild(
-                        child: Icon(Icons.favorite, color: Colors.white),
-                        backgroundColor: Colors.red,
-                        onTap: () {
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.LikeCritiqueEvent(),
-                          );
-                        },
-                        label: 'Like',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        labelBackgroundColor: Colors.red,
-                      ),
+                      );
+
+                      Navigator.push(context, route);
+                    }),
                 SpeedDialChild(
                   child: Icon(Icons.comment, color: Colors.white),
                   backgroundColor: Colors.blue,
@@ -346,6 +366,54 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     subtitle: Text(
                         '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}',
                         style: Theme.of(context).textTheme.headline6),
+                    trailing: GestureDetector(
+                      onLongPress: () {
+                        Route route = MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => LIKES_BP.LikesBloc(
+                              critique: critique,
+                            )..add(
+                                LIKES_BP.LoadPageEvent(),
+                              ),
+                            child: LIKES_BP.LikesPage(),
+                          ),
+                        );
+
+                        Navigator.push(context, route);
+                      },
+                      onTap: () {
+                        if (isLiked) {
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.UnlikeCritiqueEvent(),
+                          );
+                        } else {
+                          _critiqueDetailsBloc.add(
+                            CRITIQUE_DETAILS_BP.LikeCritiqueEvent(),
+                          );
+                        }
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '$likeCount',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, color: Colors.red),
+                          ),
+                          Icon(
+                            isLiked ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '(Longpress heart to view all likers)',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                   Divider(),
                   Padding(
@@ -370,22 +438,25 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                           (BuildContext context, CritiqueModel critique) {
                         return Container(
                           height: 100,
-                          color: Colors.grey.shade100,
                           width: MediaQuery.of(context).size.width * 0.75,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Container(
-                              height: 100,
-                              width: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: SmallCritiqueView(
+                                critique: critique,
+                                currentUser: currentUser,
+                              )
+                              // Container(
+                              //   height: 100,
+                              //   width: 200,
+                              //   decoration: BoxDecoration(
+                              //     color: Colors.grey.shade200,
+                              //     borderRadius: BorderRadius.all(
+                              //       Radius.circular(20),
+                              //     ),
+                              //   ),
+                              //   child: Text(critique.movieTitle),
+                              // ),
                               ),
-                              child: Text(critique.movieTitle),
-                            ),
-                          ),
                         );
                       },
                       pageFetch: fetchSimilarCritiques,
@@ -414,79 +485,13 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       onEmpty: Container(
                         height: 100,
                         width: 200,
-                        color: Colors.green,
+                        child: Center(
+                            child: Text('No one else has critiqued yet.')),
                       ),
                     ),
                   ),
-
                   SizedBox(height: 10),
-                  // Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        FloatingActionButton.extended(
-                          backgroundColor: Theme.of(context).buttonColor,
-                          onPressed: () {
-                            Route route = MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) => COMMENTS_BP.CommentsBloc(
-                                  critique: critique,
-                                  currentUser: currentUser,
-                                )..add(
-                                    COMMENTS_BP.LoadPageEvent(),
-                                  ),
-                                child: COMMENTS_BP.CommentsPage(),
-                              ),
-                            );
-
-                            Navigator.push(context, route);
-                          },
-                          label: Text(
-                            'View All Comments',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Route route = MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => LIKES_BP.LikesBloc(
-                                    critique: critique,
-                                  )..add(
-                                      LIKES_BP.LoadPageEvent(),
-                                    ),
-                                  child: LIKES_BP.LikesPage(),
-                                ),
-                              );
-
-                              Navigator.push(context, route);
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '$likeCount',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red),
-                                ),
-                                Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  )
+                  Divider(),
                 ],
               ),
             ),
