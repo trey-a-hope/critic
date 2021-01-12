@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
@@ -25,6 +26,8 @@ class CreateCritiqueBloc
 
   bool watchListHasMovie = false;
 
+  DocumentSnapshot similarCritiquesStartAfterDocument;
+
   void setDelegate({@required CreateCritiqueBlocDelegate delegate}) {
     this._createCritiqueBlocDelegate = delegate;
   }
@@ -46,6 +49,7 @@ class CreateCritiqueBloc
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
+          currentUser: _currentUser,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -63,6 +67,7 @@ class CreateCritiqueBloc
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
+          currentUser: _currentUser,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -83,6 +88,7 @@ class CreateCritiqueBloc
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
+          currentUser: _currentUser,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -126,6 +132,7 @@ class CreateCritiqueBloc
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
+          currentUser: _currentUser,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -134,6 +141,7 @@ class CreateCritiqueBloc
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
+          currentUser: _currentUser,
         );
       }
     }

@@ -420,11 +420,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Similar Critiques',
-                      style: TextStyle(fontSize: 21),
+                      style: Theme.of(context).textTheme.headline3,
                     ),
                   ),
                   Container(
-                    height: 200,
+                    height: 250,
                     width: MediaQuery.of(context).size.width,
                     child: PaginationList<CritiqueModel>(
                       scrollDirection: Axis.horizontal,
@@ -486,7 +486,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         height: 100,
                         width: 200,
                         child: Center(
-                            child: Text('No one else has critiqued yet.')),
+                          child: Text(
+                            'No one else has critiqued yet.',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ),
                       ),
                     ),
                   ),
