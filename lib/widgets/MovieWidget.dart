@@ -71,7 +71,11 @@ class _MovieWidgetState extends State<MovieWidget> {
         child: Center(
           child: Text(
             '${movie.title}',
-            style: Theme.of(context).textTheme.headline3,
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
           ),
         ),
       ),
