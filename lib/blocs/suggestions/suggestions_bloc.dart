@@ -5,7 +5,7 @@ import 'package:critic/models/SuggestionModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/SuggestionService.dart';
-import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';

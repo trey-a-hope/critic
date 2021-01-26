@@ -4,7 +4,7 @@ import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';

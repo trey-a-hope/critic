@@ -23,87 +23,287 @@ class _HomePageState extends State<HomePage> {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
           final List<MovieModel> popularMovies = state.popularMovies;
+          final int critiqueCount = state.critiqueCount;
+          final int userCount = state.userCount;
 
           return ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  'Popular Movies',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ),
-              Column(
-                children: popularMovies
-                    .map(
-                      (movie) => MovieWidget(movie: movie),
-                    )
-                    .toList(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Most Recent Users',
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ),
-              Container(
-                height: 127,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: mostRecentUsers.length,
-                  itemBuilder: (context, index) {
-                    final UserModel mostRecentUser = mostRecentUsers[index];
-
-                    return Container(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (mostRecentUser.uid == currentUser.uid) return;
-
-                              Route route = MaterialPageRoute(
-                                builder: (context) => BlocProvider(
-                                  create: (context) =>
-                                      OTHER_PROFILE_BP.OtherProfileBloc(
-                                    otherUserID: '${mostRecentUser.uid}',
-                                  )..add(
-                                          OTHER_PROFILE_BP.LoadPageEvent(),
-                                        ),
-                                  child: OTHER_PROFILE_BP.OtherProfilePage(),
-                                ),
-                              );
-
-                              Navigator.push(context, route);
-                            },
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  Image.network(mostRecentUser.imgUrl).image,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            mostRecentUser.username,
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                          Text(
-                            'Joined ${timeago.format(mostRecentUser.created, allowFromNow: true)}',
-                            style: Theme.of(context).textTheme.headline5,
-                          )
-                        ],
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Container(
+                      width: double.infinity,
+                      height: 290,
+                      // color: Colors.deepOrange,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.3), BlendMode.darken),
+                          image: AssetImage('assets/images/theater.jpeg'),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Column(
+                    children: <Widget>[
+                      SizedBox(height: 50),
+                      Image.asset(ASSET_APP_ICON, scale: 10),
+                      Padding(
+                        padding: EdgeInsets.all(4),
                       ),
-                    );
-                  },
-                ),
-              )
+                      Text(
+                        'Critic'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(4),
+                      ),
+                      Text(
+                        'What are you watching?',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 25),
+                        padding: EdgeInsets.all(10),
+                        child: Card(
+                          color: Theme.of(context).canvasColor,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(top: 15, bottom: 5),
+                                    child: Text('Movies',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                  Container(
+                                      padding: EdgeInsets.only(bottom: 15),
+                                      child: Text('7m',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5)),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                      padding:
+                                          EdgeInsets.only(top: 15, bottom: 5),
+                                      child: Text('Critiques',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5)),
+                                  Container(
+                                      padding: EdgeInsets.only(bottom: 15),
+                                      child: Text('$critiqueCount',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5)),
+                                ],
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Container(
+                                    padding:
+                                        EdgeInsets.only(top: 10, bottom: 5),
+                                    child: Text('Users',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: Text('$userCount',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          'Popular Movies',
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ),
+                      Column(
+                        children: popularMovies
+                            .map(
+                              (movie) => MovieWidget(movie: movie),
+                            )
+                            .toList(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          'Most Recent Users',
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ),
+                      Container(
+                        height: 127,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: mostRecentUsers.length,
+                          itemBuilder: (context, index) {
+                            final UserModel mostRecentUser =
+                                mostRecentUsers[index];
+
+                            return Container(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (mostRecentUser.uid == currentUser.uid)
+                                        return;
+
+                                      Route route = MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              OTHER_PROFILE_BP.OtherProfileBloc(
+                                            otherUserID:
+                                                '${mostRecentUser.uid}',
+                                          )..add(
+                                                  OTHER_PROFILE_BP
+                                                      .LoadPageEvent(),
+                                                ),
+                                          child: OTHER_PROFILE_BP
+                                              .OtherProfilePage(),
+                                        ),
+                                      );
+
+                                      Navigator.push(context, route);
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage:
+                                          Image.network(mostRecentUser.imgUrl)
+                                              .image,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    mostRecentUser.username,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
+                                  ),
+                                  Text(
+                                    'Joined ${timeago.format(mostRecentUser.created, allowFromNow: true)}',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ],
           );
+
+          // return ListView(
+          //   shrinkWrap: true,
+          //   children: [
+          //     Padding(
+          //       padding: EdgeInsets.all(20),
+          //       child: Text(
+          //         'Popular Movies',
+          //         style: Theme.of(context).textTheme.headline3,
+          //       ),
+          //     ),
+          //     Column(
+          //       children: popularMovies
+          //           .map(
+          //             (movie) => MovieWidget(movie: movie),
+          //           )
+          //           .toList(),
+          //     ),
+          //     Padding(
+          //       padding: const EdgeInsets.all(20),
+          //       child: Text(
+          //         'Most Recent Users',
+          //         style: Theme.of(context).textTheme.headline3,
+          //       ),
+          //     ),
+          //     Container(
+          //       height: 127,
+          //       child: ListView.builder(
+          //         shrinkWrap: true,
+          //         scrollDirection: Axis.horizontal,
+          //         itemCount: mostRecentUsers.length,
+          //         itemBuilder: (context, index) {
+          //           final UserModel mostRecentUser = mostRecentUsers[index];
+
+          //           return Container(
+          //             padding: EdgeInsets.all(10),
+          //             child: Column(
+          //               children: [
+          //                 GestureDetector(
+          //                   onTap: () {
+          //                     if (mostRecentUser.uid == currentUser.uid) return;
+
+          //                     Route route = MaterialPageRoute(
+          //                       builder: (context) => BlocProvider(
+          //                         create: (context) =>
+          //                             OTHER_PROFILE_BP.OtherProfileBloc(
+          //                           otherUserID: '${mostRecentUser.uid}',
+          //                         )..add(
+          //                                 OTHER_PROFILE_BP.LoadPageEvent(),
+          //                               ),
+          //                         child: OTHER_PROFILE_BP.OtherProfilePage(),
+          //                       ),
+          //                     );
+
+          //                     Navigator.push(context, route);
+          //                   },
+          //                   child: CircleAvatar(
+          //                     radius: 30,
+          //                     backgroundImage:
+          //                         Image.network(mostRecentUser.imgUrl).image,
+          //                   ),
+          //                 ),
+          //                 SizedBox(
+          //                   height: 10,
+          //                 ),
+          //                 Text(
+          //                   mostRecentUser.username,
+          //                   style: Theme.of(context).textTheme.headline4,
+          //                 ),
+          //                 Text(
+          //                   'Joined ${timeago.format(mostRecentUser.created, allowFromNow: true)}',
+          //                   style: Theme.of(context).textTheme.headline5,
+          //                 )
+          //               ],
+          //             ),
+          //           );
+          //         },
+          //       ),
+          //     )
+          //   ],
+          // );
         }
 
         return Container();

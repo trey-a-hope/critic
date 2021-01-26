@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';

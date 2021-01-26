@@ -50,6 +50,8 @@ abstract class IUserService {
   Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist({
     @required String uid,
   });
+
+  Future<int> getTotalUserCount();
 }
 
 class UserService extends IUserService {
@@ -375,6 +377,22 @@ class UserService extends IUserService {
           userDocRef.collection('watchList');
 
       return watchListColRef.snapshots();
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<int> getTotalUserCount() async {
+    try {
+      DocumentSnapshot tableCountsDocSnap =
+          await _dataDB.doc('tableCounts').get();
+
+      int userCount = tableCountsDocSnap.data()['users'] as int;
+
+      return userCount;
     } catch (e) {
       throw Exception(
         e.toString(),

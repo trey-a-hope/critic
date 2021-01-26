@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/MovieWidget.dart';
@@ -34,19 +36,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is LoadPageEvent) {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
-      List<MovieModel> popularMovies =
+      final List<MovieModel> popularMovies =
           await locator<MovieService>().getPopularMovies();
 
-      List<UserModel> mostRecentUsers =
+      final List<UserModel> mostRecentUsers =
           await locator<UserService>().retrieveUsers(
         limit: 10,
         orderBy: 'created',
       );
 
+      final int critiqueCount =
+          await locator<CritiqueService>().getTotalCritiqueCount();
+
+      final int userCount = await locator<UserService>().getTotalUserCount();
+
       yield HomeLoadedState(
         currentUser: _currentUser,
         mostRecentUsers: mostRecentUsers,
         popularMovies: popularMovies,
+        critiqueCount: critiqueCount,
+        userCount: userCount,
       );
     }
   }

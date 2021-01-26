@@ -42,145 +42,39 @@ class _MovieWidgetState extends State<MovieWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      width: double.infinity,
-      color: Colors.white,
-      child: Center(
-        child: Text('${movie.title}'),
+    return GestureDetector(
+      onTap: () async {
+        Route route = MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => CREATE_CRITIQUE_BP.CreateCritiqueBloc(
+              movie: movie,
+            )..add(
+                CREATE_CRITIQUE_BP.LoadPageEvent(),
+              ),
+            child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
+          ),
+        );
+
+        Navigator.push(context, route);
+      },
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.7), BlendMode.darken),
+            image: NetworkImage(movie.poster),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            '${movie.title}',
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ),
       ),
     );
   }
 }
-
-// Widget movieView() {
-//   return InkWell(
-//     onTap: () {
-//       //TODO: Open movie details.
-
-//       // Route route = MaterialPageRoute(
-//       //   builder: (context) => BlocProvider(
-//       //     create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-//       //       critiqueModel: critique,
-//       //     )..add(
-//       //         CRITIQUE_DETAILS_BP.LoadPageEvent(),
-//       //       ),
-//       //     child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
-//       //   ),
-//       // );
-
-//       // Navigator.push(context, route);
-//     },
-//     child: Container(
-//       padding: EdgeInsets.only(left: 10.0, right: 10.0),
-//       margin: EdgeInsets.only(bottom: 20.0),
-//       height: 300,
-//       child: Row(
-//         children: <Widget>[
-//           Expanded(
-//             child: Container(
-//               decoration: BoxDecoration(
-//                 image: DecorationImage(
-//                     image: NetworkImage('${critique.moviePoster}'),
-//                     fit: BoxFit.cover),
-//                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                 boxShadow: [
-//                   BoxShadow(
-//                       color: Colors.grey,
-//                       offset: Offset(5.0, 5.0),
-//                       blurRadius: 10.0)
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Expanded(
-//             child: Container(
-//               padding: EdgeInsets.all(10.0),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: <Widget>[
-//                   Text(
-//                     '${critique.movieTitle}',
-//                     style:
-//                         TextStyle(fontSize: 22.0, fontWeight: FontWeight.w700),
-//                   ),
-//                   SizedBox(
-//                     height: 10.0,
-//                   ),
-//                   Text("\"${critique.message}\"",
-//                       style: TextStyle(
-//                           color: Colors.grey.shade900, fontSize: 12.0)),
-//                   Spacer(),
-//                   Row(
-//                     children: [
-//                       InkWell(
-//                         onTap: () {
-//                           if (userWhoPosted.uid == currentUser.uid) return;
-
-//                           Route route = MaterialPageRoute(
-//                             builder: (context) => BlocProvider(
-//                               create: (context) =>
-//                                   OTHER_PROFILE_BP.OtherProfileBloc(
-//                                 otherUserID: '${userWhoPosted.uid}',
-//                               )..add(
-//                                       OTHER_PROFILE_BP.LoadPageEvent(),
-//                                     ),
-//                               child: OTHER_PROFILE_BP.OtherProfilePage(),
-//                             ),
-//                           );
-
-//                           Navigator.push(context, route);
-//                         },
-//                         child: CircleAvatar(
-//                           backgroundImage: NetworkImage(
-//                             '${userWhoPosted.imgUrl}',
-//                           ),
-//                         ),
-//                       ),
-//                       Spacer(),
-//                       Column(
-//                         children: [
-//                           Text(
-//                             '${userWhoPosted.username}',
-//                             style: TextStyle(
-//                               fontSize: 12.0,
-//                               color: Colors.black,
-//                               height: 1.5,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           Text(
-//                             '${timeago.format(critique.created, allowFromNow: true)}',
-//                             style: TextStyle(
-//                               fontSize: 12.0,
-//                               color: Colors.grey,
-//                               height: 1.5,
-//                             ),
-//                           ),
-//                         ],
-//                       )
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//               margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-//               decoration: BoxDecoration(
-//                 borderRadius: BorderRadius.only(
-//                   bottomRight: Radius.circular(10.0),
-//                   topRight: Radius.circular(10.0),
-//                 ),
-//                 color: Colors.white,
-//                 boxShadow: [
-//                   BoxShadow(
-//                       color: Colors.grey,
-//                       offset: Offset(5.0, 5.0),
-//                       blurRadius: 10.0)
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     ),
-//   );
-// }

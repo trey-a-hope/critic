@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/Spinner.dart';

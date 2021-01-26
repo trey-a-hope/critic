@@ -97,6 +97,8 @@ abstract class ICritiqueService {
     @required String imdbID,
     @required String uid,
   });
+
+  Future<int> getTotalCritiqueCount();
 }
 
 class CritiqueService extends ICritiqueService {
@@ -749,6 +751,22 @@ class CritiqueService extends ICritiqueService {
       return documentSnapshots;
     } catch (e) {
       print(e);
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<int> getTotalCritiqueCount() async {
+    try {
+      DocumentSnapshot tableCountsDocSnap =
+          await _dataDB.doc('tableCounts').get();
+
+      int critiqueCount = tableCountsDocSnap.data()['critiques'] as int;
+
+      return critiqueCount;
+    } catch (e) {
       throw Exception(
         e.toString(),
       );

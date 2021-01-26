@@ -3,7 +3,7 @@ import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/BlockUserService.dart';
 import 'package:critic/services/SuggestionService.dart';
-import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
