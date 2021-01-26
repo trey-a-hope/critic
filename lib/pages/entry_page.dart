@@ -5,6 +5,8 @@ import 'package:critic/pages/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
+
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
@@ -25,6 +27,7 @@ class EntryPageState extends State<EntryPage> {
   EntryPageState({@required this.myAppState});
   final MyAppState myAppState;
 
+  static GlobalKey homeGlobalKey = GlobalKey();
   static GlobalKey exploreGlobalKey = GlobalKey();
   static GlobalKey watchlistGlobalKey = GlobalKey();
   static GlobalKey profileGlobalKey = GlobalKey();
@@ -39,8 +42,8 @@ class EntryPageState extends State<EntryPage> {
         targets: [
           TargetFocus(
             enableOverlayTab: true,
-            identify: "Target 1",
-            keyTarget: exploreGlobalKey,
+            identify: 'Target 1',
+            keyTarget: homeGlobalKey,
             contents: [
               ContentTarget(
                 align: AlignContent.top,
@@ -50,7 +53,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Explore",
+                        'Home',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -59,7 +62,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "View the most recent critiques and create your own.",
+                          'Preview the biggest and most talked about films.',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -71,7 +74,39 @@ class EntryPageState extends State<EntryPage> {
           ),
           TargetFocus(
             enableOverlayTab: true,
-            identify: "Target 3",
+            identify: 'Target 2',
+            keyTarget: exploreGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Explore',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          'View the most recent critiques and create your own.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: 'Target 3',
             keyTarget: watchlistGlobalKey,
             contents: [
               ContentTarget(
@@ -82,7 +117,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Watchlist",
+                        'Watchlist',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -103,7 +138,7 @@ class EntryPageState extends State<EntryPage> {
           ),
           TargetFocus(
             enableOverlayTab: true,
-            identify: "Target 4",
+            identify: 'Target 4',
             keyTarget: profileGlobalKey,
             contents: [
               ContentTarget(
@@ -114,7 +149,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Profile",
+                        'Profile',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -123,7 +158,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "View your critiques, followers, and who you follow.",
+                          'View your critiques, followers, and who you follow.',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -135,7 +170,7 @@ class EntryPageState extends State<EntryPage> {
           ),
           TargetFocus(
             enableOverlayTab: true,
-            identify: "Target 5",
+            identify: 'Target 5',
             keyTarget: settingsGlobalKey,
             contents: [
               ContentTarget(
@@ -146,7 +181,7 @@ class EntryPageState extends State<EntryPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        "Settings",
+                        'Settings',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -155,7 +190,7 @@ class EntryPageState extends State<EntryPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
-                          "Handle settings for the app. Enjoy!",
+                          'Handle settings for the app. Enjoy!',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -167,11 +202,11 @@ class EntryPageState extends State<EntryPage> {
           ),
         ], // List<TargetFocus>
         colorShadow: Colors.black, onFinish: () {
-      print("finish");
+      print('finish');
     }, onClickTarget: (target) {
       print(target);
     }, onClickSkip: () {
-      print("skip");
+      print('skip');
     });
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -195,6 +230,14 @@ class EntryPageState extends State<EntryPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [
+      //Home Page
+      BlocProvider(
+        create: (BuildContext context) => HOME_BP.HomeBloc()
+          ..add(
+            HOME_BP.LoadPageEvent(),
+          ),
+        child: HOME_BP.HomePage(),
+      ),
       //Explore Page
       BlocProvider(
         create: (BuildContext context) => EXPLORE_BP.ExploreBloc()
@@ -232,6 +275,19 @@ class EntryPageState extends State<EntryPage> {
           currentIndex = index;
         }),
         items: [
+          BottomNavyBarItem(
+            icon: Icon(
+              Icons.home,
+              key: homeGlobalKey,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            title: Text(
+              'Home',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            activeColor: Theme.of(context).iconTheme.color,
+            textAlign: TextAlign.center,
+          ),
           BottomNavyBarItem(
             icon: Icon(
               Icons.explore,
@@ -294,6 +350,12 @@ class EntryPageState extends State<EntryPage> {
       case 0:
         return AppBar(
           title: Text(
+            'Home',
+          ),
+        );
+      case 1:
+        return AppBar(
+          title: Text(
             'Explore',
           ),
           actions: [
@@ -317,13 +379,13 @@ class EntryPageState extends State<EntryPage> {
             )
           ],
         );
-      case 1:
+      case 2:
         return AppBar(
           title: Text(
             'Watchlist',
           ),
         );
-      case 2:
+      case 3:
         return AppBar(
           title: Text('Profile'),
           centerTitle: true,
@@ -364,7 +426,7 @@ class EntryPageState extends State<EntryPage> {
             ),
           ],
         );
-      case 3:
+      case 4:
         return AppBar(
           title: Text(
             'Settings',

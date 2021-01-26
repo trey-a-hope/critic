@@ -22,7 +22,6 @@ void main() async {
 
   await Firebase.initializeApp();
 
-//Prepare services.
   setUpLocater();
 
   bool isWeb;
@@ -37,7 +36,6 @@ void main() async {
   }
 
   if (!isWeb) {
-    //Assign package info.
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
     buildNumber = packageInfo.buildNumber;
