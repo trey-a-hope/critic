@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/blocs/searchMovies/SearchMoviesResult.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,16 @@ abstract class IMovieService {
   Future<MovieModel> getMovieByID({@required String id});
 
   Future<SearchMoviesResult> search({@required String term});
+
+  Future<List<MovieModel>> getPopularMovies();
 }
 
 class MovieService extends IMovieService {
   final String apiKey = '7c304592';
   final String authority = 'www.omdbapi.com';
+
+  final CollectionReference _dataDB =
+      FirebaseFirestore.instance.collection('Data');
 
   @override
   Future<MovieModel> getMovieByID({@required String id}) async {
@@ -49,6 +55,35 @@ class MovieService extends IMovieService {
       throw Exception(results['Error']);
     } else {
       return SearchMoviesResult.fromJson(results);
+    }
+  }
+
+  @override
+  Future<List<MovieModel>> getPopularMovies() async {
+    try {
+      DocumentSnapshot popularMoviesDocSnap =
+          await _dataDB.doc('popularMovies').get();
+
+      List<dynamic> popularMoviesMap =
+          popularMoviesDocSnap.data()['imdbIDs'] as List<dynamic>;
+
+      List<String> popularMoviesIMDBIDs = [];
+
+      popularMoviesMap.forEach((imdbID) {
+        popularMoviesIMDBIDs.add(imdbID);
+      });
+
+      List<MovieModel> movies = [];
+
+      for (int i = 0; i < popularMoviesIMDBIDs.length; i++) {
+        MovieModel movie = await getMovieByID(id: popularMoviesIMDBIDs[i]);
+        movies.add(movie);
+      }
+      return movies;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
     }
   }
 }

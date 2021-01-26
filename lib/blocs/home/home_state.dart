@@ -14,15 +14,18 @@ class HomeLoadingState extends HomeState {}
 class HomeLoadedState extends HomeState {
   final UserModel currentUser;
   final List<UserModel> mostRecentUsers;
+  final List<MovieModel> popularMovies;
 
   const HomeLoadedState({
     @required this.currentUser,
     @required this.mostRecentUsers,
+    @required this.popularMovies,
   });
 
   @override
   List<Object> get props => [
         currentUser,
         mostRecentUsers,
+        popularMovies,
       ];
 }

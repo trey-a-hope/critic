@@ -22,19 +22,31 @@ class _HomePageState extends State<HomePage> {
         if (state is HomeLoadedState) {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
+          final List<MovieModel> popularMovies = state.popularMovies;
 
           return ListView(
             shrinkWrap: true,
-            padding: EdgeInsets.all(20),
             children: [
-              Text(
-                'Popular Movies',
-                style: Theme.of(context).textTheme.headline3,
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Text(
+                  'Popular Movies',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
               ),
-              Divider(),
-              Text(
-                'Most Recent Users',
-                style: Theme.of(context).textTheme.headline3,
+              Column(
+                children: popularMovies
+                    .map(
+                      (movie) => MovieWidget(movie: movie),
+                    )
+                    .toList(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'Most Recent Users',
+                  style: Theme.of(context).textTheme.headline3,
+                ),
               ),
               Container(
                 height: 127,
