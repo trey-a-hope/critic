@@ -51,6 +51,7 @@ class SuggestionsViewState extends State<SuggestionsView> {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                       child: TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         cursorColor:
                             Theme.of(context).textTheme.headline4.color,
                         autovalidateMode: AutovalidateMode.onUserInteraction,

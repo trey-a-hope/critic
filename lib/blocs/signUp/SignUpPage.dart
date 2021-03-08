@@ -150,6 +150,7 @@ class SignUpPageState extends State<SignUpPage>
                             ),
                             SizedBox(height: 20),
                             TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: locator<ValidationService>().isEmpty,

@@ -56,6 +56,7 @@ class PostCommentPageState extends State<PostCommentPage>
                     Padding(
                       padding: EdgeInsets.all(40),
                       child: TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         style: TextStyle(
                             color: Theme.of(context).textTheme.headline6.color),
                         cursorColor:
