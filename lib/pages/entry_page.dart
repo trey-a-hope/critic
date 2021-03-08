@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
 
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
-import 'package:critic/blocs/explore/Bloc.dart' as EXPLORE_BP;
+import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;

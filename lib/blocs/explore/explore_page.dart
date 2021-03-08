@@ -1,17 +1,4 @@
-import 'package:critic/blocs/explore/Bloc.dart';
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/SmallCritiqueView.dart';
-import 'package:critic/widgets/Spinner.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Constants.dart';
-import '../../ServiceLocator.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pagination/pagination.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+part of 'explore_bloc.dart';
 
 class ExplorePage extends StatefulWidget {
   @override
@@ -128,7 +115,7 @@ class ExplorePageState extends State<ExplorePage>
                       ),
                       itemBuilder:
                           (BuildContext context, CritiqueModel critique) {
-                        return SmallCritiqueView(
+                        return CritiqueView(
                           critique: critique,
                           currentUser: currentUser,
                         );
@@ -192,7 +179,7 @@ class ExplorePageState extends State<ExplorePage>
                       ),
                       itemBuilder:
                           (BuildContext context, CritiqueModel critique) {
-                        return SmallCritiqueView(
+                        return CritiqueView(
                           critique: critique,
                           currentUser: currentUser,
                         );

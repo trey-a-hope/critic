@@ -85,6 +85,9 @@ class LoginPageState extends State<LoginPage>
                               ),
                             ),
                             RaisedButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                               onPressed: () {
                                 context.read<LoginBloc>().add(
                                       TryAgain(),
@@ -145,7 +148,6 @@ class LoginPageState extends State<LoginPage>
                               controller: _passwordController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
-                                
                                   errorStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(
                                     Icons.lock,

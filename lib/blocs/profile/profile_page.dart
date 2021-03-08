@@ -1,7 +1,5 @@
 part of 'profile_bloc.dart';
 
-
-
 class ProfilePage extends StatefulWidget {
   @override
   State createState() => ProfilePageState();
@@ -61,7 +59,7 @@ class ProfilePageState extends State<ProfilePage> {
           final int followingCount = state.followingCount;
 
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).canvasColor,
             body: NestedScrollView(
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
@@ -161,7 +159,8 @@ class ProfilePageState extends State<ProfilePage> {
                                       onTap: () {
                                         Route route = MaterialPageRoute(
                                           builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWERS_BP.FollowersBloc(
+                                            create: (context) => FOLLOWERS_BP
+                                                .FollowersBloc(
                                                     user: currentUser)
                                               ..add(
                                                 FOLLOWERS_BP.LoadPageEvent(),
@@ -226,7 +225,7 @@ class ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).dividerColor,
                   ),
                   itemBuilder: (BuildContext context, CritiqueModel critique) {
-                    return SmallCritiqueView(
+                    return CritiqueView(
                       critique: critique,
                       currentUser: currentUser,
                     );
@@ -304,8 +303,7 @@ class ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    UploadImageEvent(
-                        imageSource: ImageSource.camera),
+                    UploadImageEvent(imageSource: ImageSource.camera),
                   );
                 },
               ),
@@ -314,8 +312,7 @@ class ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    UploadImageEvent(
-                        imageSource: ImageSource.gallery),
+                    UploadImageEvent(imageSource: ImageSource.gallery),
                   );
                 },
               )
@@ -343,8 +340,7 @@ class ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                    UploadImageEvent(
-                        imageSource: ImageSource.camera),
+                    UploadImageEvent(imageSource: ImageSource.camera),
                   );
                 },
               ),
@@ -353,8 +349,7 @@ class ProfilePageState extends State<ProfilePage> {
                 onPressed: () {
                   Navigator.pop(context);
                   _profileBloc.add(
-                  UploadImageEvent(
-                        imageSource: ImageSource.gallery),
+                    UploadImageEvent(imageSource: ImageSource.gallery),
                   );
                 },
               ),

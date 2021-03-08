@@ -10,7 +10,7 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
-import 'package:critic/widgets/SmallCritiqueView.dart';
+import 'package:critic/widgets/CritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';

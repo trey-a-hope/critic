@@ -121,6 +121,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                     child: Padding(
                       padding: EdgeInsets.all(10),
                       child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                         child: Text('Cancel'),
                         onPressed: () {
                           _critiqueController.clear();
@@ -135,6 +138,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                     child: Padding(
                         padding: EdgeInsets.all(10),
                         child: RaisedButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                           child: Text('Save'),
                           onPressed: () async {
                             final bool formValid =

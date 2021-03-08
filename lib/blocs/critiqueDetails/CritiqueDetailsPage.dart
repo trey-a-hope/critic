@@ -286,6 +286,9 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                 ),
                                 Spacer(),
                                 RaisedButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
                                     color: Colors.red.shade900,
                                     textColor: Colors.white,
                                     child: Text('View Details'),
