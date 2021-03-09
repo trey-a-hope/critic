@@ -334,7 +334,7 @@ class EntryPageState extends State<EntryPage> {
               color: Theme.of(context).iconTheme.color,
             ),
             title: Text(
-              'Recommendations',
+              'Recomm.',
               style: Theme.of(context).textTheme.headline6,
             ),
             activeColor: Theme.of(context).iconTheme.color,

@@ -20,27 +20,6 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
       appBar: AppBar(
         title: Text('Create Recommendation'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (!_formKey.currentState.validate()) {
-            return;
-          }
-
-          final bool confirm = await locator<ModalService>().showConfirmation(
-              context: context,
-              title: 'Send Recommendation',
-              message: 'Are you sure?');
-
-          if (!confirm) return;
-
-          context.read<CreateRecommendationBloc>().add(
-                SubmitRecommendationEvent(message: _messageController.text),
-              );
-        },
-        child: Icon(
-          Icons.send,
-        ),
-      ),
       body: BlocBuilder<CreateRecommendationBloc, CreateRecommendationState>(
         builder: (context, state) {
           if (state is LoadingState) {
@@ -142,9 +121,11 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
 
                             final movie = result as MovieModel;
 
-                            context.read<CreateRecommendationBloc>().add(
-                                  UpdateSelectedMovieEvent(movie: movie),
-                                );
+                            if (movie != null) {
+                              context
+                                  .read<CreateRecommendationBloc>()
+                                  .add(UpdateSelectedMovieEvent(movie: movie));
+                            }
                           },
                         ),
                       ),
@@ -215,9 +196,11 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
 
                             final user = result as UserModel;
 
-                            context.read<CreateRecommendationBloc>().add(
-                                  UpdateSelectedUserEvent(user: user),
-                                );
+                            if (user != null) {
+                              context.read<CreateRecommendationBloc>().add(
+                                    UpdateSelectedUserEvent(user: user),
+                                  );
+                            }
                           },
                         ),
                       ),
@@ -242,6 +225,35 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                             )
                           : SizedBox.shrink()
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: RaisedButton(
+                    color: Theme.of(context).iconTheme.color,
+                    onPressed: () async {
+                      if (selectedUser == null || selectedMovie == null) {
+                        return;
+                      }
+
+                      if (!_formKey.currentState.validate()) {
+                        return;
+                      }
+
+                      final bool confirm = await locator<ModalService>()
+                          .showConfirmation(
+                              context: context,
+                              title: 'Send Recommendation',
+                              message: 'Are you sure?');
+
+                      if (!confirm) return;
+
+                      context.read<CreateRecommendationBloc>().add(
+                            SubmitRecommendationEvent(
+                                message: _messageController.text),
+                          );
+                    },
+                    child: Text('Send Recommendation'),
                   ),
                 ),
               ],
