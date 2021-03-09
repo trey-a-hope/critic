@@ -30,146 +30,151 @@ class SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Account Settings'.toUpperCase(),
-            style: Theme.of(context).textTheme.headline5,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Settings'),
+      ),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Account Settings'.toUpperCase(),
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
-        ),
-        ListTile(
-          title: Text(
-            'Blocked Users',
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onTap: () {
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => BLOCKED_USERS_BP.BlockedUsersBloc()
-                  ..add(
-                    BLOCKED_USERS_BP.LoadPageEvent(),
-                  ),
-                child: BLOCKED_USERS_BP.BlockedUsersPage(),
-              ),
-            );
+          ListTile(
+            title: Text(
+              'Blocked Users',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onTap: () {
+              Route route = MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => BLOCKED_USERS_BP.BlockedUsersBloc()
+                    ..add(
+                      BLOCKED_USERS_BP.LoadPageEvent(),
+                    ),
+                  child: BLOCKED_USERS_BP.BlockedUsersPage(),
+                ),
+              );
 
-            Navigator.push(context, route);
-          },
-        ),
-        ListTile(
-          title: Text(
-            'Dark/Light Mode',
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          trailing: DayNightSwitcher(
-            isDarkModeEnabled: this.myAppState.isDarkModeEnabled,
-            onStateChanged: (bool isDarkModeEnabled) async {
-              print('${this.myAppState.isDarkModeEnabled}');
-              final SharedPreferences prefs =
-                  await SharedPreferences.getInstance();
-
-              prefs.setBool('isDarkModeEnabled', isDarkModeEnabled);
-
-              this.myAppState.setState(() {
-                this.myAppState.isDarkModeEnabled = isDarkModeEnabled;
-              });
+              Navigator.push(context, route);
             },
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Contact Us'.toUpperCase(),
-            style: Theme.of(context).textTheme.headline5,
-          ),
-        ),
-        ListTile(
-          title: Text(
-            'Email',
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onTap: () {
-            Route route = MaterialPageRoute(
-              builder: (BuildContext context) => ContactPage(),
-            );
-            Navigator.of(context).push(route);
-          },
-        ),
-        ListTile(
-          title: Text(
-            'Leave a Suggestion',
-            style: Theme.of(context).textTheme.headline4,
-          ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color,
-          ),
-          onTap: () {
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => SuggestionsBloc()..add(LoadPageEvent()),
-                child: SuggestionsView(),
-              ),
-            );
+          ListTile(
+            title: Text(
+              'Dark/Light Mode',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: DayNightSwitcher(
+              isDarkModeEnabled: this.myAppState.isDarkModeEnabled,
+              onStateChanged: (bool isDarkModeEnabled) async {
+                print('${this.myAppState.isDarkModeEnabled}');
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
 
-            Navigator.push(context, route);
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Legal'.toUpperCase(),
-            style: Theme.of(context).textTheme.headline5,
+                prefs.setBool('isDarkModeEnabled', isDarkModeEnabled);
+
+                this.myAppState.setState(() {
+                  this.myAppState.isDarkModeEnabled = isDarkModeEnabled;
+                });
+              },
+            ),
           ),
-        ),
-        ListTile(
-          title: Text(
-            'Terms of Service',
-            style: Theme.of(context).textTheme.headline4,
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Contact Us'.toUpperCase(),
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color,
+          ListTile(
+            title: Text(
+              'Email',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onTap: () {
+              Route route = MaterialPageRoute(
+                builder: (BuildContext context) => ContactPage(),
+              );
+              Navigator.of(context).push(route);
+            },
           ),
-          onTap: () {
-            Route route = MaterialPageRoute(
-              builder: (BuildContext context) => TermsServicePage(),
-            );
-            Navigator.of(context).push(route);
-          },
-        ),
-        ListTile(
-          title: Text(
-            'Logout',
-            style: Theme.of(context).textTheme.headline4,
+          ListTile(
+            title: Text(
+              'Leave a Suggestion',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onTap: () {
+              Route route = MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                  create: (context) => SuggestionsBloc()..add(LoadPageEvent()),
+                  child: SuggestionsView(),
+                ),
+              );
+
+              Navigator.push(context, route);
+            },
           ),
-          trailing: Icon(
-            Icons.chevron_right,
-            color: Theme.of(context).iconTheme.color,
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Legal'.toUpperCase(),
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
-          onTap: () async {
-            bool confirm = await locator<ModalService>().showConfirmation(
-                context: context, title: 'Logout', message: 'Are you sure?');
-            if (confirm) {
-              while (Navigator.of(context).canPop()) {
-                Navigator.pop(context);
+          ListTile(
+            title: Text(
+              'Terms of Service',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onTap: () {
+              Route route = MaterialPageRoute(
+                builder: (BuildContext context) => TermsServicePage(),
+              );
+              Navigator.of(context).push(route);
+            },
+          ),
+          ListTile(
+            title: Text(
+              'Logout',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            trailing: Icon(
+              Icons.chevron_right,
+              color: Theme.of(context).iconTheme.color,
+            ),
+            onTap: () async {
+              bool confirm = await locator<ModalService>().showConfirmation(
+                  context: context, title: 'Logout', message: 'Are you sure?');
+              if (confirm) {
+                while (Navigator.of(context).canPop()) {
+                  Navigator.pop(context);
+                }
+                await locator<AuthService>().signOut();
+                print('Goodbye...');
               }
-              await locator<AuthService>().signOut();
-              print('Goodbye...');
-            }
-          },
-        ),
-      ],
+            },
+          ),
+        ],
+      ),
     );
   }
 }

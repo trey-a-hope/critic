@@ -2,6 +2,7 @@ import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FCMNotificationService.dart';
 import 'package:critic/services/BlockUserService.dart';
+import 'package:critic/services/RecommendationsService.dart';
 import 'package:critic/services/SuggestionService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/MovieService.dart';
@@ -19,6 +20,7 @@ void setUpLocater() {
   locator.registerLazySingleton(() => FCMNotificationService());
   locator.registerLazySingleton(() => ModalService());
   locator.registerLazySingleton(() => MovieService());
+  locator.registerLazySingleton(() => RecommendationsService());
   locator.registerLazySingleton(() => StorageService());
   locator.registerLazySingleton(() => SuggestionService());
   locator.registerLazySingleton(() => UserService());

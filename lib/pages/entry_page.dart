@@ -12,6 +12,9 @@ import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
+import 'package:critic/blocs/recommendations/recommendations_bloc.dart'
+    as RECOMMENDATIONS_BP;
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -30,6 +33,7 @@ class EntryPageState extends State<EntryPage> {
   static GlobalKey homeGlobalKey = GlobalKey();
   static GlobalKey exploreGlobalKey = GlobalKey();
   static GlobalKey watchlistGlobalKey = GlobalKey();
+  static GlobalKey recommendationsGlobalKey = GlobalKey();
   static GlobalKey profileGlobalKey = GlobalKey();
   static GlobalKey settingsGlobalKey = GlobalKey();
 
@@ -139,6 +143,38 @@ class EntryPageState extends State<EntryPage> {
           TargetFocus(
             enableOverlayTab: true,
             identify: 'Target 4',
+            keyTarget: recommendationsGlobalKey,
+            contents: [
+              ContentTarget(
+                align: AlignContent.top,
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Recommendations',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20.0),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          'See movies that your friends have recommended.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          TargetFocus(
+            enableOverlayTab: true,
+            identify: 'Target 5',
             keyTarget: profileGlobalKey,
             contents: [
               ContentTarget(
@@ -159,38 +195,6 @@ class EntryPageState extends State<EntryPage> {
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Text(
                           'View your critiques, followers, and who you follow.',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
-          TargetFocus(
-            enableOverlayTab: true,
-            identify: 'Target 5',
-            keyTarget: settingsGlobalKey,
-            contents: [
-              ContentTarget(
-                align: AlignContent.top,
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Settings',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20.0),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Text(
-                          'Handle settings for the app. Enjoy!',
                           style: TextStyle(color: Colors.white),
                         ),
                       )
@@ -251,6 +255,12 @@ class EntryPageState extends State<EntryPage> {
         create: (context) =>
             WATCHLIST_BP.WatchlistBloc()..add(WATCHLIST_BP.LoadPageEvent()),
         child: WATCHLIST_BP.WatchlistPage(),
+      ),
+      //Watchlist Page
+      BlocProvider(
+        create: (context) => RECOMMENDATIONS_BP.RecommendationsBloc()
+          ..add(RECOMMENDATIONS_BP.LoadPageEvent()),
+        child: RECOMMENDATIONS_BP.RecommendationsPage(),
       ),
       //Profile Page
       BlocProvider(
@@ -316,12 +326,12 @@ class EntryPageState extends State<EntryPage> {
           ),
           BottomNavyBarItem(
             icon: Icon(
-              Icons.person,
-              key: profileGlobalKey,
+              MdiIcons.message,
+              key: recommendationsGlobalKey,
               color: Theme.of(context).iconTheme.color,
             ),
             title: Text(
-              'Profile',
+              'Recommendations',
               style: Theme.of(context).textTheme.headline6,
             ),
             activeColor: Theme.of(context).iconTheme.color,
@@ -329,12 +339,12 @@ class EntryPageState extends State<EntryPage> {
           ),
           BottomNavyBarItem(
             icon: Icon(
-              Icons.settings,
-              key: settingsGlobalKey,
+              Icons.person,
+              key: profileGlobalKey,
               color: Theme.of(context).iconTheme.color,
             ),
             title: Text(
-              'Settings',
+              'Profile',
               style: Theme.of(context).textTheme.headline6,
             ),
             activeColor: Theme.of(context).iconTheme.color,
@@ -387,6 +397,12 @@ class EntryPageState extends State<EntryPage> {
         );
       case 3:
         return AppBar(
+          title: Text(
+            'Recommendations',
+          ),
+        );
+      case 4:
+        return AppBar(
           title: Text('Profile'),
           centerTitle: true,
           leading: IconButton(
@@ -424,14 +440,19 @@ class EntryPageState extends State<EntryPage> {
                 Navigator.push(context, route);
               },
             ),
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Route route = MaterialPageRoute(
+                  builder: (context) => SettingsView(myAppState: myAppState),
+                );
+
+                Navigator.push(context, route);
+              },
+            ),
           ],
         );
-      case 4:
-        return AppBar(
-          title: Text(
-            'Settings',
-          ),
-        );
+
       default:
         return null;
         break;

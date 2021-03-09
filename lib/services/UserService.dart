@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
+//TODO: Create watchlist service and move logic from here to that file.
 abstract class IUserService {
   Future<void> createUser({@required UserModel user});
   Future<UserModel> retrieveUser({@required String uid});
