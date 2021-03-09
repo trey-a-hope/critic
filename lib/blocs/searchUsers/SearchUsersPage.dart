@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
-
+import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/widgets/Spinner.dart';
-import 'package:critic/widgets/UserListTile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchUsersPage extends StatelessWidget {
+  final bool returnUser;
+
+  SearchUsersPage({@required this.returnUser});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +18,7 @@ class SearchUsersPage extends StatelessWidget {
         title: Text('Search Users'),
       ),
       body: Column(
-        children: <Widget>[_SearchBar(), _SearchBody()],
+        children: <Widget>[_SearchBar(), _SearchBody(returnUser: returnUser)],
       ),
     );
   }
@@ -55,8 +59,7 @@ class _SearchBarState extends State<_SearchBar> {
       },
       cursorColor: Theme.of(context).textTheme.headline5.color,
       decoration: InputDecoration(
-                                          errorStyle: TextStyle(color: Colors.white),
-
+        errorStyle: TextStyle(color: Colors.white),
         prefixIcon: Icon(
           Icons.search,
           color: Theme.of(context).iconTheme.color,
@@ -83,6 +86,10 @@ class _SearchBarState extends State<_SearchBar> {
 }
 
 class _SearchBody extends StatelessWidget {
+  final bool returnUser;
+
+  _SearchBody({@required this.returnUser});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SEARCH_USERS_BP.SearchUsersBloc,
@@ -133,8 +140,48 @@ class _SearchBody extends StatelessWidget {
               itemCount: users.length,
               itemBuilder: (BuildContext context, int index) {
                 final UserModel user = users[index];
+                // return UserListTile(user: user);
 
-                return UserListTile(user: user);
+                return ListTile(
+                  leading: CachedNetworkImage(
+                    imageUrl: '${user.imgUrl}',
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
+                      backgroundImage: imageProvider,
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                  title: Text(
+                    '${user.username}',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  subtitle: Text(
+                    '${user.email}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  onTap: () {
+                    Route route = MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
+                          otherUserID: user.uid,
+                        )..add(
+                            OTHER_PROFILE_BP.LoadPageEvent(),
+                          ),
+                        child: OTHER_PROFILE_BP.OtherProfilePage(),
+                      ),
+                    );
+
+                    if (returnUser) {
+                      Navigator.pop(context, user);
+                    } else {
+                      Navigator.push(context, route);
+                    }
+                  },
+                );
               },
             ),
           );

@@ -12,6 +12,10 @@ import 'SearchMoviesState.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 
 class SearchMoviesPage extends StatelessWidget {
+  final bool returnMovie;
+
+  SearchMoviesPage({@required this.returnMovie});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +23,12 @@ class SearchMoviesPage extends StatelessWidget {
         title: Text('Search Movies'),
       ),
       body: Column(
-        children: [_SearchBar(), _SearchBody()],
+        children: [
+          _SearchBar(),
+          _SearchBody(
+            returnMovie: returnMovie,
+          )
+        ],
       ),
     );
   }
@@ -85,6 +94,10 @@ class _SearchBarState extends State<_SearchBar> {
 }
 
 class _SearchBody extends StatelessWidget {
+  final bool returnMovie;
+
+  _SearchBody({@required this.returnMovie});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SearchMoviesBloc, SearchMoviesState>(
@@ -168,7 +181,11 @@ class _SearchBody extends StatelessWidget {
                       ),
                     );
 
-                    Navigator.push(context, route);
+                    if (returnMovie) {
+                      Navigator.pop(context, movieModel);
+                    } else {
+                      Navigator.push(context, route);
+                    }
                   },
                 );
               },

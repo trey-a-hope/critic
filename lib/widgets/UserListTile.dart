@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//TODO: Get rid of this class.
 class UserListTile extends StatelessWidget {
   const UserListTile({@required this.user});
 

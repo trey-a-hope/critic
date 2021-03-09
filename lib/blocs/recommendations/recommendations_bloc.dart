@@ -48,17 +48,6 @@ class RecommendationsBloc
       try {
         currentUser = await locator<AuthService>().getCurrentUser();
 
-        // await locator<RecommendationsService>().createRecommendation(
-        //   sendeeUID: currentUser.uid,
-        //   recommendation: RecommendationModel(
-        //     id: null,
-        //     message: 'Hey Trey, check out this new movie.',
-        //     imdbID: 'tt8579674',
-        //     senderUID: currentUser.uid,
-        //     created: DateTime.now(),
-        //   ),
-        // );
-
         Stream<QuerySnapshot> recommendationsStream =
             await locator<RecommendationsService>()
                 .streamRecommendations(uid: currentUser.uid);

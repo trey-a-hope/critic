@@ -9,6 +9,9 @@ import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
 
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
+import 'package:critic/blocs/create_recommendation/create_recommendation_bloc.dart'
+    as CREATE_RECOMMENDATION_BP;
+
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
@@ -380,7 +383,9 @@ class EntryPageState extends State<EntryPage> {
                         cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
                       ),
                     ),
-                    child: SEARCH_MOVIES_BP.SearchMoviesPage(),
+                    child: SEARCH_MOVIES_BP.SearchMoviesPage(
+                      returnMovie: false,
+                    ),
                   ),
                 );
 
@@ -400,6 +405,25 @@ class EntryPageState extends State<EntryPage> {
           title: Text(
             'Recommendations',
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Route route = MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) =>
+                        CREATE_RECOMMENDATION_BP.CreateRecommendationBloc()
+                          ..add(
+                            CREATE_RECOMMENDATION_BP.LoadPageEvent(),
+                          ),
+                    child: CREATE_RECOMMENDATION_BP.CreateRecommendationPage(),
+                  ),
+                );
+
+                Navigator.push(context, route);
+              },
+            ),
+          ],
         );
       case 4:
         return AppBar(
@@ -416,7 +440,9 @@ class EntryPageState extends State<EntryPage> {
                       cache: SEARCH_USERS_BP.SearchUsersCache(),
                     ),
                   )..add(SEARCH_USERS_BP.LoadPageEvent()),
-                  child: SEARCH_USERS_BP.SearchUsersPage(),
+                  child: SEARCH_USERS_BP.SearchUsersPage(
+                    returnUser: false,
+                  ),
                 ),
               );
 
