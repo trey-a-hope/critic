@@ -13,6 +13,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 abstract class ICritiqueService {
+  Future<List<CritiqueModel>> getCritiques({
+    @required String uid,
+  });
   Future<void> createCritique({@required CritiqueModel critique});
   Future<List<CritiqueModel>> retrieveCritiquesFromStream({
     @required String uid,
@@ -766,6 +769,40 @@ class CritiqueService extends ICritiqueService {
       int critiqueCount = tableCountsDocSnap.data()['critiques'] as int;
 
       return critiqueCount;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<CritiqueModel>> getCritiques({@required String uid}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet',
+        body: {
+          'uid': uid,
+        },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      );
+
+      Map map = json.decode(response.body);
+
+      if (map['statusCode'] != null) {
+        throw PlatformException(
+          message: map['raw']['message'],
+          code: map['raw']['code'],
+        );
+      }
+
+      try {
+        Map bodyMap = json.decode(response.body);
+        //MovieModel movie = MovieModel.fromJSON(map: bodyMap);//TODO: Create new critique model to build off json.
+        return [];
+      } catch (e) {
+        throw PlatformException(message: e.toString(), code: '');
+      }
     } catch (e) {
       throw Exception(
         e.toString(),
