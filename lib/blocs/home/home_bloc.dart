@@ -4,10 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/MovieModel.dart';
+import 'package:critic/models/NewCritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/MovieService.dart';
+import 'package:critic/services/NewCritiqueService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/MovieWidget.dart';
 import 'package:critic/widgets/Spinner.dart';
@@ -36,27 +38,34 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is LoadPageEvent) {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
-      final List<MovieModel> popularMovies =
-          await locator<MovieService>().getPopularMovies();
+      try {
+        var s = locator<NewCritiqueService>()
+            .getCritiques(uid: 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2');
 
-      final List<UserModel> mostRecentUsers =
-          await locator<UserService>().retrieveUsers(
-        limit: 10,
-        orderBy: 'created',
-      );
+        // final List<MovieModel> popularMovies =
+        //     await locator<MovieService>().getPopularMovies();
 
-      final int critiqueCount =
-          await locator<CritiqueService>().getTotalCritiqueCount();
+        // final List<UserModel> mostRecentUsers =
+        //     await locator<UserService>().retrieveUsers(
+        //   limit: 10,
+        //   orderBy: 'created',
+        // );
 
-      final int userCount = await locator<UserService>().getTotalUserCount();
+        // final int critiqueCount =
+        //     await locator<CritiqueService>().getTotalCritiqueCount();
 
-      yield HomeLoadedState(
-        currentUser: _currentUser,
-        mostRecentUsers: mostRecentUsers,
-        popularMovies: popularMovies,
-        critiqueCount: critiqueCount,
-        userCount: userCount,
-      );
+        // final int userCount = await locator<UserService>().getTotalUserCount();
+
+        yield HomeLoadedState(
+          currentUser: _currentUser,
+          mostRecentUsers: [],
+          popularMovies: [],
+          critiqueCount: 0,
+          userCount: 0,
+        );
+      } catch (error) {
+        yield ErrorState(error: error);
+      }
     }
   }
 }

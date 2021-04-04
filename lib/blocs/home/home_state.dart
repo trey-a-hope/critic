@@ -35,3 +35,16 @@ class HomeLoadedState extends HomeState {
         userCount,
       ];
 }
+
+class ErrorState extends HomeState {
+  final dynamic error;
+
+  ErrorState({
+    @required this.error,
+  });
+
+  @override
+  List<Object> get props => [
+        error,
+      ];
+}

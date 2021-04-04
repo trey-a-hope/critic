@@ -24,6 +24,6 @@ exports.critiques = functions.https.onRequest(async (req, res) => {
             });
         });
     } catch (err) {
-        response.send(err);
+        return res.send(err);
     }
 });
