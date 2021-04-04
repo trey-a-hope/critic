@@ -21,4 +21,5 @@ exports.GetFollowStats = StreamIO.getFollowStats;
 exports.IsFollowing = StreamIO.isFollowing;
 
 //Mongo DB: Critiques: Get
-exports.MongoDBCritiquesGet = MongoDBCritiques.critiques;
+exports.MongoDBCritiquesList = MongoDBCritiques.list;
+exports.MongoDBCritiquesCreate = MongoDBCritiques.create;

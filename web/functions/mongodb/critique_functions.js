@@ -1,26 +1,54 @@
 const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
 const functions = require('firebase-functions');
 
 const uri = "mongodb+srv://root:root@cluster0.htul7.mongodb.net/Critic?retryWrites=true&w=majority";//TODO: Add this to firebase keys.
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const dbName = 'Critic';
 const critiquesColName = 'Critiques';
-const usersColName = 'Users';
-const suggestionsColName = 'Suggestions';
 
-/*
-    List critiques.
-*/
+exports.list = functions.https.onRequest(async (req, res) => {
+    const uid = req.body.uid;
 
-exports.critiques = functions.https.onRequest(async (req, res) => {
     try {
         client.connect(err => {
-            assert.equal(null, err);
-            client.db(dbName).collection(critiquesColName).find({}).toArray((error, docs) => {
-                assert.equal(null, error);
-                client.close();
+            if (err) throw err;
+            var query = { uid: uid };
+            client.db(dbName).collection(critiquesColName).find(query).toArray((error, docs) => {
+                if (err) throw err;
+                console.log(docs);
                 return res.send(docs);
+                //client.close();
+            });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});
+
+
+exports.create = functions.https.onRequest(async (req, res) => {
+    const message = req.body.message;
+    const uid = req.body.uid;
+    const rating = req.body.rating;
+    const imdbID = req.body.imdbID;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+            var data = {
+                message: message,
+                uid: uid,
+                rating: rating,
+                imdbID: imdbID,
+                comments: [],
+                likes: [],
+                created: new Date(),
+                modified: new Date(),
+            };
+            client.db(dbName).collection(critiquesColName).insertOne(data, (err, _) => {
+                if (err) throw err;
+                client.close();
+                return res.send(true);
             });
         });
     } catch (err) {

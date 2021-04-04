@@ -8,6 +8,7 @@ class NewCritiqueModel {
   String uid;
   List<NewCommentModel> comments;
   DateTime created;
+  DateTime modified;
   int rating;
   List<String> likes;
 
@@ -39,14 +40,12 @@ class NewCritiqueModel {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'message': message,
       'imdbID': imdbID,
       'uid': uid,
-      'comments': comments,
-      'created': created,
+      //'comments': [], //todo:
       'rating': rating,
-      'likes': likes,
+      //'likes': [], //todo:
     };
   }
 }

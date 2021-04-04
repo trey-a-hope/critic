@@ -6,25 +6,23 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 abstract class INewCritiqueService {
-  Future<List<NewCritiqueModel>> getCritiques({
+  Future<List<NewCritiqueModel>> list({
     @required String uid,
+  });
+
+  Future<void> create({
+    @required NewCritiqueModel critique,
   });
 }
 
 class NewCritiqueService extends INewCritiqueService {
   @override
-  Future<List<NewCritiqueModel>> getCritiques({@required String uid}) async {
+  Future<List<NewCritiqueModel>> list({@required String uid}) async {
     try {
-      Map data = {
-        'uid': uid,
-        // 'limit': '$limit',
-        // 'offset': '$offset',
-      };
-
-      http.Response response = await http.get(
-        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet',
-        //body: {},
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList',
+        body: json.encode({'uid': uid}),
+        headers: {'content-type': 'application/json'},
       );
 
       if (response.statusCode != 200) {
@@ -43,6 +41,30 @@ class NewCritiqueService extends INewCritiqueService {
           .toList();
 
       return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> create({@required NewCritiqueModel critique}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate',
+        body: json.encode(critique.toJson()),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),
