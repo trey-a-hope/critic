@@ -24,3 +24,4 @@ exports.IsFollowing = StreamIO.isFollowing;
 exports.MongoDBCritiquesList = MongoDBCritiques.list;
 exports.MongoDBCritiquesCreate = MongoDBCritiques.create;
 exports.MongoDBCritiquesDelete = MongoDBCritiques.delete;
+exports.MongoDBCritiquesUpdate = MongoDBCritiques.update;

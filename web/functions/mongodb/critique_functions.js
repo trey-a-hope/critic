@@ -74,3 +74,24 @@ exports.delete = functions.https.onRequest(async (req, res) => {
         return res.send(err);
     }
 });
+
+exports.update = functions.https.onRequest(async (req, res) => {
+    const id = req.body.id;
+    const params = req.body.params;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+            var query = {_id: new ObjectID(id)};
+            var newvalues = { $set: params };
+            client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
+                if (err) throw err;
+                console.log('Update success.');
+                return res.send(true);
+                //client.close();
+            });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});

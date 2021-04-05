@@ -39,8 +39,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
       try {
-        await locator<NewCritiqueService>()
-            .delete(id: '606a1bd25fe01a2162fc91fc');
+        // await locator<NewCritiqueService>().update(
+        //   id: '606a2057ee64f8927f5f5de7',
+        //   params: {
+        //     'rating': 1,
+        //     'message': 'You too cool Trey.',
+        //   },
+        // );
+
         // var s = locator<NewCritiqueService>().create(
         //   critique: NewCritiqueModel(
         //     id: null,
