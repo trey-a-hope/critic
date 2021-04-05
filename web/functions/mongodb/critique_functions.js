@@ -62,7 +62,7 @@ exports.delete = functions.https.onRequest(async (req, res) => {
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = {_id: new ObjectID(id)};
+            var query = { _id: new ObjectID(id) };
             client.db(dbName).collection(critiquesColName).deleteOne(query, (err, docs) => {
                 if (err) throw err;
                 console.log('Delete success.');
@@ -82,8 +82,29 @@ exports.update = functions.https.onRequest(async (req, res) => {
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = {_id: new ObjectID(id)};
+            var query = { _id: new ObjectID(id) };
             var newvalues = { $set: params };
+            client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
+                if (err) throw err;
+                console.log('Update success.');
+                return res.send(true);
+                //client.close();
+            });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});
+
+exports.addComment = functions.https.onRequest(async (req, res) => {
+    const id = req.body.id;
+    const comment = req.body.comment;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+            var query = { _id: new ObjectID(id) };
+            var newvalues = { $push: { comments: comment } };
             client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
                 if (err) throw err;
                 console.log('Update success.');

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/MovieModel.dart';
+import 'package:critic/models/NewCommentModel.dart';
 import 'package:critic/models/NewCritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
@@ -39,11 +40,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
       try {
+        // await locator<NewCritiqueService>().addComment(
+        //   id: '606a2057ee64f8927f5f5de7',
+        //   comment: NewCommentModel(
+        //     comment: 'I agree bro.',
+        //     likes: [],
+        //     uid: _currentUser.uid,
+        //   ),
+        // );
+
         // await locator<NewCritiqueService>().update(
         //   id: '606a2057ee64f8927f5f5de7',
         //   params: {
-        //     'rating': 1,
-        //     'message': 'You too cool Trey.',
+        //     'comments': [
+        // NewCommentModel(
+        //   comment: 'I agree bro.',
+        //   likes: [],
+        //   uid: _currentUser.uid,
+        // ).toJson()
+        //     ],
         //   },
         // );
 

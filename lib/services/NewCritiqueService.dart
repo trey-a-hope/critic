@@ -1,4 +1,5 @@
 import 'package:critic/Constants.dart';
+import 'package:critic/models/NewCommentModel.dart';
 import 'package:critic/models/NewCritiqueModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,9 @@ abstract class INewCritiqueService {
     @required String id,
     @required Map<String, dynamic> params,
   });
+
+  Future<void> addComment(
+      {@required String id, @required NewCommentModel comment});
 }
 
 class NewCritiqueService extends INewCritiqueService {
@@ -112,6 +116,31 @@ class NewCritiqueService extends INewCritiqueService {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesUpdate',
         body: json.encode({'id': id, 'params': params}),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> addComment(
+      {@required String id, @required NewCommentModel comment}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddComment',
+        body: json.encode({'id': id, 'comment': comment.toJson()}),
         headers: {'content-type': 'application/json'},
       );
 

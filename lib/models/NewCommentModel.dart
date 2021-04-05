@@ -11,7 +11,7 @@ class NewCommentModel {
     @required this.uid,
     @required this.comment,
     @required this.likes,
-    @required this.created,
+    this.created,
   });
 
   factory NewCommentModel.fromJSON({@required Map map}) {
@@ -23,16 +23,11 @@ class NewCommentModel {
     );
   }
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     '_id': id,
-  //     'message': message,
-  //     'imdbID': imdbID,
-  //     'uid': uid,
-  //     'comments': comments,
-  //     'created': created,
-  //     'rating': rating,
-  //     'likes': likes,
-  //   };
-  // }
+  Map<String, dynamic> toJson() {
+    return {
+      'uid': uid,
+      'comment': comment,
+      'likes': [],
+    };
+  }
 }
