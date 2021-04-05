@@ -39,6 +39,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
       try {
+        await locator<NewCritiqueService>()
+            .delete(id: '606a1bd25fe01a2162fc91fc');
         // var s = locator<NewCritiqueService>().create(
         //   critique: NewCritiqueModel(
         //     id: null,
@@ -52,8 +54,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         //   ),
         // );
 
-        var s = await locator<NewCritiqueService>()
-            .list(uid: 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2');
+        // var s = await locator<NewCritiqueService>()
+        //     .list(uid: 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2');
 
         // final List<MovieModel> popularMovies =
         //     await locator<MovieService>().getPopularMovies();

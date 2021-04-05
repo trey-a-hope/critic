@@ -23,3 +23,4 @@ exports.IsFollowing = StreamIO.isFollowing;
 //Mongo DB: Critiques: Get
 exports.MongoDBCritiquesList = MongoDBCritiques.list;
 exports.MongoDBCritiquesCreate = MongoDBCritiques.create;
+exports.MongoDBCritiquesDelete = MongoDBCritiques.delete;

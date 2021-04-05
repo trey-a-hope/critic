@@ -13,6 +13,10 @@ abstract class INewCritiqueService {
   Future<void> create({
     @required NewCritiqueModel critique,
   });
+
+  Future<void> delete({
+    @required String id,
+  });
 }
 
 class NewCritiqueService extends INewCritiqueService {
@@ -54,6 +58,30 @@ class NewCritiqueService extends INewCritiqueService {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate',
         body: json.encode(critique.toJson()),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> delete({@required String id}) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDelete',
+        body: json.encode({'id': id}),
         headers: {'content-type': 'application/json'},
       );
 
