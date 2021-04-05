@@ -116,3 +116,24 @@ exports.addComment = functions.https.onRequest(async (req, res) => {
         return res.send(err);
     }
 });
+
+exports.addLike = functions.https.onRequest(async (req, res) => {
+    const id = req.body.id;
+    const uid = req.body.uid;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+            var query = { _id: new ObjectID(id) };
+            var newvalues = { $push: { likes: uid } };
+            client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
+                if (err) throw err;
+                console.log('Update success.');
+                return res.send(true);
+                //client.close();
+            });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});

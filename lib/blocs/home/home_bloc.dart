@@ -40,6 +40,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
       try {
+        await locator<NewCritiqueService>().addLike(
+          id: '606a2057ee64f8927f5f5de7',
+          uid: _currentUser.uid,
+        );
+
         // await locator<NewCritiqueService>().addComment(
         //   id: '606a2057ee64f8927f5f5de7',
         //   comment: NewCommentModel(

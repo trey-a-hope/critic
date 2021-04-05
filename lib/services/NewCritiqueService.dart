@@ -26,6 +26,11 @@ abstract class INewCritiqueService {
 
   Future<void> addComment(
       {@required String id, @required NewCommentModel comment});
+
+  Future<void> addLike({
+    @required String id,
+    @required String uid,
+  });
 }
 
 class NewCritiqueService extends INewCritiqueService {
@@ -141,6 +146,33 @@ class NewCritiqueService extends INewCritiqueService {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddComment',
         body: json.encode({'id': id, 'comment': comment.toJson()}),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> addLike({
+    @required String id,
+    @required String uid,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddLike',
+        body: json.encode({'id': id, 'uid': uid}),
         headers: {'content-type': 'application/json'},
       );
 
