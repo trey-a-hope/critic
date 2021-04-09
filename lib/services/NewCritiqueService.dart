@@ -1,6 +1,8 @@
 import 'package:critic/Constants.dart';
+import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/NewCommentModel.dart';
 import 'package:critic/models/NewCritiqueModel.dart';
+import 'package:critic/services/MovieService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -57,6 +59,12 @@ class NewCritiqueService extends INewCritiqueService {
             (result) => NewCritiqueModel.fromJSON(map: result),
           )
           .toList();
+
+      //Attach movie to critique object.
+      for (int i = 0; i < critiques.length; i++) {
+        critiques[i].movie =
+            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+      }
 
       return critiques;
     } catch (e) {

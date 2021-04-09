@@ -1,5 +1,6 @@
 import 'package:critic/models/NewCommentModel.dart';
 import 'package:flutter/material.dart';
+import 'MovieModel.dart';
 
 class NewCritiqueModel {
   String id;
@@ -11,6 +12,8 @@ class NewCritiqueModel {
   DateTime modified;
   int rating;
   List<String> likes;
+
+  MovieModel movie; //Used on FE only.
 
   NewCritiqueModel({
     @required this.id,

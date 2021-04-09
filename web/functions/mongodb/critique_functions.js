@@ -9,17 +9,32 @@ const critiquesColName = 'Critiques';
 
 exports.list = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
+    const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
+    const last_id = req.body.last_id;
 
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = { uid: uid };
-            client.db(dbName).collection(critiquesColName).find(query).toArray((error, docs) => {
-                if (err) throw err;
-                console.log(docs);
-                return res.send(docs);
-                //client.close();
-            });
+
+            var query;
+
+            if (!last_id) {
+                query = { uid: uid };
+            } else {
+                query = { uid: uid, _id: { $gt: new ObjectID(last_id) } };
+            }
+
+            client
+                .db(dbName)
+                .collection(critiquesColName)
+                .find(query)
+                .limit(limit)
+                .toArray((error, docs) => {
+                    if (err) throw err;
+                    console.log(docs);
+                    return res.send(docs);
+                    //client.close();
+                });
         });
     } catch (err) {
         return res.send(err);
