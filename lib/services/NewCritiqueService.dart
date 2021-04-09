@@ -11,6 +11,8 @@ import 'dart:convert' show json;
 abstract class INewCritiqueService {
   Future<List<NewCritiqueModel>> list({
     @required String uid,
+    @required int limit,
+    @required String lastID,
   });
 
   Future<void> create({
@@ -37,11 +39,19 @@ abstract class INewCritiqueService {
 
 class NewCritiqueService extends INewCritiqueService {
   @override
-  Future<List<NewCritiqueModel>> list({@required String uid}) async {
+  Future<List<NewCritiqueModel>> list({
+    @required String uid,
+    @required int limit,
+    @required String lastID,
+  }) async {
     try {
       http.Response response = await http.post(
         '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList',
-        body: json.encode({'uid': uid}),
+        body: json.encode({
+          'uid': uid,
+          'limit': limit,
+          'last_id': lastID,
+        }),
         headers: {'content-type': 'application/json'},
       );
 

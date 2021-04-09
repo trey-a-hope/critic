@@ -1,9 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
 const functions = require('firebase-functions');
 var ObjectID = require('mongodb').ObjectID;
-
-const uri = "mongodb+srv://root:root@cluster0.htul7.mongodb.net/Critic?retryWrites=true&w=majority";//TODO: Add this to firebase keys.
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const env = functions.config();
+const client = new MongoClient(env.mongodb.connectionstring, { useNewUrlParser: true, useUnifiedTopology: true });
 const dbName = 'Critic';
 const critiquesColName = 'Critiques';
 
@@ -30,7 +29,7 @@ exports.list = functions.https.onRequest(async (req, res) => {
                 .find(query)
                 .limit(limit)
                 .toArray((error, docs) => {
-                    if (err) throw err;
+                    if (error) throw error;
                     console.log(docs);
                     return res.send(docs);
                     //client.close();
