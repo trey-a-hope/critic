@@ -5,12 +5,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/FollowStatsModel.dart';
+import 'package:critic/models/NewCritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
+import 'package:critic/services/NewCritiqueService.dart';
 import 'package:critic/services/StorageService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
+import 'package:critic/widgets/NewCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,9 +39,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   UserModel currentUser;
 
-  int limit = 25;
+  // int limit = 25;
 
-  DocumentSnapshot startAfterDocument;
+  // DocumentSnapshot startAfterDocument;
 
   @override
   Stream<ProfileState> mapEventToState(
@@ -48,7 +51,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         currentUser = await locator<AuthService>().getCurrentUser();
 
-        startAfterDocument = null;
+        // startAfterDocument = null;
 
         FollowStatsModel followStatsModel =
             await locator<CritiqueService>().followStats(uid: currentUser.uid);

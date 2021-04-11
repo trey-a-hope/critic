@@ -8,6 +8,8 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   ProfileBloc _profileBloc;
 
+  String _lastID = '';
+
   @override
   void initState() {
     super.initState();
@@ -15,34 +17,6 @@ class ProfilePageState extends State<ProfilePage> {
       ..add(
         LoadPageEvent(),
       );
-  }
-
-  Future<List<CritiqueModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveCritiquesFromFirebase(
-      uid: _profileBloc.currentUser.uid,
-      limit: _profileBloc.limit,
-      startAfterDocument: _profileBloc.startAfterDocument,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _profileBloc.startAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CritiqueModel> critiques = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
-
-    return critiques;
   }
 
   @override
@@ -217,20 +191,34 @@ class ProfilePageState extends State<ProfilePage> {
                 ];
               },
               body: RefreshIndicator(
-                child: PaginationList<CritiqueModel>(
+                child: PaginationList<NewCritiqueModel>(
                   onLoading: Spinner(),
                   onPageLoading: Spinner(),
                   separatorWidget: Divider(
                     height: 0,
                     color: Theme.of(context).dividerColor,
                   ),
-                  itemBuilder: (BuildContext context, CritiqueModel critique) {
-                    return CritiqueView(
+                  itemBuilder:
+                      (BuildContext context, NewCritiqueModel critique) {
+                    return NewCritiqueView(
                       critique: critique,
                       currentUser: currentUser,
                     );
                   },
-                  pageFetch: pageFetch,
+                  pageFetch: (int offset) async {
+                    List<NewCritiqueModel> critiques =
+                        await locator<NewCritiqueService>().listByUser(
+                      uid: currentUser.uid,
+                      limit: 25,
+                      lastID: _lastID,
+                    );
+
+                    if (critiques.isEmpty) return critiques;
+
+                    _lastID = critiques[0].id;
+
+                    return critiques;
+                  },
                   onError: (dynamic error) => Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

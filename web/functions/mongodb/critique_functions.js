@@ -23,11 +23,14 @@ exports.listByUser = functions.https.onRequest(async (req, res) => {
                 query = { uid: uid, _id: { $gt: new ObjectID(last_id) } };
             }
 
+            var sort = { _id: -1 };
+
             client
                 .db(dbName)
                 .collection(critiquesColName)
                 .find(query)
                 .limit(limit)
+                .sort(sort)
                 .toArray((error, docs) => {
                     if (error) throw error;
                     console.log(docs);
