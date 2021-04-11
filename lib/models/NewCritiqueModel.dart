@@ -12,6 +12,7 @@ class NewCritiqueModel {
   DateTime modified;
   int rating;
   List<String> likes;
+  List<String> genres;
 
   MovieModel movie; //Used on FE only.
 
@@ -24,6 +25,7 @@ class NewCritiqueModel {
     @required this.created,
     @required this.rating,
     @required this.likes,
+    @required this.genres,
   });
 
   factory NewCritiqueModel.fromJSON({@required Map map}) {
@@ -38,6 +40,7 @@ class NewCritiqueModel {
       created: DateTime.parse(map['created']),
       rating: map['rating'],
       likes: List.from(map['likes']),
+      genres: List.from(map['genres']),
     );
   }
 
@@ -49,6 +52,7 @@ class NewCritiqueModel {
       //'comments': [], //todo:
       'rating': rating,
       //'likes': [], //todo:
+      'genres': genres,
     };
   }
 }

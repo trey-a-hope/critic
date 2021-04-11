@@ -40,10 +40,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _currentUser = await locator<AuthService>().getCurrentUser();
 
       try {
-        await locator<NewCritiqueService>().addLike(
-          id: '606a2057ee64f8927f5f5de7',
-          uid: _currentUser.uid,
-        );
+        // await locator<NewCritiqueService>().addLike(
+        //   id: '606a2057ee64f8927f5f5de7',
+        //   uid: _currentUser.uid,
+        // );
 
         // await locator<NewCritiqueService>().addComment(
         //   id: '606a2057ee64f8927f5f5de7',
@@ -70,13 +70,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         // var s = locator<NewCritiqueService>().create(
         //   critique: NewCritiqueModel(
         //     id: null,
-        //     message: 'Hello bobby brown!',
-        //     imdbID: 'tt10977680',
+        //     message: 'This was really good.',
+        //     imdbID: 'tt0163651',
         //     uid: 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2',
         //     comments: [],
         //     created: DateTime.now(),
         //     rating: 3,
         //     likes: [],
+        //     genres: [
+        //       'Sci-Fi',
+        //     ],
         //   ),
         // );
 

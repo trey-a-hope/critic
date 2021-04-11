@@ -11,6 +11,14 @@ class ExplorePageState extends State<ExplorePage>
 
   final GlobalKey keyButton = GlobalKey();
 
+  String _genreLastActionID = '';
+  String _genreLastComedyID = '';
+  String _genreLastDramaID = '';
+  String _genreLastRomanceID = '';
+  String _genreLastSciFiID = '';
+
+  final int _pageFetchLimit = 25;
+
   @override
   void initState() {
     _exploreBloc = BlocProvider.of<ExploreBloc>(context);
@@ -18,31 +26,186 @@ class ExplorePageState extends State<ExplorePage>
     super.initState();
   }
 
-  Future<List<CritiqueModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveAllCritiquesFromFirebase(
-      limit: _exploreBloc.limit,
-      startAfterDocument: _exploreBloc.startAfterDocument,
+  // Future<List<CritiqueModel>> pageFetch(int offset) async {
+  //   //Fetch template documents.
+  //   List<DocumentSnapshot> documentSnapshots =
+  //       await locator<CritiqueService>().retrieveAllCritiquesFromFirebase(
+  //     limit: _exploreBloc.limit,
+  //     startAfterDocument: _exploreBloc.startAfterDocument,
+  //   );
+
+  //   //Return an empty list if there are no new documents.
+  //   if (documentSnapshots.isEmpty) {
+  //     return [];
+  //   }
+
+  //   _exploreBloc.startAfterDocument =
+  //       documentSnapshots[documentSnapshots.length - 1];
+
+  //   List<CritiqueModel> critiques = [];
+
+  //   //Convert documents to template models.
+  //   documentSnapshots.forEach((documentSnapshot) {
+  //     CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
+  //     critiques.add(critiqueModel);
+  //   });
+
+  //   return critiques;
+  // }
+  //
+  Widget _buildTap({@required String title, @required IconData iconData}) {
+    return Tab(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            iconData,
+            color: Theme.of(context).iconTheme.color,
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(title, style: Theme.of(context).textTheme.headline6),
+        ],
+      ),
     );
+  }
 
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
+  Widget _buildList({
+    @required String genre,
+    @required UserModel currentUser,
+  }) {
+    return RefreshIndicator(
+      child: PaginationList<NewCritiqueModel>(
+        onLoading: Spinner(),
+        onPageLoading: Spinner(),
+        separatorWidget: Divider(
+          height: 0,
+          color: Theme.of(context).dividerColor,
+        ),
+        itemBuilder: (BuildContext context, NewCritiqueModel critique) {
+          return NewCritiqueView(
+            critique: critique,
+            currentUser: currentUser,
+          );
+        },
+        pageFetch: (int offset) async {
+          List<NewCritiqueModel> critiques;
+          switch (genre) {
+            case 'Action':
+              critiques = await locator<NewCritiqueService>().listByGenre(
+                genre: 'Action',
+                limit: 25,
+                lastID: _genreLastActionID,
+              );
 
-    _exploreBloc.startAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
+              if (critiques.isEmpty) return critiques;
 
-    List<CritiqueModel> critiques = [];
+              _genreLastActionID = critiques[0].id;
 
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
+              break;
+            case 'Comedy':
+              critiques = await locator<NewCritiqueService>().listByGenre(
+                genre: 'Comedy',
+                limit: 25,
+                lastID: _genreLastComedyID,
+              );
 
-    return critiques;
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastComedyID = critiques[0].id;
+
+              break;
+            case 'Drama':
+              critiques = await locator<NewCritiqueService>().listByGenre(
+                genre: 'Drama',
+                limit: 25,
+                lastID: _genreLastDramaID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastDramaID = critiques[0].id;
+
+              break;
+            case 'Sci-Fi':
+              critiques = await locator<NewCritiqueService>().listByGenre(
+                genre: 'Sci-Fi',
+                limit: 25,
+                lastID: _genreLastSciFiID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastSciFiID = critiques[0].id;
+
+              break;
+            case 'Romance':
+              critiques = await locator<NewCritiqueService>().listByGenre(
+                genre: 'Romance',
+                limit: 25,
+                lastID: _genreLastRomanceID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastRomanceID = critiques[0].id;
+
+              break;
+            default:
+              critiques = [];
+              break;
+          }
+
+          return critiques;
+        },
+        onError: (dynamic error) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error,
+                size: 100,
+                color: Colors.grey,
+              ),
+              Text(
+                'Error',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
+        ),
+        onEmpty: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                MdiIcons.movieEdit,
+                size: 100,
+                color: Colors.grey,
+              ),
+              Text(
+                '$MESSAGE_EMPTY_CRITIQUES',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ],
+          ),
+        ),
+      ),
+      onRefresh: () {
+        _exploreBloc.add(
+          LoadPageEvent(),
+        );
+
+        return;
+      },
+    );
   }
 
   @override
@@ -60,192 +223,28 @@ class ExplorePageState extends State<ExplorePage>
 
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
-          final int pageFetchLimit = state.pageFetchLimit;
 
           return DefaultTabController(
-            length: 2,
+            length: 5,
             child: Scaffold(
               appBar: TabBar(
+                isScrollable: true,
                 indicatorColor: Theme.of(context).indicatorColor,
                 tabs: [
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.people,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Everyone',
-                            style: Theme.of(context).textTheme.headline6),
-                      ],
-                    ),
-                  ),
-                  Tab(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.emoji_people,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text('Following',
-                            style: Theme.of(context).textTheme.headline6),
-                      ],
-                    ),
-                  ),
+                  _buildTap(title: 'Action', iconData: MdiIcons.run),
+                  _buildTap(title: 'Comedy', iconData: MdiIcons.emoticon),
+                  _buildTap(title: 'Drama', iconData: MdiIcons.emoticonCry),
+                  _buildTap(title: 'Romance', iconData: MdiIcons.heart),
+                  _buildTap(title: 'Sci-Fi', iconData: MdiIcons.alien)
                 ],
               ),
               body: TabBarView(
                 children: [
-                  // Everyone
-                  RefreshIndicator(
-                    child: PaginationList<CritiqueModel>(
-                      onLoading: Spinner(),
-                      onPageLoading: Spinner(),
-                      separatorWidget: Divider(
-                        height: 0,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      itemBuilder:
-                          (BuildContext context, CritiqueModel critique) {
-                        return CritiqueView(
-                          critique: critique,
-                          currentUser: currentUser,
-                        );
-                      },
-                      pageFetch: pageFetch,
-                      onError: (dynamic error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'Error',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      onEmpty: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MdiIcons.movieEdit,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              '$MESSAGE_EMPTY_CRITIQUES',
-                              style: Theme.of(context).textTheme.headline4,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    onRefresh: () {
-                      _exploreBloc.add(
-                        LoadPageEvent(),
-                      );
-
-                      return;
-                    },
-                  ),
-                  // Following
-                  RefreshIndicator(
-                    child: PaginationList<CritiqueModel>(
-                      onLoading: Spinner(),
-                      onPageLoading: Spinner(),
-                      separatorWidget: Divider(
-                        height: 0,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      itemBuilder:
-                          (BuildContext context, CritiqueModel critique) {
-                        return CritiqueView(
-                          critique: critique,
-                          currentUser: currentUser,
-                        );
-                      },
-                      pageFetch: (int offset) async {
-                        //Fetch template documents.
-                        List<CritiqueModel> critiques =
-                            await locator<CritiqueService>()
-                                .retrieveCritiquesFromStream(
-                          limit: pageFetchLimit,
-                          offset: offset,
-                          uid: currentUser.uid,
-                        );
-
-                        return critiques;
-                      },
-                      onError: (dynamic error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'Error',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      onEmpty: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              MdiIcons.movieEdit,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'No critiques at this moment.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text('Create your own or follow someone.')
-                          ],
-                        ),
-                      ),
-                    ),
-                    onRefresh: () {
-                      _exploreBloc.add(
-                        LoadPageEvent(),
-                      );
-
-                      return;
-                    },
-                  )
+                  _buildList(genre: 'Action', currentUser: currentUser),
+                  _buildList(genre: 'Comedy', currentUser: currentUser),
+                  _buildList(genre: 'Drama', currentUser: currentUser),
+                  _buildList(genre: 'Romance', currentUser: currentUser),
+                  _buildList(genre: 'Sci-Fi', currentUser: currentUser),
                 ],
               ),
             ),

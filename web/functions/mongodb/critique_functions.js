@@ -6,7 +6,7 @@ const client = new MongoClient(env.mongodb.connectionstring, { useNewUrlParser: 
 const dbName = 'Critic';
 const critiquesColName = 'Critiques';
 
-exports.list = functions.https.onRequest(async (req, res) => {
+exports.listByUser = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
     const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
     const last_id = req.body.last_id;
@@ -40,11 +40,50 @@ exports.list = functions.https.onRequest(async (req, res) => {
     }
 });
 
+exports.listByGenre = functions.https.onRequest(async (req, res) => {
+    const genre = req.body.genre;
+    const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
+    const last_id = req.body.last_id;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+
+            var query;
+
+            if (!last_id) {
+                query = { genres: genre };
+            } else {
+                query = { genres: genre, _id: { $gt: new ObjectID(last_id) } };
+            }
+
+            var sort = { _id: -1 };
+
+            client
+                .db(dbName)
+                .collection(critiquesColName)
+                .find(query)
+                .limit(limit)
+                .sort(sort)
+                .toArray((error, docs) => {
+                    if (error) throw error;
+                    console.log(docs);
+                    return res.send(docs);
+                    //client.close();
+                });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});
+
+
 exports.create = functions.https.onRequest(async (req, res) => {
     const message = req.body.message;
     const uid = req.body.uid;
     const rating = req.body.rating;
     const imdbID = req.body.imdbID;
+    const genres = req.body.genres;
 
     try {
         client.connect(err => {
@@ -58,6 +97,7 @@ exports.create = functions.https.onRequest(async (req, res) => {
                 likes: [],
                 created: new Date(),
                 modified: new Date(),
+                genres: genres,
             };
             client.db(dbName).collection(critiquesColName).insertOne(data, (err, _) => {
                 if (err) throw err;

@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
+import 'package:critic/models/NewCritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/NewCritiqueService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
+import 'package:critic/widgets/NewCritiqueView.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -110,7 +114,6 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
         _setUpFirebaseMessaging();
         yield LoadedState(
           currentUser: currentUser,
-          pageFetchLimit: 25,
         );
       } catch (error) {
         _exploreBlocDelegate.showMessage(

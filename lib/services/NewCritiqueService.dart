@@ -9,10 +9,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 abstract class INewCritiqueService {
-  Future<List<NewCritiqueModel>> list({
+  Future<List<NewCritiqueModel>> listByUser({
     @required String uid,
     @required int limit,
-    @required String lastID,
+    String lastID,
+  });
+
+  Future<List<NewCritiqueModel>> listByGenre({
+    @required String genre,
+    @required int limit,
+    String lastID,
   });
 
   Future<void> create({
@@ -37,18 +43,66 @@ abstract class INewCritiqueService {
   });
 }
 
+//TODO: CREATE METHOD FOR LISTING CRITIQUES BY GENRE AND BY USER
+
 class NewCritiqueService extends INewCritiqueService {
   @override
-  Future<List<NewCritiqueModel>> list({
+  Future<List<NewCritiqueModel>> listByUser({
     @required String uid,
     @required int limit,
-    @required String lastID,
+    String lastID,
   }) async {
     try {
       http.Response response = await http.post(
-        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList',
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListByUser',
         body: json.encode({
           'uid': uid,
+          'limit': limit,
+          'last_id': lastID,
+        }),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
+
+      List<NewCritiqueModel> critiques = results
+          .map(
+            (result) => NewCritiqueModel.fromJSON(map: result),
+          )
+          .toList();
+
+      //Attach movie to critique object.
+      for (int i = 0; i < critiques.length; i++) {
+        critiques[i].movie =
+            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+      }
+
+      return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<NewCritiqueModel>> listByGenre({
+    @required String genre,
+    @required int limit,
+    String lastID,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListByGenre',
+        body: json.encode({
+          'genre': genre,
           'limit': limit,
           'last_id': lastID,
         }),

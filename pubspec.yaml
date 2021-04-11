@@ -15,17 +15,17 @@ dependencies:
   cloud_firestore: ^0.14.4
   cupertino_icons: ^1.0.0
   day_night_switcher: ^0.1.1+1
-  equatable: ^1.2.5
+  equatable: ^2.0.0
   expansion_card: ^0.1.0
   firebase_analytics: ^6.3.0
   firebase_auth: ^0.18.4+1
   firebase_auth_web: ^0.3.2+3
   firebase_core: ^0.5.3
-  firebase_crashlytics: ^0.2.4
-  firebase_messaging: ^7.0.3
+  #firebase_crashlytics: ^0.2.4
+  firebase_messaging: ^7.0.3 
   flutter_speed_dial: ^1.2.5
   firebase_storage: ^5.2.0
-  flutter_bloc: ^6.1.1
+  flutter_bloc: ^7.0.0
   getwidget: ^1.1.0
   get_it: ^5.0.3
   http: ^0.12.2

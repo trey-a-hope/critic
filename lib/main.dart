@@ -47,7 +47,7 @@ void main() async {
   runApp(
     MyApp(
       isDarkModeEnabled: isDarkModeEnabled,
-      isWeb: isWeb,
+      isWeb: false,
     ),
   );
 }
