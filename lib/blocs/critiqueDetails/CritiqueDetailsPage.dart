@@ -324,7 +324,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                   for (int i = 0; i < critique.comments.length; i++) ...[
                     ListTile(
                       leading: CachedNetworkImage(
-                        imageUrl: '${critiqueUser.imgUrl}',
+                        imageUrl: '${critique.comments[i].user.imgUrl}',
                         imageBuilder: (context, imageProvider) => CircleAvatar(
                           backgroundImage: imageProvider,
                         ),
