@@ -29,8 +29,6 @@ class ProfilePageState extends State<ProfilePage> {
 
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
-          final int followerCount = state.followerCount;
-          final int followingCount = state.followingCount;
 
           return Scaffold(
             backgroundColor: Theme.of(context).canvasColor,
@@ -105,81 +103,6 @@ class ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                             SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      '${currentUser.critiqueCount} Critiques',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followerCount Followers',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWERS_BP
-                                                .FollowersBloc(
-                                                    user: currentUser)
-                                              ..add(
-                                                FOLLOWERS_BP.LoadPageEvent(),
-                                              ),
-                                            child: FOLLOWERS_BP.FollowersPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followingCount Followings',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWINGS_BP
-                                                .FollowingsBloc(
-                                                    user: currentUser)
-                                              ..add(
-                                                FOLLOWINGS_BP.LoadPageEvent(),
-                                              ),
-                                            child:
-                                                FOLLOWINGS_BP.FollowingsPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             SizedBox(
                               height: 20,
                             )
@@ -191,25 +114,24 @@ class ProfilePageState extends State<ProfilePage> {
                 ];
               },
               body: RefreshIndicator(
-                child: PaginationList<NewCritiqueModel>(
+                child: PaginationList<CritiqueModel>(
                   onLoading: Spinner(),
                   onPageLoading: Spinner(),
                   separatorWidget: Divider(
                     height: 0,
                     color: Theme.of(context).dividerColor,
                   ),
-                  itemBuilder:
-                      (BuildContext context, NewCritiqueModel critique) {
-                    return NewCritiqueView(
+                  itemBuilder: (BuildContext context, CritiqueModel critique) {
+                    return CritiqueView(
                       critique: critique,
                       currentUser: currentUser,
                     );
                   },
                   pageFetch: (int offset) async {
-                    List<NewCritiqueModel> critiques =
-                        await locator<NewCritiqueService>().listByUser(
+                    List<CritiqueModel> critiques =
+                        await locator<CritiqueService>().listByUser(
                       uid: currentUser.uid,
-                      limit: 25,
+                      limit: PAGE_FETCH_LIMIT,
                       lastID: _lastID,
                     );
 

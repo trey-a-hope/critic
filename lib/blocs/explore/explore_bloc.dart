@@ -1,21 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:critic/models/NewCritiqueModel.dart';
+import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/NewCritiqueService.dart';
+import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/CritiqueView.dart';
-import 'package:critic/widgets/NewCritiqueView.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,10 +40,6 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
   ExploreBlocDelegate _exploreBlocDelegate;
 
   UserModel currentUser;
-
-  int limit = 25;
-
-  DocumentSnapshot startAfterDocument;
 
   void setDelegate({@required ExploreBlocDelegate delegate}) {
     this._exploreBlocDelegate = delegate;
@@ -107,8 +98,6 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
       yield LoadingState();
 
       try {
-        startAfterDocument = null;
-
         currentUser = await locator<AuthService>().getCurrentUser();
 
         _setUpFirebaseMessaging();

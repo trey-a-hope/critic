@@ -26,7 +26,7 @@ class CreateCritiqueBloc
 
   bool watchListHasMovie = false;
 
-  DocumentSnapshot similarCritiquesStartAfterDocument;
+  List<CritiqueModel> _otherCritiques;
 
   void setDelegate({@required CreateCritiqueBlocDelegate delegate}) {
     this._createCritiqueBlocDelegate = delegate;
@@ -46,10 +46,16 @@ class CreateCritiqueBloc
           imdbID: movie.imdbID,
         );
 
+        _otherCritiques = await locator<CritiqueService>().listSimilar(
+          id: null,
+          imdbID: movie.imdbID,
+        );
+
         yield LoadedState(
           movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
+          otherCritiques: _otherCritiques,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -68,6 +74,7 @@ class CreateCritiqueBloc
           movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
+          otherCritiques: _otherCritiques,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -89,6 +96,7 @@ class CreateCritiqueBloc
           movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
+          otherCritiques: _otherCritiques,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -101,28 +109,21 @@ class CreateCritiqueBloc
       yield LoadingState();
 
       final String critiqueText = event.critique;
+      final double rating = event.rating;
 
       try {
-        DateTime now = DateTime.now();
-
         CritiqueModel critique = CritiqueModel(
-          id: '',
+          id: null,
           uid: _currentUser.uid,
           imdbID: movie.imdbID,
           message: critiqueText,
-          modified: now,
-          created: now,
-          imdbRating: movie.imdbRating,
-          imdbVotes: movie.imdbVotes,
-          moviePlot: movie.plot,
-          moviePoster: movie.poster,
-          movieTitle: movie.title,
-          movieYear: movie.released,
-          movieDirector: movie.director,
-          likeCount: 0,
+          genres: movie.genre.split(', '),
+          likes: [],
+          rating: rating,
+          comments: [],
         );
 
-        await locator<CritiqueService>().createCritique(critique: critique);
+        await locator<CritiqueService>().create(critique: critique);
 
         _createCritiqueBlocDelegate.clearText();
 
@@ -133,6 +134,7 @@ class CreateCritiqueBloc
           movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
+          otherCritiques: _otherCritiques,
         );
       } catch (error) {
         _createCritiqueBlocDelegate.showMessage(
@@ -142,6 +144,7 @@ class CreateCritiqueBloc
           movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
+          otherCritiques: _otherCritiques,
         );
       }
     }

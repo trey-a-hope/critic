@@ -15,14 +15,14 @@ class HomeLoadedState extends HomeState {
   final UserModel currentUser;
   final List<UserModel> mostRecentUsers;
   final List<MovieModel> popularMovies;
-  final int critiqueCount;
+  // final int critiqueCount;
   final int userCount;
 
   const HomeLoadedState({
     @required this.currentUser,
     @required this.mostRecentUsers,
     @required this.popularMovies,
-    @required this.critiqueCount,
+    // @required this.critiqueCount,
     @required this.userCount,
   });
 
@@ -31,7 +31,7 @@ class HomeLoadedState extends HomeState {
         currentUser,
         mostRecentUsers,
         popularMovies,
-        critiqueCount,
+        // critiqueCount,
         userCount,
       ];
 }

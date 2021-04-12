@@ -20,7 +20,10 @@ exports.GetUsersFollowees = StreamIO.getUsersFollowees;
 exports.GetFollowStats = StreamIO.getFollowStats;
 exports.IsFollowing = StreamIO.isFollowing;
 
-//Mongo DB: Critiques: Get
+//Mongo DB: Critiques
+exports.MongoDBCritiquesGet = MongoDBCritiques.get;
+exports.MongoDBCritiquesCount = MongoDBCritiques.count;
+exports.MongoDBCritiquesListSimilar = MongoDBCritiques.listSimilar;
 exports.MongoDBCritiquesListByUser = MongoDBCritiques.listByUser;
 exports.MongoDBCritiquesListByGenre = MongoDBCritiques.listByGenre;
 exports.MongoDBCritiquesCreate = MongoDBCritiques.create;
@@ -28,3 +31,4 @@ exports.MongoDBCritiquesDelete = MongoDBCritiques.delete;
 exports.MongoDBCritiquesUpdate = MongoDBCritiques.update;
 exports.MongoDBCritiquesAddComment = MongoDBCritiques.addComment;
 exports.MongoDBCritiquesAddLike = MongoDBCritiques.addLike;
+exports.MongoDBCritiquesRemoveLike = MongoDBCritiques.removeLike;

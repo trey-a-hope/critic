@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
           final List<MovieModel> popularMovies = state.popularMovies;
-          final int critiqueCount = state.critiqueCount;
+          // final int critiqueCount = state.critiqueCount;
           final int userCount = state.userCount;
 
           return ListView(
@@ -94,23 +94,23 @@ class _HomePageState extends State<HomePage> {
                                               .headline5)),
                                 ],
                               ),
-                              Column(
-                                children: <Widget>[
-                                  Container(
-                                      padding:
-                                          EdgeInsets.only(top: 15, bottom: 5),
-                                      child: Text('Critiques',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5)),
-                                  Container(
-                                      padding: EdgeInsets.only(bottom: 15),
-                                      child: Text('$critiqueCount',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5)),
-                                ],
-                              ),
+                              // Column(
+                              //   children: <Widget>[
+                              //     Container(
+                              //         padding:
+                              //             EdgeInsets.only(top: 15, bottom: 5),
+                              //         child: Text('Critiques',
+                              //             style: Theme.of(context)
+                              //                 .textTheme
+                              //                 .headline5)),
+                              //     Container(
+                              //         padding: EdgeInsets.only(bottom: 15),
+                              //         child: Text('$critiqueCount',
+                              //             style: Theme.of(context)
+                              //                 .textTheme
+                              //                 .headline5)),
+                              //   ],
+                              // ),
                               Column(
                                 children: <Widget>[
                                   Container(

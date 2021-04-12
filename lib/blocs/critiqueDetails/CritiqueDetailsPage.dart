@@ -1,25 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/CommentModel.dart';
+import 'package:critic/pages/likes_page.dart';
 import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/MovieService.dart';
+import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pagination/pagination.dart';
+import 'package:image_stack/image_stack.dart';
 import '../../Constants.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart' as CRITIQUE_DETAILS_BP;
-import 'package:critic/blocs/postComment/Bloc.dart' as POST_COMMENT_BP;
-import 'package:critic/blocs/comments/Bloc.dart' as COMMENTS_BP;
-import 'package:critic/blocs/likes/Bloc.dart' as LIKES_BP;
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
 import 'package:timeago/timeago.dart' as timeago;
@@ -34,6 +27,8 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     implements CRITIQUE_DETAILS_BP.CritiqueDetailsBlocDelegate {
   CRITIQUE_DETAILS_BP.CritiqueDetailsBloc _critiqueDetailsBloc;
 
+  final TextEditingController _commentController = TextEditingController();
+
   @override
   void initState() {
     _critiqueDetailsBloc =
@@ -47,64 +42,16 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     super.dispose();
   }
 
-  Future<List<CritiqueModel>> fetchSimilarCritiques(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveSimilarCritiques(
-      limit: 1,
-      startAfterDocument:
-          _critiqueDetailsBloc.similarCritiquesStartAfterDocument,
-      uid: _critiqueDetailsBloc.critiqueModel.uid,
-      imdbID: _critiqueDetailsBloc.critiqueModel.imdbID,
+  Widget _buildTitle({
+    @required String title,
+  }) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Text(
+        '$title',
+        style: Theme.of(context).textTheme.headline3,
+      ),
     );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _critiqueDetailsBloc.similarCritiquesStartAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CritiqueModel> critiques = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
-
-    //todo: sort critiques client side.
-
-    return critiques;
-  }
-
-  Future<List<CommentModel>> fetchComments(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveCommentsFromFirebase(
-      limit: 1,
-      startAfterDocument: _critiqueDetailsBloc.commentsStartAfterDocument,
-      critiqueID: _critiqueDetailsBloc.critiqueModel.id,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _critiqueDetailsBloc.commentsStartAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CommentModel> comments = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CommentModel comment = CommentModel.fromDoc(ds: documentSnapshot);
-      comments.add(comment);
-    });
-
-    return comments;
   }
 
   @override
@@ -122,116 +69,76 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
         if (state is CRITIQUE_DETAILS_BP.LoadedState) {
           final CritiqueModel critique = state.critiqueModel;
-          final MovieModel movie = state.movieModel;
           final UserModel currentUser = state.currentUser;
           final UserModel critiqueUser = state.critiqueUser;
           final bool isLiked = state.isLiked;
-          final int likeCount = state.likeCount;
+          final List<UserModel> likedUsers = state.likedUsers;
+          final List<CritiqueModel> otherCritiques = state.otherCritiques;
 
           return Scaffold(
             appBar: AppBar(
               centerTitle: true,
               title: Text('${critiqueUser.username} says...'),
-            ),
-            floatingActionButton: SpeedDial(
-              backgroundColor: Theme.of(context).buttonColor,
-              animatedIcon: AnimatedIcons.menu_close,
-              animatedIconTheme: IconThemeData(size: 22.0),
-              curve: Curves.bounceIn,
-              children: [
-                SpeedDialChild(
-                    label: 'View Comments',
-                    labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                    labelBackgroundColor: Colors.green,
-                    child: Icon(MdiIcons.eye, color: Colors.white),
-                    backgroundColor: Colors.green,
-                    onTap: () {
-                      Route route = MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) => COMMENTS_BP.CommentsBloc(
-                            critique: critique,
-                            currentUser: currentUser,
-                          )..add(
-                              COMMENTS_BP.LoadPageEvent(),
-                            ),
-                          child: COMMENTS_BP.CommentsPage(),
-                        ),
+              actions: [
+                if (currentUser.uid == critique.uid) ...[
+                  IconButton(
+                    onPressed: () async {
+                      final bool confirm = await locator<ModalService>()
+                          .showConfirmation(
+                              context: context,
+                              title: 'Delete Critique',
+                              message: 'Are you sure?');
+
+                      if (!confirm) return;
+
+                      _critiqueDetailsBloc.add(
+                        CRITIQUE_DETAILS_BP.DeleteCritiqueEvent(),
                       );
+                    },
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  )
+                ],
+                if (currentUser.uid != critique.uid) ...[
+                  IconButton(
+                    onPressed: () async {
+                      bool confirm = await locator<ModalService>().showConfirmation(
+                          context: context,
+                          title: 'Report Critique',
+                          message:
+                              'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
 
-                      Navigator.push(context, route);
-                    }),
-                SpeedDialChild(
-                  child: Icon(Icons.comment, color: Colors.white),
-                  backgroundColor: Colors.blue,
-                  onTap: () {
-                    Route route = MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => POST_COMMENT_BP.PostCommentBloc(
-                          critique: critique,
-                          critiqueUser: critiqueUser,
-                        )..add(
-                            POST_COMMENT_BP.LoadPageEvent(),
-                          ),
-                        child: POST_COMMENT_BP.PostCommentPage(),
-                      ),
-                    );
+                      if (!confirm) return;
 
-                    Navigator.push(context, route);
+                      _critiqueDetailsBloc.add(
+                        CRITIQUE_DETAILS_BP.ReportCritiqueEvent(),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.report,
+                      color: Colors.red,
+                    ),
+                  )
+                ],
+                IconButton(
+                  onPressed: () {
+                    if (isLiked) {
+                      _critiqueDetailsBloc.add(
+                        CRITIQUE_DETAILS_BP.UnlikeCritiqueEvent(),
+                      );
+                    } else {
+                      _critiqueDetailsBloc.add(
+                        CRITIQUE_DETAILS_BP.LikeCritiqueEvent(),
+                      );
+                    }
                   },
-                  label: 'Post Comment',
-                  labelStyle: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                  labelBackgroundColor: Colors.blue,
-                ),
-                currentUser.uid == critique.uid
-                    ? SpeedDialChild(
-                        child: Icon(Icons.delete, color: Colors.white),
-                        backgroundColor: Colors.black,
-                        onTap: () async {
-                          final bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Delete Critique',
-                                  message: 'Are you sure?');
-
-                          if (!confirm) return;
-
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.DeleteCritiqueEvent(),
-                          );
-                        },
-                        label: 'Delete',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        labelBackgroundColor: Colors.black,
-                      )
-                    : SpeedDialChild(
-                        child: Icon(Icons.report, color: Colors.white),
-                        backgroundColor: Colors.black,
-                        onTap: () async {
-                          bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Report Critique',
-                                  message:
-                                      'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
-
-                          if (!confirm) return;
-
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.ReportCritiqueEvent(),
-                          );
-                        },
-                        label: 'Report',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        labelBackgroundColor: Colors.black,
-                      ),
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                )
               ],
             ),
             body: SafeArea(
@@ -248,7 +155,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                           child: InkWell(
                             onTap: () async {},
                             child: CachedNetworkImage(
-                              imageUrl: '${movie.poster}',
+                              imageUrl: '${critique.movie.poster}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -293,17 +200,13 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                     textColor: Colors.white,
                                     child: Text('View Details'),
                                     onPressed: () async {
-                                      final MovieModel movieModel =
-                                          await locator<MovieService>()
-                                              .getMovieByID(id: movie.imdbID);
-
                                       Route route = MaterialPageRoute(
                                         builder: (context) => BlocProvider(
                                           create: (context) =>
                                               CREATE_CRITIQUE_BP
                                                   .CreateCritiqueBloc(
-                                                      movie: movieModel)
-                                                ..add(
+                                            movie: critique.movie,
+                                          )..add(
                                                   CREATE_CRITIQUE_BP
                                                       .LoadPageEvent(),
                                                 ),
@@ -369,132 +272,159 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     subtitle: Text(
                         '${timeago.format(critique.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(critique.created)}',
                         style: Theme.of(context).textTheme.headline6),
-                    trailing: GestureDetector(
-                      onLongPress: () {
-                        Route route = MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (context) => LIKES_BP.LikesBloc(
-                              critique: critique,
-                            )..add(
-                                LIKES_BP.LoadPageEvent(),
-                              ),
-                            child: LIKES_BP.LikesPage(),
-                          ),
-                        );
-
-                        Navigator.push(context, route);
-                      },
-                      onTap: () {
-                        if (isLiked) {
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.UnlikeCritiqueEvent(),
-                          );
-                        } else {
-                          _critiqueDetailsBloc.add(
-                            CRITIQUE_DETAILS_BP.LikeCritiqueEvent(),
-                          );
-                        }
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$likeCount',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.red),
-                          ),
-                          Icon(
-                            isLiked ? Icons.favorite : Icons.favorite_border,
-                            color: Colors.red,
-                          )
-                        ],
-                      ),
-                    ),
                   ),
-                  Text(
-                    '(Longpress heart to view all likers)',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
+                  Divider(),
+                  _buildTitle(title: 'Likes'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Route route = MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                LikesPage(likedUsers: likedUsers),
+                          );
+
+                          Navigator.push(context, route);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            left: 50,
+                          ),
+                          child: ImageStack(
+                            imageList: likedUsers
+                                .map((likedUser) => likedUser.imgUrl)
+                                .toList(),
+                            showTotalCount: true,
+                            totalCount: likedUsers.length,
+                            imageRadius: 30,
+                            imageCount: 3,
+                            imageBorderWidth: 3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  _buildTitle(title: 'Rating'),
+                  Center(
+                    child: RatingBarIndicator(
+                      rating: critique.rating,
+                      itemBuilder: (context, index) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      itemCount: 5,
+                      itemSize: 50.0,
+                      direction: Axis.horizontal,
                     ),
                   ),
                   Divider(),
+                  _buildTitle(title: 'Comments'),
+                  for (int i = 0; i < critique.comments.length; i++) ...[
+                    ListTile(
+                      leading: CachedNetworkImage(
+                        imageUrl: '${critiqueUser.imgUrl}',
+                        imageBuilder: (context, imageProvider) => CircleAvatar(
+                          backgroundImage: imageProvider,
+                        ),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                      title: Text(
+                        '\"${critique.comments[i].comment}\"',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      subtitle: Text(
+                        '${critique.comments[i].user.username}',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      trailing: Text(
+                        '${timeago.format(critique.comments[i].created, allowFromNow: true)}',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    )
+                  ],
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Similar Critiques',
-                      style: Theme.of(context).textTheme.headline3,
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextFormField(
+                      textCapitalization: TextCapitalization.sentences,
+                      cursorColor: Theme.of(context).textTheme.headline4.color,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _commentController,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      validator: locator<ValidationService>().isEmpty,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline4.color,
+                      ),
+                      maxLines: 5,
+                      maxLength: CRITIQUE_CHAR_LIMIT,
+                      decoration: InputDecoration(
+                          errorStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
+                          counterStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline6.color),
+                          hintText:
+                              'Leave a comment about ${critiqueUser.username}\'s critique...',
+                          hintStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline4.color)),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    child: RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        color: Colors.red.shade900,
+                        textColor: Colors.white,
+                        child: Text('Post Comment'),
+                        onPressed: () async {
+                          final bool confirm = await locator<ModalService>()
+                              .showConfirmation(
+                                  context: context,
+                                  title: 'Post Comment',
+                                  message: 'Are you sure?');
+
+                          if (!confirm) return;
+
+                          context
+                              .read<CRITIQUE_DETAILS_BP.CritiqueDetailsBloc>()
+                              .add(
+                                CRITIQUE_DETAILS_BP.PostCommentEvent(
+                                    comment: _commentController.text),
+                              );
+                        }),
+                  ),
+                  Divider(),
+                  _buildTitle(title: 'Other Critiques'),
                   Container(
                     height: 250,
                     width: MediaQuery.of(context).size.width,
-                    child: PaginationList<CritiqueModel>(
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      onLoading: Spinner(),
-                      onPageLoading: Spinner(),
-                      separatorWidget: Divider(
-                        height: 0,
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      itemBuilder:
-                          (BuildContext context, CritiqueModel critique) {
+                      itemCount: otherCritiques.length,
+                      itemBuilder: (context, index) {
+                        CritiqueModel otherCritique = otherCritiques[index];
                         return Container(
                           height: 100,
                           width: MediaQuery.of(context).size.width * 0.75,
                           child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: SmallCritiqueView(
-                                critique: critique,
-                                currentUser: currentUser,
-                              )
-                              // Container(
-                              //   height: 100,
-                              //   width: 200,
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.grey.shade200,
-                              //     borderRadius: BorderRadius.all(
-                              //       Radius.circular(20),
-                              //     ),
-                              //   ),
-                              //   child: Text(critique.movieTitle),
-                              // ),
-                              ),
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: SmallCritiqueView(
+                              critique: otherCritique,
+                              currentUser: currentUser,
+                            ),
+                          ),
                         );
                       },
-                      pageFetch: fetchSimilarCritiques,
-                      onError: (dynamic error) => Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error,
-                              size: 100,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                              'Error',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              error.toString(),
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        ),
-                      ),
-                      onEmpty: Container(
-                        height: 100,
-                        width: 200,
-                        child: Center(
-                          child: Text(
-                            'No one else has critiqued yet.',
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -506,8 +436,17 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
         }
 
         if (state is CRITIQUE_DETAILS_BP.ErrorState) {
-          return Center(
-            child: Text('Error: ${state.error.toString()}'),
+          return Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text('Error'),
+            ),
+            body: Center(
+              child: Text(
+                '${state.error.toString()}',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+            ),
           );
         }
 
@@ -517,8 +456,24 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
   }
 
   @override
-  void showMessage({String message}) {
-    locator<ModalService>()
-        .showAlert(context: context, title: '', message: message);
+  void showMessage({
+    @required String title,
+    @required String message,
+  }) {
+    locator<ModalService>().showAlert(
+      context: context,
+      title: '$title',
+      message: '$message',
+    );
+  }
+
+  @override
+  void clearText() {
+    _commentController.clear();
+  }
+
+  @override
+  void pop() {
+    Navigator.of(context).pop();
   }
 }

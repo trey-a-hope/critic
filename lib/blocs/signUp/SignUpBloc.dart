@@ -62,22 +62,6 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
         await locator<UserService>().createUser(user: newUser);
 
-        final UserModel treyHopeUser =
-            await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
-
-        //Follow Trey Hope.
-        await locator<CritiqueService>()
-            .followUser(myUID: newUser.uid, theirUID: treyHopeUser.uid);
-        await locator<CritiqueService>()
-            .followUser(myUID: treyHopeUser.uid, theirUID: newUser.uid);
-
-        await locator<FCMNotificationService>().sendNotificationToUser(
-          fcmToken: treyHopeUser.fcmToken,
-          title: 'New Follower',
-          body: newUser.username,
-          notificationData: null,
-        );
-
         _signUpBlocDelegate.navigateHome();
 
         yield SignUpStartState(termsServicesChecked: _termsServicesChecked);

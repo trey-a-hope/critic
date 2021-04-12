@@ -89,7 +89,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
                   create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                    critiqueModel: widget.critique,
+                    critiqueID: widget.critique.id,
                   )..add(
                       CRITIQUE_DETAILS_BP.LoadPageEvent(),
                     ),
@@ -102,7 +102,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
             title: Text('\"${widget.critique.message}\"',
                 style: Theme.of(context).textTheme.headline6),
             subtitle: Text(
-              '\n${widget.critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
+              '\n${widget.critique.movie.title} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
               style: Theme.of(context).textTheme.headline5,
             ),
             trailing: InkWell(
@@ -150,7 +150,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
                 Navigator.push(context, route);
               },
               child: CachedNetworkImage(
-                imageUrl: '${widget.critique.moviePoster}',
+                imageUrl: '${widget.critique.movie.poster}',
                 imageBuilder: (context, imageProvider) => Image(
                   image: imageProvider,
                   height: 200,

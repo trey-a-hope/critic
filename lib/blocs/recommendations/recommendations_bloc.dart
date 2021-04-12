@@ -1,3 +1,4 @@
+import 'package:critic/Constants.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/RecommendationModel.dart';
 import 'package:critic/models/UserModel.dart';
@@ -30,8 +31,6 @@ class RecommendationsBloc
   RecommendationsBloc() : super(null);
   RecommendationsBlocDelegate _recommendationsBlocDelegate;
   UserModel currentUser;
-
-  int limit = 25;
 
   DocumentSnapshot startAfterDocument;
 

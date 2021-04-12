@@ -113,7 +113,7 @@ class _CritiqueViewState extends State<CritiqueView> {
             BlendMode.darken,
           ),
           child: Image.network(
-            '${widget.critique.moviePoster}',
+            '${widget.critique.movie.poster}',
             fit: BoxFit.cover,
             height: 200,
             width: double.infinity,
@@ -124,7 +124,7 @@ class _CritiqueViewState extends State<CritiqueView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${widget.critique.movieTitle}',
+                '${widget.critique.movie.title}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -151,16 +151,25 @@ class _CritiqueViewState extends State<CritiqueView> {
                   fontWeight: FontWeight.bold),
             ),
           ),
-          RaisedButton(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+          ElevatedButton(
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<OutlinedBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  Theme.of(context).buttonColor),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                Colors.white,
+              ),
             ),
             child: Text('Read Full Review'),
             onPressed: () {
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
                   create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                    critiqueModel: widget.critique,
+                    critiqueID: widget.critique.id,
                   )..add(
                       CRITIQUE_DETAILS_BP.LoadPageEvent(),
                     ),
@@ -170,8 +179,6 @@ class _CritiqueViewState extends State<CritiqueView> {
 
               Navigator.push(context, route);
             },
-            color: Theme.of(context).buttonColor,
-            textColor: Colors.white,
           )
         ],
       ),

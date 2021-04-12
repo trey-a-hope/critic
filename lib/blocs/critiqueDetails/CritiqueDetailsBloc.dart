@@ -1,43 +1,39 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/CritiqueStatsModel.dart';
-import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
 import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/FCMNotificationService.dart';
-import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:flutter/material.dart';
 import '../../ServiceLocator.dart';
 import 'Bloc.dart';
 
 abstract class CritiqueDetailsBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({@required String title, @required String message});
+  void clearText();
+  void pop();
 }
 
 class CritiqueDetailsBloc
     extends Bloc<CritiqueDetailsEvent, CritiqueDetailsState> {
   CritiqueDetailsBloc({
-    @required this.critiqueModel,
+    @required this.critiqueID,
   }) : super(
           CritiqueDetailsState(),
         );
-  final CritiqueModel critiqueModel;
+
+  final String critiqueID;
+
+  CritiqueModel _critiqueModel;
 
   CritiqueDetailsBlocDelegate _critiqueDetailsBlocDelegate;
 
   UserModel _currentUser;
 
   UserModel _critiqueUser;
-
-  MovieModel movieModel;
-
-  DocumentSnapshot similarCritiquesStartAfterDocument;
-
-  DocumentSnapshot commentsStartAfterDocument;
 
   void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
     this._critiqueDetailsBlocDelegate = delegate;
@@ -52,73 +48,99 @@ class CritiqueDetailsBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
+        _critiqueModel = await locator<CritiqueService>().get(id: critiqueID);
+
         _critiqueUser = await locator<UserService>().retrieveUser(
-          uid: critiqueModel.uid,
+          uid: _critiqueModel.uid,
         );
 
-        movieModel = await locator<MovieService>()
-            .getMovieByID(id: critiqueModel.imdbID);
+        // CritiqueStatsModel critiqueStats =
+        //     await locator<CritiqueService>().critiqueStats(
+        //   uid: _currentUser.uid,
+        //   critiqueID: critiqueModel.id,
+        // );
 
-        CritiqueStatsModel critiqueStats =
-            await locator<CritiqueService>().critiqueStats(
-          uid: _currentUser.uid,
-          critiqueID: critiqueModel.id,
+        //Fetch users for likes.
+        List<UserModel> likedUsers = [];
+        for (int i = 0; i < _critiqueModel.likes.length; i++) {
+          UserModel likedUser = await locator<UserService>()
+              .retrieveUser(uid: _critiqueModel.likes[i]);
+          likedUsers.add(likedUser);
+        }
+
+        //Determine if this user has liked this critique or not.
+        bool isLiked = _critiqueModel.likes.contains(_currentUser.uid);
+
+        //Fetch users for comments.
+        for (int i = 0; i < _critiqueModel.comments.length; i++) {
+          UserModel commentUser = await locator<UserService>()
+              .retrieveUser(uid: _critiqueModel.comments[i].uid);
+          _critiqueModel.comments[i].user = commentUser;
+        }
+
+        //Reverse comments to get most recent on top.
+        _critiqueModel.comments = _critiqueModel.comments.reversed.toList();
+
+        List<CritiqueModel> otherCritiques =
+            await locator<CritiqueService>().listSimilar(
+          id: _critiqueModel.id,
+          imdbID: _critiqueModel.movie.imdbID,
         );
-
-        bool isLiked = critiqueStats.isLiked;
-        critiqueModel.likeCount = critiqueStats.likeCount;
 
         yield LoadedState(
           currentUser: _currentUser,
           critiqueUser: _critiqueUser,
-          critiqueModel: critiqueModel,
-          movieModel: movieModel,
+          critiqueModel: _critiqueModel,
           isLiked: isLiked,
-          likeCount: critiqueModel.likeCount,
+          likedUsers: likedUsers,
+          otherCritiques: otherCritiques,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+          title: 'Error',
+          message: 'Error: ${error.toString()}',
+        );
         yield ErrorState(error: error);
       }
     }
 
     if (event is DeleteCritiqueEvent) {
       try {
-        await locator<CritiqueService>().deleteCritique(
-          critiqueID: critiqueModel.id,
-          uid: critiqueModel.uid,
+        await locator<CritiqueService>().delete(
+          id: _critiqueModel.id,
         );
 
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Critique deleted, refresh home page to see results.');
+            title: 'Deleted', message: 'Refresh home page to see results.');
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+            title: 'Error', message: 'Error: ${error.toString()}');
       }
     }
 
     if (event is ReportCritiqueEvent) {
       try {
-        await locator<CritiqueService>().deleteCritique(
-          critiqueID: critiqueModel.id,
-          uid: critiqueModel.uid,
+        await locator<CritiqueService>().delete(
+          id: _critiqueModel.id,
         );
 
         _critiqueDetailsBlocDelegate.showMessage(
-            message:
-                'Critique reported, you will no longer see this critique.');
+          title: 'Reported',
+          message: 'Critique reported, you will no longer see this critique.',
+        );
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+          title: 'Error',
+          message: 'Error: ${error.toString()}',
+        );
       }
     }
 
     if (event is LikeCritiqueEvent) {
       try {
-        await locator<CritiqueService>().likeCritique(
+        await locator<CritiqueService>().addLike(
+          id: _critiqueModel.id,
           uid: _currentUser.uid,
-          critiqueID: critiqueModel.id,
         );
 
         if (_currentUser.uid != _critiqueUser.uid &&
@@ -127,47 +149,80 @@ class CritiqueDetailsBloc
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: _critiqueUser.fcmToken,
             title: '${_currentUser.username} liked your critique!',
-            body: '${critiqueModel.movieTitle}',
+            body: '${_critiqueModel.movie.title}',
             notificationData: null,
           );
         }
 
-        critiqueModel.likeCount++;
-
-        yield LoadedState(
-          currentUser: _currentUser,
-          critiqueUser: _critiqueUser,
-          critiqueModel: critiqueModel,
-          movieModel: movieModel,
-          isLiked: true,
-          likeCount: critiqueModel.likeCount,
-        );
+        add(LoadPageEvent());
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+          title: 'Error',
+          message: 'Error: ${error.toString()}',
+        );
       }
     }
 
     if (event is UnlikeCritiqueEvent) {
       try {
-        await locator<CritiqueService>().unlikeCritique(
+        await locator<CritiqueService>().removeLike(
+          id: _critiqueModel.id,
           uid: _currentUser.uid,
-          critiqueID: critiqueModel.id,
         );
 
-        critiqueModel.likeCount--;
-
-        yield LoadedState(
-          currentUser: _currentUser,
-          critiqueUser: _critiqueUser,
-          critiqueModel: critiqueModel,
-          movieModel: movieModel,
-          isLiked: false,
-          likeCount: critiqueModel.likeCount,
-        );
+        add(LoadPageEvent());
       } catch (error) {
         _critiqueDetailsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+          title: 'Error',
+          message: 'Error: ${error.toString()}',
+        );
+      }
+    }
+
+    if (event is PostCommentEvent) {
+      final String comment = event.comment;
+
+      try {
+        await locator<CritiqueService>().addComment(
+          id: critiqueID,
+          comment: CommentModel(
+            uid: _currentUser.uid,
+            comment: comment,
+            likes: [],
+          ),
+        );
+
+        //Send notification to user who created critique.
+        if (_currentUser.uid != _critiqueUser.uid &&
+            _critiqueUser.fcmToken != null) {
+          await locator<FCMNotificationService>().sendNotificationToUser(
+            fcmToken: _critiqueUser.fcmToken,
+            title: '${_currentUser.username} commented on your critique!',
+            body: '${_critiqueModel.movie.title}',
+            notificationData: null,
+          );
+        }
+
+        //Send notification to all users who commented.
+        for (int i = 0; i < _critiqueModel.comments.length; i++) {
+          final UserModel commentUser = _critiqueModel.comments[i].user;
+          if (_currentUser.uid != _critiqueModel.comments[i].uid &&
+              commentUser.fcmToken != null) {
+            await locator<FCMNotificationService>().sendNotificationToUser(
+              fcmToken: commentUser.fcmToken,
+              title:
+                  '${_currentUser.username} commented on a critique you commented on!',
+              body: '${_critiqueModel.movie.title}',
+              notificationData: null,
+            );
+          }
+        }
+
+        _critiqueDetailsBlocDelegate.clearText();
+
+        add(LoadPageEvent());
+      } catch (error) {
+        yield ErrorState(error: error);
       }
     }
   }

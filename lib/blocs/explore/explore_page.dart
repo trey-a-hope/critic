@@ -12,12 +12,17 @@ class ExplorePageState extends State<ExplorePage>
   final GlobalKey keyButton = GlobalKey();
 
   String _genreLastActionID = '';
+  String _genreLastAdventureID = '';
+  String _genreLastAnimationID = '';
   String _genreLastComedyID = '';
+  String _genreLastCrimeID = '';
   String _genreLastDramaID = '';
+  String _genreLastFantasyID = '';
+  String _genreLastHorrorID = '';
+  String _genreLastMysteryID = '';
   String _genreLastRomanceID = '';
   String _genreLastSciFiID = '';
-
-  final int _pageFetchLimit = 25;
+  String _genreLastThrillerID = '';
 
   @override
   void initState() {
@@ -26,33 +31,6 @@ class ExplorePageState extends State<ExplorePage>
     super.initState();
   }
 
-  // Future<List<CritiqueModel>> pageFetch(int offset) async {
-  //   //Fetch template documents.
-  //   List<DocumentSnapshot> documentSnapshots =
-  //       await locator<CritiqueService>().retrieveAllCritiquesFromFirebase(
-  //     limit: _exploreBloc.limit,
-  //     startAfterDocument: _exploreBloc.startAfterDocument,
-  //   );
-
-  //   //Return an empty list if there are no new documents.
-  //   if (documentSnapshots.isEmpty) {
-  //     return [];
-  //   }
-
-  //   _exploreBloc.startAfterDocument =
-  //       documentSnapshots[documentSnapshots.length - 1];
-
-  //   List<CritiqueModel> critiques = [];
-
-  //   //Convert documents to template models.
-  //   documentSnapshots.forEach((documentSnapshot) {
-  //     CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-  //     critiques.add(critiqueModel);
-  //   });
-
-  //   return critiques;
-  // }
-  //
   Widget _buildTap({@required String title, @required IconData iconData}) {
     return Tab(
       child: Row(
@@ -76,26 +54,26 @@ class ExplorePageState extends State<ExplorePage>
     @required UserModel currentUser,
   }) {
     return RefreshIndicator(
-      child: PaginationList<NewCritiqueModel>(
+      child: PaginationList<CritiqueModel>(
         onLoading: Spinner(),
         onPageLoading: Spinner(),
         separatorWidget: Divider(
           height: 0,
           color: Theme.of(context).dividerColor,
         ),
-        itemBuilder: (BuildContext context, NewCritiqueModel critique) {
-          return NewCritiqueView(
+        itemBuilder: (BuildContext context, CritiqueModel critique) {
+          return CritiqueView(
             critique: critique,
             currentUser: currentUser,
           );
         },
         pageFetch: (int offset) async {
-          List<NewCritiqueModel> critiques;
+          List<CritiqueModel> critiques;
           switch (genre) {
             case 'Action':
-              critiques = await locator<NewCritiqueService>().listByGenre(
-                genre: 'Action',
-                limit: 25,
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
                 lastID: _genreLastActionID,
               );
 
@@ -104,10 +82,34 @@ class ExplorePageState extends State<ExplorePage>
               _genreLastActionID = critiques[0].id;
 
               break;
+            case 'Adventure':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastAdventureID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastAdventureID = critiques[0].id;
+
+              break;
+            case 'Animation':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastAnimationID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastAnimationID = critiques[0].id;
+
+              break;
             case 'Comedy':
-              critiques = await locator<NewCritiqueService>().listByGenre(
-                genre: 'Comedy',
-                limit: 25,
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
                 lastID: _genreLastComedyID,
               );
 
@@ -116,10 +118,22 @@ class ExplorePageState extends State<ExplorePage>
               _genreLastComedyID = critiques[0].id;
 
               break;
+            case 'Crime':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastCrimeID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastCrimeID = critiques[0].id;
+
+              break;
             case 'Drama':
-              critiques = await locator<NewCritiqueService>().listByGenre(
-                genre: 'Drama',
-                limit: 25,
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
                 lastID: _genreLastDramaID,
               );
 
@@ -128,10 +142,58 @@ class ExplorePageState extends State<ExplorePage>
               _genreLastDramaID = critiques[0].id;
 
               break;
+            case 'Fantasy':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastFantasyID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastFantasyID = critiques[0].id;
+
+              break;
+            case 'Horror':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastHorrorID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastHorrorID = critiques[0].id;
+
+              break;
+            case 'Mystery':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastMysteryID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastMysteryID = critiques[0].id;
+
+              break;
+            case 'Romance':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastRomanceID,
+              );
+
+              if (critiques.isEmpty) return critiques;
+
+              _genreLastRomanceID = critiques[0].id;
+
+              break;
             case 'Sci-Fi':
-              critiques = await locator<NewCritiqueService>().listByGenre(
-                genre: 'Sci-Fi',
-                limit: 25,
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
                 lastID: _genreLastSciFiID,
               );
 
@@ -140,16 +202,16 @@ class ExplorePageState extends State<ExplorePage>
               _genreLastSciFiID = critiques[0].id;
 
               break;
-            case 'Romance':
-              critiques = await locator<NewCritiqueService>().listByGenre(
-                genre: 'Romance',
-                limit: 25,
-                lastID: _genreLastRomanceID,
+            case 'Thriller':
+              critiques = await locator<CritiqueService>().listByGenre(
+                genre: genre,
+                limit: PAGE_FETCH_LIMIT,
+                lastID: _genreLastThrillerID,
               );
 
               if (critiques.isEmpty) return critiques;
 
-              _genreLastRomanceID = critiques[0].id;
+              _genreLastThrillerID = critiques[0].id;
 
               break;
             default:
@@ -225,26 +287,41 @@ class ExplorePageState extends State<ExplorePage>
           final UserModel currentUser = state.currentUser;
 
           return DefaultTabController(
-            length: 5,
+            length: 12,
             child: Scaffold(
               appBar: TabBar(
                 isScrollable: true,
                 indicatorColor: Theme.of(context).indicatorColor,
                 tabs: [
                   _buildTap(title: 'Action', iconData: MdiIcons.run),
+                  _buildTap(title: 'Adventure', iconData: MdiIcons.globeModel),
+                  _buildTap(title: 'Animation', iconData: MdiIcons.drawing),
                   _buildTap(title: 'Comedy', iconData: MdiIcons.emoticon),
+                  _buildTap(title: 'Crime', iconData: MdiIcons.pistol),
                   _buildTap(title: 'Drama', iconData: MdiIcons.emoticonCry),
+                  _buildTap(title: 'Fantasy', iconData: MdiIcons.unicorn),
+                  _buildTap(title: 'Horror', iconData: MdiIcons.bloodBag),
+                  _buildTap(
+                      title: 'Mystery', iconData: MdiIcons.briefcaseSearch),
                   _buildTap(title: 'Romance', iconData: MdiIcons.heart),
-                  _buildTap(title: 'Sci-Fi', iconData: MdiIcons.alien)
+                  _buildTap(title: 'Sci-Fi', iconData: MdiIcons.alien),
+                  _buildTap(title: 'Thriller', iconData: MdiIcons.emoticonDead)
                 ],
               ),
               body: TabBarView(
                 children: [
                   _buildList(genre: 'Action', currentUser: currentUser),
+                  _buildList(genre: 'Adventure', currentUser: currentUser),
+                  _buildList(genre: 'Animation', currentUser: currentUser),
                   _buildList(genre: 'Comedy', currentUser: currentUser),
+                  _buildList(genre: 'Crime', currentUser: currentUser),
                   _buildList(genre: 'Drama', currentUser: currentUser),
+                  _buildList(genre: 'Fantasy', currentUser: currentUser),
+                  _buildList(genre: 'Horror', currentUser: currentUser),
+                  _buildList(genre: 'Mystery', currentUser: currentUser),
                   _buildList(genre: 'Romance', currentUser: currentUser),
                   _buildList(genre: 'Sci-Fi', currentUser: currentUser),
+                  _buildList(genre: 'Thriller', currentUser: currentUser),
                 ],
               ),
             ),
