@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/models/MovieModel.dart';
-import 'package:critic/models/CommentModel.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/MovieService.dart';
 import 'package:critic/services/UserService.dart';
 import 'package:critic/widgets/MovieWidget.dart';
@@ -35,8 +32,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     yield HomeLoadingState();
 
     if (event is LoadPageEvent) {
-      _currentUser = await locator<AuthService>().getCurrentUser();
       try {
+        _currentUser = await locator<AuthService>().getCurrentUser();
+
         final List<MovieModel> popularMovies =
             await locator<MovieService>().getPopularMovies();
 
