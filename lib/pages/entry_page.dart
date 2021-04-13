@@ -1,26 +1,22 @@
+import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
 import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
 import 'package:critic/main.dart';
 import 'package:critic/pages/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
-
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
 import 'package:critic/blocs/create_recommendation/create_recommendation_bloc.dart'
     as CREATE_RECOMMENDATION_BP;
-
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
 import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
 import 'package:critic/blocs/recommendations/recommendations_bloc.dart'
     as RECOMMENDATIONS_BP;
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class EntryPage extends StatefulWidget {
   final MyAppState myAppState;
@@ -253,13 +249,8 @@ class EntryPageState extends State<EntryPage> {
           ),
         child: EXPLORE_BP.ExplorePage(),
       ),
-      //Watchlist Page
-      BlocProvider(
-        create: (context) =>
-            WATCHLIST_BP.WatchlistBloc()..add(WATCHLIST_BP.LoadPageEvent()),
-        child: WATCHLIST_BP.WatchlistPage(),
-      ),
-      //Watchlist Page
+
+      //Recommendations Page
       BlocProvider(
         create: (context) => RECOMMENDATIONS_BP.RecommendationsBloc()
           ..add(RECOMMENDATIONS_BP.LoadPageEvent()),
@@ -276,84 +267,43 @@ class EntryPageState extends State<EntryPage> {
 
     return Scaffold(
       appBar: buildAppBar(index: currentIndex),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Route route = MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => SEARCH_MOVIES_BP.SearchMoviesBloc(
+                searchMoviesRepository: SEARCH_MOVIES_BP.SearchMoviesRepository(
+                  cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
+                ),
+              ),
+              child: SEARCH_MOVIES_BP.SearchMoviesPage(
+                returnMovie: false,
+              ),
+            ),
+          );
+
+          Navigator.push(context, route);
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: children[currentIndex],
-      bottomNavigationBar: BottomNavyBar(
-        backgroundColor:
-            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        selectedIndex: currentIndex,
-        showElevation: true,
-        itemCornerRadius: 8,
-        curve: Curves.easeInBack,
-        onItemSelected: (index) => setState(() {
-          currentIndex = index;
-        }),
-        items: [
-          BottomNavyBarItem(
-            icon: Icon(
-              Icons.home,
-              key: homeGlobalKey,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            title: Text(
-              'Home',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            activeColor: Theme.of(context).iconTheme.color,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(
-              Icons.explore,
-              key: exploreGlobalKey,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            title: Text(
-              'Explore',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            activeColor: Theme.of(context).iconTheme.color,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(
-              MdiIcons.bookmark,
-              key: watchlistGlobalKey,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            title: Text(
-              'Watchlist',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            activeColor: Theme.of(context).iconTheme.color,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(
-              MdiIcons.message,
-              key: recommendationsGlobalKey,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            title: Text(
-              'Recomm.',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            activeColor: Theme.of(context).iconTheme.color,
-            textAlign: TextAlign.center,
-          ),
-          BottomNavyBarItem(
-            icon: Icon(
-              Icons.person,
-              key: profileGlobalKey,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            title: Text(
-              'Profile',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            activeColor: Theme.of(context).iconTheme.color,
-            textAlign: TextAlign.center,
-          ),
+      bottomNavigationBar: AnimatedBottomNavigationBar(
+        backgroundColor: Colors.grey[700],
+        activeColor: Colors.white,
+        inactiveColor: Colors.grey,
+        icons: [
+          Icons.home,
+          Icons.explore,
+          Icons.message,
+          Icons.person,
         ],
+        activeIndex: currentIndex,
+        gapLocation: GapLocation.center,
+        notchSmoothness: NotchSmoothness.defaultEdge,
+        leftCornerRadius: 32,
+        rightCornerRadius: 32,
+        onTap: (index) => setState(() => currentIndex = index),
       ),
     );
   }
@@ -371,36 +321,8 @@ class EntryPageState extends State<EntryPage> {
           title: Text(
             'Explore',
           ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Route route = MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => SEARCH_MOVIES_BP.SearchMoviesBloc(
-                      searchMoviesRepository:
-                          SEARCH_MOVIES_BP.SearchMoviesRepository(
-                        cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
-                      ),
-                    ),
-                    child: SEARCH_MOVIES_BP.SearchMoviesPage(
-                      returnMovie: false,
-                    ),
-                  ),
-                );
-
-                Navigator.push(context, route);
-              },
-            )
-          ],
         );
       case 2:
-        return AppBar(
-          title: Text(
-            'Watchlist',
-          ),
-        );
-      case 3:
         return AppBar(
           title: Text(
             'Recommendations',
@@ -425,7 +347,7 @@ class EntryPageState extends State<EntryPage> {
             ),
           ],
         );
-      case 4:
+      case 3:
         return AppBar(
           title: Text('Profile'),
           centerTitle: true,
@@ -450,6 +372,20 @@ class EntryPageState extends State<EntryPage> {
             },
           ),
           actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.movie),
+              onPressed: () {
+                Route route = MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => WATCHLIST_BP.WatchlistBloc()
+                      ..add(WATCHLIST_BP.LoadPageEvent()),
+                    child: WATCHLIST_BP.WatchlistPage(),
+                  ),
+                );
+
+                Navigator.push(context, route);
+              },
+            ),
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {

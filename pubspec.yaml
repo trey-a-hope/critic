@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   algolia: ^0.1.7
-  bottom_navy_bar: ^5.6.0
+  animated_bottom_navigation_bar: ^0.3.2
   cached_network_image: ^2.5.0
   cloud_firestore: ^0.14.4
   cupertino_icons: ^1.0.0
@@ -39,6 +39,7 @@ dependencies:
   material_design_icons_flutter: ^4.0.5755
   package_info: ^0.4.3+2
   pagination: ^0.1.0
+  persistent_bottom_nav_bar: ^4.0.2
   rxdart: ^0.25.0
   share: ^0.6.5+4
   shared_preferences: ^0.5.12+4

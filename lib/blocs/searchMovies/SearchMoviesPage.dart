@@ -20,7 +20,7 @@ class SearchMoviesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Movies'),
+        title: Text('Create Critique'),
       ),
       body: Column(
         children: [

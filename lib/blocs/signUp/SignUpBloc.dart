@@ -62,6 +62,16 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
         await locator<UserService>().createUser(user: newUser);
 
+        final UserModel treyHopeUser =
+            await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
+
+        await locator<FCMNotificationService>().sendNotificationToUser(
+          fcmToken: treyHopeUser.fcmToken,
+          title: 'New User!',
+          body: newUser.username,
+          notificationData: null,
+        );
+
         _signUpBlocDelegate.navigateHome();
 
         yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
