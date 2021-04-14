@@ -176,6 +176,8 @@ exports.create = functions.https.onRequest(async (req, res) => {
     const rating = req.body.rating;
     const imdbID = req.body.imdbID;
     const genres = req.body.genres;
+    const created = req.body.created;
+    const modified = req.body.created;
 
     try {
         client.connect(err => {
@@ -187,8 +189,8 @@ exports.create = functions.https.onRequest(async (req, res) => {
                 imdbID: imdbID,
                 comments: [],
                 likes: [],
-                created: new Date(),
-                modified: new Date(),
+                created: created,
+                modified: modified,
                 genres: genres,
             };
             client.db(dbName).collection(critiquesColName).insertOne(data, (err, _) => {

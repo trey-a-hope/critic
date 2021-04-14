@@ -121,6 +121,8 @@ class CreateCritiqueBloc
           likes: [],
           rating: rating,
           comments: [],
+          created: DateTime.now(),
+          modified: DateTime.now(),
         );
 
         await locator<CritiqueService>().create(critique: critique);

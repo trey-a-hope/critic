@@ -22,8 +22,8 @@ class CritiqueModel {
     @required this.imdbID,
     @required this.uid,
     @required this.comments,
-    this.created,
-    this.modified,
+    @required this.created,
+    @required this.modified,
     @required this.rating,
     @required this.likes,
     @required this.genres,
@@ -39,6 +39,7 @@ class CritiqueModel {
         return CommentModel.fromJSON(map: element);
       }).toList()),
       created: DateTime.parse(map['created']),
+      modified: DateTime.parse(map['modified']),
       rating: map['rating'].toDouble(),
       likes: List.from(map['likes']),
       genres: List.from(map['genres']),
@@ -54,6 +55,8 @@ class CritiqueModel {
       'rating': rating,
       //'likes': [], //todo:
       'genres': genres,
+      'created': created.toIso8601String(),
+      'modified': modified.toIso8601String(),
     };
   }
 }

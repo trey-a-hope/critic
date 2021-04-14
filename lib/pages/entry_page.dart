@@ -266,7 +266,7 @@ class EntryPageState extends State<EntryPage> {
     ];
 
     return Scaffold(
-      appBar: buildAppBar(index: currentIndex),
+      appBar: _buildAppBar(index: currentIndex),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Route route = MaterialPageRoute(
@@ -308,7 +308,7 @@ class EntryPageState extends State<EntryPage> {
     );
   }
 
-  Widget buildAppBar({@required int index}) {
+  Widget _buildAppBar({@required int index}) {
     switch (index) {
       case 0:
         return AppBar(
