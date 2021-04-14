@@ -6,10 +6,17 @@ class ExplorePage extends StatefulWidget {
 }
 
 class ExplorePageState extends State<ExplorePage>
+    with SingleTickerProviderStateMixin
     implements ExploreBlocDelegate {
   ExploreBloc _exploreBloc;
 
   final GlobalKey keyButton = GlobalKey();
+
+  TabController _tabController;
+
+  int _tabControllerIndex = 0;
+
+  int _numberOfTabs = 12;
 
   String _genreLastActionID = '';
   String _genreLastAdventureID = '';
@@ -28,10 +35,19 @@ class ExplorePageState extends State<ExplorePage>
   void initState() {
     _exploreBloc = BlocProvider.of<ExploreBloc>(context);
     _exploreBloc.setDelegate(delegate: this);
+
+    _tabController = TabController(vsync: this, length: _numberOfTabs);
+
     super.initState();
   }
 
-  Widget _buildTap({@required String title, @required IconData iconData}) {
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildTab({@required String title, @required IconData iconData}) {
     return Tab(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -260,7 +276,9 @@ class ExplorePageState extends State<ExplorePage>
           ),
         ),
       ),
-      onRefresh: () {
+      onRefresh: () async {
+        _resetFilterIDs();
+
         _exploreBloc.add(
           LoadPageEvent(),
         );
@@ -270,9 +288,19 @@ class ExplorePageState extends State<ExplorePage>
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void _resetFilterIDs() {
+    _genreLastActionID = '';
+    _genreLastAdventureID = '';
+    _genreLastAnimationID = '';
+    _genreLastComedyID = '';
+    _genreLastCrimeID = '';
+    _genreLastDramaID = '';
+    _genreLastFantasyID = '';
+    _genreLastHorrorID = '';
+    _genreLastMysteryID = '';
+    _genreLastRomanceID = '';
+    _genreLastSciFiID = '';
+    _genreLastThrillerID = '';
   }
 
   @override
@@ -286,29 +314,37 @@ class ExplorePageState extends State<ExplorePage>
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
 
+          _tabController.animateTo(_tabControllerIndex);
+
           return DefaultTabController(
-            length: 12,
+            length: _numberOfTabs,
             child: Scaffold(
               appBar: TabBar(
+                onTap: (index) {
+                  _tabControllerIndex = index;
+                  print(index);
+                },
+                controller: _tabController,
                 isScrollable: true,
                 indicatorColor: Theme.of(context).indicatorColor,
                 tabs: [
-                  _buildTap(title: 'Action', iconData: MdiIcons.run),
-                  _buildTap(title: 'Adventure', iconData: MdiIcons.globeModel),
-                  _buildTap(title: 'Animation', iconData: MdiIcons.drawing),
-                  _buildTap(title: 'Comedy', iconData: MdiIcons.emoticon),
-                  _buildTap(title: 'Crime', iconData: MdiIcons.pistol),
-                  _buildTap(title: 'Drama', iconData: MdiIcons.emoticonCry),
-                  _buildTap(title: 'Fantasy', iconData: MdiIcons.unicorn),
-                  _buildTap(title: 'Horror', iconData: MdiIcons.bloodBag),
-                  _buildTap(
+                  _buildTab(title: 'Action', iconData: MdiIcons.run),
+                  _buildTab(title: 'Adventure', iconData: MdiIcons.globeModel),
+                  _buildTab(title: 'Animation', iconData: MdiIcons.drawing),
+                  _buildTab(title: 'Comedy', iconData: MdiIcons.emoticon),
+                  _buildTab(title: 'Crime', iconData: MdiIcons.pistol),
+                  _buildTab(title: 'Drama', iconData: MdiIcons.emoticonCry),
+                  _buildTab(title: 'Fantasy', iconData: MdiIcons.unicorn),
+                  _buildTab(title: 'Horror', iconData: MdiIcons.bloodBag),
+                  _buildTab(
                       title: 'Mystery', iconData: MdiIcons.briefcaseSearch),
-                  _buildTap(title: 'Romance', iconData: MdiIcons.heart),
-                  _buildTap(title: 'Sci-Fi', iconData: MdiIcons.alien),
-                  _buildTap(title: 'Thriller', iconData: MdiIcons.emoticonDead)
+                  _buildTab(title: 'Romance', iconData: MdiIcons.heart),
+                  _buildTab(title: 'Sci-Fi', iconData: MdiIcons.alien),
+                  _buildTab(title: 'Thriller', iconData: MdiIcons.emoticonDead)
                 ],
               ),
               body: TabBarView(
+                controller: _tabController,
                 children: [
                   _buildList(genre: 'Action', currentUser: currentUser),
                   _buildList(genre: 'Adventure', currentUser: currentUser),
