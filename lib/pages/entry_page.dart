@@ -295,7 +295,7 @@ class EntryPageState extends State<EntryPage> {
         icons: [
           Icons.home,
           Icons.explore,
-          Icons.message,
+          Icons.list,
           Icons.person,
         ],
         activeIndex: currentIndex,

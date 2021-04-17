@@ -40,6 +40,8 @@ abstract class ICritiqueService {
     @required String id,
   });
 
+  Future<void> deleteAll();
+
   Future<void> update({
     @required String id,
     @required Map<String, dynamic> params,
@@ -403,6 +405,30 @@ class CritiqueService extends ICritiqueService {
       final dynamic result = json.decode(response.body);
 
       return 0;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDeleteAll',
+        //body: json.encode({'id': id}),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),

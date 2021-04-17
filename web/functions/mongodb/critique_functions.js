@@ -65,6 +65,7 @@ exports.get = functions.https.onRequest(async (req, res) => {
     }
 });
 
+//TODO: Get this to work somehow.
 exports.count = functions.https.onRequest(async (req, res) => {
     const uid = req.body.uid;
 
@@ -80,7 +81,6 @@ exports.count = functions.https.onRequest(async (req, res) => {
                 query = { uid: uid };
             }
 
-            //TODO: Get this to work somehow.
             client
                 .db(dbName)
                 .collection(critiquesColName)
@@ -212,6 +212,22 @@ exports.delete = functions.https.onRequest(async (req, res) => {
             if (err) throw err;
             var query = { _id: new ObjectID(id) };
             client.db(dbName).collection(critiquesColName).deleteOne(query, (err, docs) => {
+                if (err) throw err;
+                console.log('Delete success.');
+                return res.send(true);
+                //client.close();
+            });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});
+
+exports.deleteAll = functions.https.onRequest(async (req, res) => {
+    try {
+        client.connect(err => {
+            if (err) throw err;
+            client.db(dbName).collection(critiquesColName).deleteMany({}, (err, docs) => {
                 if (err) throw err;
                 console.log('Delete success.');
                 return res.send(true);

@@ -28,6 +28,7 @@ exports.MongoDBCritiquesListByUser = MongoDBCritiques.listByUser;
 exports.MongoDBCritiquesListByGenre = MongoDBCritiques.listByGenre;
 exports.MongoDBCritiquesCreate = MongoDBCritiques.create;
 exports.MongoDBCritiquesDelete = MongoDBCritiques.delete;
+exports.MongoDBCritiquesDeleteAll = MongoDBCritiques.deleteAll;
 exports.MongoDBCritiquesUpdate = MongoDBCritiques.update;
 exports.MongoDBCritiquesAddComment = MongoDBCritiques.addComment;
 exports.MongoDBCritiquesAddLike = MongoDBCritiques.addLike;
