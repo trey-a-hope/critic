@@ -109,7 +109,7 @@ exports.listByUser = functions.https.onRequest(async (req, res) => {
             if (!last_id) {
                 query = { uid: uid };
             } else {
-                query = { uid: uid, _id: { $gt: new ObjectID(last_id) } };
+                query = { uid: uid, _id: { $lt: new ObjectID(last_id) } };
             }
 
             var sort = { _id: -1 };
@@ -146,7 +146,7 @@ exports.listByGenre = functions.https.onRequest(async (req, res) => {
             if (!last_id) {
                 query = { genres: genre };
             } else {
-                query = { genres: genre, _id: { $gt: new ObjectID(last_id) } };
+                query = { genres: genre, _id: { $lt: new ObjectID(last_id) } };
             }
 
             var sort = { _id: -1 };
