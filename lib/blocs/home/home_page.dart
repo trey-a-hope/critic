@@ -23,6 +23,8 @@ class _HomePageState extends State<HomePage> {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
           final List<MovieModel> popularMovies = state.popularMovies;
+          final List<CritiqueModel> mostRecentCritiques =
+              state.mostRecentCritiques;
           // final int critiqueCount = state.critiqueCount;
           final int userCount = state.userCount;
 
@@ -134,6 +136,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
+                      Divider(),
                       Padding(
                         padding: EdgeInsets.all(20),
                         child: Text(
@@ -148,10 +151,11 @@ class _HomePageState extends State<HomePage> {
                             )
                             .toList(),
                       ),
+                      Divider(),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          'Most Recent Users',
+                          'Recent Users',
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
@@ -216,7 +220,41 @@ class _HomePageState extends State<HomePage> {
                             );
                           },
                         ),
-                      )
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          'Recent Critiques',
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: mostRecentCritiques.length,
+                          itemBuilder: (context, index) {
+                            CritiqueModel otherCritique =
+                                mostRecentCritiques[index];
+                            return Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width * 0.75,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: SmallCritiqueView(
+                                  critique: otherCritique,
+                                  currentUser: currentUser,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                     ],
                   )
                 ],

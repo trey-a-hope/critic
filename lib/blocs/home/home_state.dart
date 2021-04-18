@@ -15,6 +15,7 @@ class HomeLoadedState extends HomeState {
   final UserModel currentUser;
   final List<UserModel> mostRecentUsers;
   final List<MovieModel> popularMovies;
+  final List<CritiqueModel> mostRecentCritiques;
   // final int critiqueCount;
   final int userCount;
 
@@ -22,6 +23,7 @@ class HomeLoadedState extends HomeState {
     @required this.currentUser,
     @required this.mostRecentUsers,
     @required this.popularMovies,
+    @required this.mostRecentCritiques,
     // @required this.critiqueCount,
     @required this.userCount,
   });
@@ -31,6 +33,7 @@ class HomeLoadedState extends HomeState {
         currentUser,
         mostRecentUsers,
         popularMovies,
+        mostRecentCritiques,
         // critiqueCount,
         userCount,
       ];

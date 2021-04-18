@@ -169,6 +169,41 @@ exports.listByGenre = functions.https.onRequest(async (req, res) => {
     }
 });
 
+exports.list = functions.https.onRequest(async (req, res) => {
+    const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
+    const last_id = req.body.last_id;
+
+    try {
+        client.connect(err => {
+            if (err) throw err;
+
+            var query;
+
+            if (!last_id) {
+                query = {};
+            } else {
+                query = { _id: { $lt: new ObjectID(last_id) } };
+            }
+
+            var sort = { _id: -1 };
+
+            client
+                .db(dbName)
+                .collection(critiquesColName)
+                .find(query)
+                .limit(limit)
+                .sort(sort)
+                .toArray((error, docs) => {
+                    if (error) throw error;
+                    console.log(docs);
+                    return res.send(docs);
+                    //client.close();
+                });
+        });
+    } catch (err) {
+        return res.send(err);
+    }
+});
 
 exports.create = functions.https.onRequest(async (req, res) => {
     const message = req.body.message;

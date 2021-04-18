@@ -15,6 +15,11 @@ abstract class ICritiqueService {
 
   Future<int> count({@required String uid});
 
+  Future<List<CritiqueModel>> list({
+    @required int limit,
+    String lastID,
+  });
+
   Future<List<CritiqueModel>> listSimilar({
     String id,
     @required String imdbID,
@@ -429,6 +434,50 @@ class CritiqueService extends ICritiqueService {
       }
 
       return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<List<CritiqueModel>> list({
+    @required int limit,
+    String lastID,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        '${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList',
+        body: json.encode({
+          'limit': limit,
+          'last_id': lastID,
+        }),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
+
+      List<CritiqueModel> critiques = results
+          .map(
+            (result) => CritiqueModel.fromJSON(map: result),
+          )
+          .toList();
+
+      //Attach movie to critique object.
+      for (int i = 0; i < critiques.length; i++) {
+        critiques[i].movie =
+            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+      }
+
+      return critiques;
     } catch (e) {
       throw Exception(
         e.toString(),
