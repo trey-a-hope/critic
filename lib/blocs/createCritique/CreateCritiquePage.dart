@@ -45,10 +45,10 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
         child: Column(
           children: [
             Expanded(
-              child: ListView(
+              child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 0),
                     child: TextFormField(
                       textCapitalization: TextCapitalization.sentences,
                       cursorColor: Theme.of(context).textTheme.headline4.color,
@@ -187,6 +187,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 showModalBottomSheet(
                   isDismissible: false,
                   context: context,
+                  isScrollControlled: true,
                   builder: (BuildContext context) {
                     return _buildBottomSheetForm();
                   },

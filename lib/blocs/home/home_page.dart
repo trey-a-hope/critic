@@ -137,21 +137,21 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Divider(),
-                      Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          'Popular Movies',
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ),
-                      Column(
-                        children: popularMovies
-                            .map(
-                              (movie) => MovieWidget(movie: movie),
-                            )
-                            .toList(),
-                      ),
-                      Divider(),
+                      // Padding(
+                      //   padding: EdgeInsets.all(20),
+                      //   child: Text(
+                      //     'Popular Movies',
+                      //     style: Theme.of(context).textTheme.headline3,
+                      //   ),
+                      // ),
+                      // Column(
+                      //   children: popularMovies
+                      //       .map(
+                      //         (movie) => MovieWidget(movie: movie),
+                      //       )
+                      //       .toList(),
+                      // ),
+                      // Divider(),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
