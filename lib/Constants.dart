@@ -26,6 +26,8 @@ const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
 
 const int CRITIQUE_CHAR_LIMIT = 200;
 
+const int PAGE_FETCH_LIMIT = 10;
+
 const String EMAIL = 'thope@imabigcritic.com';
 
 const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';

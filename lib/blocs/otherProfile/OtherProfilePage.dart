@@ -26,6 +26,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
     implements OTHER_PROFILE_BP.OtherProfileBlocDelegate {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   OTHER_PROFILE_BP.OtherProfileBloc _otherProfileBloc;
+  String _lastID = '';
 
   @override
   void initState() {
@@ -33,34 +34,6 @@ class OtherProfilePageState extends State<OtherProfilePage>
         BlocProvider.of<OTHER_PROFILE_BP.OtherProfileBloc>(context);
     _otherProfileBloc.setDelegate(delegate: this);
     super.initState();
-  }
-
-  Future<List<CritiqueModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveCritiquesFromFirebase(
-      uid: _otherProfileBloc.otherUser.uid,
-      limit: _otherProfileBloc.limit,
-      startAfterDocument: _otherProfileBloc.startAfterDocument,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _otherProfileBloc.startAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CritiqueModel> critiques = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
-
-    return critiques;
   }
 
   @override
@@ -77,9 +50,6 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
         if (state is OTHER_PROFILE_BP.LoadedState) {
           final UserModel otherUser = state.otherUser;
-          final bool isFollowing = state.isFollowing;
-          final int followerCount = state.followerCount;
-          final int followingCount = state.followingCount;
 
           return Scaffold(
             key: _scaffoldKey,
@@ -130,144 +100,6 @@ class OtherProfilePageState extends State<OtherProfilePage>
                                   Icon(Icons.error),
                             ),
                             SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      '${otherUser.critiqueCount} Critiques',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followerCount Followers',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) =>
-                                                FOLLOWERS_BP.FollowersBloc(
-                                              user: otherUser,
-                                            )..add(
-                                                    FOLLOWERS_BP
-                                                        .LoadPageEvent(),
-                                                  ),
-                                            child: FOLLOWERS_BP.FollowersPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followingCount Following',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) =>
-                                                FOLLOWINGS_BP.FollowingsBloc(
-                                              user: otherUser,
-                                            )..add(
-                                                    FOLLOWINGS_BP
-                                                        .LoadPageEvent(),
-                                                  ),
-                                            child:
-                                                FOLLOWINGS_BP.FollowingsPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                isFollowing
-                                    ? Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: FullWidthButton(
-                                            buttonColor: Colors.white,
-                                            text: 'Unfollow Me',
-                                            textColor: Colors.red,
-                                            onPressed: () {
-                                              _otherProfileBloc.add(
-                                                OTHER_PROFILE_BP
-                                                    .UnfollowEvent(),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      )
-                                    : Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: FullWidthButton(
-                                            buttonColor: Colors.red,
-                                            text: 'Follow Me',
-                                            textColor: Colors.white,
-                                            onPressed: () {
-                                              _otherProfileBloc.add(
-                                                OTHER_PROFILE_BP.FollowEvent(),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: FullWidthButton(
-                                      buttonColor: Colors.red,
-                                      text: 'Block Me',
-                                      textColor: Colors.white,
-                                      onPressed: () async {
-                                        final bool confirm = await locator<
-                                                ModalService>()
-                                            .showConfirmation(
-                                                context: context,
-                                                title:
-                                                    'Block ${otherUser.username}?',
-                                                message: 'Are you sure?');
-
-                                        if (!confirm) return;
-
-                                        _otherProfileBloc.add(
-                                          OTHER_PROFILE_BP.BlockUserEvent(),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
                           ],
                         ),
                       ),
@@ -286,7 +118,20 @@ class OtherProfilePageState extends State<OtherProfilePage>
                       currentUser: otherUser,
                     );
                   },
-                  pageFetch: pageFetch,
+                  pageFetch: (int offset) async {
+                    List<CritiqueModel> critiques =
+                        await locator<CritiqueService>().listByUser(
+                      uid: otherUser.uid,
+                      limit: PAGE_FETCH_LIMIT,
+                      lastID: _lastID,
+                    );
+
+                    if (critiques.isEmpty) return critiques;
+
+                    _lastID = critiques[0].id;
+
+                    return critiques;
+                  },
                   onError: (dynamic error) => Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -10,23 +10,3 @@ class LoadPageEvent extends OtherProfileEvent {
 
   List<Object> get props => [];
 }
-
-class FollowEvent extends OtherProfileEvent {
-  FollowEvent();
-
-  List<Object> get props => [];
-}
-
-class UnfollowEvent extends OtherProfileEvent {
-  UnfollowEvent();
-
-  List<Object> get props => [];
-}
-
-
-
-class BlockUserEvent extends OtherProfileEvent {
-  BlockUserEvent();
-
-  List<Object> get props => [];
-}

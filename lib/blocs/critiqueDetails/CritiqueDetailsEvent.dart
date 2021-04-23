@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class CritiqueDetailsEvent extends Equatable {
   @override
@@ -33,4 +34,16 @@ class UnlikeCritiqueEvent extends CritiqueDetailsEvent {
   UnlikeCritiqueEvent();
 
   List<Object> get props => [];
+}
+
+class PostCommentEvent extends CritiqueDetailsEvent {
+  final String comment;
+
+  PostCommentEvent({
+    @required this.comment,
+  });
+
+  List<Object> get props => [
+        comment,
+      ];
 }

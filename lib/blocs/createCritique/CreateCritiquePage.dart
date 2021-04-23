@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/CreateCritiqueBloc.dart';
@@ -7,15 +6,13 @@ import 'package:critic/blocs/createCritique/CreateCritiqueEvent.dart';
 import 'package:critic/models/CritiqueModel.dart';
 import 'package:critic/models/MovieModel.dart';
 import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/CritiqueService.dart';
 import 'package:critic/services/ModalService.dart';
 import 'package:critic/services/ValidationService.dart';
 import 'package:critic/widgets/SmallCritiqueView.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pagination/pagination.dart';
-
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'CreateCritiqueState.dart';
 
 class CreateCritiquePage extends StatefulWidget {
@@ -31,43 +28,13 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
 
   CreateCritiqueBloc _createCritiqueBloc;
 
+  double _rating = 0;
+
   @override
   void initState() {
     super.initState();
     _createCritiqueBloc = BlocProvider.of<CreateCritiqueBloc>(context);
     _createCritiqueBloc.setDelegate(delegate: this);
-  }
-
-  Future<List<CritiqueModel>> fetchSimilarCritiques(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveSimilarCritiques(
-      limit: 1,
-      startAfterDocument:
-          _createCritiqueBloc.similarCritiquesStartAfterDocument,
-      uid: '',
-      imdbID: _createCritiqueBloc.movie.imdbID,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _createCritiqueBloc.similarCritiquesStartAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CritiqueModel> critiques = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
-
-    //todo: sort critiques client side.
-
-    return critiques;
   }
 
   Widget _buildBottomSheetForm() {
@@ -78,10 +45,10 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
         child: Column(
           children: [
             Expanded(
-              child: ListView(
+              child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 0),
                     child: TextFormField(
                       textCapitalization: TextCapitalization.sentences,
                       cursorColor: Theme.of(context).textTheme.headline4.color,
@@ -108,6 +75,23 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                                   Theme.of(context).textTheme.headline4.color)),
                     ),
                   ),
+                  Center(
+                    child: RatingBar.builder(
+                      initialRating: 0,
+                      minRating: 0,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                      ),
+                      onRatingUpdate: (rating) {
+                        _rating = rating;
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
@@ -162,6 +146,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             _createCritiqueBloc.add(
                               SubmitEvent(
                                 critique: _critiqueController.text,
+                                rating: _rating,
                               ),
                             );
                           },
@@ -193,6 +178,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
           final MovieModel movie = state.movie;
           final bool watchListHasMovie = state.watchListHasMovie;
           final UserModel currentUser = state.currentUser;
+          final List<CritiqueModel> otherCritiques = state.otherCritiques;
 
           return Scaffold(
             key: _scaffoldKey,
@@ -201,6 +187,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                 showModalBottomSheet(
                   isDismissible: false,
                   context: context,
+                  isScrollControlled: true,
                   builder: (BuildContext context) {
                     return _buildBottomSheetForm();
                   },
@@ -450,61 +437,24 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                         Container(
                           height: 250,
                           width: MediaQuery.of(context).size.width,
-                          child: PaginationList<CritiqueModel>(
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            onLoading: Spinner(),
-                            onPageLoading: Spinner(),
-                            separatorWidget: Divider(
-                              height: 0,
-                              color: Theme.of(context).dividerColor,
-                            ),
-                            itemBuilder:
-                                (BuildContext context, CritiqueModel critique) {
+                            itemCount: otherCritiques.length,
+                            itemBuilder: (context, index) {
+                              CritiqueModel otherCritique =
+                                  otherCritiques[index];
                               return Container(
                                 height: 100,
                                 width: MediaQuery.of(context).size.width * 0.75,
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: SmallCritiqueView(
-                                    critique: critique,
+                                    critique: otherCritique,
                                     currentUser: currentUser,
                                   ),
                                 ),
                               );
                             },
-                            pageFetch: fetchSimilarCritiques,
-                            onError: (dynamic error) => Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.error,
-                                    size: 100,
-                                    color: Colors.grey,
-                                  ),
-                                  Text(
-                                    'Error',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    error.toString(),
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
-                              ),
-                            ),
-                            onEmpty: Container(
-                              height: 100,
-                              width: 200,
-                              child: Center(
-                                child: Text(
-                                  'No one else has critiqued yet.',
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                              ),
-                            ),
                           ),
                         ),
                         SizedBox(

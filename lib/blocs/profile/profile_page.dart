@@ -8,6 +8,8 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   ProfileBloc _profileBloc;
 
+  String _lastID = '';
+
   @override
   void initState() {
     super.initState();
@@ -15,34 +17,6 @@ class ProfilePageState extends State<ProfilePage> {
       ..add(
         LoadPageEvent(),
       );
-  }
-
-  Future<List<CritiqueModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<CritiqueService>().retrieveCritiquesFromFirebase(
-      uid: _profileBloc.currentUser.uid,
-      limit: _profileBloc.limit,
-      startAfterDocument: _profileBloc.startAfterDocument,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    _profileBloc.startAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<CritiqueModel> critiques = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      CritiqueModel critiqueModel = CritiqueModel.fromDoc(ds: documentSnapshot);
-      critiques.add(critiqueModel);
-    });
-
-    return critiques;
   }
 
   @override
@@ -55,8 +29,6 @@ class ProfilePageState extends State<ProfilePage> {
 
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
-          final int followerCount = state.followerCount;
-          final int followingCount = state.followingCount;
 
           return Scaffold(
             backgroundColor: Theme.of(context).canvasColor,
@@ -131,81 +103,6 @@ class ProfilePageState extends State<ProfilePage> {
                               ],
                             ),
                             SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Text(
-                                      '${currentUser.critiqueCount} Critiques',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followerCount Followers',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWERS_BP
-                                                .FollowersBloc(
-                                                    user: currentUser)
-                                              ..add(
-                                                FOLLOWERS_BP.LoadPageEvent(),
-                                              ),
-                                            child: FOLLOWERS_BP.FollowersPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Center(
-                                    child: InkWell(
-                                      child: Text(
-                                        '$followingCount Followings',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Route route = MaterialPageRoute(
-                                          builder: (context) => BlocProvider(
-                                            create: (context) => FOLLOWINGS_BP
-                                                .FollowingsBloc(
-                                                    user: currentUser)
-                                              ..add(
-                                                FOLLOWINGS_BP.LoadPageEvent(),
-                                              ),
-                                            child:
-                                                FOLLOWINGS_BP.FollowingsPage(),
-                                          ),
-                                        );
-
-                                        Navigator.push(context, route);
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                             SizedBox(
                               height: 20,
                             )
@@ -230,7 +127,20 @@ class ProfilePageState extends State<ProfilePage> {
                       currentUser: currentUser,
                     );
                   },
-                  pageFetch: pageFetch,
+                  pageFetch: (int offset) async {
+                    List<CritiqueModel> critiques =
+                        await locator<CritiqueService>().listByUser(
+                      uid: currentUser.uid,
+                      limit: PAGE_FETCH_LIMIT,
+                      lastID: _lastID,
+                    );
+
+                    if (critiques.isEmpty) return critiques;
+
+                    _lastID = critiques[0].id;
+
+                    return critiques;
+                  },
                   onError: (dynamic error) => Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

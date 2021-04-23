@@ -1,38 +1,35 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/UserModel.dart';
 import 'package:flutter/material.dart';
 
 class CommentModel {
-  String id;
-  String message;
   String uid;
+  String comment;
+  List<String> likes;
   DateTime created;
 
-  UserModel user;
+  UserModel user; //Used for the FE only.
 
   CommentModel({
-    @required this.id,
-    @required this.message,
     @required this.uid,
-    @required this.created,
+    @required this.comment,
+    @required this.likes,
+    this.created,
   });
 
-  factory CommentModel.fromDoc({@required DocumentSnapshot ds}) {
-    final Map<String, dynamic> data = ds.data();
+  factory CommentModel.fromJSON({@required Map map}) {
     return CommentModel(
-      id: data['id'],
-      message: data['message'],
-      uid: data['uid'],
-      created: data['created'].toDate(),
+      uid: map['uid'],
+      comment: map['comment'],
+      created: DateTime.parse(map['created']),
+      likes: List.from(map['likes']),
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'message': message,
       'uid': uid,
-      'created': created,
+      'comment': comment,
+      'likes': [],
     };
   }
 }

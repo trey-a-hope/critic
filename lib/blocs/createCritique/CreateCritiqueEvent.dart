@@ -14,13 +14,16 @@ class LoadPageEvent extends CreateCritiqueEvent {
 
 class SubmitEvent extends CreateCritiqueEvent {
   final String critique;
+  final double rating;
 
   SubmitEvent({
     @required this.critique,
+    @required this.rating,
   });
 
   List<Object> get props => [
         critique,
+        rating,
       ];
 }
 

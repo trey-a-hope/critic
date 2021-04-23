@@ -28,7 +28,7 @@ class SmallCritiqueView extends StatefulWidget {
 }
 
 class SmallCritiqueViewState extends State<SmallCritiqueView> {
-  int _critiqueMessageCharCount = 75;
+  int _critiqueMessageCharCount = 100;
 
   @override
   void initState() {
@@ -79,6 +79,11 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
     @required BuildContext context,
     @required UserModel userWhoPosted,
   }) {
+    String message = widget.critique.message.length > _critiqueMessageCharCount
+        ? widget.critique.message.substring(0, _critiqueMessageCharCount - 1) +
+            '...'
+        : widget.critique.message;
+
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -89,7 +94,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
                   create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                    critiqueModel: widget.critique,
+                    critiqueID: widget.critique.id,
                   )..add(
                       CRITIQUE_DETAILS_BP.LoadPageEvent(),
                     ),
@@ -99,10 +104,10 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
 
               Navigator.push(context, route);
             },
-            title: Text('\"${widget.critique.message}\"',
+            title: Text('\"$message\"',
                 style: Theme.of(context).textTheme.headline6),
             subtitle: Text(
-              '\n${widget.critique.movieTitle} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
+              '\n${widget.critique.movie.title} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
               style: Theme.of(context).textTheme.headline5,
             ),
             trailing: InkWell(
@@ -150,7 +155,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
                 Navigator.push(context, route);
               },
               child: CachedNetworkImage(
-                imageUrl: '${widget.critique.moviePoster}',
+                imageUrl: '${widget.critique.movie.poster}',
                 imageBuilder: (context, imageProvider) => Image(
                   image: imageProvider,
                   height: 200,

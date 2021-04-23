@@ -1,0 +1,1 @@
+[{"outputType":{"type":"BUNDLE_MANIFEST"},"apkData":{"type":"MAIN","splits":[],"versionCode":120,"versionName":"1.2.0","enabled":true,"outputFile":"app-release.apk","fullName":"release","baseName":"release","dirName":""},"path":"AndroidManifest.xml","properties":{"packageId":"com.io.critic","split":"","minSdkVersion":"16"}}]

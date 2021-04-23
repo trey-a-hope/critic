@@ -23,7 +23,9 @@ class _HomePageState extends State<HomePage> {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
           final List<MovieModel> popularMovies = state.popularMovies;
-          final int critiqueCount = state.critiqueCount;
+          final List<CritiqueModel> mostRecentCritiques =
+              state.mostRecentCritiques;
+          // final int critiqueCount = state.critiqueCount;
           final int userCount = state.userCount;
 
           return ListView(
@@ -94,23 +96,23 @@ class _HomePageState extends State<HomePage> {
                                               .headline5)),
                                 ],
                               ),
-                              Column(
-                                children: <Widget>[
-                                  Container(
-                                      padding:
-                                          EdgeInsets.only(top: 15, bottom: 5),
-                                      child: Text('Critiques',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5)),
-                                  Container(
-                                      padding: EdgeInsets.only(bottom: 15),
-                                      child: Text('$critiqueCount',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5)),
-                                ],
-                              ),
+                              // Column(
+                              //   children: <Widget>[
+                              //     Container(
+                              //         padding:
+                              //             EdgeInsets.only(top: 15, bottom: 5),
+                              //         child: Text('Critiques',
+                              //             style: Theme.of(context)
+                              //                 .textTheme
+                              //                 .headline5)),
+                              //     Container(
+                              //         padding: EdgeInsets.only(bottom: 15),
+                              //         child: Text('$critiqueCount',
+                              //             style: Theme.of(context)
+                              //                 .textTheme
+                              //                 .headline5)),
+                              //   ],
+                              // ),
                               Column(
                                 children: <Widget>[
                                   Container(
@@ -134,24 +136,26 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          'Popular Movies',
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ),
-                      Column(
-                        children: popularMovies
-                            .map(
-                              (movie) => MovieWidget(movie: movie),
-                            )
-                            .toList(),
-                      ),
+                      Divider(),
+                      // Padding(
+                      //   padding: EdgeInsets.all(20),
+                      //   child: Text(
+                      //     'Popular Movies',
+                      //     style: Theme.of(context).textTheme.headline3,
+                      //   ),
+                      // ),
+                      // Column(
+                      //   children: popularMovies
+                      //       .map(
+                      //         (movie) => MovieWidget(movie: movie),
+                      //       )
+                      //       .toList(),
+                      // ),
+                      // Divider(),
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Text(
-                          'Most Recent Users',
+                          'Recent Users',
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
@@ -216,7 +220,41 @@ class _HomePageState extends State<HomePage> {
                             );
                           },
                         ),
-                      )
+                      ),
+                      Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          'Recent Critiques',
+                          style: Theme.of(context).textTheme.headline3,
+                        ),
+                      ),
+                      Container(
+                        height: 250,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: mostRecentCritiques.length,
+                          itemBuilder: (context, index) {
+                            CritiqueModel otherCritique =
+                                mostRecentCritiques[index];
+                            return Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width * 0.75,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: SmallCritiqueView(
+                                  critique: otherCritique,
+                                  currentUser: currentUser,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                     ],
                   )
                 ],

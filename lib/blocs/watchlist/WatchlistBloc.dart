@@ -17,8 +17,6 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
   WatchlistBlocDelegate _watchlistBlocDelegate;
   UserModel currentUser;
 
-  int limit = 25;
-
   DocumentSnapshot startAfterDocument;
 
   void setDelegate({@required WatchlistBlocDelegate delegate}) {

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:critic/Constants.dart';
 import 'package:critic/ServiceLocator.dart';
 import 'package:critic/blocs/createCritique/Bloc.dart' as CREATE_CRITIQUE_BP;
 import 'package:critic/models/MovieModel.dart';
@@ -34,7 +35,7 @@ class WatchlistPageState extends State<WatchlistPage>
     List<DocumentSnapshot> documentSnapshots =
         await locator<UserService>().retrieveMoviesFromWatchlist(
       uid: _watchlistBloc.currentUser.uid,
-      limit: _watchlistBloc.limit,
+      limit: PAGE_FETCH_LIMIT,
       startAfterDocument: _watchlistBloc.startAfterDocument,
     );
 
@@ -59,86 +60,91 @@ class WatchlistPageState extends State<WatchlistPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<WatchlistBloc, WatchlistState>(
-      builder: (context, state) {
-        if (state is LoadingState) {
-          return Spinner();
-        }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Watchlist'),
+      ),
+      body: BlocBuilder<WatchlistBloc, WatchlistState>(
+        builder: (context, state) {
+          if (state is LoadingState) {
+            return Spinner();
+          }
 
-        if (state is EmptyWatchlistState) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  MdiIcons.movieSearch,
-                  size: 100,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                Text(
-                  'Currently no movies in your watchlist.',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ],
-            ),
-          );
-        }
-
-        if (state is LoadedState) {
-          final List<MovieModel> movies = state.movies;
-          return ListView.builder(
-            itemCount: movies.length,
-            itemBuilder: (BuildContext context, int index) {
-              final MovieModel movie = movies[index];
-              return ListTile(
-                onTap: () async {
-                  final MovieModel movieModel = await locator<MovieService>()
-                      .getMovieByID(id: movie.imdbID);
-
-                  Route route = MaterialPageRoute(
-                    builder: (context) => BlocProvider(
-                      create: (context) =>
-                          CREATE_CRITIQUE_BP.CreateCritiqueBloc(
-                              movie: movieModel)
-                            ..add(
-                              CREATE_CRITIQUE_BP.LoadPageEvent(),
-                            ),
-                      child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
-                    ),
-                  );
-
-                  Navigator.push(context, route);
-                },
-                title: Text(
-                  '${movie.title}',
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                subtitle: Text(
-                  '${timeago.format(movie.addedToWatchList, allowFromNow: true)}',
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                leading: CachedNetworkImage(
-                  imageUrl: '${movie.poster}',
-                  imageBuilder: (context, imageProvider) => Image(
-                    image: imageProvider,
-                    height: 100,
+          if (state is EmptyWatchlistState) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    MdiIcons.movieSearch,
+                    size: 100,
+                    color: Theme.of(context).iconTheme.color,
                   ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              );
-            },
-          );
-        }
+                  Text(
+                    'Currently no movies in your watchlist.',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ],
+              ),
+            );
+          }
 
-        return Center(
-          child: Text('You should NEVER see this.'),
-        );
-      },
+          if (state is LoadedState) {
+            final List<MovieModel> movies = state.movies;
+            return ListView.builder(
+              itemCount: movies.length,
+              itemBuilder: (BuildContext context, int index) {
+                final MovieModel movie = movies[index];
+                return ListTile(
+                  onTap: () async {
+                    final MovieModel movieModel = await locator<MovieService>()
+                        .getMovieByID(id: movie.imdbID);
+
+                    Route route = MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) =>
+                            CREATE_CRITIQUE_BP.CreateCritiqueBloc(
+                                movie: movieModel)
+                              ..add(
+                                CREATE_CRITIQUE_BP.LoadPageEvent(),
+                              ),
+                        child: CREATE_CRITIQUE_BP.CreateCritiquePage(),
+                      ),
+                    );
+
+                    Navigator.push(context, route);
+                  },
+                  title: Text(
+                    '${movie.title}',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text(
+                    '${timeago.format(movie.addedToWatchList, allowFromNow: true)}',
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  trailing: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                  leading: CachedNetworkImage(
+                    imageUrl: '${movie.poster}',
+                    imageBuilder: (context, imageProvider) => Image(
+                      image: imageProvider,
+                      height: 100,
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                );
+              },
+            );
+          }
+
+          return Center(
+            child: Text('You should NEVER see this.'),
+          );
+        },
+      ),
     );
   }
 

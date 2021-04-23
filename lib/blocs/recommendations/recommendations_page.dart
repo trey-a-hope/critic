@@ -21,7 +21,7 @@ class _RecommendationsPageState extends State<RecommendationsPage>
     List<DocumentSnapshot> documentSnapshots =
         await locator<UserService>().retrieveMoviesFromWatchlist(
       uid: _recommendationsBloc.currentUser.uid,
-      limit: _recommendationsBloc.limit,
+      limit: PAGE_FETCH_LIMIT,
       startAfterDocument: _recommendationsBloc.startAfterDocument,
     );
 
