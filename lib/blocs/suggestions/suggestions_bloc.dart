@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:critic/models/SuggestionModel.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/SuggestionService.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/models/suggestion_model.dart';
+import 'package:critic/models/user_Model.dart';
+import 'package:critic/service_locator.dart';
+import 'package:critic/services/auth_service.dart';
+import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/suggestion_service.dart';
+import 'package:critic/services/validation_service.dart';
+import 'package:critic/widgets/full_width_button.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/Constants.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/services/ValidationService.dart';
-import 'package:critic/widgets/FullWidthButton.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,19 +1,18 @@
 import 'dart:io';
 
 import 'package:critic/pages/entry_page.dart';
-import 'package:critic/style/ThemeData.dart';
+import 'package:critic/style/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constants.dart';
-import 'ServiceLocator.dart';
+import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';
-import 'blocs/web/Bloc.dart' as WEB_BP;
+import 'blocs/web/web_bloc.dart' as WEB_BP;
 
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/services/AuthService.dart';
+import 'package:critic/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 

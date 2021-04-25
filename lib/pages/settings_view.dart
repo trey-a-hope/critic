@@ -2,14 +2,13 @@ import 'package:critic/blocs/suggestions/suggestions_bloc.dart';
 import 'package:critic/main.dart';
 import 'package:critic/pages/contact_page.dart';
 import 'package:critic/pages/terms_service_view.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/ModalService.dart';
+import 'package:critic/services/auth_service.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:critic/blocs/blockedUsers/Bloc.dart' as BLOCKED_USERS_BP;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../ServiceLocator.dart';
+import '../service_locator.dart';
 
 class SettingsView extends StatefulWidget {
   final MyAppState myAppState;
@@ -42,29 +41,6 @@ class SettingsViewState extends State<SettingsView> {
               'Account Settings'.toUpperCase(),
               style: Theme.of(context).textTheme.headline5,
             ),
-          ),
-          ListTile(
-            title: Text(
-              'Blocked Users',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            trailing: Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).iconTheme.color,
-            ),
-            onTap: () {
-              Route route = MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                  create: (context) => BLOCKED_USERS_BP.BlockedUsersBloc()
-                    ..add(
-                      BLOCKED_USERS_BP.LoadPageEvent(),
-                    ),
-                  child: BLOCKED_USERS_BP.BlockedUsersPage(),
-                ),
-              );
-
-              Navigator.push(context, route);
-            },
           ),
           ListTile(
             title: Text(

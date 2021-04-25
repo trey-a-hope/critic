@@ -1,7 +1,7 @@
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/widgets/UserListTile.dart';
+import 'package:critic/service_locator.dart';
+import 'package:critic/models/user_Model.dart';
+import 'package:critic/services/modal_service.dart';
+import 'package:critic/widgets/user_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class LikesPage extends StatefulWidget {

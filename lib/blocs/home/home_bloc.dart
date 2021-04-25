@@ -1,23 +1,24 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/Constants.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/models/CritiqueModel.dart';
-import 'package:critic/models/MovieModel.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/CritiqueService.dart';
-import 'package:critic/services/MovieService.dart';
-import 'package:critic/services/UserService.dart';
-import 'package:critic/widgets/MovieWidget.dart';
-import 'package:critic/widgets/SmallCritiqueView.dart';
+import 'package:critic/models/critique_model.dart';
+import 'package:critic/models/movie_model.dart';
+import 'package:critic/models/user_Model.dart';
+import 'package:critic/service_locator.dart';
+import 'package:critic/services/auth_service.dart';
+import 'package:critic/services/critique_service.dart';
+import 'package:critic/services/movie_service.dart';
+import 'package:critic/services/user_service.dart';
 import 'package:critic/widgets/Spinner.dart';
+import 'package:critic/widgets/small_critique_view.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_version/new_version.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:critic/blocs/otherProfile/Bloc.dart' as OTHER_PROFILE_BP;
+import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
+    as OTHER_PROFILE_BP;
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -43,12 +44,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
         final List<UserModel> mostRecentUsers =
             await locator<UserService>().retrieveUsers(
-          limit: 10,
+          limit: 5,
           orderBy: 'created',
         );
 
         final List<CritiqueModel> mostRecentCritiques =
-            await locator<CritiqueService>().list(limit: 10);
+            await locator<CritiqueService>().list(limit: 5);
 
         // final int critiqueCount =
         //     await locator<CritiqueService>().count(uid: null);

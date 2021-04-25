@@ -1,4 +1,4 @@
-import 'package:critic/extensions/HexColor.dart';
+import 'package:critic/extensions/hex_color.dart';
 
 const String DUMMY_POSTER_IMG_URL =
     'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';

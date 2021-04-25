@@ -11,11 +11,17 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  void _checkForAppUpdate(BuildContext context) async {
+    final NewVersion newVersion = NewVersion();
+    newVersion.showAlertIfNecessary(context: context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (BuildContext context, HomeState state) {
         if (state is HomeLoadingState) {
+          _checkForAppUpdate(context);
           return Spinner();
         }
 

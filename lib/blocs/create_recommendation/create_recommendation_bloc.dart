@@ -2,19 +2,20 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/ServiceLocator.dart';
-import 'package:critic/blocs/searchUsers/Bloc.dart';
-import 'package:critic/models/MovieModel.dart';
-import 'package:critic/models/RecommendationModel.dart';
-import 'package:critic/models/UserModel.dart';
-import 'package:critic/services/AuthService.dart';
-import 'package:critic/services/FCMNotificationService.dart';
-import 'package:critic/services/ModalService.dart';
-import 'package:critic/services/RecommendationsService.dart';
-import 'package:critic/services/ValidationService.dart';
+import 'package:critic/blocs/search_users/search_users_bloc.dart'
+    as SEARCH_USERS_BP;
+import 'package:critic/models/movie_model.dart';
+import 'package:critic/models/recommendation_model.dart';
+import 'package:critic/models/user_Model.dart';
+import 'package:critic/service_locator.dart';
+import 'package:critic/services/auth_service.dart';
+import 'package:critic/services/fcm_notification_service.dart';
+import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/recommendations_service.dart';
+import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/Spinner.dart';
-import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
-import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
+import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
+    as SEARCH_MOVIES_BP;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,7 +34,7 @@ class CreateRecommendationBloc
   MovieModel _selectedMovie;
   UserModel _selectedUser;
 
-  SearchUsersRepository searchUsersRepository;
+  SEARCH_USERS_BP.SearchUsersRepository searchUsersRepository;
 
   Stream<CreateRecommendationState> mapEventToState(
     CreateRecommendationEvent event,
@@ -71,7 +72,6 @@ class CreateRecommendationBloc
 
       //Send notification to user.
       if (_selectedUser.fcmToken != null) {
-        //Send notification to user.
         await locator<FCMNotificationService>().sendNotificationToUser(
           fcmToken: _selectedUser.fcmToken,
           title: 'New movie recommendation!',

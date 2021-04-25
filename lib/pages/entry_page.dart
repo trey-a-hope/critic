@@ -1,6 +1,8 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:critic/blocs/searchUsers/Bloc.dart' as SEARCH_USERS_BP;
-import 'package:critic/blocs/searchMovies/Bloc.dart' as SEARCH_MOVIES_BP;
+import 'package:critic/blocs/search_users/search_users_bloc.dart'
+    as SEARCH_USERS_BP;
+import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
+    as SEARCH_MOVIES_BP;
 import 'package:critic/main.dart';
 import 'package:critic/pages/settings_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +14,7 @@ import 'package:critic/blocs/create_recommendation/create_recommendation_bloc.da
     as CREATE_RECOMMENDATION_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
-import 'package:critic/blocs/watchlist/Bloc.dart' as WATCHLIST_BP;
+import 'package:critic/blocs/watch_list/watch_list_bloc.dart' as WATCHLIST_BP;
 import 'package:critic/blocs/recommendations/recommendations_bloc.dart'
     as RECOMMENDATIONS_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
