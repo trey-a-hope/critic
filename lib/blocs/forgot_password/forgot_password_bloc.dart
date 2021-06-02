@@ -15,19 +15,9 @@ part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';
 part 'forgot_password_page.dart';
 
-abstract class ForgotPasswordDelegate {
-  void showMessage({@required String message});
-}
-
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
   ForgotPasswordBloc() : super(null);
-
-  ForgotPasswordDelegate _forgotPasswordDelegate;
-
-  void setDelegate({@required ForgotPasswordDelegate delegate}) {
-    this._forgotPasswordDelegate = delegate;
-  }
 
   @override
   Stream<ForgotPasswordState> mapEventToState(
@@ -36,7 +26,7 @@ class ForgotPasswordBloc
       yield LoadingState();
 
       try {
-        yield LoadedState();
+        yield LoadedState(showMessage: false);
       } catch (error) {
         yield ErrorState(error: error);
       }
@@ -50,13 +40,9 @@ class ForgotPasswordBloc
 
         locator<AuthService>().resetPassword(email: email);
 
-        _forgotPasswordDelegate.showMessage(message: 'Email sent.');
-        yield LoadedState();
+        yield LoadedState(showMessage: true, message: 'Email sent.');
       } catch (error) {
-        _forgotPasswordDelegate.showMessage(
-          message: error.toString(),
-        );
-        yield LoadedState();
+        yield LoadedState(showMessage: true, message: error.toString());
       }
     }
   }

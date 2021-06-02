@@ -5,20 +5,14 @@ class ForgotPasswordPage extends StatefulWidget {
   State createState() => ForgotPasswordPageState();
 }
 
-class ForgotPasswordPageState extends State<ForgotPasswordPage>
-    implements ForgotPasswordDelegate {
+class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
 
-  ForgotPasswordBloc _forgotPasswordBloc;
-
   @override
   void initState() {
-    _forgotPasswordBloc = BlocProvider.of<ForgotPasswordBloc>(context);
-    _forgotPasswordBloc.setDelegate(delegate: this);
-
     super.initState();
   }
 
@@ -29,7 +23,17 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+    return BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
+      listener: (BuildContext context, ForgotPasswordState state) {
+        if (state is LoadedState) {
+          if (state.showMessage) {
+            locator<ModalService>().showInSnackBar(
+              context: context,
+              message: state.message,
+            );
+          }
+        }
+      },
       builder: (BuildContext context, ForgotPasswordState state) {
         if (state is LoadingState) {
           return Container(
@@ -102,11 +106,11 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage>
 
                           if (!confirm) return;
 
-                          _forgotPasswordBloc.add(
-                            SubmitEvent(
-                              email: _emailController.text,
-                            ),
-                          );
+                          context.read<ForgotPasswordBloc>().add(
+                                SubmitEvent(
+                                  email: _emailController.text,
+                                ),
+                              );
                         },
                         textColor: Colors.white,
                       ),
