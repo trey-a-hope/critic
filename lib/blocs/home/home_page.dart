@@ -267,87 +267,16 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           );
+        }
 
-          // return ListView(
-          //   shrinkWrap: true,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsets.all(20),
-          //       child: Text(
-          //         'Popular Movies',
-          //         style: Theme.of(context).textTheme.headline3,
-          //       ),
-          //     ),
-          //     Column(
-          //       children: popularMovies
-          //           .map(
-          //             (movie) => MovieWidget(movie: movie),
-          //           )
-          //           .toList(),
-          //     ),
-          //     Padding(
-          //       padding: const EdgeInsets.all(20),
-          //       child: Text(
-          //         'Most Recent Users',
-          //         style: Theme.of(context).textTheme.headline3,
-          //       ),
-          //     ),
-          //     Container(
-          //       height: 127,
-          //       child: ListView.builder(
-          //         shrinkWrap: true,
-          //         scrollDirection: Axis.horizontal,
-          //         itemCount: mostRecentUsers.length,
-          //         itemBuilder: (context, index) {
-          //           final UserModel mostRecentUser = mostRecentUsers[index];
-
-          //           return Container(
-          //             padding: EdgeInsets.all(10),
-          //             child: Column(
-          //               children: [
-          //                 GestureDetector(
-          //                   onTap: () {
-          //                     if (mostRecentUser.uid == currentUser.uid) return;
-
-          //                     Route route = MaterialPageRoute(
-          //                       builder: (context) => BlocProvider(
-          //                         create: (context) =>
-          //                             OTHER_PROFILE_BP.OtherProfileBloc(
-          //                           otherUserID: '${mostRecentUser.uid}',
-          //                         )..add(
-          //                                 OTHER_PROFILE_BP.LoadPageEvent(),
-          //                               ),
-          //                         child: OTHER_PROFILE_BP.OtherProfilePage(),
-          //                       ),
-          //                     );
-
-          //                     Navigator.push(context, route);
-          //                   },
-          //                   child: CircleAvatar(
-          //                     radius: 30,
-          //                     backgroundImage:
-          //                         Image.network(mostRecentUser.imgUrl).image,
-          //                   ),
-          //                 ),
-          //                 SizedBox(
-          //                   height: 10,
-          //                 ),
-          //                 Text(
-          //                   mostRecentUser.username,
-          //                   style: Theme.of(context).textTheme.headline4,
-          //                 ),
-          //                 Text(
-          //                   'Joined ${timeago.format(mostRecentUser.created, allowFromNow: true)}',
-          //                   style: Theme.of(context).textTheme.headline5,
-          //                 )
-          //               ],
-          //             ),
-          //           );
-          //         },
-          //       ),
-          //     )
-          //   ],
-          // );
+        if (state is ErrorState) {
+          return Container(
+            child: Center(
+              child: Text(
+                state.error.toString(),
+              ),
+            ),
+          );
         }
 
         return Container();

@@ -8,7 +8,6 @@ class ForgotPasswordPage extends StatefulWidget {
 class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final TextEditingController _emailController = TextEditingController();
 
   @override
@@ -135,10 +134,5 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
         return Container();
       },
     );
-  }
-
-  @override
-  void showMessage({String message}) {
-    locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 }
