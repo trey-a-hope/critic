@@ -16,9 +16,20 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Generate new localized screenshots"
-  lane :screenshots do
-    capture_screenshots(workspace: "Runner.xcworkspace", scheme: "Runner")
-    upload_to_app_store(skip_binary_upload: true, skip_metadata: true)
-  end
+  desc "Basic description goes here."
+    lane :ios_beta_app do
+        build_app(
+            scheme: "Runner",
+            archive_path: "./build/Runner.xcarchive",
+            export_method: "development",
+            output_directory: "./build/Runner"
+        )
+        firebase_app_distribution(
+            app: "1:237172304059:ios:a60bc37a9a989c3053a19e",
+            testers: "trey.a.hope@gmail.com",
+            release_notes: "New release...",
+            firebase_cli_path: "/usr/local/bin/firebase",
+            ipa_path: "./build/Runner/Runner.ipa"
+        )
+    end
 end
