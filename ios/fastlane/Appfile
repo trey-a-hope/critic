@@ -1,0 +1,8 @@
+app_identifier("com.example.critic") # The bundle identifier of your app
+apple_id("trey.a.hope@gmail.com") # Your Apple email address
+
+itc_team_id("109036801") # App Store Connect Team ID
+team_id("AYXEVPG9Z5") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
