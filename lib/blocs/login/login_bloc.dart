@@ -19,7 +19,9 @@ part 'login_state.dart';
 part 'login_page.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitial());
+  LoginBloc() : super(LoginInitial(passwordVisible: false));
+
+  bool _passwordVisible = false;
 
   @override
   Stream<LoginState> mapEventToState(
@@ -32,14 +34,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: event.email, password: event.password);
 
-        yield LoginInitial();
+        yield LoginInitial(passwordVisible: _passwordVisible);
       } catch (error) {
         yield LoginError(error: error);
       }
     }
 
     if (event is TryAgain) {
-      yield LoginInitial();
+      yield LoginInitial(passwordVisible: _passwordVisible);
+    }
+
+    if (event is UpdatePasswordVisibleEvent) {
+      _passwordVisible = !_passwordVisible;
+      yield LoginInitial(passwordVisible: _passwordVisible);
     }
   }
 }

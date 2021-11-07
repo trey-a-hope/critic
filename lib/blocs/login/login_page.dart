@@ -107,6 +107,8 @@ class LoginPageState extends State<LoginPage>
                     }
 
                     if (state is LoginInitial) {
+                      bool passwordVisible = state.passwordVisible;
+
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
@@ -144,7 +146,7 @@ class LoginPageState extends State<LoginPage>
                               autovalidateMode:
                                   AutovalidateMode.onUserInteraction,
                               validator: locator<ValidationService>().password,
-                              obscureText: true,
+                              obscureText: !passwordVisible,
                               controller: _passwordController,
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
@@ -153,14 +155,25 @@ class LoginPageState extends State<LoginPage>
                                     Icons.lock,
                                     color: Colors.white,
                                   ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<LoginBloc>()
+                                          .add(UpdatePasswordVisibleEvent());
+                                    },
+                                  ),
                                   border: OutlineInputBorder(
                                     // width: 0.0 produces a thin "hairline" border
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(90.0),
                                     ),
                                     borderSide: BorderSide.none,
-
-                                    //borderSide: const BorderSide(),
                                   ),
                                   hintStyle: TextStyle(
                                       color: Colors.white,

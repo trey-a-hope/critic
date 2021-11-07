@@ -23,3 +23,5 @@ class Login extends LoginEvent {
 }
 
 class TryAgain extends LoginEvent {}
+
+class UpdatePasswordVisibleEvent extends LoginEvent {}

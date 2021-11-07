@@ -7,7 +7,18 @@ abstract class LoginState extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginInitial extends LoginState {}
+class LoginInitial extends LoginState {
+  final bool passwordVisible;
+
+  LoginInitial({
+    @required this.passwordVisible,
+  });
+
+  @override
+  List<Object> get props => [
+        passwordVisible,
+      ];
+}
 
 class LoginLoading extends LoginState {}
 

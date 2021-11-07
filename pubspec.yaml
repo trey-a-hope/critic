@@ -16,7 +16,7 @@ dependencies:
   crypto: ^3.0.0
   cupertino_icons: ^1.0.0
   day_night_switcher: ^0.1.1+1
-  equatable: ^2.0.0
+  equatable: ^2.0.3
   expansion_card: ^0.1.0
   # firebase_analytics: ^6.3.0
   firebase_auth: ^1.1.1
@@ -27,7 +27,7 @@ dependencies:
   flutter_rating_bar: ^4.0.0
   flutter_speed_dial: ^1.2.5
   firebase_storage: ^8.0.4
-  flutter_bloc: ^7.0.0
+  flutter_bloc: ^7.3.3
   getwidget: ^1.1.0
   get_it: ^5.0.3
   http: ^0.13.1
