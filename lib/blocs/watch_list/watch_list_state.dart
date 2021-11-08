@@ -5,12 +5,14 @@ class WatchlistState extends Equatable {
   List<Object> get props => [];
 }
 
+class InitialState extends WatchlistState {}
+
 class LoadingState extends WatchlistState {}
 
 class LoadedState extends WatchlistState {
   final List<MovieModel> movies;
   LoadedState({
-    @required this.movies,
+    required this.movies,
   });
 
   @override

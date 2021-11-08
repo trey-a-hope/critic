@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/blocs/search_movies/search_movies_bloc.dart';
 import 'package:critic/models/movie_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 abstract class IMovieService {
-  Future<MovieModel> getMovieByID({@required String id});
+  Future<MovieModel> getMovieByID({required String id});
 
-  Future<SearchMoviesResult> search({@required String term});
+  Future<SearchMoviesResult> search({required String term});
 
   Future<List<MovieModel>> getPopularMovies();
 }
@@ -22,7 +21,7 @@ class MovieService extends IMovieService {
       FirebaseFirestore.instance.collection('Data');
 
   @override
-  Future<MovieModel> getMovieByID({@required String id}) async {
+  Future<MovieModel> getMovieByID({required String id}) async {
     Map<String, String> params = {
       'i': '$id',
       'apiKey': apiKey,
@@ -45,7 +44,7 @@ class MovieService extends IMovieService {
   }
 
   @override
-  Future<SearchMoviesResult> search({@required String term}) async {
+  Future<SearchMoviesResult> search({required String term}) async {
     final String baseUrl = 'https://www.omdbapi.com';
     final response =
         await http.get(Uri.parse("$baseUrl/?s=$term&apiKey=$apiKey"));
@@ -65,7 +64,7 @@ class MovieService extends IMovieService {
           await _dataDB.doc('popularMovies').get();
 
       List<dynamic> popularMoviesMap =
-          popularMoviesDocSnap.data()['imdbIDs'] as List<dynamic>;
+          popularMoviesDocSnap['imdbIDs'] as List<dynamic>;
 
       List<String> popularMoviesIMDBIDs = [];
 

@@ -11,15 +11,18 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  CreateCritiqueBloc _createCritiqueBloc;
+  // CreateCritiqueBloc _createCritiqueBloc;
 
   double _rating = 0;
 
   @override
   void initState() {
     super.initState();
-    _createCritiqueBloc = BlocProvider.of<CreateCritiqueBloc>(context);
-    _createCritiqueBloc.setDelegate(delegate: this);
+
+    context.read<CreateCritiqueBloc>().setDelegate(delegate: this);
+
+    // _createCritiqueBloc = BlocProvider.of<CreateCritiqueBloc>(context);
+    // _createCritiqueBloc.setDelegate(delegate: this);
   }
 
   Widget _buildBottomSheetForm() {
@@ -36,28 +39,30 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                     padding: EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 0),
                     child: TextFormField(
                       textCapitalization: TextCapitalization.sentences,
-                      cursorColor: Theme.of(context).textTheme.headline4.color,
+                      cursorColor: Theme.of(context).textTheme.headline4!.color,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: _critiqueController,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       validator: locator<ValidationService>().isEmpty,
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline4.color,
+                        color: Theme.of(context).textTheme.headline4!.color,
                       ),
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
                           errorStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                           counterStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                           hintText: 'What do you think about this movie/show?',
                           hintStyle: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline4.color)),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .color)),
                     ),
                   ),
                   Center(
@@ -90,54 +95,74 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.all(10),
-                      child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                      //ELEVATED BUTTON
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.white),
+                          textStyle: MaterialStateProperty.all(
+                            TextStyle(color: Colors.black),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
                         ),
                         child: Text('Cancel'),
                         onPressed: () {
                           _critiqueController.clear();
                           Navigator.of(context).pop();
                         },
-                        color: Colors.white,
-                        textColor: Colors.black,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                      padding: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: Theme.of(context)
+                              .elevatedButtonTheme
+                              .style!
+                              .backgroundColor,
+                          textStyle: MaterialStateProperty.all(
+                            TextStyle(color: Colors.white),
                           ),
-                          child: Text('Save'),
-                          onPressed: () async {
-                            final bool formValid =
-                                _formKey.currentState.validate();
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        child: Text('Save'),
+                        onPressed: () async {
+                          final bool formValid =
+                              _formKey.currentState!.validate();
 
-                            if (!formValid) return;
+                          if (!formValid) return;
 
-                            final bool confirm = await locator<ModalService>()
-                                .showConfirmation(
-                                    context: context,
-                                    title: 'Submit Critique',
-                                    message: 'Are you sure?');
+                          final bool? confirm = await locator<ModalService>()
+                              .showConfirmation(
+                                  context: context,
+                                  title: 'Submit Critique',
+                                  message: 'Are you sure?');
 
-                            if (!confirm) return;
+                          if (confirm == null || !confirm) return;
 
-                            Navigator.of(context).pop();
+                          Navigator.of(context).pop();
 
-                            _createCritiqueBloc.add(
-                              SubmitEvent(
-                                critique: _critiqueController.text,
-                                rating: _rating,
-                              ),
-                            );
-                          },
-                          color: Theme.of(context).buttonColor,
-                          textColor: Colors.white,
-                        )),
+                          context.read<CreateCritiqueBloc>().add(
+                                SubmitEvent(
+                                  critique: _critiqueController.text,
+                                  rating: _rating,
+                                ),
+                              );
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -209,9 +234,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          _createCritiqueBloc.add(
-                            RemoveMovieFromWatchlistEvent(),
-                          );
+                          context.read<CreateCritiqueBloc>().add(
+                                RemoveMovieFromWatchlistEvent(),
+                              );
                         },
                       )
                     : IconButton(
@@ -220,9 +245,9 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          _createCritiqueBloc.add(
-                            AddMovieToWatchlistEvent(),
-                          );
+                          context.read<CreateCritiqueBloc>().add(
+                                AddMovieToWatchlistEvent(),
+                              );
                         })
               ],
             ),
@@ -462,7 +487,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
   }
 
   @override
-  void showMessage({String message}) {
+  void showMessage({required String message}) {
     locator<ModalService>()
         .showAlert(context: context, title: 'Success', message: message);
   }

@@ -28,7 +28,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
           if (state.showMessage) {
             locator<ModalService>().showInSnackBar(
               context: context,
-              message: state.message,
+              message: state.message ?? '',
             );
           }
         }
@@ -79,7 +79,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               errorStyle: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline6
+                                      .headline6!
                                       .color),
                               border: OutlineInputBorder(),
                               labelText: 'Email',
@@ -94,16 +94,16 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         buttonColor: Colors.red,
                         text: 'Reset Password',
                         onPressed: () async {
-                          if (!_formKey.currentState.validate()) return;
+                          if (!_formKey.currentState!.validate()) return;
 
-                          final bool confirm =
+                          final bool? confirm =
                               await locator<ModalService>().showConfirmation(
                             context: context,
                             title: 'Send instructions to this email.',
                             message: 'Are you sure?',
                           );
 
-                          if (!confirm) return;
+                          if (confirm == null || !confirm) return;
 
                           context.read<ForgotPasswordBloc>().add(
                                 SubmitEvent(

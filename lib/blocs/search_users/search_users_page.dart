@@ -3,7 +3,7 @@ part of 'search_users_bloc.dart';
 class SearchUsersPage extends StatelessWidget {
   final bool returnUser;
 
-  SearchUsersPage({@required this.returnUser});
+  SearchUsersPage({required this.returnUser});
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +25,10 @@ class _SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<_SearchBar> {
   final TextEditingController _textController = TextEditingController();
-  SearchUsersBloc _searchUsersBloc;
 
   @override
   void initState() {
     super.initState();
-    _searchUsersBloc = BlocProvider.of<SearchUsersBloc>(context);
   }
 
   @override
@@ -42,15 +40,15 @@ class _SearchBarState extends State<_SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: TextStyle(color: Theme.of(context).textTheme.headline6.color),
+      style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),
       controller: _textController,
       autocorrect: false,
       onChanged: (text) {
-        _searchUsersBloc.add(
-          TextChangedEvent(text: text),
-        );
+        context.read<SearchUsersBloc>().add(
+              TextChangedEvent(text: text),
+            );
       },
-      cursorColor: Theme.of(context).textTheme.headline5.color,
+      cursorColor: Theme.of(context).textTheme.headline5!.color,
       decoration: InputDecoration(
         errorStyle: TextStyle(color: Colors.white),
         prefixIcon: Icon(
@@ -67,21 +65,21 @@ class _SearchBarState extends State<_SearchBar> {
         border: InputBorder.none,
         hintText: 'Enter a search term',
         hintStyle:
-            TextStyle(color: Theme.of(context).textTheme.headline6.color),
+            TextStyle(color: Theme.of(context).textTheme.headline6!.color),
       ),
     );
   }
 
   void _onClearTapped() {
     _textController.text = '';
-    _searchUsersBloc.add(TextChangedEvent(text: ''));
+    context.read<SearchUsersBloc>().add(TextChangedEvent(text: ''));
   }
 }
 
 class _SearchBody extends StatelessWidget {
   final bool returnUser;
 
-  _SearchBody({@required this.returnUser});
+  _SearchBody({required this.returnUser});
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +157,7 @@ class _SearchBody extends StatelessWidget {
                     Route route = MaterialPageRoute(
                       builder: (context) => BlocProvider(
                         create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                          otherUserID: user.uid,
+                          otherUserID: user.uid!,
                         )..add(
                             OTHER_PROFILE_BP.LoadPageEvent(),
                           ),

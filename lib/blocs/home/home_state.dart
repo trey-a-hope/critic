@@ -14,25 +14,25 @@ class HomeLoadingState extends HomeState {}
 class HomeLoadedState extends HomeState {
   final UserModel currentUser;
   final List<UserModel> mostRecentUsers;
-  final List<MovieModel> popularMovies;
+  // final List<MovieModel> popularMovies;
   final List<CritiqueModel> mostRecentCritiques;
   // final int critiqueCount;
   final int userCount;
 
   const HomeLoadedState({
-    @required this.currentUser,
-    @required this.mostRecentUsers,
-    @required this.popularMovies,
-    @required this.mostRecentCritiques,
-    // @required this.critiqueCount,
-    @required this.userCount,
+    required this.currentUser,
+    required this.mostRecentUsers,
+    // required this.popularMovies,
+    required this.mostRecentCritiques,
+    // required this.critiqueCount,
+    required this.userCount,
   });
 
   @override
   List<Object> get props => [
         currentUser,
         mostRecentUsers,
-        popularMovies,
+        // popularMovies,
         mostRecentCritiques,
         // critiqueCount,
         userCount,
@@ -43,7 +43,7 @@ class ErrorState extends HomeState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

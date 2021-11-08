@@ -1,5 +1,5 @@
 import 'package:critic/service_locator.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/widgets/user_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class LikesPage extends StatefulWidget {
   final List<UserModel> likedUsers;
 
-  LikesPage({@required this.likedUsers});
+  LikesPage({required this.likedUsers});
 
   @override
   State createState() => _LikesPageState();
@@ -59,9 +59,8 @@ class _LikesPageState extends State<LikesPage> {
     );
   }
 
-  @override
   void showMessage({
-    @required String message,
+    required String message,
   }) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }

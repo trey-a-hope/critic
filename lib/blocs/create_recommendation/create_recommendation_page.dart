@@ -27,8 +27,8 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
           }
 
           if (state is LoadedState) {
-            final MovieModel selectedMovie = state.selectedMovie;
-            final UserModel selectedUser = state.selectedUser;
+            final MovieModel? selectedMovie = state.selectedMovie;
+            final UserModel? selectedUser = state.selectedUser;
 
             return Column(
               children: [
@@ -44,8 +44,10 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                               child: TextFormField(
                                 textCapitalization:
                                     TextCapitalization.sentences,
-                                cursorColor:
-                                    Theme.of(context).textTheme.headline4.color,
+                                cursorColor: Theme.of(context)
+                                    .textTheme
+                                    .headline4!
+                                    .color,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 controller: _messageController,
@@ -55,7 +57,7 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
-                                      .headline4
+                                      .headline4!
                                       .color,
                                 ),
                                 maxLines: 1,
@@ -64,18 +66,18 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                                   errorStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                   counterStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                   hintText: 'Write a quick message...',
                                   hintStyle: TextStyle(
                                       color: Theme.of(context)
                                           .textTheme
-                                          .headline4
+                                          .headline4!
                                           .color),
                                 ),
                               ),
@@ -91,11 +93,17 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).iconTheme.color),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
                           ),
-                          color: Theme.of(context).iconTheme.color,
                           child: Text(
                               selectedMovie == null
                                   ? 'Pick Movie'
@@ -119,7 +127,7 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
 
                             final result = await Navigator.push(context, route);
 
-                            final movie = result as MovieModel;
+                            final movie = result as MovieModel?;
 
                             if (movie != null) {
                               context
@@ -166,15 +174,21 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(20.0),
-                        child: RaisedButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Theme.of(context).iconTheme.color),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
                           ),
-                          color: Theme.of(context).iconTheme.color,
                           child: Text(
-                              selectedUser == null
-                                  ? 'Pick A User'
-                                  : '${selectedUser.username}\nPick A Different User?',
+                              selectedMovie == null
+                                  ? 'Pick Movie'
+                                  : '${selectedMovie.title}\nPick A Different Movie?',
                               textAlign: TextAlign.center),
                           onPressed: () async {
                             Route route = MaterialPageRoute(
@@ -194,7 +208,7 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
 
                             final result = await Navigator.push(context, route);
 
-                            final user = result as UserModel;
+                            final user = result as UserModel?;
 
                             if (user != null) {
                               context.read<CreateRecommendationBloc>().add(
@@ -229,31 +243,39 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: RaisedButton(
-                    color: Theme.of(context).iconTheme.color,
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).iconTheme.color),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    child: Text('Send Recommendation'),
                     onPressed: () async {
                       if (selectedUser == null || selectedMovie == null) {
                         return;
                       }
 
-                      if (!_formKey.currentState.validate()) {
+                      if (!_formKey.currentState!.validate()) {
                         return;
                       }
 
-                      final bool confirm = await locator<ModalService>()
+                      final bool? confirm = await locator<ModalService>()
                           .showConfirmation(
                               context: context,
                               title: 'Send Recommendation',
                               message: 'Are you sure?');
 
-                      if (!confirm) return;
+                      if (confirm == null || !confirm) return;
 
                       context.read<CreateRecommendationBloc>().add(
                             SubmitRecommendationEvent(
                                 message: _messageController.text),
                           );
                     },
-                    child: Text('Send Recommendation'),
                   ),
                 ),
               ],

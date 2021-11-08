@@ -16,12 +16,12 @@ class LoadedState extends CritiqueDetailsState {
   final List<CritiqueModel> otherCritiques;
 
   LoadedState({
-    @required this.currentUser,
-    @required this.critiqueUser,
-    @required this.critiqueModel,
-    @required this.isLiked,
-    @required this.likedUsers,
-    @required this.otherCritiques,
+    required this.currentUser,
+    required this.critiqueUser,
+    required this.critiqueModel,
+    required this.isLiked,
+    required this.likedUsers,
+    required this.otherCritiques,
   });
 
   @override
@@ -39,7 +39,7 @@ class ErrorState extends CritiqueDetailsState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

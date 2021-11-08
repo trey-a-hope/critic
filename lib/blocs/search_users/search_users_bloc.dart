@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/block_user_service.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -24,7 +23,7 @@ part 'search_users_state.dart';
 
 class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
   final SearchUsersRepository searchUsersRepository;
-  SearchUsersBloc({@required this.searchUsersRepository})
+  SearchUsersBloc({required this.searchUsersRepository})
       : super(
           SearchUsersStateStart(),
         );
@@ -48,9 +47,9 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
     super.onTransition(transition);
   }
 
-  UserModel _currentUser;
-  List<String> _usersIBlockedIDs;
-  List<String> _usersWhoBlockedMeIDs;
+  late UserModel _currentUser;
+  late List<String> _usersIBlockedIDs;
+  late List<String> _usersWhoBlockedMeIDs;
 
   @override
   Stream<SearchUsersState> mapEventToState(
@@ -60,10 +59,10 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
         _usersIBlockedIDs = await locator<BlockUserService>()
-            .getUsersIBlockedIDs(userID: _currentUser.uid);
+            .getUsersIBlockedIDs(userID: _currentUser.uid!);
 
         _usersWhoBlockedMeIDs = await locator<BlockUserService>()
-            .getUsersWhoBlockedMeIDs(userID: _currentUser.uid);
+            .getUsersWhoBlockedMeIDs(userID: _currentUser.uid!);
       } catch (error) {
         print(error.toString()); //todo: Display error message.
       }

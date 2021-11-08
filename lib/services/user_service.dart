@@ -1,55 +1,55 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_Model.dart';
-import 'package:flutter/material.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 //TODO: Create watchlist service and move logic from here to that file.
 abstract class IUserService {
-  Future<void> createUser({@required UserModel user});
-  Future<UserModel> retrieveUser({@required String uid});
-  Future<List<UserModel>> retrieveUsers({int limit, String orderBy});
+  Future<void> createUser({required UserModel user});
+  Future<UserModel> retrieveUser({required String uid});
+  Future<List<UserModel>> retrieveUsers(
+      {required int? limit, required String? orderBy});
   Stream<QuerySnapshot> streamUsers();
   Future<void> updateUser(
-      {@required String uid, @required Map<String, dynamic> data});
+      {required String uid, required Map<String, dynamic> data});
   Future<List<UserModel>> retrieveFollowersFromStream({
-    @required String uid,
-    @required int limit,
-    @required int offset,
+    required String uid,
+    required int limit,
+    required int offset,
   });
 
   Future<List<UserModel>> retrieveFollowingsFromStream({
-    @required String uid,
-    @required int limit,
-    @required int offset,
+    required String uid,
+    required int limit,
+    required int offset,
   });
 
   Future<void> addMovieToWatchList({
-    @required String uid,
-    @required MovieModel movie,
+    required String uid,
+    required MovieModel movie,
   });
 
   Future<void> removeMovieFromWatchList({
-    @required String uid,
-    @required String imdbID,
+    required String uid,
+    required String imdbID,
   });
 
   Future<bool> watchListHasMovie({
-    @required String uid,
-    @required String imdbID,
+    required String uid,
+    required String imdbID,
   });
 
   Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
-    @required String uid,
-    @required int limit,
-    @required DocumentSnapshot startAfterDocument,
+    required String uid,
+    required int? limit,
+    required DocumentSnapshot? startAfterDocument,
   });
 
   Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist({
-    @required String uid,
+    required String uid,
   });
 
   Future<int> getTotalUserCount();
@@ -62,7 +62,7 @@ class UserService extends IUserService {
       FirebaseFirestore.instance.collection('Data');
 
   @override
-  Future<void> createUser({@required UserModel user}) async {
+  Future<void> createUser({required UserModel user}) async {
     try {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
@@ -89,10 +89,10 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<UserModel> retrieveUser({@required String uid}) async {
+  Future<UserModel> retrieveUser({required String uid}) async {
     try {
       DocumentSnapshot documentSnapshot = await _usersDB.doc(uid).get();
-      return UserModel.fromDoc(ds: documentSnapshot);
+      return UserModel.fromDoc(data: documentSnapshot);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -106,7 +106,7 @@ class UserService extends IUserService {
 
   @override
   Future<void> updateUser(
-      {@required String uid, Map<String, dynamic> data}) async {
+      {required String uid, required Map<String, dynamic> data}) async {
     try {
       await _usersDB.doc(uid).update(data);
       return;
@@ -118,7 +118,8 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<List<UserModel>> retrieveUsers({int limit, String orderBy}) async {
+  Future<List<UserModel>> retrieveUsers(
+      {required int? limit, required String? orderBy}) async {
     try {
       Query query = _usersDB;
 
@@ -132,7 +133,7 @@ class UserService extends IUserService {
 
       return (await query.get())
           .docs
-          .map((doc) => UserModel.fromDoc(ds: doc))
+          .map((doc) => UserModel.fromDoc(data: doc))
           .toList();
     } catch (e) {
       throw Exception(
@@ -143,9 +144,9 @@ class UserService extends IUserService {
 
   @override
   Future<List<UserModel>> retrieveFollowersFromStream({
-    @required String uid,
-    @required int limit,
-    @required int offset,
+    required String uid,
+    required int limit,
+    required int offset,
   }) async {
     try {
       Map data = {
@@ -193,9 +194,9 @@ class UserService extends IUserService {
 
   @override
   Future<List<UserModel>> retrieveFollowingsFromStream({
-    @required String uid,
-    @required int limit,
-    @required int offset,
+    required String uid,
+    required int limit,
+    required int offset,
   }) async {
     try {
       Map data = {
@@ -243,8 +244,8 @@ class UserService extends IUserService {
 
   @override
   Future<void> addMovieToWatchList({
-    @required String uid,
-    @required MovieModel movie,
+    required String uid,
+    required MovieModel movie,
   }) async {
     try {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -276,8 +277,8 @@ class UserService extends IUserService {
 
   @override
   Future<void> removeMovieFromWatchList({
-    @required String uid,
-    @required String imdbID,
+    required String uid,
+    required String imdbID,
   }) async {
     try {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -314,8 +315,8 @@ class UserService extends IUserService {
 
   @override
   Future<bool> watchListHasMovie({
-    @required String uid,
-    @required String imdbID,
+    required String uid,
+    required String imdbID,
   }) async {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
@@ -336,9 +337,9 @@ class UserService extends IUserService {
 
   @override
   Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
-    @required String uid,
-    @required int limit,
-    @required DocumentSnapshot startAfterDocument,
+    required String uid,
+    required int? limit,
+    required DocumentSnapshot? startAfterDocument,
   }) async {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
@@ -370,7 +371,7 @@ class UserService extends IUserService {
 
   @override
   Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist(
-      {@required String uid}) async {
+      {required String uid}) async {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
@@ -391,7 +392,7 @@ class UserService extends IUserService {
       DocumentSnapshot tableCountsDocSnap =
           await _dataDB.doc('tableCounts').get();
 
-      int userCount = tableCountsDocSnap.data()['users'] as int;
+      int userCount = tableCountsDocSnap['users'] as int;
 
       return userCount;
     } catch (e) {

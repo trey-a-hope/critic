@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MovieModel {
@@ -13,23 +12,23 @@ class MovieModel {
   final String genre;
   final String actors;
 
-  DateTime addedToWatchList = DateTime.now();
+  DateTime? addedToWatchList = DateTime.now();
 
   MovieModel({
-    @required this.imdbID,
-    @required this.title,
-    @required this.poster,
-    @required this.released,
-    @required this.plot,
-    @required this.director,
-    @required this.imdbRating,
-    @required this.imdbVotes,
-    @required this.genre,
-    @required this.actors,
+    required this.imdbID,
+    required this.title,
+    required this.poster,
+    required this.released,
+    required this.plot,
+    required this.director,
+    required this.imdbRating,
+    required this.imdbVotes,
+    required this.genre,
+    required this.actors,
     this.addedToWatchList,
   });
 
-  factory MovieModel.fromJSON({@required Map map}) {
+  factory MovieModel.fromJSON({required Map map}) {
     return MovieModel(
       imdbID: map['imdbID'],
       title: map['Title'],
@@ -44,9 +43,7 @@ class MovieModel {
     );
   }
 
-  factory MovieModel.fromDoc({@required DocumentSnapshot ds}) {
-    final Map<String, dynamic> data = ds.data();
-
+  factory MovieModel.fromDoc({required DocumentSnapshot data}) {
     return MovieModel(
       imdbID: data['imdbID'],
       title: data['title'],

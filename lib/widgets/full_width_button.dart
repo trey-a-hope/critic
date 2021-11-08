@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class FullWidthButton extends StatelessWidget {
-  final Function onPressed;
+  final VoidCallback onPressed;
   final String text;
   final Color buttonColor;
   final Color textColor;
 
   FullWidthButton(
-      {Key key,
-      @required this.onPressed,
-      @required this.text,
-      @required this.buttonColor,
-      @required this.textColor})
+      {Key? key,
+      required this.onPressed,
+      required this.text,
+      required this.buttonColor,
+      required this.textColor})
       : super(key: key);
 
   @override

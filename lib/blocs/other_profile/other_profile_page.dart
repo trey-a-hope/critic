@@ -8,13 +8,13 @@ class OtherProfilePage extends StatefulWidget {
 class OtherProfilePageState extends State<OtherProfilePage>
     implements OTHER_PROFILE_BP.OtherProfileBlocDelegate {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  OTHER_PROFILE_BP.OtherProfileBloc _otherProfileBloc;
   String _lastID = '';
 
   @override
   void initState() {
-    _otherProfileBloc = BlocProvider.of<OtherProfileBloc>(context);
-    _otherProfileBloc.setDelegate(delegate: this);
+    context
+        .read<OTHER_PROFILE_BP.OtherProfileBloc>()
+        .setDelegate(delegate: this);
     super.initState();
   }
 
@@ -31,6 +31,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
 
         if (state is OTHER_PROFILE_BP.LoadedState) {
           final UserModel otherUser = state.otherUser;
+          final UserModel currentUser = state.currentUser;
 
           return Scaffold(
             key: _scaffoldKey,
@@ -89,27 +90,26 @@ class OtherProfilePageState extends State<OtherProfilePage>
                 ];
               },
               body: RefreshIndicator(
-                child: PaginationList<CritiqueModel>(
-                  onLoading: Spinner(),
-                  onPageLoading: Spinner(),
-                  separatorWidget: Divider(height: 0),
-                  itemBuilder: (BuildContext context, CritiqueModel critique) {
-                    return CritiqueView(
-                      critique: critique,
-                      currentUser: otherUser,
-                    );
-                  },
+                child: PaginationView<CritiqueModel>(
+                  initialLoader: Spinner(),
+                  bottomLoader: Spinner(),
+                  itemBuilder: (BuildContext context, CritiqueModel critique,
+                          int index) =>
+                      CritiqueView(
+                    critique: critique,
+                    currentUser: currentUser,
+                  ),
                   pageFetch: (int offset) async {
                     List<CritiqueModel> critiques =
                         await locator<CritiqueService>().listByUser(
-                      uid: otherUser.uid,
+                      uid: otherUser.uid!,
                       limit: PAGE_FETCH_LIMIT,
                       lastID: _lastID,
                     );
 
                     if (critiques.isEmpty) return critiques;
 
-                    _lastID = critiques[0].id;
+                    _lastID = critiques[0].id!;
 
                     return critiques;
                   },
@@ -152,12 +152,10 @@ class OtherProfilePageState extends State<OtherProfilePage>
                     ),
                   ),
                 ),
-                onRefresh: () {
-                  _otherProfileBloc.add(
-                    OTHER_PROFILE_BP.LoadPageEvent(),
-                  );
-
-                  return;
+                onRefresh: () async {
+                  context.read<OTHER_PROFILE_BP.OtherProfileBloc>().add(
+                        OTHER_PROFILE_BP.LoadPageEvent(),
+                      );
                 },
               ),
             ),
@@ -170,7 +168,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
   }
 
   @override
-  void showMessage({String message}) {
+  void showMessage({required String message}) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 

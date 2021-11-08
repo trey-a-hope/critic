@@ -6,18 +6,18 @@ import 'package:critic/blocs/critique_details/critique_details_bloc.dart'
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
     as OTHER_PROFILE_BP;
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/services/user_service.dart';
-import 'package:expansion_card/expansion_card.dart';
+import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CritiqueView extends StatefulWidget {
   const CritiqueView({
-    Key key,
-    @required this.critique,
-    @required this.currentUser,
+    Key? key,
+    required this.critique,
+    required this.currentUser,
   }) : super(key: key);
 
   final CritiqueModel critique;
@@ -56,7 +56,6 @@ class _CritiqueViewState extends State<CritiqueView> {
                 watchListCount: null,
               ),
             );
-            break;
           default:
             if (snapshot.hasError) {
               return Center(
@@ -76,12 +75,12 @@ class _CritiqueViewState extends State<CritiqueView> {
   }
 
   Widget critiqueView({
-    @required BuildContext context,
-    @required UserModel userWhoPosted,
+    required BuildContext context,
+    required UserModel userWhoPosted,
   }) {
     return Padding(
       padding: EdgeInsets.all(10),
-      child: ExpansionCard(
+      child: ExpansionTileCard(
         leading: InkWell(
           onTap: () {
             if (userWhoPosted.uid == widget.currentUser.uid) return;
@@ -108,25 +107,27 @@ class _CritiqueViewState extends State<CritiqueView> {
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),
         ),
-        borderRadius: 20,
-        background: ColorFiltered(
-          colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.7),
-            BlendMode.darken,
-          ),
-          child: Image.network(
-            '${widget.critique.movie.poster}',
-            fit: BoxFit.cover,
-            height: 200,
-            width: double.infinity,
-          ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
         ),
+        // background: ColorFiltered(
+        //   colorFilter: ColorFilter.mode(
+        //     Colors.black.withOpacity(0.7),
+        //     BlendMode.darken,
+        //   ),
+        //   child: Image.network(
+        //     '${widget.critique.movie!.poster}',
+        //     fit: BoxFit.cover,
+        //     height: 200,
+        //     width: double.infinity,
+        //   ),
+        // ),
         title: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${widget.critique.movie.title}',
+                '${widget.critique.movie!.title}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -161,7 +162,7 @@ class _CritiqueViewState extends State<CritiqueView> {
                 ),
               ),
               backgroundColor: MaterialStateProperty.all<Color>(
-                  Theme.of(context).buttonColor),
+                  Theme.of(context).canvasColor),
               foregroundColor: MaterialStateProperty.all<Color>(
                 Colors.white,
               ),
@@ -171,7 +172,7 @@ class _CritiqueViewState extends State<CritiqueView> {
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
                   create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                    critiqueID: widget.critique.id,
+                    critiqueID: widget.critique.id!,
                   )..add(
                       CRITIQUE_DETAILS_BP.LoadPageEvent(),
                     ),

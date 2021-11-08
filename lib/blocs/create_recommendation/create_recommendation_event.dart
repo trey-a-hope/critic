@@ -17,7 +17,7 @@ class SubmitRecommendationEvent extends CreateRecommendationEvent {
   final String message;
 
   SubmitRecommendationEvent({
-    @required this.message,
+    required this.message,
   });
 
   List<Object> get props => [
@@ -28,7 +28,7 @@ class SubmitRecommendationEvent extends CreateRecommendationEvent {
 class UpdateSelectedMovieEvent extends CreateRecommendationEvent {
   final MovieModel movie;
 
-  UpdateSelectedMovieEvent({@required this.movie});
+  UpdateSelectedMovieEvent({required this.movie});
 
   List<Object> get props => [
         movie,
@@ -38,7 +38,7 @@ class UpdateSelectedMovieEvent extends CreateRecommendationEvent {
 class UpdateSelectedUserEvent extends CreateRecommendationEvent {
   final UserModel user;
 
-  UpdateSelectedUserEvent({@required this.user});
+  UpdateSelectedUserEvent({required this.user});
 
   List<Object> get props => [
         user,

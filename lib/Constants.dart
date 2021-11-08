@@ -6,10 +6,10 @@ const String DUMMY_PROFILE_PHOTO_URL =
     'https://firebasestorage.googleapis.com/v0/b/hidden-gems-e481d.appspot.com/o/Images%2FUsers%2FDummy%2FProfile.jpg?alt=media&token=99cd4cbd-7df9-4005-adef-b27b3996a6cc';
 
 //These are set in main().
-String version;
-String buildNumber;
-double screenWidth;
-double screenHeight;
+String? version;
+String? buildNumber;
+double? screenWidth;
+double? screenHeight;
 
 const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
 const String ALGOLIA_SEARCH_API_KEY = '01be9bb46f445fa21cdba2c7197d84bf';
@@ -33,3 +33,6 @@ const String EMAIL = 'thope@imabigcritic.com';
 const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';
 const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
 const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';
+
+//Hive Boxes Names
+const String HIVE_BOX_LOGIN_CREDENTIALS = 'HIVE_BOX_LOGIN_CREDENTIALS';

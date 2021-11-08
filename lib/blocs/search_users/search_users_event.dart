@@ -14,7 +14,7 @@ class LoadPageEvent extends SearchUsersEvent {
 class TextChangedEvent extends SearchUsersEvent {
   final String text;
 
-  const TextChangedEvent({@required this.text});
+  const TextChangedEvent({required this.text});
 
   @override
   List<Object> get props => [text];

@@ -4,6 +4,7 @@ import 'package:critic/pages/entry_page.dart';
 import 'package:critic/style/theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constants.dart';
@@ -11,9 +12,8 @@ import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';
 import 'blocs/web/web_bloc.dart' as WEB_BP;
-
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:critic/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
@@ -43,6 +43,12 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final bool isDarkModeEnabled = prefs.getBool('isDarkModeEnabled') ?? false;
 
+  //Initialize Hive.
+  await Hive.initFlutter();
+
+  //Open hive boxes.
+  await Hive.openBox<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+
   runApp(
     MyApp(
       isDarkModeEnabled: isDarkModeEnabled,
@@ -56,8 +62,8 @@ class MyApp extends StatefulWidget {
   final bool isWeb;
 
   MyApp({
-    @required this.isDarkModeEnabled,
-    @required this.isWeb,
+    required this.isDarkModeEnabled,
+    required this.isWeb,
   });
 
   @override
@@ -69,8 +75,8 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   MyAppState({
-    @required this.isDarkModeEnabled,
-    @required this.isWeb,
+    required this.isDarkModeEnabled,
+    required this.isWeb,
   });
 
   bool isDarkModeEnabled;
@@ -109,12 +115,9 @@ class MyAppState extends State<MyApp> {
             home: StreamBuilder(
               stream: locator<AuthService>().onAuthStateChanged(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                final User firebaseUser = snapshot.data;
-
                 screenWidth = MediaQuery.of(context).size.width;
                 screenHeight = MediaQuery.of(context).size.height;
-
-                return firebaseUser == null
+                return !snapshot.hasData
                     ? BlocProvider<LoginBloc>(
                         create: (BuildContext context) => LoginBloc(),
                         child: LoginPage(),

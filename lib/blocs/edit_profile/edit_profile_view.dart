@@ -50,9 +50,10 @@ class EditProfileViewState extends State<EditProfileView> {
                       padding: EdgeInsets.all(40),
                       child: TextFormField(
                         style: TextStyle(
-                            color: Theme.of(context).textTheme.headline6.color),
+                            color:
+                                Theme.of(context).textTheme.headline6!.color),
                         cursorColor:
-                            Theme.of(context).textTheme.headline5.color,
+                            Theme.of(context).textTheme.headline5!.color,
                         controller: _usernameController,
                         keyboardType: TextInputType.text,
                         validator: locator<ValidationService>().isEmpty,
@@ -61,11 +62,11 @@ class EditProfileViewState extends State<EditProfileView> {
                         decoration: InputDecoration(
                           errorStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                           hintText: 'Username',
                           hintStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                         ),
                       ),
                     );
@@ -82,15 +83,18 @@ class EditProfileViewState extends State<EditProfileView> {
               ),
               Spacer(),
               FullWidthButton(
-                buttonColor: Theme.of(context).buttonColor,
+                buttonColor: Theme.of(context).canvasColor,
                 textColor: Colors.white,
                 onPressed: () async {
-                  if (!_formKey.currentState.validate()) return;
+                  if (!_formKey.currentState!.validate()) return;
 
-                  if (!(await locator<ModalService>().showConfirmation(
-                      context: context,
-                      title: 'Submit',
-                      message: 'Are you sure?'))) return;
+                  bool? confirm = (await locator<ModalService>()
+                      .showConfirmation(
+                          context: context,
+                          title: 'Submit',
+                          message: 'Are you sure?'));
+
+                  if (confirm == null || !confirm) return;
 
                   context.read<EditProfileBloc>().add(
                         Save(

@@ -7,12 +7,9 @@ class RecommendationsPage extends StatefulWidget {
 
 class _RecommendationsPageState extends State<RecommendationsPage>
     implements RecommendationsBlocDelegate {
-  RecommendationsBloc _recommendationsBloc;
-
   @override
   void initState() {
-    _recommendationsBloc = BlocProvider.of<RecommendationsBloc>(context);
-    _recommendationsBloc.setDelegate(delegate: this);
+    context.read<RecommendationsBloc>().setDelegate(delegate: this);
     super.initState();
   }
 
@@ -20,9 +17,10 @@ class _RecommendationsPageState extends State<RecommendationsPage>
     //Fetch template documents.
     List<DocumentSnapshot> documentSnapshots =
         await locator<UserService>().retrieveMoviesFromWatchlist(
-      uid: _recommendationsBloc.currentUser.uid,
+      uid: context.read<RecommendationsBloc>().currentUser.uid!,
       limit: PAGE_FETCH_LIMIT,
-      startAfterDocument: _recommendationsBloc.startAfterDocument,
+      startAfterDocument:
+          context.read<RecommendationsBloc>().startAfterDocument!,
     );
 
     //Return an empty list if there are no new documents.
@@ -30,14 +28,14 @@ class _RecommendationsPageState extends State<RecommendationsPage>
       return [];
     }
 
-    _recommendationsBloc.startAfterDocument =
+    context.read<RecommendationsBloc>().startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
     List<MovieModel> movies = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
-      MovieModel movieModel = MovieModel.fromDoc(ds: documentSnapshot);
+      MovieModel movieModel = MovieModel.fromDoc(data: documentSnapshot);
       movies.add(movieModel);
     });
 
@@ -83,7 +81,7 @@ class _RecommendationsPageState extends State<RecommendationsPage>
                 delete: () {
                   context.read<RecommendationsBloc>().add(
                         DeleteRecommendationEvent(
-                            recommendationID: recommendation.id),
+                            recommendationID: recommendation.id!),
                       );
                 },
               );
@@ -100,7 +98,7 @@ class _RecommendationsPageState extends State<RecommendationsPage>
 
   @override
   void showMessage({
-    @required String message,
+    required String message,
   }) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }

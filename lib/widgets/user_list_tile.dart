@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
     as OTHER_PROFILE_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserListTile extends StatelessWidget {
-  const UserListTile({@required this.user});
+  const UserListTile({required this.user});
 
   final UserModel user;
 
@@ -37,7 +37,7 @@ class UserListTile extends StatelessWidget {
         Route route = MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-              otherUserID: user.uid,
+              otherUserID: user.uid!,
             )..add(
                 OTHER_PROFILE_BP.LoadPageEvent(),
               ),

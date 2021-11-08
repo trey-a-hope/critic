@@ -3,7 +3,7 @@ part of 'search_movies_bloc.dart';
 class SearchMoviesRepository {
   final SearchMoviesCache cache;
 
-  SearchMoviesRepository({@required this.cache});
+  SearchMoviesRepository({required this.cache});
 
   Future<SearchMoviesResult> search(String term) async {
     if (cache.contains(term)) {

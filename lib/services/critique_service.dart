@@ -3,74 +3,73 @@ import 'package:critic/service_locator.dart';
 import 'package:critic/models/comment_model.dart';
 import 'package:critic/models/critique_model.dart';
 import 'package:critic/services/movie_service.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
 abstract class ICritiqueService {
   Future<CritiqueModel> get({
-    @required String id,
+    required String id,
   });
 
-  Future<int> count({@required String uid});
+  Future<int> count({required String uid});
 
   Future<List<CritiqueModel>> list({
-    @required int limit,
-    String lastID,
+    required int limit,
+    String? lastID,
   });
 
   Future<List<CritiqueModel>> listSimilar({
-    String id,
-    @required String imdbID,
+    String? id,
+    required String imdbID,
   });
 
   Future<List<CritiqueModel>> listByUser({
-    @required String uid,
-    @required int limit,
-    String lastID,
+    required String uid,
+    required int limit,
+    String? lastID,
   });
 
   Future<List<CritiqueModel>> listByGenre({
-    @required String genre,
-    @required int limit,
+    required String genre,
+    required int limit,
     String lastID,
   });
 
   Future<void> create({
-    @required CritiqueModel critique,
+    required CritiqueModel critique,
   });
 
   Future<void> delete({
-    @required String id,
+    required String id,
   });
 
   Future<void> deleteAll();
 
   Future<void> update({
-    @required String id,
-    @required Map<String, dynamic> params,
+    required String id,
+    required Map<String, dynamic> params,
   });
 
   Future<void> addComment({
-    @required String id,
-    @required CommentModel comment,
+    required String id,
+    required CommentModel comment,
   });
 
   Future<void> addLike({
-    @required String id,
-    @required String uid,
+    required String id,
+    required String uid,
   });
 
   Future<void> removeLike({
-    @required String id,
-    @required String uid,
+    required String id,
+    required String uid,
   });
 }
 
 class CritiqueService extends ICritiqueService {
   @override
-  Future<CritiqueModel> get({@required String id}) async {
+  Future<CritiqueModel> get({required String id}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet'),
@@ -105,9 +104,9 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<List<CritiqueModel>> listByUser({
-    @required String uid,
-    @required int limit,
-    String lastID,
+    required String uid,
+    required int limit,
+    String? lastID,
   }) async {
     try {
       http.Response response = await http.post(
@@ -151,9 +150,9 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<List<CritiqueModel>> listByGenre({
-    @required String genre,
-    @required int limit,
-    String lastID,
+    required String genre,
+    required int limit,
+    String? lastID,
   }) async {
     try {
       http.Response response = await http.post(
@@ -196,7 +195,7 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<void> create({@required CritiqueModel critique}) async {
+  Future<void> create({required CritiqueModel critique}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate'),
@@ -220,7 +219,7 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<void> delete({@required String id}) async {
+  Future<void> delete({required String id}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDelete'),
@@ -245,7 +244,7 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<void> update(
-      {@required String id, @required Map<String, dynamic> params}) async {
+      {required String id, required Map<String, dynamic> params}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesUpdate'),
@@ -270,7 +269,7 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<void> addComment(
-      {@required String id, @required CommentModel comment}) async {
+      {required String id, required CommentModel comment}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddComment'),
@@ -295,8 +294,8 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<void> addLike({
-    @required String id,
-    @required String uid,
+    required String id,
+    required String uid,
   }) async {
     try {
       http.Response response = await http.post(
@@ -322,8 +321,8 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<List<CritiqueModel>> listSimilar({
-    String id,
-    @required String imdbID,
+    String? id,
+    required String imdbID,
   }) async {
     try {
       http.Response response = await http.post(
@@ -366,8 +365,8 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<void> removeLike({
-    @required String id,
-    @required String uid,
+    required String id,
+    required String uid,
   }) async {
     try {
       http.Response response = await http.post(
@@ -392,7 +391,7 @@ class CritiqueService extends ICritiqueService {
   }
 
   @override
-  Future<int> count({@required String uid}) async {
+  Future<int> count({required String uid}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCount'),
@@ -407,7 +406,7 @@ class CritiqueService extends ICritiqueService {
         );
       }
 
-      final dynamic result = json.decode(response.body);
+      // final dynamic result = json.decode(response.body);
 
       return 0;
     } catch (e) {
@@ -443,8 +442,8 @@ class CritiqueService extends ICritiqueService {
 
   @override
   Future<List<CritiqueModel>> list({
-    @required int limit,
-    String lastID,
+    required int limit,
+    String? lastID,
   }) async {
     try {
       http.Response response = await http.post(

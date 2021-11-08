@@ -15,7 +15,7 @@ class EditProfileLoaded extends EditProfileState {
   final UserModel currentUser;
 
   EditProfileLoaded({
-    @required this.currentUser,
+    required this.currentUser,
   });
 
   @override
@@ -28,7 +28,7 @@ class ErrorState extends EditProfileState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

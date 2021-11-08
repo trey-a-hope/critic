@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/suggestion_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
@@ -21,7 +21,7 @@ part 'suggestions_view.dart';
 class SuggestionsBloc extends Bloc<SuggestionsEvent, SuggestionsState> {
   SuggestionsBloc() : super(SuggestionsInitial());
 
-  UserModel _currentUser;
+  late UserModel _currentUser;
 
   @override
   Stream<SuggestionsState> mapEventToState(
@@ -46,7 +46,7 @@ class SuggestionsBloc extends Bloc<SuggestionsEvent, SuggestionsState> {
         await locator<SuggestionService>().createSuggestion(
           suggestion: SuggestionModel(
             id: null,
-            uid: _currentUser.uid,
+            uid: _currentUser.uid!,
             message: message,
             created: DateTime.now(),
           ),

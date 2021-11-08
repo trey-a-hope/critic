@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/critique_model.dart';
 import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
@@ -11,7 +12,6 @@ import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/small_critique_view.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,23 +22,26 @@ part 'create_critique_state.dart';
 part 'create_critique_page.dart';
 
 abstract class CreateCritiqueBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({required String message});
   void clearText();
 }
 
 class CreateCritiqueBloc
     extends Bloc<CreateCritiqueEvent, CreateCritiqueState> {
-  CreateCritiqueBloc({@required this.movie}) : super(null);
-  final MovieModel movie;
+  MovieModel? movie;
 
-  CreateCritiqueBlocDelegate _createCritiqueBlocDelegate;
-  UserModel _currentUser;
+  CreateCritiqueBloc({required this.movie}) : super(InitialState()) {
+    movie = null;
+  }
+
+  CreateCritiqueBlocDelegate? _createCritiqueBlocDelegate;
+  late UserModel _currentUser;
 
   bool watchListHasMovie = false;
 
-  List<CritiqueModel> _otherCritiques;
+  List<CritiqueModel> _otherCritiques = [];
 
-  void setDelegate({@required CreateCritiqueBlocDelegate delegate}) {
+  void setDelegate({required CreateCritiqueBlocDelegate delegate}) {
     this._createCritiqueBlocDelegate = delegate;
   }
 
@@ -52,42 +55,42 @@ class CreateCritiqueBloc
         _currentUser = await locator<AuthService>().getCurrentUser();
 
         watchListHasMovie = await locator<UserService>().watchListHasMovie(
-          uid: _currentUser.uid,
-          imdbID: movie.imdbID,
+          uid: _currentUser.uid!,
+          imdbID: movie!.imdbID,
         );
 
         _otherCritiques = await locator<CritiqueService>().listSimilar(
           id: null,
-          imdbID: movie.imdbID,
+          imdbID: movie!.imdbID,
         );
 
         yield LoadedState(
-          movie: movie,
+          movie: movie!,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
         );
       } catch (error) {
-        _createCritiqueBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+        _createCritiqueBlocDelegate!
+            .showMessage(message: 'Error: ${error.toString()}');
       }
     }
 
     if (event is AddMovieToWatchlistEvent) {
       try {
         await locator<UserService>()
-            .addMovieToWatchList(uid: _currentUser.uid, movie: movie);
+            .addMovieToWatchList(uid: _currentUser.uid!, movie: movie!);
 
         watchListHasMovie = true;
 
         yield LoadedState(
-          movie: movie,
+          movie: movie!,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
         );
       } catch (error) {
-        _createCritiqueBlocDelegate.showMessage(
+        _createCritiqueBlocDelegate!.showMessage(
           message: error.toString(),
         );
       }
@@ -96,20 +99,20 @@ class CreateCritiqueBloc
     if (event is RemoveMovieFromWatchlistEvent) {
       try {
         await locator<UserService>().removeMovieFromWatchList(
-          uid: _currentUser.uid,
-          imdbID: movie.imdbID,
+          uid: _currentUser.uid!,
+          imdbID: movie!.imdbID,
         );
 
         watchListHasMovie = false;
 
         yield LoadedState(
-          movie: movie,
+          movie: movie!,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
         );
       } catch (error) {
-        _createCritiqueBlocDelegate.showMessage(
+        _createCritiqueBlocDelegate!.showMessage(
           message: error.toString(),
         );
       }
@@ -124,10 +127,10 @@ class CreateCritiqueBloc
       try {
         CritiqueModel critique = CritiqueModel(
           id: null,
-          uid: _currentUser.uid,
-          imdbID: movie.imdbID,
+          uid: _currentUser.uid!,
+          imdbID: movie!.imdbID,
           message: critiqueText,
-          genres: movie.genre.split(', '),
+          genres: movie!.genre.split(', '),
           likes: [],
           rating: rating,
           comments: [],
@@ -137,23 +140,23 @@ class CreateCritiqueBloc
 
         await locator<CritiqueService>().create(critique: critique);
 
-        _createCritiqueBlocDelegate.clearText();
+        _createCritiqueBlocDelegate!.clearText();
 
-        _createCritiqueBlocDelegate.showMessage(
+        _createCritiqueBlocDelegate!.showMessage(
             message: 'Critique added, check it out on the home page.');
 
         yield LoadedState(
-          movie: movie,
+          movie: movie!,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
         );
       } catch (error) {
-        _createCritiqueBlocDelegate.showMessage(
-            message: 'Error ${error.toString()}!');
+        _createCritiqueBlocDelegate!
+            .showMessage(message: 'Error ${error.toString()}!');
 
         yield LoadedState(
-          movie: movie,
+          movie: movie!,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,

@@ -16,7 +16,7 @@ class SubmitEvent extends ForgotPasswordEvent {
   final String email;
 
   SubmitEvent({
-    @required this.email,
+    required this.email,
   });
 
   @override

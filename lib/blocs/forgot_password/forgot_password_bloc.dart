@@ -17,7 +17,7 @@ part 'forgot_password_page.dart';
 
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
-  ForgotPasswordBloc() : super(null);
+  ForgotPasswordBloc() : super(InitialState());
 
   @override
   Stream<ForgotPasswordState> mapEventToState(
@@ -26,7 +26,7 @@ class ForgotPasswordBloc
       yield LoadingState();
 
       try {
-        yield LoadedState(showMessage: false);
+        yield LoadedState(showMessage: false, message: null);
       } catch (error) {
         yield ErrorState(error: error);
       }

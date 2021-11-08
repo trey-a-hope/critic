@@ -17,7 +17,7 @@ class Save extends EditProfileEvent {
   final String username;
 
   Save({
-    @required this.username,
+    required this.username,
   });
 
   List<Object> get props => [

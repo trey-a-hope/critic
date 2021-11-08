@@ -6,7 +6,7 @@ import 'package:critic/blocs/search_users/search_users_bloc.dart'
     as SEARCH_USERS_BP;
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/recommendation_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
@@ -30,11 +30,11 @@ class CreateRecommendationBloc
     extends Bloc<CreateRecommendationEvent, CreateRecommendationState> {
   CreateRecommendationBloc() : super(CreateRecommendationInitial());
 
-  UserModel _currentUser;
-  MovieModel _selectedMovie;
-  UserModel _selectedUser;
+  late UserModel _currentUser;
+  MovieModel? _selectedMovie;
+  UserModel? _selectedUser;
 
-  SEARCH_USERS_BP.SearchUsersRepository searchUsersRepository;
+  //SEARCH_USERS_BP.SearchUsersRepository? searchUsersRepository;
 
   Stream<CreateRecommendationState> mapEventToState(
     CreateRecommendationEvent event,
@@ -60,22 +60,22 @@ class CreateRecommendationBloc
       yield LoadingState();
 
       await locator<RecommendationsService>().createRecommendation(
-        sendeeUID: _selectedUser.uid,
+        sendeeUID: _selectedUser!.uid!,
         recommendation: RecommendationModel(
           id: null,
           message: message,
-          imdbID: _selectedMovie.imdbID,
-          senderUID: _currentUser.uid,
+          imdbID: _selectedMovie!.imdbID,
+          senderUID: _currentUser.uid!,
           created: DateTime.now(),
         ),
       );
 
       //Send notification to user.
-      if (_selectedUser.fcmToken != null) {
+      if (_selectedUser!.fcmToken != null) {
         await locator<FCMNotificationService>().sendNotificationToUser(
-          fcmToken: _selectedUser.fcmToken,
+          fcmToken: _selectedUser!.fcmToken!,
           title: 'New movie recommendation!',
-          body: '${_selectedMovie.title}',
+          body: '${_selectedMovie!.title}',
           notificationData: null,
         );
       }

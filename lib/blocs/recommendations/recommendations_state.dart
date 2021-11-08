@@ -5,13 +5,15 @@ class RecommendationsState extends Equatable {
   List<Object> get props => [];
 }
 
+class InitialState extends RecommendationsState {}
+
 class LoadingState extends RecommendationsState {}
 
 class LoadedState extends RecommendationsState {
   final List<RecommendationModel> recommendations;
 
   LoadedState({
-    @required this.recommendations,
+    required this.recommendations,
   });
 
   @override

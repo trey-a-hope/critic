@@ -8,13 +8,13 @@ class SearchUsersRepository {
     apiKey: ALGOLIA_SEARCH_API_KEY,
   );
 
-  SearchUsersRepository({@required this.cache});
+  SearchUsersRepository({required this.cache});
 
   Future<List<UserModel>> search(String term) async {
     if (cache.contains(term)) {
       return cache.get(term);
     } else {
-      AlgoliaQuery query = _algolia.instance.index('Users').search(term);
+      AlgoliaQuery query = _algolia.instance.index('Users').query(term);
       // query = query.setFacetFilter('isGem:$_isSearchingGems');
 
       final List<AlgoliaObjectSnapshot> results =

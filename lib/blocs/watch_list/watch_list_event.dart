@@ -15,7 +15,7 @@ class WatchlistUpdatedEvent extends WatchlistEvent {
   final List<MovieModel> movies;
 
   WatchlistUpdatedEvent({
-    @required this.movies,
+    required this.movies,
   });
 
   @override

@@ -22,13 +22,13 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class EntryPage extends StatefulWidget {
   final MyAppState myAppState;
-  EntryPage({@required this.myAppState});
+  EntryPage({required this.myAppState});
   @override
   State createState() => EntryPageState(myAppState: myAppState);
 }
 
 class EntryPageState extends State<EntryPage> {
-  EntryPageState({@required this.myAppState});
+  EntryPageState({required this.myAppState});
   final MyAppState myAppState;
 
   static GlobalKey homeGlobalKey = GlobalKey();
@@ -50,8 +50,8 @@ class EntryPageState extends State<EntryPage> {
             identify: 'Target 1',
             keyTarget: homeGlobalKey,
             contents: [
-              ContentTarget(
-                align: AlignContent.top,
+              TargetContent(
+                align: ContentAlign.top,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -82,8 +82,8 @@ class EntryPageState extends State<EntryPage> {
             identify: 'Target 2',
             keyTarget: exploreGlobalKey,
             contents: [
-              ContentTarget(
-                align: AlignContent.top,
+              TargetContent(
+                align: ContentAlign.top,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -114,8 +114,8 @@ class EntryPageState extends State<EntryPage> {
             identify: 'Target 3',
             keyTarget: watchlistGlobalKey,
             contents: [
-              ContentTarget(
-                align: AlignContent.top,
+              TargetContent(
+                align: ContentAlign.top,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -146,8 +146,8 @@ class EntryPageState extends State<EntryPage> {
             identify: 'Target 4',
             keyTarget: recommendationsGlobalKey,
             contents: [
-              ContentTarget(
-                align: AlignContent.top,
+              TargetContent(
+                align: ContentAlign.top,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -178,8 +178,8 @@ class EntryPageState extends State<EntryPage> {
             identify: 'Target 5',
             keyTarget: profileGlobalKey,
             contents: [
-              ContentTarget(
-                align: AlignContent.top,
+              TargetContent(
+                align: ContentAlign.top,
                 child: Container(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -210,8 +210,6 @@ class EntryPageState extends State<EntryPage> {
       print('finish');
     }, onClickTarget: (target) {
       print(target);
-    }, onClickSkip: () {
-      print('skip');
     });
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -310,7 +308,7 @@ class EntryPageState extends State<EntryPage> {
     );
   }
 
-  Widget _buildAppBar({@required int index}) {
+  PreferredSizeWidget? _buildAppBar({required int index}) {
     switch (index) {
       case 0:
         return AppBar(
@@ -419,7 +417,6 @@ class EntryPageState extends State<EntryPage> {
 
       default:
         return null;
-        break;
     }
   }
 }

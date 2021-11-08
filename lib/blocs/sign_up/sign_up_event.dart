@@ -11,9 +11,9 @@ class SignUp extends SignUpEvent {
   final String password;
 
   SignUp({
-    @required this.username,
-    @required this.email,
-    @required this.password,
+    required this.username,
+    required this.email,
+    required this.password,
   });
 
   List<Object> get props => [
@@ -31,7 +31,7 @@ class TermsServiceCheckboxEvent extends SignUpEvent {
   final bool checked;
 
   TermsServiceCheckboxEvent({
-    @required this.checked,
+    required this.checked,
   });
 
   List<Object> get props => [

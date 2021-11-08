@@ -39,7 +39,7 @@ class PostCommentEvent extends CritiqueDetailsEvent {
   final String comment;
 
   PostCommentEvent({
-    @required this.comment,
+    required this.comment,
   });
 
   List<Object> get props => [

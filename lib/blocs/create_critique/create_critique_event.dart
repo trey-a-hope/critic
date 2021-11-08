@@ -1,6 +1,6 @@
 part of 'create_critique_bloc.dart';
 
-class CreateCritiqueEvent extends Equatable {
+abstract class CreateCritiqueEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
@@ -16,8 +16,8 @@ class SubmitEvent extends CreateCritiqueEvent {
   final double rating;
 
   SubmitEvent({
-    @required this.critique,
-    @required this.rating,
+    required this.critique,
+    required this.rating,
   });
 
   List<Object> get props => [

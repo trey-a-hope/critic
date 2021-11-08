@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
@@ -12,9 +12,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pagination_view/pagination_view.dart';
 import '../../Constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pagination/pagination.dart';
 
 part 'explore_page.dart';
 part 'explore_state.dart';
@@ -22,8 +22,8 @@ part 'explore_event.dart';
 
 abstract class ExploreBlocDelegate {
   void showMessage({
-    @required String title,
-    @required String body,
+    required String title,
+    required String body,
   });
 }
 
@@ -35,11 +35,11 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
 
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
-  ExploreBlocDelegate _exploreBlocDelegate;
+  ExploreBlocDelegate? _exploreBlocDelegate;
 
-  UserModel currentUser;
+  late UserModel currentUser;
 
-  void setDelegate({@required ExploreBlocDelegate delegate}) {
+  void setDelegate({required ExploreBlocDelegate delegate}) {
     this._exploreBlocDelegate = delegate;
   }
 
@@ -55,7 +55,7 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
           currentUser: currentUser,
         );
       } catch (error) {
-        _exploreBlocDelegate.showMessage(
+        _exploreBlocDelegate!.showMessage(
           title: 'Error',
           body: error.toString(),
         );

@@ -4,7 +4,7 @@ abstract class CreateRecommendationState extends Equatable {
   const CreateRecommendationState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class CreateRecommendationInitial extends CreateRecommendationState {}
@@ -12,16 +12,16 @@ class CreateRecommendationInitial extends CreateRecommendationState {}
 class LoadingState extends CreateRecommendationState {}
 
 class LoadedState extends CreateRecommendationState {
-  final MovieModel selectedMovie;
-  final UserModel selectedUser;
+  final MovieModel? selectedMovie;
+  final UserModel? selectedUser;
 
   LoadedState({
-    @required this.selectedMovie,
-    @required this.selectedUser,
+    required this.selectedMovie,
+    required this.selectedUser,
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         selectedMovie,
         selectedUser,
       ];
@@ -33,7 +33,7 @@ class ErrorState extends CreateRecommendationState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

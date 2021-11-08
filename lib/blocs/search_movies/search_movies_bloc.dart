@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/movie_service.dart';
-import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -23,7 +22,7 @@ part 'search_movies_state.dart';
 
 class SearchMoviesBloc extends Bloc<SearchMoviesEvent, SearchMoviesState> {
   final SearchMoviesRepository searchMoviesRepository;
-  SearchMoviesBloc({@required this.searchMoviesRepository})
+  SearchMoviesBloc({required this.searchMoviesRepository})
       : super(
           SearchMoviesStateEmpty(),
         );

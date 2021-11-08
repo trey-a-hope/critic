@@ -1,9 +1,8 @@
 import 'package:critic/models/comment_model.dart';
-import 'package:flutter/material.dart';
-import 'movie_model.dart';
+import 'package:critic/models/movie_model.dart';  
 
 class CritiqueModel {
-  String id;
+  String? id;
   String message;
   String imdbID;
   String uid;
@@ -14,22 +13,22 @@ class CritiqueModel {
   List<String> likes;
   List<String> genres;
 
-  MovieModel movie; //Used on FE only.
+  MovieModel? movie; //Used on FE only.
 
   CritiqueModel({
-    @required this.id,
-    @required this.message,
-    @required this.imdbID,
-    @required this.uid,
-    @required this.comments,
-    @required this.created,
-    @required this.modified,
-    @required this.rating,
-    @required this.likes,
-    @required this.genres,
+    required this.id,
+    required this.message,
+    required this.imdbID,
+    required this.uid,
+    required this.comments,
+    required this.created,
+    required this.modified,
+    required this.rating,
+    required this.likes,
+    required this.genres,
   });
 
-  factory CritiqueModel.fromJSON({@required Map map}) {
+  factory CritiqueModel.fromJSON({required Map map}) {
     return CritiqueModel(
       id: map['_id'],
       message: map['message'],

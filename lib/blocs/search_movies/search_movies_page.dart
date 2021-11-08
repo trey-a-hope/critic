@@ -3,7 +3,7 @@ part of 'search_movies_bloc.dart';
 class SearchMoviesPage extends StatelessWidget {
   final bool returnMovie;
 
-  SearchMoviesPage({@required this.returnMovie});
+  SearchMoviesPage({required this.returnMovie});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +30,10 @@ class _SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<_SearchBar> {
   final TextEditingController _textController = TextEditingController();
-  SearchMoviesBloc _searchMoviesBloc;
 
   @override
   void initState() {
     super.initState();
-    _searchMoviesBloc = BlocProvider.of<SearchMoviesBloc>(context);
   }
 
   @override
@@ -47,15 +45,15 @@ class _SearchBarState extends State<_SearchBar> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      style: TextStyle(color: Theme.of(context).textTheme.headline6.color),
+      style: TextStyle(color: Theme.of(context).textTheme.headline6!.color),
       controller: _textController,
       autocorrect: false,
       onChanged: (text) {
-        _searchMoviesBloc.add(
-          TextChangedEvent(text: text),
-        );
+        context.read<SearchMoviesBloc>().add(
+              TextChangedEvent(text: text),
+            );
       },
-      cursorColor: Theme.of(context).textTheme.headline5.color,
+      cursorColor: Theme.of(context).textTheme.headline5!.color,
       decoration: InputDecoration(
           errorStyle: TextStyle(color: Colors.white),
           prefixIcon: Icon(
@@ -72,20 +70,20 @@ class _SearchBarState extends State<_SearchBar> {
           border: InputBorder.none,
           hintText: 'Enter a search term',
           hintStyle:
-              TextStyle(color: Theme.of(context).textTheme.headline6.color)),
+              TextStyle(color: Theme.of(context).textTheme.headline6!.color)),
     );
   }
 
   void _onClearTapped() {
     _textController.text = '';
-    _searchMoviesBloc.add(TextChangedEvent(text: ''));
+    context.read<SearchMoviesBloc>().add(TextChangedEvent(text: ''));
   }
 }
 
 class _SearchBody extends StatelessWidget {
   final bool returnMovie;
 
-  _SearchBody({@required this.returnMovie});
+  _SearchBody({required this.returnMovie});
 
   @override
   Widget build(BuildContext context) {

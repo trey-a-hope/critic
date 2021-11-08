@@ -14,11 +14,9 @@ class SignUpPageState extends State<SignUpPage>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  SignUpBloc _signUpBloc;
   @override
   void initState() {
-    _signUpBloc = BlocProvider.of<SignUpBloc>(context);
-    _signUpBloc.setDelegate(delegate: this);
+    context.read<SignUpBloc>().setDelegate(delegate: this);
     super.initState();
   }
 
@@ -201,10 +199,10 @@ class SignUpPageState extends State<SignUpPage>
                                 ),
                                 value: state.termsServicesChecked,
                                 onChanged: (newValue) {
-                                  _signUpBloc.add(
-                                    TermsServiceCheckboxEvent(
-                                        checked: newValue),
-                                  );
+                                  context.read<SignUpBloc>().add(
+                                        TermsServiceCheckboxEvent(
+                                            checked: newValue!),
+                                      );
                                 },
                               ),
                             ),
@@ -219,24 +217,24 @@ class SignUpPageState extends State<SignUpPage>
                               text: 'Sign Up',
                               textColor: Colors.white,
                               onPressed: () async {
-                                if (!_formKey.currentState.validate()) return;
+                                if (!_formKey.currentState!.validate()) return;
 
-                                final bool confirm =
+                                final bool? confirm =
                                     await locator<ModalService>()
                                         .showConfirmation(
                                             context: context,
                                             title: 'Login',
                                             message: 'Are you sure?');
 
-                                if (!confirm) return;
+                                if (confirm == null || !confirm) return;
 
-                                _signUpBloc.add(
-                                  SignUp(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    username: _usernameController.text,
-                                  ),
-                                );
+                                context.read<SignUpBloc>().add(
+                                      SignUp(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                        username: _usernameController.text,
+                                      ),
+                                    );
                               },
                             ),
                             Padding(
@@ -284,7 +282,7 @@ class SignUpPageState extends State<SignUpPage>
   }
 
   @override
-  void showMessage({String message}) {
+  void showMessage({required String message}) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }
 

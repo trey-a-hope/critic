@@ -5,6 +5,8 @@ class WebState extends Equatable {
   List<Object> get props => [];
 }
 
+class InitialState extends WebState {}
+
 class LoadingState extends WebState {}
 
 class LoadedState extends WebState {
@@ -12,8 +14,8 @@ class LoadedState extends WebState {
   final List<UserModel> topFiveCritiquesUsers;
 
   LoadedState({
-    @required this.topFiveRecentUsers,
-    @required this.topFiveCritiquesUsers,
+    required this.topFiveRecentUsers,
+    required this.topFiveCritiquesUsers,
   });
 
   @override
@@ -27,7 +29,7 @@ class ErrorState extends WebState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

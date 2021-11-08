@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/models/comment_model.dart';
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
@@ -32,7 +32,7 @@ part 'critique_details_state.dart';
 part 'critique_details_page.dart';
 
 abstract class CritiqueDetailsBlocDelegate {
-  void showMessage({@required String title, @required String message});
+  void showMessage({required String title, required String message});
   void clearText();
   void pop();
 }
@@ -40,22 +40,22 @@ abstract class CritiqueDetailsBlocDelegate {
 class CritiqueDetailsBloc
     extends Bloc<CritiqueDetailsEvent, CritiqueDetailsState> {
   CritiqueDetailsBloc({
-    @required this.critiqueID,
+    required this.critiqueID,
   }) : super(
           CritiqueDetailsState(),
         );
 
   final String critiqueID;
 
-  CritiqueModel _critiqueModel;
+  late CritiqueModel _critiqueModel;
 
-  CritiqueDetailsBlocDelegate _critiqueDetailsBlocDelegate;
+  CritiqueDetailsBlocDelegate? _critiqueDetailsBlocDelegate;
 
-  UserModel _currentUser;
+  late UserModel _currentUser;
 
-  UserModel _critiqueUser;
+  late UserModel _critiqueUser;
 
-  void setDelegate({@required CritiqueDetailsBlocDelegate delegate}) {
+  void setDelegate({required CritiqueDetailsBlocDelegate delegate}) {
     this._critiqueDetailsBlocDelegate = delegate;
   }
 
@@ -104,7 +104,7 @@ class CritiqueDetailsBloc
         List<CritiqueModel> otherCritiques =
             await locator<CritiqueService>().listSimilar(
           id: _critiqueModel.id,
-          imdbID: _critiqueModel.movie.imdbID,
+          imdbID: _critiqueModel.movie!.imdbID,
         );
 
         yield LoadedState(
@@ -116,7 +116,7 @@ class CritiqueDetailsBloc
           otherCritiques: otherCritiques,
         );
       } catch (error) {
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
           title: 'Error',
           message: 'Error: ${error.toString()}',
         );
@@ -127,29 +127,29 @@ class CritiqueDetailsBloc
     if (event is DeleteCritiqueEvent) {
       try {
         await locator<CritiqueService>().delete(
-          id: _critiqueModel.id,
+          id: _critiqueModel.id!,
         );
 
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
             title: 'Deleted', message: 'Refresh home page to see results.');
       } catch (error) {
-        _critiqueDetailsBlocDelegate.showMessage(
-            title: 'Error', message: 'Error: ${error.toString()}');
+        _critiqueDetailsBlocDelegate!
+            .showMessage(title: 'Error', message: 'Error: ${error.toString()}');
       }
     }
 
     if (event is ReportCritiqueEvent) {
       try {
         await locator<CritiqueService>().delete(
-          id: _critiqueModel.id,
+          id: _critiqueModel.id!,
         );
 
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
           title: 'Reported',
           message: 'Critique reported, you will no longer see this critique.',
         );
       } catch (error) {
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
           title: 'Error',
           message: 'Error: ${error.toString()}',
         );
@@ -159,24 +159,24 @@ class CritiqueDetailsBloc
     if (event is LikeCritiqueEvent) {
       try {
         await locator<CritiqueService>().addLike(
-          id: _critiqueModel.id,
-          uid: _currentUser.uid,
+          id: _critiqueModel.id!,
+          uid: _currentUser.uid!,
         );
 
         if (_currentUser.uid != _critiqueUser.uid &&
             _critiqueUser.fcmToken != null) {
           //Send notification to user.
           await locator<FCMNotificationService>().sendNotificationToUser(
-            fcmToken: _critiqueUser.fcmToken,
+            fcmToken: _critiqueUser.fcmToken!,
             title: '${_currentUser.username} liked your critique!',
-            body: '${_critiqueModel.movie.title}',
+            body: '${_critiqueModel.movie!.title}',
             notificationData: null,
           );
         }
 
         add(LoadPageEvent());
       } catch (error) {
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
           title: 'Error',
           message: 'Error: ${error.toString()}',
         );
@@ -186,13 +186,13 @@ class CritiqueDetailsBloc
     if (event is UnlikeCritiqueEvent) {
       try {
         await locator<CritiqueService>().removeLike(
-          id: _critiqueModel.id,
-          uid: _currentUser.uid,
+          id: _critiqueModel.id!,
+          uid: _currentUser.uid!,
         );
 
         add(LoadPageEvent());
       } catch (error) {
-        _critiqueDetailsBlocDelegate.showMessage(
+        _critiqueDetailsBlocDelegate!.showMessage(
           title: 'Error',
           message: 'Error: ${error.toString()}',
         );
@@ -206,7 +206,7 @@ class CritiqueDetailsBloc
         await locator<CritiqueService>().addComment(
           id: critiqueID,
           comment: CommentModel(
-            uid: _currentUser.uid,
+            uid: _currentUser.uid!,
             comment: comment,
             likes: [],
           ),
@@ -216,29 +216,29 @@ class CritiqueDetailsBloc
         if (_currentUser.uid != _critiqueUser.uid &&
             _critiqueUser.fcmToken != null) {
           await locator<FCMNotificationService>().sendNotificationToUser(
-            fcmToken: _critiqueUser.fcmToken,
+            fcmToken: _critiqueUser.fcmToken!,
             title: '${_currentUser.username} commented on your critique!',
-            body: '${_critiqueModel.movie.title}',
+            body: '${_critiqueModel.movie!.title}',
             notificationData: null,
           );
         }
 
         //Send notification to all users who commented.
         for (int i = 0; i < _critiqueModel.comments.length; i++) {
-          final UserModel commentUser = _critiqueModel.comments[i].user;
+          final UserModel commentUser = _critiqueModel.comments[i].user!;
           if (_currentUser.uid != _critiqueModel.comments[i].uid &&
               commentUser.fcmToken != null) {
             await locator<FCMNotificationService>().sendNotificationToUser(
-              fcmToken: commentUser.fcmToken,
+              fcmToken: commentUser.fcmToken!,
               title:
                   '${_currentUser.username} commented on a critique you commented on!',
-              body: '${_critiqueModel.movie.title}',
+              body: '${_critiqueModel.movie!.title}',
               notificationData: null,
             );
           }
         }
 
-        _critiqueDetailsBlocDelegate.clearText();
+        _critiqueDetailsBlocDelegate!.clearText();
 
         add(LoadPageEvent());
       } catch (error) {

@@ -1,5 +1,5 @@
 import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
@@ -23,17 +22,17 @@ part 'watch_list_state.dart';
 part 'watch_list_page.dart';
 
 abstract class WatchlistBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({required String message});
 }
 
 class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
-  WatchlistBloc() : super(null);
-  WatchlistBlocDelegate _watchlistBlocDelegate;
-  UserModel currentUser;
+  WatchlistBloc() : super(InitialState());
+  WatchlistBlocDelegate? _watchlistBlocDelegate;
+  late UserModel currentUser;
 
-  DocumentSnapshot startAfterDocument;
+  DocumentSnapshot? startAfterDocument;
 
-  void setDelegate({@required WatchlistBlocDelegate delegate}) {
+  void setDelegate({required WatchlistBlocDelegate delegate}) {
     this._watchlistBlocDelegate = delegate;
   }
 
@@ -46,19 +45,19 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
         currentUser = await locator<AuthService>().getCurrentUser();
 
         Stream<QuerySnapshot> watchlistStream = await locator<UserService>()
-            .streamMoviesFromWatchlist(uid: currentUser.uid);
+            .streamMoviesFromWatchlist(uid: currentUser.uid!);
 
         watchlistStream.listen(
           (QuerySnapshot event) {
             List<MovieModel> movies =
-                event.docs.map((doc) => MovieModel.fromDoc(ds: doc)).toList();
+                event.docs.map((doc) => MovieModel.fromDoc(data: doc)).toList();
 
             add(WatchlistUpdatedEvent(movies: movies));
           },
         );
       } catch (error) {
-        _watchlistBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+        _watchlistBlocDelegate!
+            .showMessage(message: 'Error: ${error.toString()}');
       }
     }
 
@@ -69,7 +68,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
         yield EmptyWatchlistState();
       } else {
         movies.sort(
-          (a, b) => b.addedToWatchList.compareTo(a.addedToWatchList),
+          (a, b) => b.addedToWatchList!.compareTo(a.addedToWatchList!),
         );
         yield LoadedState(movies: movies);
       }

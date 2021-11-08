@@ -9,7 +9,7 @@ import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
     as OTHER_PROFILE_BP;
 import 'package:critic/models/critique_model.dart';
 import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +18,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SmallCritiqueView extends StatefulWidget {
   const SmallCritiqueView({
-    Key key,
-    @required this.critique,
-    @required this.currentUser,
+    Key? key,
+    required this.critique,
+    required this.currentUser,
   }) : super(key: key);
 
   final CritiqueModel critique;
@@ -59,7 +59,6 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
                 watchListCount: null,
               ),
             );
-            break;
           default:
             if (snapshot.hasError) {
               return Center(
@@ -79,8 +78,8 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
   }
 
   Widget critiqueView({
-    @required BuildContext context,
-    @required UserModel userWhoPosted,
+    required BuildContext context,
+    required UserModel userWhoPosted,
   }) {
     String message = widget.critique.message.length > _critiqueMessageCharCount
         ? widget.critique.message.substring(0, _critiqueMessageCharCount - 1) +
@@ -97,7 +96,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
               Route route = MaterialPageRoute(
                 builder: (context) => BlocProvider(
                   create: (context) => CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                    critiqueID: widget.critique.id,
+                    critiqueID: widget.critique.id!,
                   )..add(
                       CRITIQUE_DETAILS_BP.LoadPageEvent(),
                     ),
@@ -110,7 +109,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
             title: Text('\"$message\"',
                 style: Theme.of(context).textTheme.headline6),
             subtitle: Text(
-              '\n${widget.critique.movie.title} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
+              '\n${widget.critique.movie!.title} - ${userWhoPosted.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
               style: Theme.of(context).textTheme.headline5,
             ),
             trailing: InkWell(
@@ -158,7 +157,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
                 Navigator.push(context, route);
               },
               child: CachedNetworkImage(
-                imageUrl: '${widget.critique.movie.poster}',
+                imageUrl: '${widget.critique.movie!.poster}',
                 imageBuilder: (context, imageProvider) => Image(
                   image: imageProvider,
                   height: 200,

@@ -17,7 +17,7 @@ class ErrorState extends SuggestionsState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

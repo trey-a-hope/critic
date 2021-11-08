@@ -9,7 +9,7 @@ class SignUpStartState extends SignUpState {
   final bool termsServicesChecked;
 
   SignUpStartState({
-    @required this.termsServicesChecked,
+    required this.termsServicesChecked,
   });
 
   @override

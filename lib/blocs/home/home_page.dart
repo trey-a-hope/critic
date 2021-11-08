@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         if (state is HomeLoadedState) {
           final UserModel currentUser = state.currentUser;
           final List<UserModel> mostRecentUsers = state.mostRecentUsers;
-          final List<MovieModel> popularMovies = state.popularMovies;
+          // final List<MovieModel> popularMovies = state.popularMovies;
           final List<CritiqueModel> mostRecentCritiques =
               state.mostRecentCritiques;
           // final int critiqueCount = state.critiqueCount;
@@ -186,14 +186,13 @@ class _HomePageState extends State<HomePage> {
 
                                       Route route = MaterialPageRoute(
                                         builder: (context) => BlocProvider(
-                                          create: (context) =>
-                                              OTHER_PROFILE_BP.OtherProfileBloc(
+                                          create: (context) => OTHER_PROFILE_BP
+                                              .OtherProfileBloc(
                                             otherUserID:
                                                 '${mostRecentUser.uid}',
                                           )..add(
-                                                  OTHER_PROFILE_BP
-                                                      .LoadPageEvent(),
-                                                ),
+                                              OTHER_PROFILE_BP.LoadPageEvent(),
+                                            ),
                                           child: OTHER_PROFILE_BP
                                               .OtherProfilePage(),
                                         ),
@@ -217,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                                         Theme.of(context).textTheme.headline4,
                                   ),
                                   Text(
-                                    'Joined ${timeago.format(mostRecentUser.created, allowFromNow: true)}',
+                                    'Joined ${timeago.format(mostRecentUser.created!, allowFromNow: true)}',
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   )

@@ -1,32 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:algolia/algolia.dart';
 
 class UserModel {
   String imgUrl;
-  String email;
-  DateTime modified;
-  DateTime created;
-  String uid;
+  String? email;
+  DateTime? modified;
+  DateTime? created;
+  String? uid;
   String username;
-  int critiqueCount;
-  String fcmToken;
-  int watchListCount;
+  int? critiqueCount;
+  String? fcmToken;
+  int? watchListCount;
 
   UserModel({
-    @required this.imgUrl,
-    @required this.email,
-    @required this.modified,
-    @required this.created,
-    @required this.uid,
-    @required this.username,
-    @required this.critiqueCount,
-    @required this.fcmToken,
-    @required this.watchListCount,
+    required this.imgUrl,
+    required this.email,
+    required this.modified,
+    required this.created,
+    required this.uid,
+    required this.username,
+    required this.critiqueCount,
+    this.fcmToken,
+    required this.watchListCount,
   });
 
-  factory UserModel.fromDoc({@required DocumentSnapshot ds}) {
-    final Map<String, dynamic> data = ds.data();
+  factory UserModel.fromDoc({required DocumentSnapshot data}) {
     return UserModel(
       imgUrl: data['imgUrl'],
       email: data['email'],

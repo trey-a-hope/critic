@@ -1,23 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 abstract class IBlockUserService {
   void block({
-    @required String blockerID,
-    @required String blockeeID,
+    required String blockerID,
+    required String blockeeID,
   });
 
   void unblock({
-    @required String blockerID,
-    @required String blockeeID,
+    required String blockerID,
+    required String blockeeID,
   });
 
   Future<List<String>> getUsersIBlockedIDs({
-    @required String userID,
+    required String userID,
   });
 
   Future<List<String>> getUsersWhoBlockedMeIDs({
-    @required String userID,
+    required String userID,
   });
 }
 
@@ -27,8 +26,8 @@ class BlockUserService extends IBlockUserService {
 
   @override
   void block({
-    @required String blockerID,
-    @required String blockeeID,
+    required String blockerID,
+    required String blockeeID,
   }) async {
     final DocumentReference docRef = _usersDB.doc(blockerID);
     docRef.update(
@@ -45,8 +44,8 @@ class BlockUserService extends IBlockUserService {
 
   @override
   void unblock({
-    @required String blockerID,
-    @required String blockeeID,
+    required String blockerID,
+    required String blockeeID,
   }) async {
     final DocumentReference docRef = _usersDB.doc(blockerID);
     docRef.update(
@@ -62,10 +61,10 @@ class BlockUserService extends IBlockUserService {
   }
 
   @override
-  Future<List<String>> getUsersIBlockedIDs({@required String userID}) async {
+  Future<List<String>> getUsersIBlockedIDs({required String userID}) async {
     DocumentSnapshot followerDocSnapshot = await _usersDB.doc(userID).get();
 
-    dynamic blockedUsers = followerDocSnapshot.data()['blockedUsers'];
+    dynamic blockedUsers = followerDocSnapshot['blockedUsers'];
 
     List<String> blockedUsersIDS = [];
 
@@ -77,8 +76,7 @@ class BlockUserService extends IBlockUserService {
   }
 
   @override
-  Future<List<String>> getUsersWhoBlockedMeIDs(
-      {@required String userID}) async {
+  Future<List<String>> getUsersWhoBlockedMeIDs({required String userID}) async {
     final QuerySnapshot usersWhoBlockedMe = await _usersDB
         .where(
           'blockedUsers',

@@ -8,11 +8,9 @@ class ExplorePage extends StatefulWidget {
 class ExplorePageState extends State<ExplorePage>
     with SingleTickerProviderStateMixin
     implements ExploreBlocDelegate {
-  ExploreBloc _exploreBloc;
-
   final GlobalKey keyButton = GlobalKey();
 
-  TabController _tabController;
+  late TabController _tabController;
 
   int _tabControllerIndex = 0;
 
@@ -46,7 +44,7 @@ class ExplorePageState extends State<ExplorePage>
   String _genreTalkShowLastID = '';
   String _genreRealityTVLastID = '';
 
-  void _setGenreLastID({@required String genre, @required String lastID}) {
+  void _setGenreLastID({required String genre, required String lastID}) {
     switch (genre) {
       case 'Action':
         _genreLastActionID = lastID;
@@ -131,7 +129,7 @@ class ExplorePageState extends State<ExplorePage>
     }
   }
 
-  String _getGenreLastID({@required String genre}) {
+  String _getGenreLastID({required String genre}) {
     switch (genre) {
       case 'Action':
         return _genreLastActionID;
@@ -192,8 +190,7 @@ class ExplorePageState extends State<ExplorePage>
 
   @override
   void initState() {
-    _exploreBloc = BlocProvider.of<ExploreBloc>(context);
-    _exploreBloc.setDelegate(delegate: this);
+    context.read<ExploreBloc>().setDelegate(delegate: this);
 
     _tabController = TabController(vsync: this, length: _numberOfTabs);
 
@@ -206,7 +203,7 @@ class ExplorePageState extends State<ExplorePage>
     super.dispose();
   }
 
-  Widget _buildTab({@required String title, @required IconData iconData}) {
+  Widget _buildTab({required String title, required IconData iconData}) {
     return Tab(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -225,23 +222,19 @@ class ExplorePageState extends State<ExplorePage>
   }
 
   Widget _buildList({
-    @required String genre,
-    @required UserModel currentUser,
+    required String genre,
+    required UserModel currentUser,
   }) {
     return RefreshIndicator(
-      child: PaginationList<CritiqueModel>(
-        onLoading: Spinner(),
-        onPageLoading: Spinner(),
-        separatorWidget: Divider(
-          height: 0,
-          color: Theme.of(context).dividerColor,
+      child: PaginationView<CritiqueModel>(
+        initialLoader: Spinner(),
+        bottomLoader: Spinner(),
+        itemBuilder:
+            (BuildContext context, CritiqueModel critique, int index) =>
+                CritiqueView(
+          critique: critique,
+          currentUser: currentUser,
         ),
-        itemBuilder: (BuildContext context, CritiqueModel critique) {
-          return CritiqueView(
-            critique: critique,
-            currentUser: currentUser,
-          );
-        },
         pageFetch: (int offset) async {
           List<CritiqueModel> critiques;
 
@@ -258,7 +251,7 @@ class ExplorePageState extends State<ExplorePage>
           if (critiques.isEmpty) return critiques;
 
           _setGenreLastID(
-              genre: genre, lastID: critiques[critiques.length - 1].id);
+              genre: genre, lastID: critiques[critiques.length - 1].id!);
 
           return critiques;
         },
@@ -304,9 +297,9 @@ class ExplorePageState extends State<ExplorePage>
       onRefresh: () async {
         _resetFilterIDs();
 
-        _exploreBloc.add(
-          LoadPageEvent(),
-        );
+        context.read<ExploreBloc>().add(
+              LoadPageEvent(),
+            );
 
         return;
       },
@@ -448,8 +441,8 @@ class ExplorePageState extends State<ExplorePage>
 
   @override
   void showMessage({
-    @required String title,
-    @required String body,
+    required String title,
+    required String body,
   }) {
     locator<ModalService>().showAlert(
       context: context,

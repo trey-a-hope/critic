@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
@@ -18,7 +18,7 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pagination/pagination.dart';
+import 'package:pagination_view/pagination_view.dart';
 import '../../Constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,7 +29,7 @@ part 'profile_page.dart';
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(LoadingState());
 
-  UserModel currentUser;
+  late UserModel currentUser;
 
   @override
   Stream<ProfileState> mapEventToState(
@@ -49,12 +49,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     if (event is UploadImageEvent) {
       try {
-        PickedFile file =
-            await ImagePicker().getImage(source: event.imageSource);
+        XFile? file = await ImagePicker().pickImage(source: event.imageSource);
 
         if (file == null) return;
 
-        File image = await ImageCropper.cropImage(sourcePath: file.path);
+        File? image = await ImageCropper.cropImage(sourcePath: file.path);
 
         if (image == null) return;
 
@@ -64,7 +63,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             file: image, imgPath: 'Images/Users/${currentUser.uid}/Profile');
 
         await locator<UserService>()
-            .updateUser(uid: currentUser.uid, data: {'imgUrl': newImgUrl});
+            .updateUser(uid: currentUser.uid!, data: {'imgUrl': newImgUrl});
 
         add(LoadPageEvent());
       } catch (error) {

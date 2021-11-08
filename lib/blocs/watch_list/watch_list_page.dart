@@ -7,12 +7,9 @@ class WatchlistPage extends StatefulWidget {
 
 class WatchlistPageState extends State<WatchlistPage>
     implements WatchlistBlocDelegate {
-  WatchlistBloc _watchlistBloc;
-
   @override
   void initState() {
-    _watchlistBloc = BlocProvider.of<WatchlistBloc>(context);
-    _watchlistBloc.setDelegate(delegate: this);
+    context.read<WatchlistBloc>().setDelegate(delegate: this);
     super.initState();
   }
 
@@ -20,9 +17,9 @@ class WatchlistPageState extends State<WatchlistPage>
     //Fetch template documents.
     List<DocumentSnapshot> documentSnapshots =
         await locator<UserService>().retrieveMoviesFromWatchlist(
-      uid: _watchlistBloc.currentUser.uid,
+      uid: context.read<WatchlistBloc>().currentUser.uid!,
       limit: PAGE_FETCH_LIMIT,
-      startAfterDocument: _watchlistBloc.startAfterDocument,
+      startAfterDocument: context.read<WatchlistBloc>().startAfterDocument!,
     );
 
     //Return an empty list if there are no new documents.
@@ -30,14 +27,14 @@ class WatchlistPageState extends State<WatchlistPage>
       return [];
     }
 
-    _watchlistBloc.startAfterDocument =
+    context.read<WatchlistBloc>().startAfterDocument =
         documentSnapshots[documentSnapshots.length - 1];
 
     List<MovieModel> movies = [];
 
     //Convert documents to template models.
     documentSnapshots.forEach((documentSnapshot) {
-      MovieModel movieModel = MovieModel.fromDoc(ds: documentSnapshot);
+      MovieModel movieModel = MovieModel.fromDoc(data: documentSnapshot);
       movies.add(movieModel);
     });
 
@@ -105,7 +102,7 @@ class WatchlistPageState extends State<WatchlistPage>
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   subtitle: Text(
-                    '${timeago.format(movie.addedToWatchList, allowFromNow: true)}',
+                    '${timeago.format(movie.addedToWatchList!, allowFromNow: true)}',
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   trailing: Icon(
@@ -136,7 +133,7 @@ class WatchlistPageState extends State<WatchlistPage>
 
   @override
   void showMessage({
-    @required String message,
+    required String message,
   }) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }

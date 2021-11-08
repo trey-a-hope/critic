@@ -12,8 +12,8 @@ class Login extends LoginEvent {
   final String password;
 
   Login({
-    @required this.email,
-    @required this.password,
+    required this.email,
+    required this.password,
   });
 
   List<Object> get props => [
@@ -25,3 +25,5 @@ class Login extends LoginEvent {
 class TryAgain extends LoginEvent {}
 
 class UpdatePasswordVisibleEvent extends LoginEvent {}
+
+class UpdateRememberMeEvent extends LoginEvent {}

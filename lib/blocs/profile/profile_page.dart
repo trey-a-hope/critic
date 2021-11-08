@@ -6,14 +6,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  ProfileBloc _profileBloc;
-
   String _lastID = '';
 
   @override
   void initState() {
     super.initState();
-    _profileBloc = BlocProvider.of<ProfileBloc>(context)
+
+    context.read<ProfileBloc>()
       ..add(
         LoadPageEvent(),
       );
@@ -114,30 +113,26 @@ class ProfilePageState extends State<ProfilePage> {
                 ];
               },
               body: RefreshIndicator(
-                child: PaginationList<CritiqueModel>(
-                  onLoading: Spinner(),
-                  onPageLoading: Spinner(),
-                  separatorWidget: Divider(
-                    height: 0,
-                    color: Theme.of(context).dividerColor,
+                child: PaginationView<CritiqueModel>(
+                  initialLoader: Spinner(),
+                  bottomLoader: Spinner(),
+                  itemBuilder: (BuildContext context, CritiqueModel critique,
+                          int index) =>
+                      CritiqueView(
+                    critique: critique,
+                    currentUser: currentUser,
                   ),
-                  itemBuilder: (BuildContext context, CritiqueModel critique) {
-                    return CritiqueView(
-                      critique: critique,
-                      currentUser: currentUser,
-                    );
-                  },
                   pageFetch: (int offset) async {
                     List<CritiqueModel> critiques =
                         await locator<CritiqueService>().listByUser(
-                      uid: currentUser.uid,
+                      uid: currentUser.uid!,
                       limit: PAGE_FETCH_LIMIT,
                       lastID: _lastID,
                     );
 
                     if (critiques.isEmpty) return critiques;
 
-                    _lastID = critiques[0].id;
+                    _lastID = critiques[0].id!;
 
                     return critiques;
                   },
@@ -180,10 +175,10 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-                onRefresh: () {
-                  _profileBloc.add(
-                    LoadPageEvent(),
-                  );
+                onRefresh: () async {
+                  context.read<ProfileBloc>().add(
+                        LoadPageEvent(),
+                      );
 
                   return;
                 },
@@ -212,18 +207,18 @@ class ProfilePageState extends State<ProfilePage> {
                 child: Text('Take Photo'),
                 onPressed: () {
                   Navigator.pop(context);
-                  _profileBloc.add(
-                    UploadImageEvent(imageSource: ImageSource.camera),
-                  );
+                  context.read<ProfileBloc>().add(
+                        UploadImageEvent(imageSource: ImageSource.camera),
+                      );
                 },
               ),
               CupertinoActionSheetAction(
                 child: Text('Choose From Gallery'),
                 onPressed: () {
                   Navigator.pop(context);
-                  _profileBloc.add(
-                    UploadImageEvent(imageSource: ImageSource.gallery),
-                  );
+                  context.read<ProfileBloc>().add(
+                        UploadImageEvent(imageSource: ImageSource.gallery),
+                      );
                 },
               )
             ],
@@ -249,18 +244,18 @@ class ProfilePageState extends State<ProfilePage> {
                 child: Text('Take Photo'),
                 onPressed: () {
                   Navigator.pop(context);
-                  _profileBloc.add(
-                    UploadImageEvent(imageSource: ImageSource.camera),
-                  );
+                  context.read<ProfileBloc>().add(
+                        UploadImageEvent(imageSource: ImageSource.camera),
+                      );
                 },
               ),
               SimpleDialogOption(
                 child: Text('Choose From Gallery'),
                 onPressed: () {
                   Navigator.pop(context);
-                  _profileBloc.add(
-                    UploadImageEvent(imageSource: ImageSource.gallery),
-                  );
+                  context.read<ProfileBloc>().add(
+                        UploadImageEvent(imageSource: ImageSource.gallery),
+                      );
                 },
               ),
               SimpleDialogOption(

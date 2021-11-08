@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
@@ -23,7 +23,7 @@ part 'sign_up_state.dart';
 abstract class SignUpBlocDelegate {
   void navigateHome();
   void navigateToTermsServicePage();
-  void showMessage({@required String message});
+  void showMessage({required String message});
 }
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
@@ -34,10 +34,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           ),
         );
 
-  SignUpBlocDelegate _signUpBlocDelegate;
+  SignUpBlocDelegate? _signUpBlocDelegate;
   bool _termsServicesChecked = false;
 
-  void setDelegate({@required SignUpBlocDelegate delegate}) {
+  void setDelegate({required SignUpBlocDelegate delegate}) {
     this._signUpBlocDelegate = delegate;
   }
 
@@ -54,7 +54,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         final UserCredential userCredential = await locator<AuthService>()
             .createUserWithEmailAndPassword(email: email, password: password);
 
-        final User firebaseUser = userCredential.user;
+        final User firebaseUser = userCredential.user!;
 
         UserModel newUser = UserModel(
           imgUrl: DUMMY_PROFILE_PHOTO_URL,
@@ -74,23 +74,23 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             await locator<UserService>().retrieveUser(uid: TREY_HOPE_UID);
 
         await locator<FCMNotificationService>().sendNotificationToUser(
-          fcmToken: treyHopeUser.fcmToken,
+          fcmToken: treyHopeUser.fcmToken!,
           title: 'New User!',
           body: newUser.username,
           notificationData: null,
         );
 
-        _signUpBlocDelegate.navigateHome();
+        _signUpBlocDelegate!.navigateHome();
 
         yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
       } catch (error) {
-        _signUpBlocDelegate.showMessage(message: 'Error: ${error.toString()}');
+        _signUpBlocDelegate!.showMessage(message: 'Error: ${error.toString()}');
         yield SignUpStartState(termsServicesChecked: _termsServicesChecked);
       }
     }
 
     if (event is NavigateToTermsServicePageEvent) {
-      _signUpBlocDelegate.navigateToTermsServicePage();
+      _signUpBlocDelegate!.navigateToTermsServicePage();
     }
 
     if (event is TermsServiceCheckboxEvent) {

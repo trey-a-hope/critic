@@ -15,7 +15,7 @@ class RecommendationsUpdatedEvent extends RecommendationsEvent {
   final List<RecommendationModel> recommendations;
 
   RecommendationsUpdatedEvent({
-    @required this.recommendations,
+    required this.recommendations,
   });
 
   @override
@@ -28,7 +28,7 @@ class DeleteRecommendationEvent extends RecommendationsEvent {
   final String recommendationID;
 
   DeleteRecommendationEvent({
-    @required this.recommendationID,
+    required this.recommendationID,
   });
 
   @override

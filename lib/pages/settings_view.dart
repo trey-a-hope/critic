@@ -12,14 +12,14 @@ import '../service_locator.dart';
 
 class SettingsView extends StatefulWidget {
   final MyAppState myAppState;
-  SettingsView({@required this.myAppState});
+  SettingsView({required this.myAppState});
 
   @override
   State createState() => SettingsViewState(myAppState: myAppState);
 }
 
 class SettingsViewState extends State<SettingsView> {
-  SettingsViewState({@required this.myAppState});
+  SettingsViewState({required this.myAppState});
   final MyAppState myAppState;
 
   @override
@@ -138,9 +138,9 @@ class SettingsViewState extends State<SettingsView> {
               color: Theme.of(context).iconTheme.color,
             ),
             onTap: () async {
-              bool confirm = await locator<ModalService>().showConfirmation(
+              bool? confirm = await locator<ModalService>().showConfirmation(
                   context: context, title: 'Logout', message: 'Are you sure?');
-              if (confirm) {
+              if (confirm == null || confirm) {
                 while (Navigator.of(context).canPop()) {
                   Navigator.pop(context);
                 }

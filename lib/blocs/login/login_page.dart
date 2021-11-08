@@ -19,6 +19,18 @@ class LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    Box<String> loginCredentialsBox =
+        Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+
+    //Set form values if present.
+    if (loginCredentialsBox.get('email') != null) {
+      String email = loginCredentialsBox.get('email')!;
+      String password = loginCredentialsBox.get('password')!;
+
+      _emailController.text = email;
+      _passwordController.text = password;
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       body: Stack(
@@ -84,15 +96,15 @@ class LoginPageState extends State<LoginPage>
                                     fontWeight: FontWeight.w300),
                               ),
                             ),
-                            RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
                               ),
-                              onPressed: () {
-                                context.read<LoginBloc>().add(
-                                      TryAgain(),
-                                    );
-                              },
                               child: Text(
                                 'Try Again?',
                                 style: TextStyle(
@@ -100,6 +112,11 @@ class LoginPageState extends State<LoginPage>
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              onPressed: () {
+                                context.read<LoginBloc>().add(
+                                      TryAgain(),
+                                    );
+                              },
                             ),
                           ],
                         ),
@@ -108,6 +125,7 @@ class LoginPageState extends State<LoginPage>
 
                     if (state is LoginInitial) {
                       bool passwordVisible = state.passwordVisible;
+                      bool rememberMe = state.rememberMe;
 
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
@@ -185,31 +203,19 @@ class LoginPageState extends State<LoginPage>
                             SizedBox(
                               height: 40,
                             ),
-                            Center(
-                              child: InkWell(
-                                child: Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    color: Colors.grey.shade100,
-                                    fontSize: 14,
-                                  ),
+                            Container(
+                              color: Colors.white,
+                              height: 50,
+                              width: double.infinity,
+                              child: CheckboxListTile(
+                                title: Text(
+                                  'Remember Me',
                                 ),
-                                onTap: () {
-                                  Route route = MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        BlocProvider(
-                                      create: (BuildContext context) =>
-                                          FORGOT_PASSWORD_BP
-                                              .ForgotPasswordBloc()
-                                            ..add(
-                                              FORGOT_PASSWORD_BP
-                                                  .LoadPageEvent(),
-                                            ),
-                                      child: FORGOT_PASSWORD_BP
-                                          .ForgotPasswordPage(),
-                                    ),
-                                  );
-                                  Navigator.push(context, route);
+                                value: rememberMe,
+                                onChanged: (newValue) {
+                                  context.read<LoginBloc>().add(
+                                        UpdateRememberMeEvent(),
+                                      );
                                 },
                               ),
                             ),
@@ -221,7 +227,7 @@ class LoginPageState extends State<LoginPage>
                               text: 'Login',
                               textColor: Colors.white,
                               onPressed: () async {
-                                if (!_formKey.currentState.validate()) return;
+                                if (!_formKey.currentState!.validate()) return;
 
                                 final String email = _emailController.text;
                                 final String password =
@@ -263,7 +269,35 @@ class LoginPageState extends State<LoginPage>
                                   ),
                                 ),
                               ),
-                            )
+                            ),
+                            Center(
+                              child: InkWell(
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade100,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Route route = MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        BlocProvider(
+                                      create: (BuildContext context) =>
+                                          FORGOT_PASSWORD_BP
+                                              .ForgotPasswordBloc()
+                                            ..add(
+                                              FORGOT_PASSWORD_BP
+                                                  .LoadPageEvent(),
+                                            ),
+                                      child: FORGOT_PASSWORD_BP
+                                          .ForgotPasswordPage(),
+                                    ),
+                                  );
+                                  Navigator.push(context, route);
+                                },
+                              ),
+                            ),
                           ],
                         ),
                       );

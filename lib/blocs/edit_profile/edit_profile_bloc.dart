@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
@@ -19,7 +19,7 @@ part 'edit_profile_view.dart';
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   EditProfileBloc() : super(EditProfileInitial());
 
-  UserModel _currentUser;
+  late UserModel _currentUser;
 
   @override
   Stream<EditProfileState> mapEventToState(
@@ -41,7 +41,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         final String username = event.username;
 
         await locator<UserService>().updateUser(
-          uid: _currentUser.uid,
+          uid: _currentUser.uid!,
           data: {
             'username': username,
             'modified': DateTime.now(),

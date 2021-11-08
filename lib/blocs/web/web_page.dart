@@ -7,11 +7,9 @@ class WebPage extends StatefulWidget {
 
 class WebPageState extends State<WebPage> implements WebBlocDelegate {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  WebBloc _webBloc;
   @override
   void initState() {
-    _webBloc = BlocProvider.of<WebBloc>(context);
-    _webBloc.setDelegate(delegate: this);
+    context.read<WebBloc>().setDelegate(delegate: this);
     super.initState();
   }
 
@@ -95,7 +93,7 @@ class WebPageState extends State<WebPage> implements WebBlocDelegate {
                                     ),
                                     title: Text(user.username),
                                     subtitle: Text(
-                                        '${timeago.format(user.created, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(user.created)}'),
+                                        '${timeago.format(user.created!, allowFromNow: true)} on ${DateFormat('MMM dd, yyyy').format(user.created!)}'),
                                   ),
                                 ),
                               );
@@ -159,7 +157,7 @@ class WebPageState extends State<WebPage> implements WebBlocDelegate {
 
   @override
   void showMessage({
-    @required String message,
+    required String message,
   }) {
     locator<ModalService>().showInSnackBar(context: context, message: message);
   }

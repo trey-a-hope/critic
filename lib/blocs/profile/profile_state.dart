@@ -13,7 +13,7 @@ class LoadedState extends ProfileState {
   final UserModel currentUser;
 
   LoadedState({
-    @required this.currentUser,
+    required this.currentUser,
   });
 
   @override
@@ -26,7 +26,7 @@ class ErrorState extends ProfileState {
   final dynamic error;
 
   ErrorState({
-    @required this.error,
+    required this.error,
   });
 
   @override

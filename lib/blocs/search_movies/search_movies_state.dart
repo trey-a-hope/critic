@@ -15,7 +15,7 @@ class SearchMoviesStateSuccess extends SearchMoviesState {
   final List<SearchMoviesResultItemModel> movies;
 
   const SearchMoviesStateSuccess({
-    @required this.movies,
+    required this.movies,
   });
 
   @override
@@ -29,7 +29,7 @@ class SearchMoviesStateError extends SearchMoviesState {
   final dynamic error;
 
   const SearchMoviesStateError({
-    @required this.error,
+    required this.error,
   });
 
   @override

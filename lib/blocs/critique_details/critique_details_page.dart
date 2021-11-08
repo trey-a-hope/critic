@@ -7,14 +7,14 @@ class CritiqueDetailsPage extends StatefulWidget {
 
 class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     implements CritiqueDetailsBlocDelegate {
-  CritiqueDetailsBloc _critiqueDetailsBloc;
+  //  _critiqueDetailsBloc;
 
   final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
-    _critiqueDetailsBloc = BlocProvider.of<CritiqueDetailsBloc>(context);
-    _critiqueDetailsBloc.setDelegate(delegate: this);
+    // _critiqueDetailsBloc = BlocProvider.of<CritiqueDetailsBloc>(context);
+    context.read<CritiqueDetailsBloc>().setDelegate(delegate: this);
     super.initState();
   }
 
@@ -24,7 +24,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
   }
 
   Widget _buildTitle({
-    @required String title,
+    required String title,
   }) {
     return Padding(
       padding: EdgeInsets.all(20),
@@ -62,17 +62,17 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                 if (currentUser.uid == critique.uid) ...[
                   IconButton(
                     onPressed: () async {
-                      final bool confirm = await locator<ModalService>()
+                      final bool? confirm = await locator<ModalService>()
                           .showConfirmation(
                               context: context,
                               title: 'Delete Critique',
                               message: 'Are you sure?');
 
-                      if (!confirm) return;
+                      if (confirm == null || !confirm) return;
 
-                      _critiqueDetailsBloc.add(
-                        DeleteCritiqueEvent(),
-                      );
+                      context.read<CritiqueDetailsBloc>().add(
+                            DeleteCritiqueEvent(),
+                          );
                     },
                     icon: Icon(
                       Icons.delete,
@@ -83,17 +83,18 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                 if (currentUser.uid != critique.uid) ...[
                   IconButton(
                     onPressed: () async {
-                      bool confirm = await locator<ModalService>().showConfirmation(
-                          context: context,
-                          title: 'Report Critique',
-                          message:
-                              'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
+                      bool? confirm = await locator<ModalService>()
+                          .showConfirmation(
+                              context: context,
+                              title: 'Report Critique',
+                              message:
+                                  'If this material was abusive, disrespectful, or uncomfortable, let us know please. This post will become flagged and removed from your timeline.');
 
-                      if (!confirm) return;
+                      if (confirm == null || !confirm) return;
 
-                      _critiqueDetailsBloc.add(
-                        ReportCritiqueEvent(),
-                      );
+                      context.read<CritiqueDetailsBloc>().add(
+                            ReportCritiqueEvent(),
+                          );
                     },
                     icon: Icon(
                       Icons.report,
@@ -104,13 +105,13 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                 IconButton(
                   onPressed: () {
                     if (isLiked) {
-                      _critiqueDetailsBloc.add(
-                        UnlikeCritiqueEvent(),
-                      );
+                      context.read<CritiqueDetailsBloc>().add(
+                            UnlikeCritiqueEvent(),
+                          );
                     } else {
-                      _critiqueDetailsBloc.add(
-                        LikeCritiqueEvent(),
-                      );
+                      context.read<CritiqueDetailsBloc>().add(
+                            LikeCritiqueEvent(),
+                          );
                     }
                   },
                   icon: Icon(
@@ -134,7 +135,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                           child: InkWell(
                             onTap: () async {},
                             child: CachedNetworkImage(
-                              imageUrl: '${critique.movie.poster}',
+                              imageUrl: '${critique.movie!.poster}',
                               imageBuilder: (context, imageProvider) =>
                                   Container(
                                 decoration: BoxDecoration(
@@ -171,31 +172,39 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                                 Spacer(),
-                                RaisedButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.red.shade900),
+                                    textStyle: MaterialStateProperty.all(
+                                      TextStyle(color: Colors.white),
                                     ),
-                                    color: Colors.red.shade900,
-                                    textColor: Colors.white,
-                                    child: Text('View Details'),
-                                    onPressed: () async {
-                                      Route route = MaterialPageRoute(
-                                        builder: (context) => BlocProvider(
-                                          create: (context) =>
-                                              CREATE_CRITIQUE_BP
-                                                  .CreateCritiqueBloc(
-                                            movie: critique.movie,
-                                          )..add(
-                                                  CREATE_CRITIQUE_BP
-                                                      .LoadPageEvent(),
-                                                ),
-                                          child: CREATE_CRITIQUE_BP
-                                              .CreateCritiquePage(),
-                                        ),
-                                      );
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Text('View Details'),
+                                  onPressed: () {
+                                    Route route = MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => CREATE_CRITIQUE_BP
+                                            .CreateCritiqueBloc(
+                                          movie: critique.movie,
+                                        )..add(
+                                            CREATE_CRITIQUE_BP.LoadPageEvent(),
+                                          ),
+                                        child: CREATE_CRITIQUE_BP
+                                            .CreateCritiquePage(),
+                                      ),
+                                    );
 
-                                      Navigator.push(context, route);
-                                    })
+                                    Navigator.push(context, route);
+                                  },
+                                ),
                               ],
                             ),
                             margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -303,7 +312,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                   for (int i = 0; i < critique.comments.length; i++) ...[
                     ListTile(
                       leading: CachedNetworkImage(
-                        imageUrl: '${critique.comments[i].user.imgUrl}',
+                        imageUrl: '${critique.comments[i].user!.imgUrl}',
                         imageBuilder: (context, imageProvider) => CircleAvatar(
                           backgroundImage: imageProvider,
                         ),
@@ -316,11 +325,11 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                         style: Theme.of(context).textTheme.headline4,
                       ),
                       subtitle: Text(
-                        '${critique.comments[i].user.username}',
+                        '${critique.comments[i].user!.username}',
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       trailing: Text(
-                        '${timeago.format(critique.comments[i].created, allowFromNow: true)}',
+                        '${timeago.format(critique.comments[i].created!, allowFromNow: true)}',
                         style: Theme.of(context).textTheme.headline6,
                       ),
                     )
@@ -329,56 +338,67 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                     padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextFormField(
                       textCapitalization: TextCapitalization.sentences,
-                      cursorColor: Theme.of(context).textTheme.headline4.color,
+                      cursorColor: Theme.of(context).textTheme.headline4!.color,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: _commentController,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       validator: locator<ValidationService>().isEmpty,
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline4.color,
+                        color: Theme.of(context).textTheme.headline4!.color,
                       ),
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
                           errorStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                           counterStyle: TextStyle(
                               color:
-                                  Theme.of(context).textTheme.headline6.color),
+                                  Theme.of(context).textTheme.headline6!.color),
                           hintText:
                               'Leave a comment about ${critiqueUser.username}\'s critique...',
                           hintStyle: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline4.color)),
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .headline4!
+                                  .color)),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                     ),
-                    child: RaisedButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.red.shade900),
+                        textStyle: MaterialStateProperty.all(
+                          TextStyle(color: Colors.white),
                         ),
-                        color: Colors.red.shade900,
-                        textColor: Colors.white,
-                        child: Text('Post Comment'),
-                        onPressed: () async {
-                          final bool confirm = await locator<ModalService>()
-                              .showConfirmation(
-                                  context: context,
-                                  title: 'Post Comment',
-                                  message: 'Are you sure?');
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                      child: Text('Post Comment'),
+                      onPressed: () async {
+                        final bool? confirm = await locator<ModalService>()
+                            .showConfirmation(
+                                context: context,
+                                title: 'Post Comment',
+                                message: 'Are you sure?');
 
-                          if (!confirm) return;
+                        if (confirm == null || !confirm) return;
 
-                          context.read<CritiqueDetailsBloc>().add(
-                                PostCommentEvent(
-                                    comment: _commentController.text),
-                              );
-                        }),
+                        context.read<CritiqueDetailsBloc>().add(
+                              PostCommentEvent(
+                                  comment: _commentController.text),
+                            );
+                      },
+                    ),
                   ),
                   Divider(),
                   _buildTitle(title: 'Other Critiques'),
@@ -434,8 +454,8 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
 
   @override
   void showMessage({
-    @required String title,
-    @required String message,
+    required String title,
+    required String message,
   }) {
     locator<ModalService>().showAlert(
       context: context,

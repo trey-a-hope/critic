@@ -35,7 +35,7 @@ class SuggestionsViewState extends State<SuggestionsView> {
               BlocConsumer<SuggestionsBloc, SuggestionsState>(
                 listener: (context, state) {
                   if (state is SuggestionsSuccess) {
-                    _formKey.currentState.reset();
+                    _formKey.currentState!.reset();
                     _messageController.clear();
                     locator<ModalService>().showInSnackBar(
                         context: context, message: 'Suggestion submitted.');
@@ -53,14 +53,14 @@ class SuggestionsViewState extends State<SuggestionsView> {
                       child: TextFormField(
                         textCapitalization: TextCapitalization.sentences,
                         cursorColor:
-                            Theme.of(context).textTheme.headline4.color,
+                            Theme.of(context).textTheme.headline4!.color,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _messageController,
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.done,
                         validator: locator<ValidationService>().isEmpty,
                         style: TextStyle(
-                          color: Theme.of(context).textTheme.headline4.color,
+                          color: Theme.of(context).textTheme.headline4!.color,
                         ),
                         maxLines: 5,
                         maxLength: CRITIQUE_CHAR_LIMIT,
@@ -68,18 +68,18 @@ class SuggestionsViewState extends State<SuggestionsView> {
                             errorStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline6
+                                    .headline6!
                                     .color),
                             counterStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline6
+                                    .headline6!
                                     .color),
                             hintText: 'How can we improve the app?',
                             hintStyle: TextStyle(
                                 color: Theme.of(context)
                                     .textTheme
-                                    .headline4
+                                    .headline4!
                                     .color)),
                       ),
                     );
@@ -102,15 +102,18 @@ class SuggestionsViewState extends State<SuggestionsView> {
               ),
               Spacer(),
               FullWidthButton(
-                buttonColor: Theme.of(context).buttonColor,
+                buttonColor: Theme.of(context).canvasColor,
                 textColor: Colors.white,
                 onPressed: () async {
-                  if (!_formKey.currentState.validate()) return;
+                  if (!_formKey.currentState!.validate()) return;
 
-                  if (!(await locator<ModalService>().showConfirmation(
-                      context: context,
-                      title: 'Submit',
-                      message: 'Are you sure?'))) return;
+                  bool? confirm = (await locator<ModalService>()
+                      .showConfirmation(
+                          context: context,
+                          title: 'Submit',
+                          message: 'Are you sure?'));
+
+                  if (confirm == null || !confirm) return;
 
                   context.read<SuggestionsBloc>().add(
                         SubmitEvent(

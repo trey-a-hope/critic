@@ -1,7 +1,7 @@
 import 'package:critic/Constants.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/recommendation_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
@@ -15,25 +15,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:flutter/foundation.dart';
 
 part 'recommendations_event.dart';
 part 'recommendations_state.dart';
 part 'recommendations_page.dart';
 
 abstract class RecommendationsBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({required String message});
 }
 
 class RecommendationsBloc
     extends Bloc<RecommendationsEvent, RecommendationsState> {
-  RecommendationsBloc() : super(null);
-  RecommendationsBlocDelegate _recommendationsBlocDelegate;
-  UserModel currentUser;
+  RecommendationsBloc() : super(InitialState());
+  RecommendationsBlocDelegate? _recommendationsBlocDelegate;
+  late UserModel currentUser;
 
-  DocumentSnapshot startAfterDocument;
+  DocumentSnapshot? startAfterDocument;
 
-  void setDelegate({@required RecommendationsBlocDelegate delegate}) {
+  void setDelegate({required RecommendationsBlocDelegate delegate}) {
     this._recommendationsBlocDelegate = delegate;
   }
 
@@ -48,12 +47,12 @@ class RecommendationsBloc
 
         Stream<QuerySnapshot> recommendationsStream =
             await locator<RecommendationsService>()
-                .streamRecommendations(uid: currentUser.uid);
+                .streamRecommendations(uid: currentUser.uid!);
 
         recommendationsStream.listen(
           (QuerySnapshot event) {
             List<RecommendationModel> recommendations = event.docs
-                .map((doc) => RecommendationModel.fromDoc(ds: doc))
+                .map((doc) => RecommendationModel.fromDoc(data: doc))
                 .toList();
 
             add(
@@ -62,8 +61,8 @@ class RecommendationsBloc
           },
         );
       } catch (error) {
-        _recommendationsBlocDelegate.showMessage(
-            message: 'Error: ${error.toString()}');
+        _recommendationsBlocDelegate!
+            .showMessage(message: 'Error: ${error.toString()}');
       }
     }
 
@@ -93,7 +92,7 @@ class RecommendationsBloc
     if (event is DeleteRecommendationEvent) {
       final String recommendationID = event.recommendationID;
       await locator<RecommendationsService>().deleteRecommendation(
-          sendeeUID: currentUser.uid, recommendationID: recommendationID);
+          sendeeUID: currentUser.uid!, recommendationID: recommendationID);
     }
   }
 }

@@ -15,7 +15,7 @@ class LoadPageEvent extends ProfileEvent {
 
 class UploadImageEvent extends ProfileEvent {
   final ImageSource imageSource;
-  UploadImageEvent({@required this.imageSource});
+  UploadImageEvent({required this.imageSource});
 
   List<Object> get props => [imageSource];
 }

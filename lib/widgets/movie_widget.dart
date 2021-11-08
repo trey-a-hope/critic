@@ -6,8 +6,8 @@ import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
 
 class MovieWidget extends StatefulWidget {
   const MovieWidget({
-    Key key,
-    @required this.movie,
+    Key? key,
+    required this.movie,
   }) : super(key: key);
 
   final MovieModel movie;
@@ -20,7 +20,7 @@ class MovieWidget extends StatefulWidget {
 
 class _MovieWidgetState extends State<MovieWidget> {
   _MovieWidgetState({
-    @required this.movie,
+    required this.movie,
   });
 
   final MovieModel movie;

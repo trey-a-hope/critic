@@ -17,7 +17,7 @@ class SearchUsersStateFoundResults extends SearchUsersState {
   final List<UserModel> users;
 
   const SearchUsersStateFoundResults({
-    @required this.users,
+    required this.users,
   });
 
   @override
@@ -31,7 +31,7 @@ class SearchUsersStateError extends SearchUsersState {
   final dynamic error;
 
   const SearchUsersStateError({
-    @required this.error,
+    required this.error,
   });
 
   @override

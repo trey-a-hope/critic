@@ -9,14 +9,16 @@ abstract class LoginState extends Equatable {
 
 class LoginInitial extends LoginState {
   final bool passwordVisible;
-
+  final bool rememberMe;
   LoginInitial({
-    @required this.passwordVisible,
+    required this.passwordVisible,
+    required this.rememberMe,
   });
 
   @override
   List<Object> get props => [
         passwordVisible,
+        rememberMe,
       ];
 }
 
@@ -28,7 +30,7 @@ class LoginError extends LoginState {
   final dynamic error;
 
   LoginError({
-    @required this.error,
+    required this.error,
   });
 
   @override

@@ -13,7 +13,7 @@ class SubmitEvent extends SuggestionsEvent {
   final String message;
 
   SubmitEvent({
-    @required this.message,
+    required this.message,
   });
 
   List<Object> get props => [

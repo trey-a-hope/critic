@@ -2,12 +2,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:critic/Constants.dart';
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
-import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:critic/widgets/small_critique_view.dart';
@@ -27,7 +25,7 @@ part 'home_page.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial());
 
-  UserModel _currentUser;
+  late UserModel _currentUser;
 
   @override
   Stream<HomeState> mapEventToState(
@@ -39,8 +37,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        final List<MovieModel> popularMovies =
-            await locator<MovieService>().getPopularMovies();
+        // final List<MovieModel> popularMovies =
+        //     await locator<MovieService>().getPopularMovies();
 
         final List<UserModel> mostRecentUsers =
             await locator<UserService>().retrieveUsers(
@@ -59,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         yield HomeLoadedState(
           currentUser: _currentUser,
           mostRecentUsers: mostRecentUsers,
-          popularMovies: popularMovies,
+          // popularMovies: popularMovies,
           mostRecentCritiques: mostRecentCritiques,
           // critiqueCount: critiqueCount,
           userCount: userCount,

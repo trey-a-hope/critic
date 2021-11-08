@@ -1,4 +1,4 @@
-import 'package:critic/models/user_Model.dart';
+import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/user_service.dart';
@@ -15,14 +15,14 @@ part 'web_state.dart';
 part 'web_page.dart';
 
 abstract class WebBlocDelegate {
-  void showMessage({@required String message});
+  void showMessage({required String message});
 }
 
 class WebBloc extends Bloc<WebEvent, WebState> {
-  WebBloc() : super(null);
-  WebBlocDelegate _webBlocDelegate;
+  WebBloc() : super(InitialState());
+  WebBlocDelegate? _webBlocDelegate;
 
-  void setDelegate({@required WebBlocDelegate delegate}) {
+  void setDelegate({required WebBlocDelegate delegate}) {
     this._webBlocDelegate = delegate;
   }
 
