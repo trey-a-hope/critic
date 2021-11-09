@@ -7,13 +7,10 @@ class CritiqueDetailsPage extends StatefulWidget {
 
 class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
     implements CritiqueDetailsBlocDelegate {
-  //  _critiqueDetailsBloc;
-
   final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
-    // _critiqueDetailsBloc = BlocProvider.of<CritiqueDetailsBloc>(context);
     context.read<CritiqueDetailsBloc>().setDelegate(delegate: this);
     super.initState();
   }

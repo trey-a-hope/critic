@@ -35,33 +35,33 @@ class SettingsViewState extends State<SettingsView> {
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              'Account Settings'.toUpperCase(),
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          ),
-          ListTile(
-            title: Text(
-              'Dark/Light Mode',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            trailing: DayNightSwitcher(
-              isDarkModeEnabled: this.myAppState.isDarkModeEnabled,
-              onStateChanged: (bool isDarkModeEnabled) async {
-                print('${this.myAppState.isDarkModeEnabled}');
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-
-                prefs.setBool('isDarkModeEnabled', isDarkModeEnabled);
-
-                this.myAppState.setState(() {
-                  this.myAppState.isDarkModeEnabled = isDarkModeEnabled;
-                });
-              },
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.all(10),
+          //   child: Text(
+          //     'Account Settings'.toUpperCase(),
+          //     style: Theme.of(context).textTheme.headline5,
+          //   ),
+          // ),
+          // ListTile(
+          //   title: Text(
+          //     'Dark/Light Mode',
+          //     style: Theme.of(context).textTheme.headline4,
+          //   ),
+          //   trailing: DayNightSwitcher(
+          //     isDarkModeEnabled: this.myAppState.isDarkModeEnabled,
+          //     onStateChanged: (bool isDarkModeEnabled) async {
+          //       print('${this.myAppState.isDarkModeEnabled}');
+          //       final SharedPreferences prefs =
+          //           await SharedPreferences.getInstance();
+          //
+          //       prefs.setBool('isDarkModeEnabled', isDarkModeEnabled);
+          //
+          //       this.myAppState.setState(() {
+          //         this.myAppState.isDarkModeEnabled = isDarkModeEnabled;
+          //       });
+          //     },
+          //   ),
+          // ),
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(

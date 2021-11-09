@@ -40,8 +40,8 @@ void main() async {
     buildNumber = packageInfo.buildNumber;
   }
 
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final bool isDarkModeEnabled = prefs.getBool('isDarkModeEnabled') ?? false;
+  // final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // final bool isDarkModeEnabled = prefs.getBool('isDarkModeEnabled') ?? false;
 
   //Initialize Hive.
   await Hive.initFlutter();
@@ -51,7 +51,7 @@ void main() async {
 
   runApp(
     MyApp(
-      isDarkModeEnabled: isDarkModeEnabled,
+      isDarkModeEnabled: true, //TODO: Add option for light mode later.
       isWeb: false,
     ),
   );

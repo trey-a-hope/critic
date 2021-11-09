@@ -56,7 +56,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
                 username: 'John Doe',
                 critiqueCount: null,
                 fcmToken: null,
-                watchListCount: null,
+                // watchListCount: null,
               ),
             );
           default:

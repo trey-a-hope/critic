@@ -53,7 +53,7 @@ class _CritiqueViewState extends State<CritiqueView> {
                 username: 'John Doe',
                 critiqueCount: null,
                 fcmToken: null,
-                watchListCount: null,
+                // watchListCount: null,
               ),
             );
           default:
@@ -122,6 +122,14 @@ class _CritiqueViewState extends State<CritiqueView> {
         //     width: double.infinity,
         //   ),
         // ),
+        trailing: CachedNetworkImage(
+          imageUrl: '${widget.critique.movie!.poster}',
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundImage: imageProvider,
+          ),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
         title: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

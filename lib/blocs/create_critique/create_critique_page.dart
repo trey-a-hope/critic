@@ -11,8 +11,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // CreateCritiqueBloc _createCritiqueBloc;
-
   double _rating = 0;
 
   @override
@@ -20,9 +18,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
     super.initState();
 
     context.read<CreateCritiqueBloc>().setDelegate(delegate: this);
-
-    // _createCritiqueBloc = BlocProvider.of<CreateCritiqueBloc>(context);
-    // _createCritiqueBloc.setDelegate(delegate: this);
   }
 
   Widget _buildBottomSheetForm() {

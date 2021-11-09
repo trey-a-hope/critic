@@ -62,9 +62,9 @@ class CritiqueDetailsBloc
   @override
   Stream<CritiqueDetailsState> mapEventToState(
       CritiqueDetailsEvent event) async* {
-    if (event is LoadPageEvent) {
-      yield LoadingState();
+    yield LoadingState();
 
+    if (event is LoadPageEvent) {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
