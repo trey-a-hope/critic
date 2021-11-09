@@ -131,7 +131,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                       builder: (context) => BlocProvider(
                         create: (context) =>
                             CREATE_CRITIQUE_BP.CreateCritiqueBloc(
-                          movie: widget.recommendation.movie,
+                          movie: widget.recommendation.movie!,
                         )..add(
                                 CREATE_CRITIQUE_BP.LoadPageEvent(),
                               ),

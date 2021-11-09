@@ -28,12 +28,9 @@ abstract class CreateCritiqueBlocDelegate {
 
 class CreateCritiqueBloc
     extends Bloc<CreateCritiqueEvent, CreateCritiqueState> {
-  MovieModel? movie;
+  CreateCritiqueBloc({required this.movie}) : super(InitialState());
 
-  CreateCritiqueBloc({required this.movie}) : super(InitialState()) {
-    movie = null;
-  }
-
+  MovieModel movie;
   CreateCritiqueBlocDelegate? _createCritiqueBlocDelegate;
   late UserModel _currentUser;
 
@@ -56,16 +53,16 @@ class CreateCritiqueBloc
 
         watchListHasMovie = await locator<UserService>().watchListHasMovie(
           uid: _currentUser.uid!,
-          imdbID: movie!.imdbID,
+          imdbID: movie.imdbID,
         );
 
         _otherCritiques = await locator<CritiqueService>().listSimilar(
           id: null,
-          imdbID: movie!.imdbID,
+          imdbID: movie.imdbID,
         );
 
         yield LoadedState(
-          movie: movie!,
+          movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
@@ -79,12 +76,12 @@ class CreateCritiqueBloc
     if (event is AddMovieToWatchlistEvent) {
       try {
         await locator<UserService>()
-            .addMovieToWatchList(uid: _currentUser.uid!, movie: movie!);
+            .addMovieToWatchList(uid: _currentUser.uid!, movie: movie);
 
         watchListHasMovie = true;
 
         yield LoadedState(
-          movie: movie!,
+          movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
@@ -100,13 +97,13 @@ class CreateCritiqueBloc
       try {
         await locator<UserService>().removeMovieFromWatchList(
           uid: _currentUser.uid!,
-          imdbID: movie!.imdbID,
+          imdbID: movie.imdbID,
         );
 
         watchListHasMovie = false;
 
         yield LoadedState(
-          movie: movie!,
+          movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
@@ -128,9 +125,9 @@ class CreateCritiqueBloc
         CritiqueModel critique = CritiqueModel(
           id: null,
           uid: _currentUser.uid!,
-          imdbID: movie!.imdbID,
+          imdbID: movie.imdbID,
           message: critiqueText,
-          genres: movie!.genre.split(', '),
+          genres: movie.genre.split(', '),
           likes: [],
           rating: rating,
           comments: [],
@@ -146,7 +143,7 @@ class CreateCritiqueBloc
             message: 'Critique added, check it out on the home page.');
 
         yield LoadedState(
-          movie: movie!,
+          movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,
@@ -156,7 +153,7 @@ class CreateCritiqueBloc
             .showMessage(message: 'Error ${error.toString()}!');
 
         yield LoadedState(
-          movie: movie!,
+          movie: movie,
           watchListHasMovie: watchListHasMovie,
           currentUser: _currentUser,
           otherCritiques: _otherCritiques,

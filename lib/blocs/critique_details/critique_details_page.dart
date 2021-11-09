@@ -190,7 +190,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                                       builder: (context) => BlocProvider(
                                         create: (context) => CREATE_CRITIQUE_BP
                                             .CreateCritiqueBloc(
-                                          movie: critique.movie,
+                                          movie: critique.movie!,
                                         )..add(
                                             CREATE_CRITIQUE_BP.LoadPageEvent(),
                                           ),
