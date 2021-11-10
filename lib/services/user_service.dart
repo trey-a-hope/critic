@@ -48,7 +48,7 @@ abstract class IUserService {
     required DocumentSnapshot? startAfterDocument,
   });
 
-  Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist({
+  Future<List<MovieModel>> listMoviesFromWatchList({
     required String uid,
   });
 
@@ -370,15 +370,25 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<Stream<QuerySnapshot>> streamMoviesFromWatchlist(
-      {required String uid}) async {
+  Future<List<MovieModel>> listMoviesFromWatchList({
+    required String uid,
+  }) async {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
       final CollectionReference watchListColRef =
           userDocRef.collection('watchList');
+      Query query = watchListColRef.orderBy(
+        'addedToWatchList',
+        descending: true,
+      );
 
-      return watchListColRef.snapshots();
+      List<MovieModel> movies = (await query.get())
+          .docs
+          .map((e) => MovieModel.fromDoc(data: e))
+          .toList();
+
+      return movies;
     } catch (e) {
       throw Exception(
         e.toString(),

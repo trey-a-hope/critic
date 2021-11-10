@@ -14,7 +14,6 @@ import 'package:critic/blocs/create_recommendation/create_recommendation_bloc.da
     as CREATE_RECOMMENDATION_BP;
 import 'package:critic/blocs/edit_profile/edit_profile_bloc.dart'
     as EDIT_PROFILE_BP;
-import 'package:critic/blocs/watch_list/watch_list_bloc.dart' as WATCHLIST_BP;
 import 'package:critic/blocs/recommendations/recommendations_bloc.dart'
     as RECOMMENDATIONS_BP;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -372,20 +371,6 @@ class EntryPageState extends State<EntryPage> {
             },
           ),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.movie),
-              onPressed: () {
-                Route route = MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => WATCHLIST_BP.WatchlistBloc()
-                      ..add(WATCHLIST_BP.LoadPageEvent()),
-                    child: WATCHLIST_BP.WatchlistPage(),
-                  ),
-                );
-
-                Navigator.push(context, route);
-              },
-            ),
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {

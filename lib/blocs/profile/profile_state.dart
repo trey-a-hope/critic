@@ -11,14 +11,17 @@ class LoadingState extends ProfileState {}
 
 class LoadedState extends ProfileState {
   final UserModel currentUser;
+  final List<MovieModel> movies;
 
   LoadedState({
     required this.currentUser,
+    required this.movies,
   });
 
   @override
   List<Object> get props => [
         currentUser,
+        movies,
       ];
 }
 

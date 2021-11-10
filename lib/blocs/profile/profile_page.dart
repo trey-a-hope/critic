@@ -28,160 +28,252 @@ class ProfilePageState extends State<ProfilePage> {
 
         if (state is LoadedState) {
           final UserModel currentUser = state.currentUser;
+          final List<MovieModel> movies = state.movies;
 
           return Scaffold(
             backgroundColor: Theme.of(context).canvasColor,
-            body: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  SliverAppBar(
-                    backgroundColor: colorNavy,
-                    expandedHeight: 200.0,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      centerTitle: true,
-                      title: Text(
-                        '${currentUser.username}',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      background: Container(
-                        height: 200,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.3),
-                                BlendMode.darken),
-                            image: AssetImage('assets/images/theater.jpeg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: <Widget>[
-                                CachedNetworkImage(
-                                  imageUrl: '${currentUser.imgUrl}',
-                                  imageBuilder: (context, imageProvider) =>
-                                      GFAvatar(
-                                    radius: 40,
-                                    backgroundImage: imageProvider,
-                                  ),
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
-                                Positioned(
-                                  bottom: 1,
-                                  right: 1,
-                                  child: CircleAvatar(
-                                    radius: 15,
-                                    backgroundColor: Colors.red,
-                                    child: Center(
-                                      child: IconButton(
-                                        icon: Icon(
-                                          MdiIcons.camera,
-                                          size: 15,
-                                          color: Colors.white,
+            body: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                body: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverAppBar(
+                        backgroundColor: colorNavy,
+                        expandedHeight: 200.0,
+                        floating: false,
+                        pinned: true,
+                        flexibleSpace: FlexibleSpaceBar(
+                          centerTitle: true,
+                          background: Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                colorFilter: ColorFilter.mode(
+                                    Colors.black.withOpacity(0.5),
+                                    BlendMode.darken),
+                                image: AssetImage('assets/images/theater.jpeg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Stack(
+                                      children: <Widget>[
+                                        CachedNetworkImage(
+                                          imageUrl: '${currentUser.imgUrl}',
+                                          imageBuilder:
+                                              (context, imageProvider) =>
+                                                  GFAvatar(
+                                            radius: 40,
+                                            backgroundImage: imageProvider,
+                                          ),
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
                                         ),
-                                        onPressed: () {
-                                          showSelectImageDialog();
-                                        },
+                                        Positioned(
+                                          bottom: 1,
+                                          right: 1,
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: Colors.red,
+                                            child: Center(
+                                              child: IconButton(
+                                                icon: Icon(
+                                                  MdiIcons.camera,
+                                                  size: 15,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () {
+                                                  showSelectImageDialog();
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Text(
+                                      '${currentUser.username}',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                )
+                                  ],
+                                ),
                               ],
                             ),
-                            SizedBox(height: 10),
-                            SizedBox(
-                              height: 20,
-                            )
+                          ),
+                        ),
+                        bottom: TabBar(
+                          isScrollable: true,
+                          tabs: [
+                            Tab(
+                              child: Text(
+                                'My Critiques',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Tab(
+                              child: Text(
+                                'Watchlist',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                ];
-              },
-              body: RefreshIndicator(
-                child: PaginationView<CritiqueModel>(
-                  initialLoader: Spinner(),
-                  bottomLoader: Spinner(),
-                  itemBuilder: (BuildContext context, CritiqueModel critique,
-                          int index) =>
-                      CritiqueView(
-                    critique: critique,
-                    currentUser: currentUser,
-                  ),
-                  pageFetch: (int offset) async {
-                    List<CritiqueModel> critiques =
-                        await locator<CritiqueService>().listByUser(
-                      uid: currentUser.uid!,
-                      limit: PAGE_FETCH_LIMIT,
-                      lastID: _lastID,
-                    );
-
-                    if (critiques.isEmpty) return critiques;
-
-                    _lastID = critiques[0].id!;
-
-                    return critiques;
+                    ];
                   },
-                  onError: (dynamic error) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Error',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                  body: TabBarView(
+                    children: <Widget>[
+                      RefreshIndicator(
+                        child: PaginationView<CritiqueModel>(
+                          initialLoader: Spinner(),
+                          bottomLoader: Spinner(),
+                          itemBuilder: (BuildContext context,
+                                  CritiqueModel critique, int index) =>
+                              CritiqueView(
+                            critique: critique,
+                            currentUser: currentUser,
+                          ),
+                          pageFetch: (int offset) async {
+                            List<CritiqueModel> critiques =
+                                await locator<CritiqueService>().listByUser(
+                              uid: currentUser.uid!,
+                              limit: PAGE_FETCH_LIMIT,
+                              lastID: _lastID,
+                            );
+
+                            if (critiques.isEmpty) return critiques;
+
+                            _lastID = critiques[0].id!;
+
+                            return critiques;
+                          },
+                          onError: (dynamic error) => Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error,
+                                  size: 100,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  'Error',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  error.toString(),
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          ),
+                          onEmpty: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  MdiIcons.movieEdit,
+                                  size: 100,
+                                  color: Colors.grey,
+                                ),
+                                Text(
+                                  '$MESSAGE_EMPTY_CRITIQUES',
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        Text(
-                          error.toString(),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                  onEmpty: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          MdiIcons.movieEdit,
-                          size: 100,
-                          color: Colors.grey,
+                        onRefresh: () async {
+                          context.read<ProfileBloc>().add(
+                                LoadPageEvent(),
+                              );
+
+                          return;
+                        },
+                      ),
+                      RefreshIndicator(
+                        child: ListView.builder(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: movies.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final MovieModel movie = movies[index];
+                            return ListTile(
+                              onTap: () async {
+                                final MovieModel movieModel =
+                                    await locator<MovieService>()
+                                        .getMovieByID(id: movie.imdbID);
+
+                                Route route = MaterialPageRoute(
+                                  builder: (context) => BlocProvider(
+                                    create: (context) =>
+                                        CREATE_CRITIQUE_BP.CreateCritiqueBloc(
+                                            movie: movieModel)
+                                          ..add(
+                                            CREATE_CRITIQUE_BP.LoadPageEvent(),
+                                          ),
+                                    child:
+                                        CREATE_CRITIQUE_BP.CreateCritiquePage(),
+                                  ),
+                                );
+
+                                Navigator.push(context, route);
+                              },
+                              title: Text(
+                                '${movie.title}',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              subtitle: Text(
+                                '${timeago.format(movie.addedToWatchList!, allowFromNow: true)}',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                              trailing: Icon(
+                                Icons.chevron_right,
+                                color: Theme.of(context).iconTheme.color,
+                              ),
+                              leading: CachedNetworkImage(
+                                imageUrl: '${movie.poster}',
+                                imageBuilder: (context, imageProvider) => Image(
+                                  image: imageProvider,
+                                  height: 100,
+                                ),
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                              ),
+                            );
+                          },
                         ),
-                        Text(
-                          '$MESSAGE_EMPTY_CRITIQUES',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
+                        onRefresh: () async {
+                          context.read<ProfileBloc>().add(
+                                LoadPageEvent(),
+                              );
+
+                          return;
+                        },
+                      )
+                    ],
                   ),
                 ),
-                onRefresh: () async {
-                  context.read<ProfileBloc>().add(
-                        LoadPageEvent(),
-                      );
-
-                  return;
-                },
               ),
             ),
           );
