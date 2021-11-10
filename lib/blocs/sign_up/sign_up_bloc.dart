@@ -10,11 +10,11 @@ import 'package:critic/widgets/full_width_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/pages/terms_service_view.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../Constants.dart';
+import '../../constants.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_page.dart';

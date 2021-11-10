@@ -13,7 +13,7 @@ import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pagination_view/pagination_view.dart';
-import '../../Constants.dart';
+import '../../constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 part 'explore_page.dart';

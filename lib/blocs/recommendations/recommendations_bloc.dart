@@ -1,4 +1,4 @@
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/recommendation_model.dart';
 import 'package:critic/models/user_model.dart';

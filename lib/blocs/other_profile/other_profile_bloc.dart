@@ -11,7 +11,7 @@ import 'package:critic/widgets/critique_view.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/models/critique_model.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';

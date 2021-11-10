@@ -1,4 +1,4 @@
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:flutter/material.dart';
 
 class ContactPage extends StatelessWidget {
@@ -38,7 +38,8 @@ class ContactPage extends StatelessWidget {
           padding: EdgeInsets.all(20),
           child: ListView(
             children: <Widget>[
-              Text('Feel free to hit us up anytime with questions, concerns, or comments.',
+              Text(
+                  'Feel free to hit us up anytime with questions, concerns, or comments.',
                   style: Theme.of(context).textTheme.headline5),
               SizedBox(
                 height: 30,

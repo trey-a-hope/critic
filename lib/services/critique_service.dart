@@ -1,4 +1,4 @@
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/models/comment_model.dart';
 import 'package:critic/models/critique_model.dart';

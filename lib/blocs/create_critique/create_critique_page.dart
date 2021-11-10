@@ -46,18 +46,17 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                       maxLines: 5,
                       maxLength: CRITIQUE_CHAR_LIMIT,
                       decoration: InputDecoration(
-                          errorStyle: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline6!.color),
-                          counterStyle: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline6!.color),
-                          hintText: 'What do you think about this movie/show?',
-                          hintStyle: TextStyle(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .headline4!
-                                  .color)),
+                        errorStyle: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.headline6!.color),
+                        counterStyle: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.headline6!.color),
+                        hintText: 'What do you think about this movie/show?',
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.headline4!.color),
+                      ),
                     ),
                   ),
                   Center(
@@ -95,9 +94,6 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.white),
-                          textStyle: MaterialStateProperty.all(
-                            TextStyle(color: Colors.black),
-                          ),
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
@@ -105,7 +101,11 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             ),
                           ),
                         ),
-                        child: Text('Cancel'),
+                        child: Text(
+                          'Cancel',
+                          style:
+                              TextStyle(color: Theme.of(context).canvasColor),
+                        ),
                         onPressed: () {
                           _critiqueController.clear();
                           Navigator.of(context).pop();

@@ -9,7 +9,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/services.dart';
-import '../../Constants.dart';
+import '../../constants.dart';
 
 part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';

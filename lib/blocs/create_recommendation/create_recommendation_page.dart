@@ -105,10 +105,13 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                             ),
                           ),
                           child: Text(
-                              selectedMovie == null
-                                  ? 'Pick Movie'
-                                  : '${selectedMovie.title}\nPick A Different Movie?',
-                              textAlign: TextAlign.center),
+                            selectedMovie == null
+                                ? 'Pick Movie'
+                                : '${selectedMovie.title}\nPick A Different Movie?',
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(color: Theme.of(context).canvasColor),
+                          ),
                           onPressed: () async {
                             Route route = MaterialPageRoute(
                               builder: (context) => BlocProvider(
@@ -186,10 +189,13 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                             ),
                           ),
                           child: Text(
-                              selectedMovie == null
-                                  ? 'Pick Movie'
-                                  : '${selectedMovie.title}\nPick A Different Movie?',
-                              textAlign: TextAlign.center),
+                            selectedMovie == null
+                                ? 'Pick A User'
+                                : '${selectedMovie.title}\nPick A Different User?',
+                            textAlign: TextAlign.center,
+                            style:
+                                TextStyle(color: Theme.of(context).canvasColor),
+                          ),
                           onPressed: () async {
                             Route route = MaterialPageRoute(
                               builder: (context) => BlocProvider(
@@ -253,7 +259,10 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                         ),
                       ),
                     ),
-                    child: Text('Send Recommendation'),
+                    child: Text(
+                      'Send Recommendation',
+                      style: TextStyle(color: Theme.of(context).canvasColor),
+                    ),
                     onPressed: () async {
                       if (selectedUser == null || selectedMovie == null) {
                         return;

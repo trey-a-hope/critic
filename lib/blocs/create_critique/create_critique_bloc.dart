@@ -12,7 +12,7 @@ import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/small_critique_view.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

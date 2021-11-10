@@ -1,4 +1,4 @@
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:flutter/material.dart';
 
 final String fontFamily = 'Montserrat';

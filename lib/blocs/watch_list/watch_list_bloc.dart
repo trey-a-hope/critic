@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
     as CREATE_CRITIQUE_BP;
 import 'package:critic/widgets/Spinner.dart';

@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/blocs/critique_details/critique_details_bloc.dart'
     as CRITIQUE_DETAILS_BP;

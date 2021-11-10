@@ -13,7 +13,7 @@ import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:algolia/algolia.dart';
-import '../../Constants.dart';
+import '../../constants.dart';
 
 part 'search_users_cache.dart';
 part 'search_users_event.dart';

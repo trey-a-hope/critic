@@ -19,7 +19,7 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_stack/image_stack.dart';
-import '../../Constants.dart';
+import '../../constants.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
     as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'

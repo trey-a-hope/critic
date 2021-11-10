@@ -10,7 +10,7 @@ import 'package:critic/services/suggestion_service.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/full_width_button.dart';
 import 'package:equatable/equatable.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

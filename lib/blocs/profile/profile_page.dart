@@ -199,14 +199,14 @@ class ProfilePageState extends State<ProfilePage> {
   iOSBottomSheet() {
     showCupertinoModalPopup(
         context: context,
-        builder: (BuildContext context) {
+        builder: (BuildContext buildContext) {
           return CupertinoActionSheet(
             title: Text('Add Photo'),
             actions: <Widget>[
               CupertinoActionSheetAction(
                 child: Text('Take Photo'),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(buildContext);
                   context.read<ProfileBloc>().add(
                         UploadImageEvent(imageSource: ImageSource.camera),
                       );
@@ -215,7 +215,7 @@ class ProfilePageState extends State<ProfilePage> {
               CupertinoActionSheetAction(
                 child: Text('Choose From Gallery'),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(buildContext);
                   context.read<ProfileBloc>().add(
                         UploadImageEvent(imageSource: ImageSource.gallery),
                       );
@@ -227,7 +227,7 @@ class ProfilePageState extends State<ProfilePage> {
                 'Cancel',
                 style: TextStyle(color: Colors.redAccent),
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(buildContext),
             ),
           );
         });
@@ -235,38 +235,39 @@ class ProfilePageState extends State<ProfilePage> {
 
   androidDialog() {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('Add Photo'),
-            children: <Widget>[
-              SimpleDialogOption(
-                child: Text('Take Photo'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  context.read<ProfileBloc>().add(
-                        UploadImageEvent(imageSource: ImageSource.camera),
-                      );
-                },
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text('Add Photo'),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text('Take Photo'),
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<ProfileBloc>().add(
+                      UploadImageEvent(imageSource: ImageSource.camera),
+                    );
+              },
+            ),
+            SimpleDialogOption(
+              child: Text('Choose From Gallery'),
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<ProfileBloc>().add(
+                      UploadImageEvent(imageSource: ImageSource.gallery),
+                    );
+              },
+            ),
+            SimpleDialogOption(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.redAccent),
               ),
-              SimpleDialogOption(
-                child: Text('Choose From Gallery'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  context.read<ProfileBloc>().add(
-                        UploadImageEvent(imageSource: ImageSource.gallery),
-                      );
-                },
-              ),
-              SimpleDialogOption(
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.redAccent),
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
-            ],
-          );
-        });
+              onPressed: () => Navigator.pop(context),
+            )
+          ],
+        );
+      },
+    );
   }
 }

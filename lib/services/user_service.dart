@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/user_model.dart';
 import 'package:flutter/services.dart';

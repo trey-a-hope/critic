@@ -5,7 +5,7 @@ import 'package:critic/service_locator.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/full_width_button.dart';
 import 'package:equatable/equatable.dart';
-import 'package:critic/Constants.dart';
+import 'package:critic/constants.dart';
 import 'package:critic/blocs/sign_up/sign_up_bloc.dart' as SIGN_UP_BP;
 import 'package:critic/widgets/Spinner.dart';
 import 'package:firebase_auth/firebase_auth.dart';

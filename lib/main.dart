@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Constants.dart';
+import 'constants.dart';
 import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';
@@ -117,12 +117,12 @@ class MyAppState extends State<MyApp> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 screenWidth = MediaQuery.of(context).size.width;
                 screenHeight = MediaQuery.of(context).size.height;
-                return !snapshot.hasData
-                    ? BlocProvider<LoginBloc>(
+                return snapshot.hasData
+                    ? EntryPage(myAppState: this)
+                    : BlocProvider<LoginBloc>(
                         create: (BuildContext context) => LoginBloc(),
                         child: LoginPage(),
-                      )
-                    : EntryPage(myAppState: this);
+                      );
               },
             ),
           );
