@@ -67,18 +67,28 @@ class ProfilePageState extends State<ProfilePage> {
                                   children: [
                                     Stack(
                                       children: <Widget>[
-                                        CachedNetworkImage(
-                                          imageUrl: '${currentUser.imgUrl}',
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  GFAvatar(
-                                            radius: 40,
-                                            backgroundImage: imageProvider,
+                                        InkWell(
+                                          onTap: () {
+                                            locator<UtilService>().heroToImage(
+                                              context: context,
+                                              imgUrl: currentUser.imgUrl,
+                                              tag: currentUser.uid!,
+                                            );
+                                          },
+                                          child: CachedNetworkImage(
+                                            imageUrl: currentUser.imgUrl,
+                                            imageBuilder:
+                                                (context, imageProvider) =>
+                                                    GFAvatar(
+                                              radius: 40,
+                                              backgroundImage: imageProvider,
+                                            ),
+                                            placeholder: (context, url) =>
+                                                CircularProgressIndicator(),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
                                           ),
-                                          placeholder: (context, url) =>
-                                              CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
                                         ),
                                         Positioned(
                                           bottom: 1,

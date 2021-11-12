@@ -272,16 +272,25 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(20),
-                                  child: CachedNetworkImage(
-                                    imageUrl: '${movie.poster}',
-                                    imageBuilder: (context, imageProvider) =>
-                                        Image(
-                                      image: imageProvider,
+                                  child: InkWell(
+                                    onTap: () {
+                                      locator<UtilService>().heroToImage(
+                                        context: context,
+                                        imgUrl: movie.poster,
+                                        tag: movie.imdbID,
+                                      );
+                                    },
+                                    child: CachedNetworkImage(
+                                      imageUrl: movie.poster,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Image(
+                                        image: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
                                   ),
                                 ),
                                 Flexible(

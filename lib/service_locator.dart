@@ -1,3 +1,4 @@
+import 'package:critic/services/util_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'services/auth_service.dart';
@@ -25,5 +26,6 @@ void setUpLocater() {
   locator.registerLazySingleton(() => StorageService());
   locator.registerLazySingleton(() => SuggestionService());
   locator.registerLazySingleton(() => UserService());
+  locator.registerLazySingleton(() => UtilService());
   locator.registerLazySingleton(() => ValidationService());
 }

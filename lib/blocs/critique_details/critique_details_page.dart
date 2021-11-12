@@ -130,7 +130,13 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: () async {},
+                            onTap: () async {
+                              locator<UtilService>().heroToImage(
+                                context: context,
+                                imgUrl: '${critique.movie!.poster}',
+                                tag: critique.movie!.title,
+                              );
+                            },
                             child: CachedNetworkImage(
                               imageUrl: '${critique.movie!.poster}',
                               imageBuilder: (context, imageProvider) =>

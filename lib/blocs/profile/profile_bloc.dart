@@ -10,6 +10,7 @@ import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/storage_service.dart';
 import 'package:critic/services/user_service.dart';
+import 'package:critic/services/util_service.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:critic/widgets/critique_view.dart';
 import 'package:equatable/equatable.dart';

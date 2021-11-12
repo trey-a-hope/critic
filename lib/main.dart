@@ -52,7 +52,7 @@ void main() async {
   runApp(
     MyApp(
       isDarkModeEnabled: true, //TODO: Add option for light mode later.
-      isWeb: false,
+      isWeb: false, //TODO: Add web mode later.
     ),
   );
 }

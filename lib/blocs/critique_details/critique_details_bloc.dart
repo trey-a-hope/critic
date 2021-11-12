@@ -9,6 +9,7 @@ import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/user_service.dart';
+import 'package:critic/services/util_service.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/small_critique_view.dart';
 import 'package:flutter/material.dart';

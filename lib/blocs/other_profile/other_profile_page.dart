@@ -69,17 +69,26 @@ class OtherProfilePageState extends State<OtherProfilePage>
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: '${otherUser.imgUrl}',
-                              imageBuilder: (context, imageProvider) =>
-                                  CircleAvatar(
-                                radius: 40,
-                                backgroundImage: imageProvider,
+                            InkWell(
+                              onTap: () {
+                                locator<UtilService>().heroToImage(
+                                  context: context,
+                                  imgUrl: otherUser.imgUrl,
+                                  tag: otherUser.uid!,
+                                );
+                              },
+                              child: CachedNetworkImage(
+                                imageUrl: '${otherUser.imgUrl}',
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage: imageProvider,
+                                ),
+                                placeholder: (context, url) =>
+                                    CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
                             ),
                             SizedBox(height: 10),
                           ],
