@@ -9,6 +9,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
     implements OTHER_PROFILE_BP.OtherProfileBlocDelegate {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _lastID = '';
+  late UserModel _otherUser;
 
   @override
   void initState() {
@@ -16,6 +17,20 @@ class OtherProfilePageState extends State<OtherProfilePage>
         .read<OTHER_PROFILE_BP.OtherProfileBloc>()
         .setDelegate(delegate: this);
     super.initState();
+  }
+
+  Future<List<CritiqueModel>> pageFetch(int offset) async {
+    List<CritiqueModel> critiques = await locator<CritiqueService>().listByUser(
+      uid: _otherUser.uid!,
+      limit: PAGE_FETCH_LIMIT,
+      lastID: _lastID,
+    );
+
+    if (critiques.isEmpty) return critiques;
+
+    _lastID = critiques[critiques.length - 1].id!;
+
+    return critiques;
   }
 
   @override
@@ -30,7 +45,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
         }
 
         if (state is OTHER_PROFILE_BP.LoadedState) {
-          final UserModel otherUser = state.otherUser;
+          _otherUser = state.otherUser;
           final UserModel currentUser = state.currentUser;
 
           return Scaffold(
@@ -47,7 +62,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                     flexibleSpace: FlexibleSpaceBar(
                       centerTitle: true,
                       title: Text(
-                        '${otherUser.username}',
+                        '${_otherUser.username}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.0,
@@ -73,12 +88,12 @@ class OtherProfilePageState extends State<OtherProfilePage>
                               onTap: () {
                                 locator<UtilService>().heroToImage(
                                   context: context,
-                                  imgUrl: otherUser.imgUrl,
-                                  tag: otherUser.uid!,
+                                  imgUrl: _otherUser.imgUrl,
+                                  tag: _otherUser.uid!,
                                 );
                               },
                               child: CachedNetworkImage(
-                                imageUrl: '${otherUser.imgUrl}',
+                                imageUrl: '${_otherUser.imgUrl}',
                                 imageBuilder: (context, imageProvider) =>
                                     CircleAvatar(
                                   radius: 40,
@@ -108,20 +123,7 @@ class OtherProfilePageState extends State<OtherProfilePage>
                     critique: critique,
                     currentUser: currentUser,
                   ),
-                  pageFetch: (int offset) async {
-                    List<CritiqueModel> critiques =
-                        await locator<CritiqueService>().listByUser(
-                      uid: otherUser.uid!,
-                      limit: PAGE_FETCH_LIMIT,
-                      lastID: _lastID,
-                    );
-
-                    if (critiques.isEmpty) return critiques;
-
-                    _lastID = critiques[0].id!;
-
-                    return critiques;
-                  },
+                  pageFetch: pageFetch,
                   onError: (dynamic error) => Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

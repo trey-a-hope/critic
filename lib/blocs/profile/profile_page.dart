@@ -7,6 +7,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   String _lastID = '';
+  late UserModel _currentUser;
 
   @override
   void initState() {
@@ -18,6 +19,20 @@ class ProfilePageState extends State<ProfilePage> {
       );
   }
 
+  Future<List<CritiqueModel>> pageFetch(int offset) async {
+    List<CritiqueModel> critiques = await locator<CritiqueService>().listByUser(
+      uid: _currentUser.uid!,
+      limit: PAGE_FETCH_LIMIT,
+      lastID: _lastID,
+    );
+
+    if (critiques.isEmpty) return critiques;
+
+    _lastID = critiques[critiques.length - 1].id!;
+
+    return critiques;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
@@ -27,7 +42,7 @@ class ProfilePageState extends State<ProfilePage> {
         }
 
         if (state is LoadedState) {
-          final UserModel currentUser = state.currentUser;
+          _currentUser = state.currentUser;
           final List<MovieModel> movies = state.movies;
 
           return Scaffold(
@@ -71,12 +86,12 @@ class ProfilePageState extends State<ProfilePage> {
                                           onTap: () {
                                             locator<UtilService>().heroToImage(
                                               context: context,
-                                              imgUrl: currentUser.imgUrl,
-                                              tag: currentUser.uid!,
+                                              imgUrl: _currentUser.imgUrl,
+                                              tag: _currentUser.uid!,
                                             );
                                           },
                                           child: CachedNetworkImage(
-                                            imageUrl: currentUser.imgUrl,
+                                            imageUrl: _currentUser.imgUrl,
                                             imageBuilder:
                                                 (context, imageProvider) =>
                                                     GFAvatar(
@@ -113,7 +128,7 @@ class ProfilePageState extends State<ProfilePage> {
                                       ],
                                     ),
                                     Text(
-                                      '${currentUser.username}',
+                                      '${_currentUser.username}',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16.0,
@@ -156,22 +171,9 @@ class ProfilePageState extends State<ProfilePage> {
                                   CritiqueModel critique, int index) =>
                               CritiqueView(
                             critique: critique,
-                            currentUser: currentUser,
+                            currentUser: _currentUser,
                           ),
-                          pageFetch: (int offset) async {
-                            List<CritiqueModel> critiques =
-                                await locator<CritiqueService>().listByUser(
-                              uid: currentUser.uid!,
-                              limit: PAGE_FETCH_LIMIT,
-                              lastID: _lastID,
-                            );
-
-                            if (critiques.isEmpty) return critiques;
-
-                            _lastID = critiques[0].id!;
-
-                            return critiques;
-                          },
+                          pageFetch: pageFetch,
                           onError: (dynamic error) => Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -221,7 +223,7 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                       RefreshIndicator(
                         child: ListView.builder(
-                          primary: false,
+                          primary: true,
                           shrinkWrap: true,
                           itemCount: movies.length,
                           itemBuilder: (BuildContext context, int index) {
