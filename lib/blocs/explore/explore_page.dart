@@ -16,6 +16,8 @@ class ExplorePageState extends State<ExplorePage>
 
   int _numberOfTabs = 26;
 
+  String _genre = '';
+
   String _genreLastActionID = '';
   String _genreLastAdventureID = '';
   String _genreLastAnimationID = '';
@@ -203,6 +205,26 @@ class ExplorePageState extends State<ExplorePage>
     super.dispose();
   }
 
+  Future<List<CritiqueModel>> pageFetch(int offset) async {
+    List<CritiqueModel> critiques;
+
+    String lastID = _getGenreLastID(genre: _genre);
+
+    critiques = [];
+
+    critiques = await locator<CritiqueService>().listByGenre(
+      genre: _genre,
+      limit: PAGE_FETCH_LIMIT,
+      lastID: lastID,
+    );
+
+    if (critiques.isEmpty) return critiques;
+
+    _setGenreLastID(genre: _genre, lastID: critiques[critiques.length - 1].id!);
+
+    return critiques;
+  }
+
   Widget _buildTab({required String title, required IconData iconData}) {
     return Tab(
       child: Row(
@@ -225,6 +247,7 @@ class ExplorePageState extends State<ExplorePage>
     required String genre,
     required UserModel currentUser,
   }) {
+    _genre = genre;
     return RefreshIndicator(
       child: PaginationView<CritiqueModel>(
         initialLoader: Spinner(),
@@ -235,26 +258,7 @@ class ExplorePageState extends State<ExplorePage>
           critique: critique,
           currentUser: currentUser,
         ),
-        pageFetch: (int offset) async {
-          List<CritiqueModel> critiques;
-
-          String lastID = _getGenreLastID(genre: genre);
-
-          critiques = [];
-
-          critiques = await locator<CritiqueService>().listByGenre(
-            genre: genre,
-            limit: PAGE_FETCH_LIMIT,
-            lastID: lastID,
-          );
-
-          if (critiques.isEmpty) return critiques;
-
-          _setGenreLastID(
-              genre: genre, lastID: critiques[critiques.length - 1].id!);
-
-          return critiques;
-        },
+        pageFetch: pageFetch,
         onError: (dynamic error) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
