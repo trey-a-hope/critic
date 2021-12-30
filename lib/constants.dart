@@ -1,4 +1,7 @@
 import 'package:critic/extensions/hex_color.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'models/genre_model.dart';
 
 const String DUMMY_POSTER_IMG_URL =
     'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';
@@ -36,3 +39,32 @@ const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';
 
 //Hive Boxes Names
 const String HIVE_BOX_LOGIN_CREDENTIALS = 'HIVE_BOX_LOGIN_CREDENTIALS';
+
+List<GenreModel> genres = [
+  GenreModel(title: 'Action', iconData: MdiIcons.run),
+  GenreModel(title: 'Adventure', iconData: MdiIcons.globeModel),
+  GenreModel(title: 'Animation', iconData: MdiIcons.drawing),
+  GenreModel(title: 'Biography', iconData: MdiIcons.accountDetails),
+  GenreModel(title: 'Comedy', iconData: MdiIcons.emoticon),
+  GenreModel(title: 'Crime', iconData: MdiIcons.pistol),
+  GenreModel(title: 'Documentary', iconData: MdiIcons.televisionClassic),
+  GenreModel(title: 'Drama', iconData: MdiIcons.emoticonCry),
+  GenreModel(title: 'Family', iconData: MdiIcons.motherNurse),
+  GenreModel(title: 'Fantasy', iconData: MdiIcons.unicorn),
+  GenreModel(title: 'Film-Noir', iconData: MdiIcons.hail),
+  GenreModel(title: 'History', iconData: MdiIcons.bookOpenPageVariant),
+  GenreModel(title: 'Horror', iconData: MdiIcons.emoticonDevil),
+  GenreModel(title: 'Music', iconData: MdiIcons.music),
+  GenreModel(title: 'Musical', iconData: MdiIcons.danceBallroom),
+  GenreModel(title: 'Mystery', iconData: MdiIcons.headQuestion),
+  GenreModel(title: 'N/A', iconData: MdiIcons.setNone),
+  GenreModel(title: 'Reality-TV', iconData: MdiIcons.televisionBox),
+  GenreModel(title: 'Romance', iconData: MdiIcons.heart),
+  GenreModel(title: 'Sci-Fi', iconData: MdiIcons.alien),
+  GenreModel(title: 'Short', iconData: MdiIcons.sizeS),
+  GenreModel(title: 'Sport', iconData: MdiIcons.basketball),
+  GenreModel(title: 'Talk-Show', iconData: MdiIcons.microphone),
+  GenreModel(title: 'Thriller', iconData: MdiIcons.halloween),
+  GenreModel(title: 'War', iconData: MdiIcons.medal),
+  GenreModel(title: 'Western', iconData: MdiIcons.accountCowboyHat)
+];

@@ -1,20 +1,16 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:critic/models/critique_model.dart';
 import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
-import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/modal_service.dart';
-import 'package:critic/widgets/critique_view.dart';
+import 'package:critic/widgets/explore_list.dart';
+import 'package:critic/widgets/explore_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pagination_view/pagination_view.dart';
 import '../../constants.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 part 'explore_page.dart';
 part 'explore_state.dart';
