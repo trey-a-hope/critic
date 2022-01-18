@@ -1,7 +1,7 @@
 name: critic
 description: Timeline view of movie/tv show critiques.
 
-version: 1.3.2+132
+version: 1.3.3+133
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
