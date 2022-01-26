@@ -22,6 +22,8 @@ class Login extends LoginEvent {
       ];
 }
 
+class GoogleLoginEvent extends LoginEvent {}
+
 class TryAgain extends LoginEvent {}
 
 class UpdatePasswordVisibleEvent extends LoginEvent {}

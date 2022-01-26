@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/full_width_button.dart';
@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/forgot_password/forgot_password_bloc.dart'
     as FORGOT_PASSWORD_BP;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hive/hive.dart';
 
 part 'login_event.dart';
@@ -22,6 +23,8 @@ part 'login_page.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   static Box<dynamic> _loginCredentialsBox =
       Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   LoginBloc()
       : super(
@@ -45,7 +48,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       try {
         yield LoginLoading();
 
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -60,6 +63,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         yield LoginInitial(
             passwordVisible: _passwordVisible, rememberMe: _rememberMe);
+      } catch (error) {
+        yield LoginError(error: error);
+      }
+    }
+
+    if (event is GoogleLoginEvent) {
+      try {
+        // Trigger the authentication flow
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+        // Obtain the auth details from the request
+        final GoogleSignInAuthentication? googleAuth =
+            await googleUser?.authentication;
+
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        // Once signed in, return the UserCredential
+        await _auth.signInWithCredential(credential);
       } catch (error) {
         yield LoginError(error: error);
       }

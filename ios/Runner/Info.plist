@@ -59,5 +59,16 @@
 		<string>itms-beta</string>
         <string>itms</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+        	<string>Editor</string>
+        	<key>CFBundleURLSchemes</key>
+        	<array>
+        		<string>com.googleusercontent.apps.237172304059-dmu4491ov8fiqloss7v7e11gb3smugil</string>
+        	</array>
+        </dict>
+    </array>
 </dict>
 </plist>

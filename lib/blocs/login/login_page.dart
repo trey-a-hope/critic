@@ -181,9 +181,9 @@ class LoginPageState extends State<LoginPage>
                                       color: Colors.white,
                                     ),
                                     onPressed: () {
-                                      context
-                                          .read<LoginBloc>()
-                                          .add(UpdatePasswordVisibleEvent());
+                                      context.read<LoginBloc>().add(
+                                            UpdatePasswordVisibleEvent(),
+                                          );
                                     },
                                   ),
                                   border: OutlineInputBorder(
@@ -201,7 +201,7 @@ class LoginPageState extends State<LoginPage>
                                   hintText: 'Password'),
                             ),
                             SizedBox(
-                              height: 40,
+                              height: 30,
                             ),
                             Container(
                               color: Colors.white,
@@ -220,7 +220,7 @@ class LoginPageState extends State<LoginPage>
                               ),
                             ),
                             SizedBox(
-                              height: 50,
+                              height: 30,
                             ),
                             FullWidthButton(
                               buttonColor: Colors.red,
@@ -297,6 +297,15 @@ class LoginPageState extends State<LoginPage>
                                   Navigator.push(context, route);
                                 },
                               ),
+                            ),
+                            Divider(),
+                            SignInButton(
+                              Buttons.Google,
+                              onPressed: () {
+                                context.read<LoginBloc>().add(
+                                      GoogleLoginEvent(),
+                                    );
+                              },
                             ),
                           ],
                         ),
