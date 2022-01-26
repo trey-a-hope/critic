@@ -105,9 +105,12 @@ class UserService extends IUserService {
   }
 
   @override
-  Future<void> updateUser(
-      {required String uid, required Map<String, dynamic> data}) async {
+  Future<void> updateUser({
+    required String uid,
+    required Map<String, dynamic> data,
+  }) async {
     try {
+      data['modified'] = DateTime.now();
       await _usersDB.doc(uid).update(data);
       return;
     } catch (e) {

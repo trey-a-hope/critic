@@ -11,7 +11,6 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:critic/widgets/small_critique_view.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_version/new_version.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -37,29 +36,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        // final List<MovieModel> popularMovies =
-        //     await locator<MovieService>().getPopularMovies();
-
-        final List<UserModel> mostRecentUsers =
+        final List<UserModel> recentlyActiveUsers =
             await locator<UserService>().retrieveUsers(
-          limit: 5,
-          orderBy: 'created',
+          limit: 10,
+          orderBy: 'modified',
         );
 
         final List<CritiqueModel> mostRecentCritiques =
             await locator<CritiqueService>().list(limit: 5);
 
-        // final int critiqueCount =
-        //     await locator<CritiqueService>().count(uid: null);
-
         final int userCount = await locator<UserService>().getTotalUserCount();
 
         yield HomeLoadedState(
           currentUser: _currentUser,
-          mostRecentUsers: mostRecentUsers,
-          // popularMovies: popularMovies,
+          recentlyActiveUsers: recentlyActiveUsers,
           mostRecentCritiques: mostRecentCritiques,
-          // critiqueCount: critiqueCount,
           userCount: userCount,
         );
       } catch (error) {
