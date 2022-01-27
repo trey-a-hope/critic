@@ -1,17 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MovieModel {
-  final String imdbID;
-  final String title;
-  final String poster;
-  final String released;
-  final String plot;
-  final String director;
-  final String imdbRating;
-  final String imdbVotes;
-  final String genre;
-  final String actors;
-
   DateTime? addedToWatchList = DateTime.now();
 
   MovieModel({
@@ -74,4 +63,16 @@ class MovieModel {
       'addedToWatchList': addedToWatchList,
     };
   }
+
+  /// The id of the movie in the omb
+  final String imdbID;
+  final String title;
+  final String poster;
+  final String released;
+  final String plot;
+  final String director;
+  final String imdbRating;
+  final String imdbVotes;
+  final String genre;
+  final String actors;
 }
