@@ -38,10 +38,6 @@ Podfile.lock
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
 
-#android specific
-android/app/google-services.json
-android/key.properties
-
 # IntelliJ related
 *.iml
 *.ipr
