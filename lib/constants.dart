@@ -21,9 +21,12 @@ const String CLOUD_FUNCTIONS_ENDPOINT =
     'https://us-central1-critic-a9e44.cloudfunctions.net/';
 
 final HexColor colorNavy = HexColor('#09487e');
+final HexColor colorGrey = HexColor('#25272A');
 
 const String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
 const String ASSET_APP_ICON = 'assets/images/app_icon.png';
+const String ASSET_APP_ICON_LIGHT = 'assets/images/app_icon_light.png';
+
 
 const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
 

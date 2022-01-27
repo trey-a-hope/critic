@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/constants.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/blocs/critique_details/critique_details_bloc.dart'
     as CRITIQUE_DETAILS_BP;
@@ -42,20 +41,7 @@ class _CritiqueViewState extends State<CritiqueView> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return critiqueView(
-              context: context,
-              userWhoPosted: UserModel(
-                imgUrl: DUMMY_PROFILE_PHOTO_URL,
-                email: null,
-                modified: null,
-                created: null,
-                uid: null,
-                username: 'John Doe',
-                critiqueCount: null,
-                fcmToken: null,
-                // watchListCount: null,
-              ),
-            );
+            return CircularProgressIndicator();
           default:
             if (snapshot.hasError) {
               return Center(
