@@ -1,5 +1,6 @@
 import 'package:critic/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 final String fontFamily = 'Montserrat';
 
@@ -37,6 +38,7 @@ ThemeData darkThemeData = ThemeData(
 );
 
 ThemeData themeData = ThemeData(
+
   textTheme: TextTheme(
     headline3: TextStyle(
       color: colorNavy,
@@ -51,8 +53,9 @@ ThemeData themeData = ThemeData(
   ),
   indicatorColor: colorNavy,
   iconTheme: IconThemeData(color: colorNavy),
-  appBarTheme: AppBarTheme(color: Colors.red.shade900),
-  scaffoldBackgroundColor: Colors.white,
+  appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle.dark,
+  ),  scaffoldBackgroundColor: Colors.white,
   fontFamily: fontFamily,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,

@@ -22,7 +22,9 @@ class Login extends LoginEvent {
       ];
 }
 
-class GoogleLoginEvent extends LoginEvent {}
+class GoogleSignInEvent extends LoginEvent {}
+
+class AppleSignInEvent extends LoginEvent {}
 
 class TryAgain extends LoginEvent {}
 

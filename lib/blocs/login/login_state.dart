@@ -7,29 +7,19 @@ abstract class LoginState extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginInitial extends LoginState {
-  final bool passwordVisible;
-  final bool rememberMe;
-  LoginInitial({
-    required this.passwordVisible,
-    required this.rememberMe,
-  });
+class LoginInitialState extends LoginState {
+  LoginInitialState();
 
   @override
-  List<Object> get props => [
-        passwordVisible,
-        rememberMe,
-      ];
+  List<Object> get props => [];
 }
 
-class LoginLoading extends LoginState {}
+class LoginLoadingState extends LoginState {}
 
-class LoginSuccess extends LoginState {}
-
-class LoginError extends LoginState {
+class LoginErrorState extends LoginState {
   final dynamic error;
 
-  LoginError({
+  LoginErrorState({
     required this.error,
   });
 

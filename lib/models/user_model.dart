@@ -2,16 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:algolia/algolia.dart';
 
 class UserModel {
-  String imgUrl;
-  String? email;
-  DateTime? modified;
-  DateTime? created;
-  String? uid;
-  String username;
-  int? critiqueCount;
-  String? fcmToken;
-  // int? watchListCount;
-
   UserModel({
     required this.imgUrl,
     required this.email,
@@ -21,7 +11,6 @@ class UserModel {
     required this.username,
     required this.critiqueCount,
     this.fcmToken,
-    // required this.watchListCount,
   });
 
   factory UserModel.fromDoc({required DocumentSnapshot data}) {
@@ -34,7 +23,6 @@ class UserModel {
       username: data['username'],
       critiqueCount: data['critiqueCount'],
       fcmToken: data['fcmToken'],
-      // watchListCount: data['watchListCount'],
     );
   }
 
@@ -43,15 +31,16 @@ class UserModel {
     return UserModel(
       imgUrl: data['imgUrl'],
       email: data['email'],
-      // created: data['created'].toDate(),//todo:
-      // modified: data['modified'].toDate(),//todo:
-      created: DateTime.now(),
-      modified: DateTime.now(),
+      created: DateTime.fromMillisecondsSinceEpoch(
+        data['created'],
+      ),
+      modified: DateTime.fromMillisecondsSinceEpoch(
+        data['modified'],
+      ),
       uid: data['uid'],
       username: data['username'],
       critiqueCount: data['critiqueCount'],
       fcmToken: data['fcmToken'],
-      // watchListCount: data['watchListCount'],
     );
   }
 
@@ -65,7 +54,30 @@ class UserModel {
       'username': username,
       'critiqueCount': critiqueCount,
       'fcmToken': fcmToken,
-      // 'watchListCount': watchListCount,
     };
   }
+
+  /// The unique id of the user.
+  String? uid;
+
+  /// The users email.
+  String? email;
+
+  /// User's image url.
+  String imgUrl;
+
+  /// Firebase Cloud Message token for push notifications.
+  String? fcmToken;
+
+  /// Time the user was last modified.
+  DateTime modified;
+
+  /// Time the user was created.
+  DateTime created;
+
+  /// Username of the user.
+  String username;
+
+  /// Number of critiques.
+  int critiqueCount;
 }
