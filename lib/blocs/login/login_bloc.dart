@@ -35,9 +35,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         // Trigger the authentication flow
         final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
+        // If user cancels selection, throw error to prevent null check below.
+        if (googleUser == null) {
+          throw Exception('Must select a Google Account.');
+        }
+
         // Obtain the auth details from the request
         final GoogleSignInAuthentication? googleAuth =
-            await googleUser?.authentication;
+            await googleUser.authentication;
 
         // Create a new credential
         final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -54,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     if (event is AppleSignInEvent) {
       try {
-        //Trigger the authentication flow.
+        // Trigger the authentication flow.
         final AuthorizationCredentialAppleID appleIdCredential =
             await SignInWithApple.getAppleIDCredential(
           scopes: [
@@ -63,14 +68,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ],
         );
 
-        //Created credential from id credential.
+        // Created credential from id credential.
         final OAuthCredential credential =
             OAuthProvider('apple.com').credential(
           idToken: appleIdCredential.identityToken!,
           accessToken: appleIdCredential.authorizationCode,
         );
 
-        //Once signed in, return the UserCredential.
+        // Once signed in, return the UserCredential.
         await _auth.signInWithCredential(credential);
       } catch (error) {
         yield LoginErrorState(error: error);
@@ -78,7 +83,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
 
     if (event is TryAgain) {
-      //Send user back to login page.
+      // Send user back to login page.
       yield LoginInitialState();
     }
   }

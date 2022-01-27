@@ -124,7 +124,7 @@ class LoginPageState extends State<LoginPage>
                                   ),
                                 ),
                                 Text(
-                                  'The best place for movie & tv show reviews.',
+                                  'The best place for movie & TV show reviews.',
                                   style: TextStyle(
                                     color: Colors.grey.shade100,
                                     fontSize: 14,

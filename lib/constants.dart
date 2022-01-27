@@ -6,7 +6,7 @@ import 'models/genre_model.dart';
 const String DUMMY_POSTER_IMG_URL =
     'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';
 const String DUMMY_PROFILE_PHOTO_URL =
-    'https://firebasestorage.googleapis.com/v0/b/hidden-gems-e481d.appspot.com/o/Images%2FUsers%2FDummy%2FProfile.jpg?alt=media&token=99cd4cbd-7df9-4005-adef-b27b3996a6cc';
+    'https://firebasestorage.googleapis.com/v0/b/critic-a9e44.appspot.com/o/Images%2FProfile.jpeg?alt=media&token=f8d67c2f-9b1c-4cbe-aca5-6da014c504a0';
 
 //These are set in main().
 String? version;
@@ -26,7 +26,6 @@ final HexColor colorGrey = HexColor('#25272A');
 const String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
 const String ASSET_APP_ICON = 'assets/images/app_icon.png';
 const String ASSET_APP_ICON_LIGHT = 'assets/images/app_icon_light.png';
-
 
 const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
 

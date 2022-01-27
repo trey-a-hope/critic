@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                                         Theme.of(context).textTheme.headline4,
                                   ),
                                   Text(
-                                    'Active ${timeago.format(recentlyActiveUser.modified!, allowFromNow: true)}',
+                                    'Active ${timeago.format(recentlyActiveUser.modified, allowFromNow: true)}',
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   )

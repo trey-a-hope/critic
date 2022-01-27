@@ -61,7 +61,7 @@ class UserModel {
   String? uid;
 
   /// The users email.
-  String? email;
+  String email;
 
   /// User's image url.
   String imgUrl;
