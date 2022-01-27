@@ -48,17 +48,22 @@ class CritiqueModel {
     };
   }
 
+  ///User who posted the critique.
+  UserModel? user;
+
   //Return the user associated with this critique.
-  Future<UserModel> user() async {
-    return await locator<UserService>().retrieveUser(uid: uid);
+  Future<void> getUser() async {
+    user = await locator<UserService>().retrieveUser(uid: uid);
+    return;
   }
 
   /// Movie associated with this critique.
   MovieModel? movie;
 
   //Return the movie associated with this critique.
-  Future<MovieModel> getMovie() async {
-    return await locator<MovieService>().getMovieByID(id: imdbID);
+  Future<void> getMovie() async {
+    movie = await locator<MovieService>().getMovieByID(id: imdbID);
+    return;
   }
 
   /// Id of the critique

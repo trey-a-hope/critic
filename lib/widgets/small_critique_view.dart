@@ -39,7 +39,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.critique.user(),
+      future: widget.critique.getUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
@@ -51,11 +51,9 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
               );
             }
 
-            UserModel userWhoPosted = snapshot.data;
-
             return critiqueView(
               context: context,
-              userWhoPosted: userWhoPosted,
+              userWhoPosted: widget.critique.user!,
             );
         }
       },

@@ -89,7 +89,7 @@ class CritiqueService extends ICritiqueService {
       CritiqueModel critique = CritiqueModel.fromJSON(map: result);
 
       //Attach movie to critique object.
-      critique.movie = await critique.getMovie();
+      await critique.getMovie();
 
       return critique;
     } catch (e) {
@@ -133,7 +133,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie = await critiques[i].getMovie();
+        await critiques[i].getMovie();
       }
 
       return critiques;
@@ -178,7 +178,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie = await critiques[i].getMovie();
+        await critiques[i].getMovie();
       }
 
       return critiques;
@@ -346,7 +346,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie = await critiques[i].getMovie();
+        await critiques[i].getMovie();
       }
 
       return critiques;
@@ -466,7 +466,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie = await critiques[i].getMovie();
+        await critiques[i].getMovie();
       }
 
       return critiques;
