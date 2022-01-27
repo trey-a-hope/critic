@@ -10,7 +10,6 @@ import 'package:critic/models/critique_model.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/user_model.dart';
 import 'package:critic/services/movie_service.dart';
-import 'package:critic/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +39,7 @@ class SmallCritiqueViewState extends State<SmallCritiqueView> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: locator<UserService>().retrieveUser(uid: widget.critique.uid),
+      future: widget.critique.user(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:

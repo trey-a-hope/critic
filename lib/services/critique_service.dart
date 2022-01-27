@@ -1,8 +1,6 @@
 import 'package:critic/constants.dart';
-import 'package:critic/service_locator.dart';
 import 'package:critic/models/comment_model.dart';
 import 'package:critic/models/critique_model.dart';
-import 'package:critic/services/movie_service.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
@@ -91,8 +89,7 @@ class CritiqueService extends ICritiqueService {
       CritiqueModel critique = CritiqueModel.fromJSON(map: result);
 
       //Attach movie to critique object.
-      critique.movie =
-          await locator<MovieService>().getMovieByID(id: critique.imdbID);
+      critique.movie = await critique.getMovie();
 
       return critique;
     } catch (e) {
@@ -136,8 +133,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie =
-            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+        critiques[i].movie = await critiques[i].getMovie();
       }
 
       return critiques;
@@ -182,8 +178,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie =
-            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+        critiques[i].movie = await critiques[i].getMovie();
       }
 
       return critiques;
@@ -351,8 +346,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie =
-            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+        critiques[i].movie = await critiques[i].getMovie();
       }
 
       return critiques;
@@ -472,8 +466,7 @@ class CritiqueService extends ICritiqueService {
 
       //Attach movie to critique object.
       for (int i = 0; i < critiques.length; i++) {
-        critiques[i].movie =
-            await locator<MovieService>().getMovieByID(id: critiques[i].imdbID);
+        critiques[i].movie = await critiques[i].getMovie();
       }
 
       return critiques;
