@@ -64,15 +64,33 @@ class MovieModel {
     };
   }
 
-  /// The id of the movie in the omb
+  /// The id of the movie in the omdb.
   final String imdbID;
+
+  /// Title of the movie.
   final String title;
+
+  /// Image url of the poster.
   final String poster;
+
+  /// Date the movie was released.
   final String released;
+
+  /// Plot/description of movie.
   final String plot;
+
+  /// The director.
   final String director;
+
+  ///Rating on imdb.
   final String imdbRating;
+
+  /// Number of votes on imdb.
   final String imdbVotes;
+
+  /// Movie genre.
   final String genre;
+
+  /// Actors in the movie.
   final String actors;
 }
