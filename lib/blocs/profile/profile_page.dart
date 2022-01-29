@@ -253,10 +253,6 @@ class ProfilePageState extends State<ProfilePage> {
                                 '${movie.title}',
                                 style: Theme.of(context).textTheme.headline6,
                               ),
-                              subtitle: Text(
-                                '${timeago.format(movie.addedToWatchList!, allowFromNow: true)}',
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
                               trailing: Icon(
                                 Icons.chevron_right,
                                 color: Theme.of(context).iconTheme.color,

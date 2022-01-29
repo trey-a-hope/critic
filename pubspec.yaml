@@ -27,6 +27,7 @@ dependencies:
   flutter_speed_dial: ^4.6.6
   firebase_storage: ^10.1.0
   flutter_bloc: ^7.3.3
+  freezed_annotation:
   getwidget: ^2.0.4
   get_it: ^7.2.0
   google_sign_in: ^5.2.3
@@ -38,6 +39,8 @@ dependencies:
   image_picker: ^0.8.4+4
   image_stack: ^2.0.1
   intl: ^0.17.0
+  json_annotation: ^4.3.0
+  json_serializable: ^6.0.1
   launch_review: ^3.0.1
   material_design_icons_flutter: ^5.0.6295
   new_version: ^0.2.0
@@ -55,7 +58,8 @@ dependencies:
   uuid: ^3.0.4
 
 dev_dependencies:
-  build_runner: ^2.1.4
+  build_runner: ^2.1.5
+  freezed: ^0.15.1+1
   flutter_test:
     sdk: flutter
 

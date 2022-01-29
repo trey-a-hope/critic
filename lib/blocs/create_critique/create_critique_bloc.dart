@@ -19,11 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 part 'create_critique_event.dart';
+
 part 'create_critique_state.dart';
+
 part 'create_critique_page.dart';
 
 abstract class CreateCritiqueBlocDelegate {
   void showMessage({required String message});
+
   void clearText();
 }
 
@@ -76,8 +79,10 @@ class CreateCritiqueBloc
 
     if (event is AddMovieToWatchlistEvent) {
       try {
-        await locator<UserService>()
-            .addMovieToWatchList(uid: _currentUser.uid!, movie: movie);
+        await locator<UserService>().addMovieToWatchList(
+          uid: _currentUser.uid!,
+          imdbID: movie.imdbID,
+        );
 
         watchListHasMovie = true;
 

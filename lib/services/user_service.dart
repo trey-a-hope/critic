@@ -1,35 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/constants.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/user_model.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show json;
 
 //TODO: Create watchlist service and move logic from here to that file.
 abstract class IUserService {
   Future<void> createUser({required UserModel user});
+
   Future<UserModel> retrieveUser({required String uid});
+
   Future<List<UserModel>> retrieveUsers(
       {required int? limit, required String? orderBy});
+
   Stream<QuerySnapshot> streamUsers();
+
   Future<void> updateUser(
       {required String uid, required Map<String, dynamic> data});
-  Future<List<UserModel>> retrieveFollowersFromStream({
-    required String uid,
-    required int limit,
-    required int offset,
-  });
-
-  Future<List<UserModel>> retrieveFollowingsFromStream({
-    required String uid,
-    required int limit,
-    required int offset,
-  });
 
   Future<void> addMovieToWatchList({
     required String uid,
-    required MovieModel movie,
+    required String imdbID,
   });
 
   Future<void> removeMovieFromWatchList({
@@ -40,12 +29,6 @@ abstract class IUserService {
   Future<bool> watchListHasMovie({
     required String uid,
     required String imdbID,
-  });
-
-  Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
-    required String uid,
-    required int? limit,
-    required DocumentSnapshot? startAfterDocument,
   });
 
   Future<List<MovieModel>> listMoviesFromWatchList({
@@ -68,7 +51,7 @@ class UserService extends IUserService {
 
       final DocumentReference userDocRef = _usersDB.doc(user.uid);
 
-      Map userMap = user.toMap();
+      Map userMap = user.toJson();
       userMap['blockedUsers'] = [];
 
       batch.set(
@@ -91,8 +74,14 @@ class UserService extends IUserService {
   @override
   Future<UserModel> retrieveUser({required String uid}) async {
     try {
-      DocumentSnapshot documentSnapshot = await _usersDB.doc(uid).get();
-      return UserModel.fromDoc(data: documentSnapshot);
+      final DocumentReference model = await _usersDB
+          .doc(uid)
+          .withConverter<UserModel>(
+              fromFirestore: (snapshot, _) =>
+                  UserModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson());
+
+      return (await model.get()).data() as UserModel;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -134,107 +123,21 @@ class UserService extends IUserService {
         query = query.orderBy(orderBy, descending: true);
       }
 
-      return (await query.get())
+      List<Future<DocumentSnapshot<UserModel>>> s = (await query.get())
           .docs
-          .map((doc) => UserModel.fromDoc(data: doc))
+          .map((doc) => (doc.reference
+              .withConverter<UserModel>(
+                  fromFirestore: (snapshot, _) =>
+                      UserModel.fromJson(snapshot.data()!),
+                  toFirestore: (model, _) => model.toJson())
+              .get()))
           .toList();
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<UserModel>> retrieveFollowersFromStream({
-    required String uid,
-    required int limit,
-    required int offset,
-  }) async {
-    try {
-      Map data = {
-        'uid': uid,
-        'limit': '$limit',
-        'offset': '$offset',
-      };
-
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowers'),
-        body: data,
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-      );
-
-      Map map = json.decode(response.body);
-
-      if (map['statusCode'] != null) {
-        throw PlatformException(
-            message: map['raw']['message'], code: map['raw']['code']);
-      }
-
-      final List<dynamic> results = map['results'];
 
       List<UserModel> users = [];
 
-      for (int i = 0; i < results.length; i++) {
-        dynamic result = results[i];
-
-        final String uid = result['feed_id'].replaceAll('Critiques:', '');
-
-        final UserModel user = await retrieveUser(uid: uid);
-
-        print(uid);
-
-        users.add(user);
-      }
-
-      return users;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<UserModel>> retrieveFollowingsFromStream({
-    required String uid,
-    required int limit,
-    required int offset,
-  }) async {
-    try {
-      Map data = {
-        'uid': uid,
-        'limit': '$limit',
-        'offset': '$offset',
-      };
-
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}GetUsersFollowees'),
-        body: data,
-        headers: {'content-type': 'application/x-www-form-urlencoded'},
-      );
-
-      Map map = json.decode(response.body);
-
-      if (map['statusCode'] != null) {
-        throw PlatformException(
-            message: map['raw']['message'], code: map['raw']['code']);
-      }
-
-      final List<dynamic> results = map['results'];
-
-      List<UserModel> users = [];
-
-      for (int i = 0; i < results.length; i++) {
-        dynamic result = results[i];
-
-        final String uid = result['target_id'].replaceAll('Critiques:', '');
-
-        final UserModel user = await retrieveUser(uid: uid);
-
-        print(uid);
-
-        users.add(user);
+      for (int i = 0; i < s.length; i++) {
+        DocumentSnapshot<UserModel> res = await s[i];
+        users.add(res.data()!);
       }
 
       return users;
@@ -248,28 +151,14 @@ class UserService extends IUserService {
   @override
   Future<void> addMovieToWatchList({
     required String uid,
-    required MovieModel movie,
+    required String imdbID,
   }) async {
     try {
-      final WriteBatch batch = FirebaseFirestore.instance.batch();
-
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference watchListColRef =
-          userDocRef.collection('watchList');
-
-      final DocumentReference watchListDocRef = watchListColRef.doc();
-
-      movie.addedToWatchList = DateTime.now();
-
-      batch.set(
-        watchListDocRef,
-        movie.toMap(),
-      );
-
-      batch.update(userDocRef, {'watchListCount': FieldValue.increment(1)});
-
-      await batch.commit();
+      await userDocRef.update({
+        'watchList': FieldValue.arrayUnion([imdbID])
+      });
       return;
     } catch (e) {
       throw Exception(
@@ -284,30 +173,11 @@ class UserService extends IUserService {
     required String imdbID,
   }) async {
     try {
-      final WriteBatch batch = FirebaseFirestore.instance.batch();
-
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference watchListColRef =
-          userDocRef.collection('watchList');
-
-      final List<QueryDocumentSnapshot> watchListQuerySnap =
-          (await watchListColRef.where('imdbID', isEqualTo: imdbID).get()).docs;
-
-      if (watchListQuerySnap.isEmpty) {
-        return;
-      }
-
-      final DocumentReference watchListDocRef =
-          watchListQuerySnap.first.reference;
-
-      batch.delete(
-        watchListDocRef,
-      );
-
-      batch.update(userDocRef, {'watchListCount': FieldValue.increment(-1)});
-
-      await batch.commit();
+      await userDocRef.update({
+        'watchList': FieldValue.arrayRemove([imdbID])
+      });
       return;
     } catch (e) {
       throw Exception(
@@ -324,47 +194,13 @@ class UserService extends IUserService {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference watchListColRef =
-          userDocRef.collection('watchList');
+      DocumentSnapshot<Object?> userData = (await userDocRef.get());
 
-      final List<QueryDocumentSnapshot> watchListQuerySnap =
-          (await watchListColRef.where('imdbID', isEqualTo: imdbID).get()).docs;
+      Object object = userData.data()!;
 
-      return watchListQuerySnap.isNotEmpty;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
+      //TODO: Return true if the imdbID is contained in the users wqtchList array...
 
-  @override
-  Future<List<DocumentSnapshot>> retrieveMoviesFromWatchlist({
-    required String uid,
-    required int? limit,
-    required DocumentSnapshot? startAfterDocument,
-  }) async {
-    try {
-      final DocumentReference userDocRef = _usersDB.doc(uid);
-
-      final CollectionReference watchListColRef =
-          userDocRef.collection('watchList');
-      Query query = watchListColRef.orderBy(
-        'addedToWatchList',
-        descending: true,
-      );
-
-      if (limit != null) {
-        query = query.limit(limit);
-      }
-
-      if (startAfterDocument != null) {
-        query = query.startAfterDocument(startAfterDocument);
-      }
-
-      List<DocumentSnapshot> documentSnapshots = (await query.get()).docs;
-
-      return documentSnapshots;
+      return true;
     } catch (e) {
       throw Exception(
         e.toString(),
@@ -377,21 +213,23 @@ class UserService extends IUserService {
     required String uid,
   }) async {
     try {
+      //TODO: List each movie out.
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference watchListColRef =
-          userDocRef.collection('watchList');
-      Query query = watchListColRef.orderBy(
-        'addedToWatchList',
-        descending: true,
-      );
-
-      List<MovieModel> movies = (await query.get())
-          .docs
-          .map((e) => MovieModel.fromDoc(data: e))
-          .toList();
-
-      return movies;
+      // final CollectionReference watchListColRef =
+      //     userDocRef.collection('watchList');
+      // Query query = watchListColRef.orderBy(
+      //   'addedToWatchList',
+      //   descending: true,
+      // );
+      //
+      // List<MovieModel> movies = (await query.get())
+      //     .docs
+      //     .map((e) => MovieModel.fromDoc(data: e))
+      //     .toList();
+      //
+      // return movies;
+      return [];
     } catch (e) {
       throw Exception(
         e.toString(),

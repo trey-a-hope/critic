@@ -239,6 +239,7 @@ class _HomePageState extends State<HomePage> {
             child: Center(
               child: Text(
                 state.error.toString(),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           );

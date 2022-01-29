@@ -13,7 +13,9 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'edit_profile_event.dart';
+
 part 'edit_profile_state.dart';
+
 part 'edit_profile_view.dart';
 
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
@@ -40,6 +42,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       try {
         final String username = event.username;
 
+        //Update the user.
         await locator<UserService>().updateUser(
           uid: _currentUser.uid!,
           data: {
@@ -48,7 +51,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
           },
         );
 
-        _currentUser.username = username;
+        //Fetch the updated user.
+        _currentUser =
+            await locator<UserService>().retrieveUser(uid: _currentUser.uid!);
 
         yield EditProfileLoaded(
           currentUser: _currentUser,

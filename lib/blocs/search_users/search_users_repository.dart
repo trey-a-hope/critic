@@ -21,7 +21,7 @@ class SearchUsersRepository {
           (await query.getObjects()).hits;
 
       final List<UserModel> users =
-          results.map((result) => UserModel.fromAlgolia(result)).toList();
+          results.map((result) => UserModel.fromJson(result.data)).toList();
 
       cache.set(term, users);
       return users;

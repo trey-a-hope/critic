@@ -1,8 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class MovieModel {
-  DateTime? addedToWatchList = DateTime.now();
-
   MovieModel({
     required this.imdbID,
     required this.title,
@@ -14,7 +10,7 @@ class MovieModel {
     required this.imdbVotes,
     required this.genre,
     required this.actors,
-    this.addedToWatchList,
+    required this.rated,
   });
 
   factory MovieModel.fromJSON({required Map map}) {
@@ -29,39 +25,8 @@ class MovieModel {
       imdbVotes: map['imdbVotes'],
       genre: map['Genre'],
       actors: map['Actors'],
+      rated: map['Rated'],
     );
-  }
-
-  factory MovieModel.fromDoc({required DocumentSnapshot data}) {
-    return MovieModel(
-      imdbID: data['imdbID'],
-      title: data['title'],
-      poster: data['poster'],
-      released: data['released'],
-      plot: data['plot'],
-      director: data['director'],
-      imdbRating: data['imdbRating'],
-      imdbVotes: data['imdbVotes'],
-      genre: data['genre'],
-      actors: data['actors'],
-      addedToWatchList: data['addedToWatchList'].toDate(),
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'imdbID': imdbID,
-      'title': title,
-      'poster': poster,
-      'released': released,
-      'plot': plot,
-      'director': director,
-      'imdbRating': imdbRating,
-      'imdbVotes': imdbVotes,
-      'genre': genre,
-      'actors': actors,
-      'addedToWatchList': addedToWatchList,
-    };
   }
 
   /// The id of the movie in the omdb.
@@ -82,7 +47,7 @@ class MovieModel {
   /// The director.
   final String director;
 
-  ///Rating on imdb.
+  /// Rating on imdb.
   final String imdbRating;
 
   /// Number of votes on imdb.
@@ -93,4 +58,7 @@ class MovieModel {
 
   /// Actors in the movie.
   final String actors;
+
+  /// Parental rating for movie.
+  final String rated;
 }
