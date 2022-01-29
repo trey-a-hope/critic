@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:critic/models/tuples/recommendation_tuple.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
     as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
     as OTHER_PROFILE_BP;
-import 'package:critic/models/recommendation_model.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +14,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RecommendationWidget extends StatefulWidget {
   const RecommendationWidget({
     Key? key,
-    required this.recommendation,
+    required this.recommendationTuple,
     required this.delete,
   }) : super(key: key);
 
-  final RecommendationModel recommendation;
+  final RecommendationTuple recommendationTuple;
   final Function delete;
 
   @override
@@ -43,7 +43,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Route route = MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                  otherUserID: '${widget.recommendation.user!.uid!}',
+                  otherUserID: '${widget.recommendationTuple.user.uid!}',
                 )..add(
                     OTHER_PROFILE_BP.LoadPageEvent(),
                   ),
@@ -54,7 +54,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Navigator.push(context, route);
           },
           child: CachedNetworkImage(
-            imageUrl: '${widget.recommendation.user!.uid!}',
+            imageUrl: '${widget.recommendationTuple.user.uid!}',
             imageBuilder: (context, imageProvider) => CircleAvatar(
               backgroundImage: imageProvider,
             ),
@@ -65,31 +65,19 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
         borderRadius: BorderRadius.all(
           Radius.circular(20),
         ),
-        // background: ColorFiltered(
-        //   colorFilter: ColorFilter.mode(
-        //     Colors.black.withOpacity(0.7),
-        //     BlendMode.darken,
-        //   ),
-        //   child: Image.network(
-        //     '${widget.recommendation.movie!.poster}',
-        //     fit: BoxFit.cover,
-        //     height: 200,
-        //     width: double.infinity,
-        //   ),
-        // ),
         title: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${widget.recommendation.movie!.title}',
+                '${widget.recommendationTuple.movie.title}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                  '${widget.recommendation.user!.username}, ${timeago.format(widget.recommendation.created, allowFromNow: true)}',
+                  '${widget.recommendationTuple.user.username}, ${timeago.format(widget.recommendationTuple.recommendation.created, allowFromNow: true)}',
                   style: TextStyle(color: Colors.white, fontSize: 14)),
             ],
           ),
@@ -98,7 +86,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              '"${widget.recommendation.message}\"',
+              '"${widget.recommendationTuple.recommendation.message}\"',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -131,7 +119,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                       builder: (context) => BlocProvider(
                         create: (context) =>
                             CREATE_CRITIQUE_BP.CreateCritiqueBloc(
-                          movie: widget.recommendation.movie!,
+                          movie: widget.recommendationTuple.movie,
                         )..add(
                                 CREATE_CRITIQUE_BP.LoadPageEvent(),
                               ),

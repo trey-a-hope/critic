@@ -11,7 +11,7 @@ part 'recommendation_model.g.dart';
 class RecommendationModel with _$RecommendationModel {
   factory RecommendationModel({
     /// The unique id of the recommendation.
-    required String id,
+    String? id,
 
     /// The message.
     required String message,

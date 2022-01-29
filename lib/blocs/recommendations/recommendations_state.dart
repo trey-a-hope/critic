@@ -10,15 +10,15 @@ class InitialState extends RecommendationsState {}
 class LoadingState extends RecommendationsState {}
 
 class LoadedState extends RecommendationsState {
-  final List<RecommendationModel> recommendations;
+  final List<RecommendationTuple> recommendationTuples;
 
   LoadedState({
-    required this.recommendations,
+    required this.recommendationTuples,
   });
 
   @override
   List<Object> get props => [
-        recommendations,
+        recommendationTuples,
       ];
 }
 

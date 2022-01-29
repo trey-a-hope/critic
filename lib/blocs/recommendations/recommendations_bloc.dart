@@ -1,9 +1,13 @@
+import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/recommendation_model.dart';
+import 'package:critic/models/tuples/recommendation_tuple.dart';
 import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/recommendations_service.dart';
+import 'package:critic/services/user_service.dart';
 import 'package:critic/widgets/recommendation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +54,7 @@ class RecommendationsBloc
         recommendationsStream.listen(
           (QuerySnapshot event) {
             List<RecommendationModel> recommendations = event.docs
-                .map((doc) => RecommendationModel.fromDoc(data: doc))
+                .map((doc) => doc.data() as RecommendationModel)
                 .toList();
 
             add(
@@ -67,21 +71,34 @@ class RecommendationsBloc
     if (event is RecommendationsUpdatedEvent) {
       final List<RecommendationModel> recommendations = event.recommendations;
 
+      List<RecommendationTuple> recommendationTuples = [];
       for (int i = 0; i < recommendations.length; i++) {
         RecommendationModel recommendation = recommendations[i];
 
-        await recommendation.getMovie();
+        MovieModel movie = await locator<MovieService>()
+            .getMovieByID(id: recommendation.imdbID);
 
-        await recommendation.getUser();
+        UserModel user =
+            await locator<UserService>().retrieveUser(uid: recommendation.uid);
+
+        RecommendationTuple recommendationTuple = RecommendationTuple(
+          recommendation: recommendation,
+          user: user,
+          movie: movie,
+        );
+
+        recommendationTuples.add(recommendationTuple);
       }
 
       if (recommendations.isEmpty) {
         yield EmptyRecommendationsState();
       } else {
-        recommendations.sort(
-          (a, b) => b.created.compareTo(a.created),
+        recommendationTuples.sort(
+          (a, b) => b.recommendation.created.compareTo(
+            a.recommendation.created,
+          ),
         );
-        yield LoadedState(recommendations: recommendations);
+        yield LoadedState(recommendationTuples: recommendationTuples);
       }
     }
 

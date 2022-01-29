@@ -41,18 +41,21 @@ class _RecommendationsPageState extends State<RecommendationsPage>
         }
 
         if (state is LoadedState) {
-          final List<RecommendationModel> recommendations =
-              state.recommendations;
+          final List<RecommendationTuple> recommendationTuples =
+              state.recommendationTuples;
           return ListView.builder(
-            itemCount: recommendations.length,
+            itemCount: recommendationTuples.length,
             itemBuilder: (BuildContext context, int index) {
-              final RecommendationModel recommendation = recommendations[index];
+              final RecommendationTuple recommendationTuple =
+                  recommendationTuples[index];
               return RecommendationWidget(
-                recommendation: recommendation,
+                recommendationTuple: recommendationTuple,
                 delete: () {
                   context.read<RecommendationsBloc>().add(
                         DeleteRecommendationEvent(
-                            recommendationID: recommendation.id!),
+                          recommendationID:
+                              recommendationTuple.recommendation.id!,
+                        ),
                       );
                 },
               );

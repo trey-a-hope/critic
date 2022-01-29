@@ -62,8 +62,12 @@ class RecommendationsService extends IRecommendationsService {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference recommendations =
-          userDocRef.collection(_RECOMMENDATIONS_TABLE_NAME);
+      final CollectionReference recommendations = userDocRef
+          .collection(_RECOMMENDATIONS_TABLE_NAME)
+          .withConverter<RecommendationModel>(
+              fromFirestore: (snapshot, _) =>
+                  RecommendationModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson());
 
       return recommendations.snapshots();
     } catch (e) {
