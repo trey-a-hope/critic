@@ -221,64 +221,75 @@ class ProfilePageState extends State<ProfilePage> {
                           return;
                         },
                       ),
-                      RefreshIndicator(
-                        child: ListView.builder(
-                          primary: true,
-                          shrinkWrap: true,
-                          itemCount: movies.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final MovieModel movie = movies[index];
-                            return ListTile(
-                              onTap: () async {
-                                final MovieModel movieModel =
-                                    await locator<MovieService>()
-                                        .getMovieByID(id: movie.imdbID);
+                      movies.isEmpty
+                          ? Center(
+                              child: Text(
+                                'No movies',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : RefreshIndicator(
+                              child: ListView.builder(
+                                primary: true,
+                                shrinkWrap: true,
+                                itemCount: movies.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final MovieModel movie = movies[index];
+                                  return ListTile(
+                                    onTap: () async {
+                                      final MovieModel movieModel =
+                                          await locator<MovieService>()
+                                              .getMovieByID(id: movie.imdbID);
 
-                                Route route = MaterialPageRoute(
-                                  builder: (context) => BlocProvider(
-                                    create: (context) =>
-                                        CREATE_CRITIQUE_BP.CreateCritiqueBloc(
-                                            movie: movieModel)
-                                          ..add(
-                                            CREATE_CRITIQUE_BP.LoadPageEvent(),
-                                          ),
-                                    child:
-                                        CREATE_CRITIQUE_BP.CreateCritiquePage(),
-                                  ),
-                                );
+                                      Route route = MaterialPageRoute(
+                                        builder: (context) => BlocProvider(
+                                          create: (context) =>
+                                              CREATE_CRITIQUE_BP
+                                                  .CreateCritiqueBloc(
+                                                      movie: movieModel)
+                                                ..add(
+                                                  CREATE_CRITIQUE_BP
+                                                      .LoadPageEvent(),
+                                                ),
+                                          child: CREATE_CRITIQUE_BP
+                                              .CreateCritiquePage(),
+                                        ),
+                                      );
 
-                                Navigator.push(context, route);
+                                      Navigator.push(context, route);
+                                    },
+                                    title: Text(
+                                      '${movie.title}',
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                    trailing: Icon(
+                                      Icons.chevron_right,
+                                      color: Theme.of(context).iconTheme.color,
+                                    ),
+                                    leading: CachedNetworkImage(
+                                      imageUrl: '${movie.poster}',
+                                      imageBuilder: (context, imageProvider) =>
+                                          Image(
+                                        image: imageProvider,
+                                        height: 100,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  );
+                                },
+                              ),
+                              onRefresh: () async {
+                                context.read<ProfileBloc>().add(
+                                      LoadPageEvent(),
+                                    );
+
+                                return;
                               },
-                              title: Text(
-                                '${movie.title}',
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              trailing: Icon(
-                                Icons.chevron_right,
-                                color: Theme.of(context).iconTheme.color,
-                              ),
-                              leading: CachedNetworkImage(
-                                imageUrl: '${movie.poster}',
-                                imageBuilder: (context, imageProvider) => Image(
-                                  image: imageProvider,
-                                  height: 100,
-                                ),
-                                placeholder: (context, url) =>
-                                    CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    Icon(Icons.error),
-                              ),
-                            );
-                          },
-                        ),
-                        onRefresh: () async {
-                          context.read<ProfileBloc>().add(
-                                LoadPageEvent(),
-                              );
-
-                          return;
-                        },
-                      )
+                            )
                     ],
                   ),
                 ),

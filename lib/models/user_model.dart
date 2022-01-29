@@ -8,12 +8,12 @@ part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
 @freezed
-abstract class UserModel with _$UserModel {
+class UserModel with _$UserModel {
   factory UserModel({
     /// The unique id of the user.
     String? uid,
 
-    /// The users email.
+    /// The user's email.
     required String email,
 
     /// User's image url.
@@ -33,6 +33,9 @@ abstract class UserModel with _$UserModel {
 
     /// Number of critiques.
     required int critiqueCount,
+
+    /// Ids of movies in watch list.
+    List<String>? watchList,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

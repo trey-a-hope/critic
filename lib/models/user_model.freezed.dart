@@ -29,7 +29,8 @@ class _$UserModelTearOff {
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount}) {
+      required int critiqueCount,
+      List<String>? watchList}) {
     return _UserModel(
       uid: uid,
       email: email,
@@ -39,6 +40,7 @@ class _$UserModelTearOff {
       created: created,
       username: username,
       critiqueCount: critiqueCount,
+      watchList: watchList,
     );
   }
 
@@ -78,6 +80,9 @@ mixin _$UserModel {
   /// Number of critiques.
   int get critiqueCount => throw _privateConstructorUsedError;
 
+  /// Ids of movies in watch list.
+  List<String>? get watchList => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserModelCopyWith<UserModel> get copyWith =>
@@ -96,7 +101,8 @@ abstract class $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount});
+      int critiqueCount,
+      List<String>? watchList});
 }
 
 /// @nodoc
@@ -117,6 +123,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? created = freezed,
     Object? username = freezed,
     Object? critiqueCount = freezed,
+    Object? watchList = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -151,6 +158,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.critiqueCount
           : critiqueCount // ignore: cast_nullable_to_non_nullable
               as int,
+      watchList: watchList == freezed
+          ? _value.watchList
+          : watchList // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -169,7 +180,8 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount});
+      int critiqueCount,
+      List<String>? watchList});
 }
 
 /// @nodoc
@@ -191,6 +203,7 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? created = freezed,
     Object? username = freezed,
     Object? critiqueCount = freezed,
+    Object? watchList = freezed,
   }) {
     return _then(_UserModel(
       uid: uid == freezed
@@ -225,6 +238,10 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.critiqueCount
           : critiqueCount // ignore: cast_nullable_to_non_nullable
               as int,
+      watchList: watchList == freezed
+          ? _value.watchList
+          : watchList // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -240,7 +257,8 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       @TimestampConverter() required this.modified,
       @TimestampConverter() required this.created,
       required this.username,
-      required this.critiqueCount});
+      required this.critiqueCount,
+      this.watchList});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -279,10 +297,14 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
 
   /// Number of critiques.
   final int critiqueCount;
+  @override
+
+  /// Ids of movies in watch list.
+  final List<String>? watchList;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount)';
+    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount, watchList: $watchList)';
   }
 
   @override
@@ -297,7 +319,8 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('modified', modified))
       ..add(DiagnosticsProperty('created', created))
       ..add(DiagnosticsProperty('username', username))
-      ..add(DiagnosticsProperty('critiqueCount', critiqueCount));
+      ..add(DiagnosticsProperty('critiqueCount', critiqueCount))
+      ..add(DiagnosticsProperty('watchList', watchList));
   }
 
   @override
@@ -316,12 +339,22 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.critiqueCount, critiqueCount) ||
-                other.critiqueCount == critiqueCount));
+                other.critiqueCount == critiqueCount) &&
+            const DeepCollectionEquality().equals(other.watchList, watchList));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, uid, email, imgUrl, fcmToken,
-      modified, created, username, critiqueCount);
+  int get hashCode => Object.hash(
+      runtimeType,
+      uid,
+      email,
+      imgUrl,
+      fcmToken,
+      modified,
+      created,
+      username,
+      critiqueCount,
+      const DeepCollectionEquality().hash(watchList));
 
   @JsonKey(ignore: true)
   @override
@@ -343,7 +376,8 @@ abstract class _UserModel implements UserModel {
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount}) = _$_UserModel;
+      required int critiqueCount,
+      List<String>? watchList}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -382,6 +416,10 @@ abstract class _UserModel implements UserModel {
 
   /// Number of critiques.
   int get critiqueCount;
+  @override
+
+  /// Ids of movies in watch list.
+  List<String>? get watchList;
   @override
   @JsonKey(ignore: true)
   _$UserModelCopyWith<_UserModel> get copyWith =>

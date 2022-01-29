@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/user_model.dart';
 
+import '../service_locator.dart';
+import 'movie_service.dart';
+
 //TODO: Create watchlist service and move logic from here to that file.
 abstract class IUserService {
   Future<void> createUser({required UserModel user});
@@ -192,15 +195,19 @@ class UserService extends IUserService {
     required String imdbID,
   }) async {
     try {
-      final DocumentReference userDocRef = _usersDB.doc(uid);
+      UserModel user = await retrieveUser(uid: uid);
 
-      DocumentSnapshot<Object?> userData = (await userDocRef.get());
+      /// If watch list is null, the user does not have this movie in their list.
+      if (user.watchList == null) {
+        return false;
+      }
 
-      Object object = userData.data()!;
+      /// Check to see if the movie id is in their list.
+      if (user.watchList!.contains(imdbID)) {
+        return true;
+      }
 
-      //TODO: Return true if the imdbID is contained in the users wqtchList array...
-
-      return true;
+      return false;
     } catch (e) {
       throw Exception(
         e.toString(),
@@ -213,23 +220,22 @@ class UserService extends IUserService {
     required String uid,
   }) async {
     try {
-      //TODO: List each movie out.
-      final DocumentReference userDocRef = _usersDB.doc(uid);
+      UserModel user = await retrieveUser(uid: uid);
 
-      // final CollectionReference watchListColRef =
-      //     userDocRef.collection('watchList');
-      // Query query = watchListColRef.orderBy(
-      //   'addedToWatchList',
-      //   descending: true,
-      // );
-      //
-      // List<MovieModel> movies = (await query.get())
-      //     .docs
-      //     .map((e) => MovieModel.fromDoc(data: e))
-      //     .toList();
-      //
-      // return movies;
-      return [];
+      /// If watch list is null, return empty list.
+      if (user.watchList == null) {
+        return [];
+      }
+
+      /// Fetch movie for each id in their watchlist array.
+      List<MovieModel> movies = [];
+      for (int i = 0; i < user.watchList!.length; i++) {
+        String imdb = user.watchList![i];
+        MovieModel movie = await locator<MovieService>().getMovieByID(id: imdb);
+        movies.add(movie);
+      }
+
+      return movies;
     } catch (e) {
       throw Exception(
         e.toString(),

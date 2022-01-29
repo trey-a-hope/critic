@@ -11,13 +11,13 @@ abstract class IRecommendationsService {
     required String sendeeUID,
     required String recommendationID,
   });
+
   Future<Stream<QuerySnapshot>> streamRecommendations({
     required String uid,
   });
 }
 
 class RecommendationsService extends IRecommendationsService {
-  //final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('Users');
 
