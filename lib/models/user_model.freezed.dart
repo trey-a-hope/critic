@@ -57,7 +57,7 @@ mixin _$UserModel {
   /// The unique id of the user.
   String? get uid => throw _privateConstructorUsedError;
 
-  /// The users email.
+  /// The user's email.
   String get email => throw _privateConstructorUsedError;
 
   /// User's image url.
@@ -269,7 +269,7 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   final String? uid;
   @override
 
-  /// The users email.
+  /// The user's email.
   final String email;
   @override
 
@@ -388,7 +388,7 @@ abstract class _UserModel implements UserModel {
   String? get uid;
   @override
 
-  /// The users email.
+  /// The user's email.
   String get email;
   @override
 

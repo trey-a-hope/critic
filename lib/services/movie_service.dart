@@ -35,8 +35,8 @@ class MovieService extends IMovieService {
     );
 
     try {
-      Map bodyMap = json.decode(response.body);
-      MovieModel movie = MovieModel.fromJSON(map: bodyMap);
+      Map<String, dynamic> map = json.decode(response.body);
+      MovieModel movie = MovieModel.fromJson(map);
       return movie;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');

@@ -37,13 +37,14 @@ class RecommendationsService extends IRecommendationsService {
 
       DocumentReference newRecommendationDocRef = recommendationsColRef.doc();
 
-      recommendation.id = newRecommendationDocRef.id;
+      String id = newRecommendationDocRef.id;
 
-      Map recommendationMap = recommendation.toMap();
+      Map map = recommendation.toJson();
+      map['id'] = id;
 
       batch.set(
         newRecommendationDocRef,
-        recommendationMap,
+        map,
       );
 
       await batch.commit();

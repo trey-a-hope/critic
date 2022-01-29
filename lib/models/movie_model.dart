@@ -1,64 +1,46 @@
-class MovieModel {
-  MovieModel({
-    required this.imdbID,
-    required this.title,
-    required this.poster,
-    required this.released,
-    required this.plot,
-    required this.director,
-    required this.imdbRating,
-    required this.imdbVotes,
-    required this.genre,
-    required this.actors,
-    required this.rated,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory MovieModel.fromJSON({required Map map}) {
-    return MovieModel(
-      imdbID: map['imdbID'],
-      title: map['Title'],
-      poster: map['Poster'],
-      released: map['Released'],
-      plot: map['Plot'],
-      director: map['Director'],
-      imdbRating: map['imdbRating'],
-      imdbVotes: map['imdbVotes'],
-      genre: map['Genre'],
-      actors: map['Actors'],
-      rated: map['Rated'],
-    );
-  }
+part 'movie_model.freezed.dart';
 
-  /// The id of the movie in the omdb.
-  final String imdbID;
+part 'movie_model.g.dart';
 
-  /// Title of the movie.
-  final String title;
+@freezed
+class MovieModel with _$MovieModel {
+  factory MovieModel({
+    /// The id of the movie in the omdb.
+    required String imdbID,
 
-  /// Image url of the poster.
-  final String poster;
+    /// Title of the movie.
+    @JsonKey(name: 'Title') required String title,
 
-  /// Date the movie was released.
-  final String released;
+    /// Image url of the poster.
+    @JsonKey(name: 'Property') required String poster,
 
-  /// Plot/description of movie.
-  final String plot;
+    /// Date the movie was released.
+    @JsonKey(name: 'Released') required String released,
 
-  /// The director.
-  final String director;
+    /// Plot/description of movie.
+    @JsonKey(name: 'Plot') required String plot,
 
-  /// Rating on imdb.
-  final String imdbRating;
+    /// The director.
+    @JsonKey(name: 'Director') required String director,
 
-  /// Number of votes on imdb.
-  final String imdbVotes;
+    /// Rating on imdb.
+    required String imdbRating,
 
-  /// Movie genre.
-  final String genre;
+    /// Number of votes on imdb.
+    required String imdbVotes,
 
-  /// Actors in the movie.
-  final String actors;
+    /// Movie genre.
+    @JsonKey(name: 'Genre') required String genre,
 
-  /// Parental rating for movie.
-  final String rated;
+    /// Actors in the movie.
+    @JsonKey(name: 'Actors') required String actors,
+
+    /// Parental rating for movie.
+    @JsonKey(name: 'Rated') required String rated,
+  }) = _MovieModel;
+
+  factory MovieModel.fromJson(Map<String, dynamic> json) =>
+      _$MovieModelFromJson(json);
 }

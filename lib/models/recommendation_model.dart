@@ -1,68 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_model.dart';
-import 'package:critic/services/movie_service.dart';
-import 'package:critic/services/user_service.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:critic/converters/timestamp_converter.dart';
 
-import '../service_locator.dart';
+part 'recommendation_model.freezed.dart';
 
-class RecommendationModel {
-  RecommendationModel({
-    required this.id,
-    required this.message,
-    required this.imdbID,
-    required this.uid,
-    required this.created,
-  });
+part 'recommendation_model.g.dart';
 
-  factory RecommendationModel.fromDoc({required DocumentSnapshot data}) {
-    return RecommendationModel(
-      id: data['id'],
-      message: data['message'],
-      imdbID: data['imdbID'],
-      uid: data['uid'],
-      created: data['created'].toDate(),
-    );
-  }
+@freezed
+class RecommendationModel with _$RecommendationModel {
+  factory RecommendationModel({
+    /// The unique id of the recommendation.
+    required String id,
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'message': message,
-      'imdbID': imdbID,
-      'uid': uid,
-      'created': created,
-    };
-  }
+    /// The message.
+    required String message,
 
-  /// User who sent the recommendation.
-  UserModel? user;
+    /// Movie id associated with the recommendation.
+    required String imdbID,
 
-  /// Fetch the user who sent the recommendation.
-  Future<void> getUser() async {
-    user = await locator<UserService>().retrieveUser(uid: uid);
-  }
+    /// User id of the person who sent the recommendation.
+    required String uid,
 
-  /// The movie that the user is recommending.
-  MovieModel? movie;
+    /// Date it was created.
+    @TimestampConverter() required DateTime created,
+  }) = _RecommendationModel;
 
-  /// Fetch the movie the user is recommending.
-  Future<void> getMovie() async {
-    movie = await locator<MovieService>().getMovieByID(id: imdbID);
-  }
-
-  /// The id of the recommendation.
-  String? id;
-
-  /// Message the user sent.
-  String message;
-
-  /// Id of the movie.
-  String imdbID;
-
-  /// Id of the user.
-  String uid;
-
-  /// Date this recommendation was created.
-  DateTime created;
+  factory RecommendationModel.fromJson(Map<String, dynamic> json) =>
+      _$RecommendationModelFromJson(json);
 }
