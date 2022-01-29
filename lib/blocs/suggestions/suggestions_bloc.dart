@@ -14,8 +14,11 @@ import 'package:critic/constants.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 part 'suggestions_event.dart';
+
 part 'suggestions_state.dart';
+
 part 'suggestions_view.dart';
 
 class SuggestionsBloc extends Bloc<SuggestionsEvent, SuggestionsState> {

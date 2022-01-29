@@ -4,15 +4,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class IAuthService {
   Future<UserModel> getCurrentUser();
+
   Future<void> signOut();
+
   Stream<User?> onAuthStateChanged();
+
   Future<UserCredential> signInWithEmailAndPassword(
       {required String email, required String password});
 
   Future<UserCredential> createUserWithEmailAndPassword(
       {required String email, required String password});
+
   void updatePassword({required String password});
+
   Future<void> deleteUser({required String userID});
+
   Future<void> resetPassword({required String email});
 }
 
@@ -25,9 +31,18 @@ class AuthService extends IAuthService {
   Future<UserModel> getCurrentUser() async {
     try {
       final User firebaseUser = _auth.currentUser!;
-      final DocumentSnapshot documentSnapshot =
-          await _usersDB.doc(firebaseUser.uid).get();
-      return UserModel.fromDoc(data: documentSnapshot);
+
+      final DocumentSnapshot<UserModel> model = (await _usersDB
+          .doc(firebaseUser.uid)
+          .withConverter<UserModel>(
+              fromFirestore: (snapshot, _) =>
+                  UserModel.fromJson(snapshot.data()!),
+              toFirestore: (user, _) => user.toJson())
+          .get());
+
+      UserModel user = model.data()!;
+
+      return user;
     } catch (e) {
       throw Exception('Could not fetch user at this time.');
     }

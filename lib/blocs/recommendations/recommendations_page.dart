@@ -13,35 +13,6 @@ class _RecommendationsPageState extends State<RecommendationsPage>
     super.initState();
   }
 
-  Future<List<MovieModel>> pageFetch(int offset) async {
-    //Fetch template documents.
-    List<DocumentSnapshot> documentSnapshots =
-        await locator<UserService>().retrieveMoviesFromWatchlist(
-      uid: context.read<RecommendationsBloc>().currentUser.uid!,
-      limit: PAGE_FETCH_LIMIT,
-      startAfterDocument:
-          context.read<RecommendationsBloc>().startAfterDocument!,
-    );
-
-    //Return an empty list if there are no new documents.
-    if (documentSnapshots.isEmpty) {
-      return [];
-    }
-
-    context.read<RecommendationsBloc>().startAfterDocument =
-        documentSnapshots[documentSnapshots.length - 1];
-
-    List<MovieModel> movies = [];
-
-    //Convert documents to template models.
-    documentSnapshots.forEach((documentSnapshot) {
-      MovieModel movieModel = MovieModel.fromDoc(data: documentSnapshot);
-      movies.add(movieModel);
-    });
-
-    return movies;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RecommendationsBloc, RecommendationsState>(

@@ -1,13 +1,9 @@
-import 'package:critic/constants.dart';
-import 'package:critic/models/movie_model.dart';
 import 'package:critic/models/recommendation_model.dart';
 import 'package:critic/models/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
-import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/recommendations_service.dart';
-import 'package:critic/services/user_service.dart';
 import 'package:critic/widgets/recommendation_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +13,9 @@ import 'package:critic/widgets/Spinner.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 part 'recommendations_event.dart';
+
 part 'recommendations_state.dart';
+
 part 'recommendations_page.dart';
 
 abstract class RecommendationsBlocDelegate {
@@ -72,11 +70,9 @@ class RecommendationsBloc
       for (int i = 0; i < recommendations.length; i++) {
         RecommendationModel recommendation = recommendations[i];
 
-        recommendation.movie = await locator<MovieService>()
-            .getMovieByID(id: recommendation.imdbID);
+        await recommendation.getMovie();
 
-        recommendation.sender = await locator<UserService>()
-            .retrieveUser(uid: recommendation.senderUID);
+        await recommendation.getUser();
       }
 
       if (recommendations.isEmpty) {

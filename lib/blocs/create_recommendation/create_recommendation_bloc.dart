@@ -23,7 +23,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 part 'create_recommendation_event.dart';
+
 part 'create_recommendation_state.dart';
+
 part 'create_recommendation_page.dart';
 
 class CreateRecommendationBloc
@@ -65,7 +67,7 @@ class CreateRecommendationBloc
           id: null,
           message: message,
           imdbID: _selectedMovie!.imdbID,
-          senderUID: _currentUser.uid!,
+          uid: _currentUser.uid!,
           created: DateTime.now(),
         ),
       );

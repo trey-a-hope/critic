@@ -1,83 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:algolia/algolia.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:critic/converters/timestamp_converter.dart';
 
-class UserModel {
-  UserModel({
-    required this.imgUrl,
-    required this.email,
-    required this.modified,
-    required this.created,
-    required this.uid,
-    required this.username,
-    required this.critiqueCount,
-    this.fcmToken,
-  });
+part 'user_model.freezed.dart';
 
-  factory UserModel.fromDoc({required DocumentSnapshot data}) {
-    return UserModel(
-      imgUrl: data['imgUrl'],
-      email: data['email'],
-      created: data['created'].toDate(),
-      modified: data['modified'].toDate(),
-      uid: data['uid'],
-      username: data['username'],
-      critiqueCount: data['critiqueCount'],
-      fcmToken: data['fcmToken'],
-    );
-  }
+part 'user_model.g.dart';
 
-  factory UserModel.fromAlgolia(AlgoliaObjectSnapshot aob) {
-    Map<String, dynamic> data = aob.data;
-    return UserModel(
-      imgUrl: data['imgUrl'],
-      email: data['email'],
-      created: DateTime.fromMillisecondsSinceEpoch(
-        data['created'],
-      ),
-      modified: DateTime.fromMillisecondsSinceEpoch(
-        data['modified'],
-      ),
-      uid: data['uid'],
-      username: data['username'],
-      critiqueCount: data['critiqueCount'],
-      fcmToken: data['fcmToken'],
-    );
-  }
+@freezed
+abstract class UserModel with _$UserModel {
+  factory UserModel({
+    /// The unique id of the user.
+    String? uid,
 
-  Map<String, dynamic> toMap() {
-    return {
-      'imgUrl': imgUrl,
-      'email': email,
-      'created': created,
-      'modified': modified,
-      'uid': uid,
-      'username': username,
-      'critiqueCount': critiqueCount,
-      'fcmToken': fcmToken,
-    };
-  }
+    /// The users email.
+    required String email,
 
-  /// The unique id of the user.
-  String? uid;
+    /// User's image url.
+    required String imgUrl,
 
-  /// The users email.
-  String email;
+    /// Firebase Cloud Message token for push notifications.
+    String? fcmToken,
 
-  /// User's image url.
-  String imgUrl;
+    /// Time the user was last modified.
+    @TimestampConverter() required DateTime modified,
 
-  /// Firebase Cloud Message token for push notifications.
-  String? fcmToken;
+    /// Time the user was created.
+    @TimestampConverter() required DateTime created,
 
-  /// Time the user was last modified.
-  DateTime modified;
+    /// Username of the user.
+    required String username,
 
-  /// Time the user was created.
-  DateTime created;
+    /// Number of critiques.
+    required int critiqueCount,
+  }) = _UserModel;
 
-  /// Username of the user.
-  String username;
-
-  /// Number of critiques.
-  int critiqueCount;
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }
