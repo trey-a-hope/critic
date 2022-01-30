@@ -118,11 +118,41 @@ class OtherProfilePageState extends State<OtherProfilePage>
                   initialLoader: Spinner(),
                   bottomLoader: Spinner(),
                   itemBuilder: (BuildContext context, CritiqueModel critique,
-                          int index) =>
-                      CritiqueView(
-                    critique: critique,
-                    currentUser: currentUser,
-                  ),
+                      int index) {
+                    //Send future to fetch the movie and user associated with the critique.
+                    Future<UserModel> userFuture =
+                        locator<UserService>().retrieveUser(uid: critique.uid);
+                    Future<MovieModel> movieFuture = locator<MovieService>()
+                        .getMovieByID(id: critique.imdbID);
+
+                    return FutureBuilder(
+                      future: Future.wait([userFuture, movieFuture]),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<dynamic>> snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return CircularProgressIndicator();
+                          default:
+                            if (snapshot.hasError) {
+                              return Center(
+                                child:
+                                    Text('Error ${snapshot.error.toString()}'),
+                              );
+                            }
+
+                            UserModel user = snapshot.data![0] as UserModel;
+                            MovieModel movie = snapshot.data![1] as MovieModel;
+
+                            return CritiqueView(
+                              movie: movie,
+                              user: user,
+                              critique: critique,
+                              currentUserUid: currentUser.uid!,
+                            );
+                        }
+                      },
+                    );
+                  },
                   pageFetch: pageFetch,
                   onError: (dynamic error) => Center(
                     child: Column(

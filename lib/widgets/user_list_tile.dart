@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
     as OTHER_PROFILE_BP;

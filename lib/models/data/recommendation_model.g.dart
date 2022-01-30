@@ -9,7 +9,7 @@ part of 'recommendation_model.dart';
 _$_RecommendationModel _$$_RecommendationModelFromJson(
         Map<String, dynamic> json) =>
     _$_RecommendationModel(
-      id: json['id'] as String,
+      id: json['id'] as String?,
       message: json['message'] as String,
       imdbID: json['imdbID'] as String,
       uid: json['uid'] as String,

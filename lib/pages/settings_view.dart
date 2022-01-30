@@ -4,10 +4,8 @@ import 'package:critic/pages/contact_page.dart';
 import 'package:critic/pages/terms_service_view.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
-import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../service_locator.dart';
 
 class SettingsView extends StatefulWidget {

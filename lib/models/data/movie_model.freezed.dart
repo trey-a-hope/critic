@@ -24,15 +24,18 @@ class _$MovieModelTearOff {
   _MovieModel call(
       {required String imdbID,
       @JsonKey(name: 'Title') required String title,
-      @JsonKey(name: 'Property') required String poster,
+      @JsonKey(name: 'Poster') required String poster,
       @JsonKey(name: 'Released') required String released,
       @JsonKey(name: 'Plot') required String plot,
       @JsonKey(name: 'Director') required String director,
+      @JsonKey(name: 'Writer') required String writer,
+      @JsonKey(name: 'Runtime') required String runtime,
       required String imdbRating,
       required String imdbVotes,
       @JsonKey(name: 'Genre') required String genre,
       @JsonKey(name: 'Actors') required String actors,
-      @JsonKey(name: 'Rated') required String rated}) {
+      @JsonKey(name: 'Rated') required String rated,
+      @JsonKey(name: 'Year') required String year}) {
     return _MovieModel(
       imdbID: imdbID,
       title: title,
@@ -40,11 +43,14 @@ class _$MovieModelTearOff {
       released: released,
       plot: plot,
       director: director,
+      writer: writer,
+      runtime: runtime,
       imdbRating: imdbRating,
       imdbVotes: imdbVotes,
       genre: genre,
       actors: actors,
       rated: rated,
+      year: year,
     );
   }
 
@@ -66,7 +72,7 @@ mixin _$MovieModel {
   String get title => throw _privateConstructorUsedError;
 
   /// Image url of the poster.
-  @JsonKey(name: 'Property')
+  @JsonKey(name: 'Poster')
   String get poster => throw _privateConstructorUsedError;
 
   /// Date the movie was released.
@@ -80,6 +86,14 @@ mixin _$MovieModel {
   /// The director.
   @JsonKey(name: 'Director')
   String get director => throw _privateConstructorUsedError;
+
+  /// The writer.
+  @JsonKey(name: 'Writer')
+  String get writer => throw _privateConstructorUsedError;
+
+  /// Length of the movie.
+  @JsonKey(name: 'Runtime')
+  String get runtime => throw _privateConstructorUsedError;
 
   /// Rating on imdb.
   String get imdbRating => throw _privateConstructorUsedError;
@@ -99,6 +113,10 @@ mixin _$MovieModel {
   @JsonKey(name: 'Rated')
   String get rated => throw _privateConstructorUsedError;
 
+  /// Year the movie was released.
+  @JsonKey(name: 'Year')
+  String get year => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $MovieModelCopyWith<MovieModel> get copyWith =>
@@ -113,15 +131,18 @@ abstract class $MovieModelCopyWith<$Res> {
   $Res call(
       {String imdbID,
       @JsonKey(name: 'Title') String title,
-      @JsonKey(name: 'Property') String poster,
+      @JsonKey(name: 'Poster') String poster,
       @JsonKey(name: 'Released') String released,
       @JsonKey(name: 'Plot') String plot,
       @JsonKey(name: 'Director') String director,
+      @JsonKey(name: 'Writer') String writer,
+      @JsonKey(name: 'Runtime') String runtime,
       String imdbRating,
       String imdbVotes,
       @JsonKey(name: 'Genre') String genre,
       @JsonKey(name: 'Actors') String actors,
-      @JsonKey(name: 'Rated') String rated});
+      @JsonKey(name: 'Rated') String rated,
+      @JsonKey(name: 'Year') String year});
 }
 
 /// @nodoc
@@ -140,11 +161,14 @@ class _$MovieModelCopyWithImpl<$Res> implements $MovieModelCopyWith<$Res> {
     Object? released = freezed,
     Object? plot = freezed,
     Object? director = freezed,
+    Object? writer = freezed,
+    Object? runtime = freezed,
     Object? imdbRating = freezed,
     Object? imdbVotes = freezed,
     Object? genre = freezed,
     Object? actors = freezed,
     Object? rated = freezed,
+    Object? year = freezed,
   }) {
     return _then(_value.copyWith(
       imdbID: imdbID == freezed
@@ -171,6 +195,14 @@ class _$MovieModelCopyWithImpl<$Res> implements $MovieModelCopyWith<$Res> {
           ? _value.director
           : director // ignore: cast_nullable_to_non_nullable
               as String,
+      writer: writer == freezed
+          ? _value.writer
+          : writer // ignore: cast_nullable_to_non_nullable
+              as String,
+      runtime: runtime == freezed
+          ? _value.runtime
+          : runtime // ignore: cast_nullable_to_non_nullable
+              as String,
       imdbRating: imdbRating == freezed
           ? _value.imdbRating
           : imdbRating // ignore: cast_nullable_to_non_nullable
@@ -191,6 +223,10 @@ class _$MovieModelCopyWithImpl<$Res> implements $MovieModelCopyWith<$Res> {
           ? _value.rated
           : rated // ignore: cast_nullable_to_non_nullable
               as String,
+      year: year == freezed
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -204,15 +240,18 @@ abstract class _$MovieModelCopyWith<$Res> implements $MovieModelCopyWith<$Res> {
   $Res call(
       {String imdbID,
       @JsonKey(name: 'Title') String title,
-      @JsonKey(name: 'Property') String poster,
+      @JsonKey(name: 'Poster') String poster,
       @JsonKey(name: 'Released') String released,
       @JsonKey(name: 'Plot') String plot,
       @JsonKey(name: 'Director') String director,
+      @JsonKey(name: 'Writer') String writer,
+      @JsonKey(name: 'Runtime') String runtime,
       String imdbRating,
       String imdbVotes,
       @JsonKey(name: 'Genre') String genre,
       @JsonKey(name: 'Actors') String actors,
-      @JsonKey(name: 'Rated') String rated});
+      @JsonKey(name: 'Rated') String rated,
+      @JsonKey(name: 'Year') String year});
 }
 
 /// @nodoc
@@ -233,11 +272,14 @@ class __$MovieModelCopyWithImpl<$Res> extends _$MovieModelCopyWithImpl<$Res>
     Object? released = freezed,
     Object? plot = freezed,
     Object? director = freezed,
+    Object? writer = freezed,
+    Object? runtime = freezed,
     Object? imdbRating = freezed,
     Object? imdbVotes = freezed,
     Object? genre = freezed,
     Object? actors = freezed,
     Object? rated = freezed,
+    Object? year = freezed,
   }) {
     return _then(_MovieModel(
       imdbID: imdbID == freezed
@@ -264,6 +306,14 @@ class __$MovieModelCopyWithImpl<$Res> extends _$MovieModelCopyWithImpl<$Res>
           ? _value.director
           : director // ignore: cast_nullable_to_non_nullable
               as String,
+      writer: writer == freezed
+          ? _value.writer
+          : writer // ignore: cast_nullable_to_non_nullable
+              as String,
+      runtime: runtime == freezed
+          ? _value.runtime
+          : runtime // ignore: cast_nullable_to_non_nullable
+              as String,
       imdbRating: imdbRating == freezed
           ? _value.imdbRating
           : imdbRating // ignore: cast_nullable_to_non_nullable
@@ -284,6 +334,10 @@ class __$MovieModelCopyWithImpl<$Res> extends _$MovieModelCopyWithImpl<$Res>
           ? _value.rated
           : rated // ignore: cast_nullable_to_non_nullable
               as String,
+      year: year == freezed
+          ? _value.year
+          : year // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -294,15 +348,18 @@ class _$_MovieModel implements _MovieModel {
   _$_MovieModel(
       {required this.imdbID,
       @JsonKey(name: 'Title') required this.title,
-      @JsonKey(name: 'Property') required this.poster,
+      @JsonKey(name: 'Poster') required this.poster,
       @JsonKey(name: 'Released') required this.released,
       @JsonKey(name: 'Plot') required this.plot,
       @JsonKey(name: 'Director') required this.director,
+      @JsonKey(name: 'Writer') required this.writer,
+      @JsonKey(name: 'Runtime') required this.runtime,
       required this.imdbRating,
       required this.imdbVotes,
       @JsonKey(name: 'Genre') required this.genre,
       @JsonKey(name: 'Actors') required this.actors,
-      @JsonKey(name: 'Rated') required this.rated});
+      @JsonKey(name: 'Rated') required this.rated,
+      @JsonKey(name: 'Year') required this.year});
 
   factory _$_MovieModel.fromJson(Map<String, dynamic> json) =>
       _$$_MovieModelFromJson(json);
@@ -319,7 +376,7 @@ class _$_MovieModel implements _MovieModel {
   @override
 
   /// Image url of the poster.
-  @JsonKey(name: 'Property')
+  @JsonKey(name: 'Poster')
   final String poster;
   @override
 
@@ -336,6 +393,16 @@ class _$_MovieModel implements _MovieModel {
   /// The director.
   @JsonKey(name: 'Director')
   final String director;
+  @override
+
+  /// The writer.
+  @JsonKey(name: 'Writer')
+  final String writer;
+  @override
+
+  /// Length of the movie.
+  @JsonKey(name: 'Runtime')
+  final String runtime;
   @override
 
   /// Rating on imdb.
@@ -359,10 +426,15 @@ class _$_MovieModel implements _MovieModel {
   /// Parental rating for movie.
   @JsonKey(name: 'Rated')
   final String rated;
+  @override
+
+  /// Year the movie was released.
+  @JsonKey(name: 'Year')
+  final String year;
 
   @override
   String toString() {
-    return 'MovieModel(imdbID: $imdbID, title: $title, poster: $poster, released: $released, plot: $plot, director: $director, imdbRating: $imdbRating, imdbVotes: $imdbVotes, genre: $genre, actors: $actors, rated: $rated)';
+    return 'MovieModel(imdbID: $imdbID, title: $title, poster: $poster, released: $released, plot: $plot, director: $director, writer: $writer, runtime: $runtime, imdbRating: $imdbRating, imdbVotes: $imdbVotes, genre: $genre, actors: $actors, rated: $rated, year: $year)';
   }
 
   @override
@@ -378,18 +450,35 @@ class _$_MovieModel implements _MovieModel {
             (identical(other.plot, plot) || other.plot == plot) &&
             (identical(other.director, director) ||
                 other.director == director) &&
+            (identical(other.writer, writer) || other.writer == writer) &&
+            (identical(other.runtime, runtime) || other.runtime == runtime) &&
             (identical(other.imdbRating, imdbRating) ||
                 other.imdbRating == imdbRating) &&
             (identical(other.imdbVotes, imdbVotes) ||
                 other.imdbVotes == imdbVotes) &&
             (identical(other.genre, genre) || other.genre == genre) &&
             (identical(other.actors, actors) || other.actors == actors) &&
-            (identical(other.rated, rated) || other.rated == rated));
+            (identical(other.rated, rated) || other.rated == rated) &&
+            (identical(other.year, year) || other.year == year));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, imdbID, title, poster, released,
-      plot, director, imdbRating, imdbVotes, genre, actors, rated);
+  int get hashCode => Object.hash(
+      runtimeType,
+      imdbID,
+      title,
+      poster,
+      released,
+      plot,
+      director,
+      writer,
+      runtime,
+      imdbRating,
+      imdbVotes,
+      genre,
+      actors,
+      rated,
+      year);
 
   @JsonKey(ignore: true)
   @override
@@ -406,15 +495,18 @@ abstract class _MovieModel implements MovieModel {
   factory _MovieModel(
       {required String imdbID,
       @JsonKey(name: 'Title') required String title,
-      @JsonKey(name: 'Property') required String poster,
+      @JsonKey(name: 'Poster') required String poster,
       @JsonKey(name: 'Released') required String released,
       @JsonKey(name: 'Plot') required String plot,
       @JsonKey(name: 'Director') required String director,
+      @JsonKey(name: 'Writer') required String writer,
+      @JsonKey(name: 'Runtime') required String runtime,
       required String imdbRating,
       required String imdbVotes,
       @JsonKey(name: 'Genre') required String genre,
       @JsonKey(name: 'Actors') required String actors,
-      @JsonKey(name: 'Rated') required String rated}) = _$_MovieModel;
+      @JsonKey(name: 'Rated') required String rated,
+      @JsonKey(name: 'Year') required String year}) = _$_MovieModel;
 
   factory _MovieModel.fromJson(Map<String, dynamic> json) =
       _$_MovieModel.fromJson;
@@ -431,7 +523,7 @@ abstract class _MovieModel implements MovieModel {
   @override
 
   /// Image url of the poster.
-  @JsonKey(name: 'Property')
+  @JsonKey(name: 'Poster')
   String get poster;
   @override
 
@@ -448,6 +540,16 @@ abstract class _MovieModel implements MovieModel {
   /// The director.
   @JsonKey(name: 'Director')
   String get director;
+  @override
+
+  /// The writer.
+  @JsonKey(name: 'Writer')
+  String get writer;
+  @override
+
+  /// Length of the movie.
+  @JsonKey(name: 'Runtime')
+  String get runtime;
   @override
 
   /// Rating on imdb.
@@ -471,6 +573,11 @@ abstract class _MovieModel implements MovieModel {
   /// Parental rating for movie.
   @JsonKey(name: 'Rated')
   String get rated;
+  @override
+
+  /// Year the movie was released.
+  @JsonKey(name: 'Year')
+  String get year;
   @override
   @JsonKey(ignore: true)
   _$MovieModelCopyWith<_MovieModel> get copyWith =>

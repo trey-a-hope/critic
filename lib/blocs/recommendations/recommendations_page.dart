@@ -41,22 +41,49 @@ class _RecommendationsPageState extends State<RecommendationsPage>
         }
 
         if (state is LoadedState) {
-          final List<RecommendationTuple> recommendationTuples =
-              state.recommendationTuples;
+          final List<RecommendationModel> recommendations =
+              state.recommendations;
           return ListView.builder(
-            itemCount: recommendationTuples.length,
+            itemCount: recommendations.length,
             itemBuilder: (BuildContext context, int index) {
-              final RecommendationTuple recommendationTuple =
-                  recommendationTuples[index];
-              return RecommendationWidget(
-                recommendationTuple: recommendationTuple,
-                delete: () {
-                  context.read<RecommendationsBloc>().add(
-                        DeleteRecommendationEvent(
-                          recommendationID:
-                              recommendationTuple.recommendation.id!,
-                        ),
+              final RecommendationModel recommendation = recommendations[index];
+
+              //Send future to fetch the movie and user associated with the critique.
+              Future<UserModel> userFuture =
+                  locator<UserService>().retrieveUser(uid: recommendation.uid);
+              Future<MovieModel> movieFuture = locator<MovieService>()
+                  .getMovieByID(id: recommendation.imdbID);
+
+              return FutureBuilder(
+                future: Future.wait([userFuture, movieFuture]),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<dynamic>> snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return CircularProgressIndicator();
+                    default:
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text('Error ${snapshot.error.toString()}'),
+                        );
+                      }
+
+                      UserModel user = snapshot.data![0] as UserModel;
+                      MovieModel movie = snapshot.data![1] as MovieModel;
+
+                      return RecommendationWidget(
+                        movie: movie,
+                        user: user,
+                        recommendation: recommendation,
+                        delete: () {
+                          context.read<RecommendationsBloc>().add(
+                                DeleteRecommendationEvent(
+                                  recommendationID: recommendation.id!,
+                                ),
+                              );
+                        },
                       );
+                  }
                 },
               );
             },

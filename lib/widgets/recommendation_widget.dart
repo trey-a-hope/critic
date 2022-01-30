@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/models/tuples/recommendation_tuple.dart';
+import 'package:critic/models/data/movie_model.dart';
+import 'package:critic/models/data/recommendation_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
     as CREATE_CRITIQUE_BP;
@@ -14,11 +16,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RecommendationWidget extends StatefulWidget {
   const RecommendationWidget({
     Key? key,
-    required this.recommendationTuple,
+    required this.recommendation,
+    required this.movie,
+    required this.user,
     required this.delete,
   }) : super(key: key);
 
-  final RecommendationTuple recommendationTuple;
+  final RecommendationModel recommendation;
+  final UserModel user;
+  final MovieModel movie;
   final Function delete;
 
   @override
@@ -43,7 +49,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Route route = MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                  otherUserID: '${widget.recommendationTuple.user.uid!}',
+                  otherUserID: '${widget.user.uid!}',
                 )..add(
                     OTHER_PROFILE_BP.LoadPageEvent(),
                   ),
@@ -54,7 +60,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Navigator.push(context, route);
           },
           child: CachedNetworkImage(
-            imageUrl: '${widget.recommendationTuple.user.uid!}',
+            imageUrl: '${widget.user.uid!}',
             imageBuilder: (context, imageProvider) => CircleAvatar(
               backgroundImage: imageProvider,
             ),
@@ -70,14 +76,14 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '${widget.recommendationTuple.movie.title}',
+                '${widget.movie.title}',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold),
               ),
               Text(
-                  '${widget.recommendationTuple.user.username}, ${timeago.format(widget.recommendationTuple.recommendation.created, allowFromNow: true)}',
+                  '${widget.user.username}, ${timeago.format(widget.recommendation.created, allowFromNow: true)}',
                   style: TextStyle(color: Colors.white, fontSize: 14)),
             ],
           ),
@@ -86,7 +92,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              '"${widget.recommendationTuple.recommendation.message}\"',
+              '"${widget.recommendation.message}\"',
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -119,7 +125,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
                       builder: (context) => BlocProvider(
                         create: (context) =>
                             CREATE_CRITIQUE_BP.CreateCritiqueBloc(
-                          movie: widget.recommendationTuple.movie,
+                          movie: widget.movie,
                         )..add(
                                 CREATE_CRITIQUE_BP.LoadPageEvent(),
                               ),

@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:package_info/package_info.dart';
 import 'constants.dart';
-import 'models/user_model.dart';
+import 'models/data/user_model.dart';
 import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';

@@ -3,7 +3,6 @@ import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/full_width_button.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';

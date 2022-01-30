@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class IAuthService {

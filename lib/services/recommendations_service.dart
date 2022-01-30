@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/recommendation_model.dart';
+import 'package:critic/models/data/recommendation_model.dart';
 
 abstract class IRecommendationsService {
   Future<void> createRecommendation({

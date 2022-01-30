@@ -22,7 +22,7 @@ class _$RecommendationModelTearOff {
   const _$RecommendationModelTearOff();
 
   _RecommendationModel call(
-      {required String id,
+      {String? id,
       required String message,
       required String imdbID,
       required String uid,
@@ -47,7 +47,7 @@ const $RecommendationModel = _$RecommendationModelTearOff();
 /// @nodoc
 mixin _$RecommendationModel {
   /// The unique id of the recommendation.
-  String get id => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
 
   /// The message.
   String get message => throw _privateConstructorUsedError;
@@ -74,7 +74,7 @@ abstract class $RecommendationModelCopyWith<$Res> {
           RecommendationModel value, $Res Function(RecommendationModel) then) =
       _$RecommendationModelCopyWithImpl<$Res>;
   $Res call(
-      {String id,
+      {String? id,
       String message,
       String imdbID,
       String uid,
@@ -102,7 +102,7 @@ class _$RecommendationModelCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       message: message == freezed
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -131,7 +131,7 @@ abstract class _$RecommendationModelCopyWith<$Res>
       __$RecommendationModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String id,
+      {String? id,
       String message,
       String imdbID,
       String uid,
@@ -161,7 +161,7 @@ class __$RecommendationModelCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       message: message == freezed
           ? _value.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -188,7 +188,7 @@ class _$_RecommendationModel
     with DiagnosticableTreeMixin
     implements _RecommendationModel {
   _$_RecommendationModel(
-      {required this.id,
+      {this.id,
       required this.message,
       required this.imdbID,
       required this.uid,
@@ -200,7 +200,7 @@ class _$_RecommendationModel
   @override
 
   /// The unique id of the recommendation.
-  final String id;
+  final String? id;
   @override
 
   /// The message.
@@ -266,7 +266,7 @@ class _$_RecommendationModel
 
 abstract class _RecommendationModel implements RecommendationModel {
   factory _RecommendationModel(
-          {required String id,
+          {String? id,
           required String message,
           required String imdbID,
           required String uid,
@@ -279,7 +279,7 @@ abstract class _RecommendationModel implements RecommendationModel {
   @override
 
   /// The unique id of the recommendation.
-  String get id;
+  String? get id;
   @override
 
   /// The message.

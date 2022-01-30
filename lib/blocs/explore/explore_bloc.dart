@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/widgets/explore_list.dart';
 import 'package:critic/widgets/explore_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,8 +27,6 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
       : super(
           ExploreState(),
         );
-
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   ExploreBlocDelegate? _exploreBlocDelegate;
 

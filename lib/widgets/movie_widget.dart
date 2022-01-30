@@ -1,4 +1,4 @@
-import 'package:critic/models/movie_model.dart';
+import 'package:critic/models/data/movie_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'

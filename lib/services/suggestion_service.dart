@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/suggestion_model.dart';
+import 'package:critic/models/data/suggestion_model.dart';
 
 abstract class ISuggestionService {
   Future<void> createSuggestion({required SuggestionModel suggestion});
@@ -20,12 +20,10 @@ class SuggestionService extends ISuggestionService {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
       final DocumentReference suggestionDocRef = _suggestionsColRef.doc();
-      suggestion.id = suggestionDocRef.id;
+      Map map = suggestion.toJson();
+      map['id'] = suggestionDocRef.id;
 
-      batch.set(
-        suggestionDocRef,
-        suggestion.toMap(),
-      );
+      batch.set(suggestionDocRef, map);
 
       final DocumentReference tableCountsDocRef =
           _dataColRef.doc('tableCounts');

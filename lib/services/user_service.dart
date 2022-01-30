@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/movie_model.dart';
+import 'package:critic/models/data/user_model.dart';
 
 import '../service_locator.dart';
 import 'movie_service.dart';

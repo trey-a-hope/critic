@@ -1,32 +1,18 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:critic/models/comment_model.dart';
-import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/comment_model.dart';
+import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/user_service.dart';
-import 'package:critic/services/util_service.dart';
-import 'package:critic/services/validation_service.dart';
-import 'package:critic/widgets/small_critique_view.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/pages/likes_page.dart';
 import 'package:critic/widgets/Spinner.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_stack/image_stack.dart';
 import '../../constants.dart';
-import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
-    as CREATE_CRITIQUE_BP;
-import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
-    as OTHER_PROFILE_BP;
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:intl/intl.dart';
 
 part 'critique_details_event.dart';
 part 'critique_details_state.dart';
@@ -75,12 +61,6 @@ class CritiqueDetailsBloc
           uid: _critiqueModel.uid,
         );
 
-        // CritiqueStatsModel critiqueStats =
-        //     await locator<CritiqueService>().critiqueStats(
-        //   uid: _currentUser.uid,
-        //   critiqueID: critiqueModel.id,
-        // );
-
         //Fetch users for likes.
         List<UserModel> likedUsers = [];
         for (int i = 0; i < _critiqueModel.likes.length; i++) {
@@ -93,19 +73,19 @@ class CritiqueDetailsBloc
         bool isLiked = _critiqueModel.likes.contains(_currentUser.uid);
 
         //Fetch users for comments.
-        for (int i = 0; i < _critiqueModel.comments.length; i++) {
-          UserModel commentUser = await locator<UserService>()
-              .retrieveUser(uid: _critiqueModel.comments[i].uid);
-          _critiqueModel.comments[i].user = commentUser;
-        }
+        // for (int i = 0; i < _critiqueModel.comments.length; i++) {
+        //   UserModel commentUser = await locator<UserService>()
+        //       .retrieveUser(uid: _critiqueModel.comments[i].uid);
+        //   _critiqueModel.comments[i].user = commentUser;
+        // }
 
         //Reverse comments to get most recent on top.
-        _critiqueModel.comments = _critiqueModel.comments.reversed.toList();
+        //_critiqueModel.comments = _critiqueModel.comments.reversed.toList();
 
         List<CritiqueModel> otherCritiques =
             await locator<CritiqueService>().listSimilar(
           id: _critiqueModel.id,
-          imdbID: _critiqueModel.movie!.imdbID,
+          imdbID: _critiqueModel.imdbID,
         );
 
         yield LoadedState(
@@ -170,7 +150,8 @@ class CritiqueDetailsBloc
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: _critiqueUser.fcmToken!,
             title: '${_currentUser.username} liked your critique!',
-            body: '${_critiqueModel.movie!.title}',
+            // body: '${_critiqueModel.movie!.title}',
+            body: 'See what movie it was now.',
             notificationData: null,
           );
         }
@@ -210,6 +191,7 @@ class CritiqueDetailsBloc
             uid: _currentUser.uid!,
             comment: comment,
             likes: [],
+            created: DateTime.now(),
           ),
         );
 
@@ -219,25 +201,27 @@ class CritiqueDetailsBloc
           await locator<FCMNotificationService>().sendNotificationToUser(
             fcmToken: _critiqueUser.fcmToken!,
             title: '${_currentUser.username} commented on your critique!',
-            body: '${_critiqueModel.movie!.title}',
+            // body: '${_critiqueModel.movie!.title}',
+            body: 'See what movie it was now.',
+
             notificationData: null,
           );
         }
 
         //Send notification to all users who commented.
-        for (int i = 0; i < _critiqueModel.comments.length; i++) {
-          final UserModel commentUser = _critiqueModel.comments[i].user!;
-          if (_currentUser.uid != _critiqueModel.comments[i].uid &&
-              commentUser.fcmToken != null) {
-            await locator<FCMNotificationService>().sendNotificationToUser(
-              fcmToken: commentUser.fcmToken!,
-              title:
-                  '${_currentUser.username} commented on a critique you commented on!',
-              body: '${_critiqueModel.movie!.title}',
-              notificationData: null,
-            );
-          }
-        }
+        // for (int i = 0; i < _critiqueModel.comments.length; i++) {
+        //   final UserModel commentUser = _critiqueModel.comments[i].user!;
+        //   if (_currentUser.uid != _critiqueModel.comments[i].uid &&
+        //       commentUser.fcmToken != null) {
+        //     await locator<FCMNotificationService>().sendNotificationToUser(
+        //       fcmToken: commentUser.fcmToken!,
+        //       title:
+        //           '${_currentUser.username} commented on a critique you commented on!',
+        //       body: '${_critiqueModel.movie!.title}',
+        //       notificationData: null,
+        //     );
+        //   }
+        // }
 
         _critiqueDetailsBlocDelegate!.clearText();
 

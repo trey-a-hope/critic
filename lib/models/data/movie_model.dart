@@ -14,7 +14,7 @@ class MovieModel with _$MovieModel {
     @JsonKey(name: 'Title') required String title,
 
     /// Image url of the poster.
-    @JsonKey(name: 'Property') required String poster,
+    @JsonKey(name: 'Poster') required String poster,
 
     /// Date the movie was released.
     @JsonKey(name: 'Released') required String released,
@@ -24,6 +24,12 @@ class MovieModel with _$MovieModel {
 
     /// The director.
     @JsonKey(name: 'Director') required String director,
+
+    /// The writer.
+    @JsonKey(name: 'Writer') required String writer,
+
+    /// Length of the movie.
+    @JsonKey(name: 'Runtime') required String runtime,
 
     /// Rating on imdb.
     required String imdbRating,
@@ -39,6 +45,9 @@ class MovieModel with _$MovieModel {
 
     /// Parental rating for movie.
     @JsonKey(name: 'Rated') required String rated,
+
+    /// Year the movie was released.
+    @JsonKey(name: 'Year') required String year,
   }) = _MovieModel;
 
   factory MovieModel.fromJson(Map<String, dynamic> json) =>

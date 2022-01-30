@@ -1,7 +1,6 @@
-import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/recommendation_model.dart';
-import 'package:critic/models/tuples/recommendation_tuple.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/movie_model.dart';
+import 'package:critic/models/data/recommendation_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
@@ -71,34 +70,15 @@ class RecommendationsBloc
     if (event is RecommendationsUpdatedEvent) {
       final List<RecommendationModel> recommendations = event.recommendations;
 
-      List<RecommendationTuple> recommendationTuples = [];
-      for (int i = 0; i < recommendations.length; i++) {
-        RecommendationModel recommendation = recommendations[i];
-
-        MovieModel movie = await locator<MovieService>()
-            .getMovieByID(id: recommendation.imdbID);
-
-        UserModel user =
-            await locator<UserService>().retrieveUser(uid: recommendation.uid);
-
-        RecommendationTuple recommendationTuple = RecommendationTuple(
-          recommendation: recommendation,
-          user: user,
-          movie: movie,
-        );
-
-        recommendationTuples.add(recommendationTuple);
-      }
-
       if (recommendations.isEmpty) {
         yield EmptyRecommendationsState();
       } else {
-        recommendationTuples.sort(
-          (a, b) => b.recommendation.created.compareTo(
-            a.recommendation.created,
+        recommendations.sort(
+          (a, b) => b.created.compareTo(
+            a.created,
           ),
         );
-        yield LoadedState(recommendationTuples: recommendationTuples);
+        yield LoadedState(recommendations: recommendations);
       }
     }
 
