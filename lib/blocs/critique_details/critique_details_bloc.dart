@@ -1,18 +1,33 @@
 import 'dart:async';
 import 'package:critic/models/data/comment_model.dart';
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
 import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
+import 'package:critic/widgets/small_critique_view.dart';
 import 'package:flutter/material.dart';
 import 'package:equatable/equatable.dart';
 import 'package:critic/widgets/Spinner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../constants.dart';
+
+import 'package:critic/services/util_service.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:critic/pages/likes_page.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:image_stack/image_stack.dart';
+import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
+    as CREATE_CRITIQUE_BP;
+import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
+    as OTHER_PROFILE_BP;
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
 
 part 'critique_details_event.dart';
 part 'critique_details_state.dart';
@@ -82,11 +97,16 @@ class CritiqueDetailsBloc
         //Reverse comments to get most recent on top.
         //_critiqueModel.comments = _critiqueModel.comments.reversed.toList();
 
+        //Fetch similar critiques.
         List<CritiqueModel> otherCritiques =
             await locator<CritiqueService>().listSimilar(
           id: _critiqueModel.id,
           imdbID: _critiqueModel.imdbID,
         );
+
+        //Fetch the movie this critique is about.
+        MovieModel movie = await locator<MovieService>()
+            .getMovieByID(id: _critiqueModel.imdbID);
 
         yield LoadedState(
           currentUser: _currentUser,
@@ -95,6 +115,7 @@ class CritiqueDetailsBloc
           isLiked: isLiked,
           likedUsers: likedUsers,
           otherCritiques: otherCritiques,
+          movie: movie,
         );
       } catch (error) {
         _critiqueDetailsBlocDelegate!.showMessage(
