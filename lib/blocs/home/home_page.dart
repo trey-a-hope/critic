@@ -11,6 +11,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  /// Prompt user for update if one is available.
   void _checkForAppUpdate(BuildContext context) async {
     final NewVersion newVersion = NewVersion();
     newVersion.showAlertIfNecessary(context: context);
@@ -207,17 +208,47 @@ class _HomePageState extends State<HomePage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: mostRecentCritiques.length,
                           itemBuilder: (context, index) {
-                            CritiqueModel otherCritique =
-                                mostRecentCritiques[index];
+                            CritiqueModel critique = mostRecentCritiques[index];
+
+                            //Send future to fetch the movie and user associated with the critique.
+                            Future<UserModel> userFuture =
+                                locator<UserService>()
+                                    .retrieveUser(uid: critique.uid);
+                            Future<MovieModel> movieFuture =
+                                locator<MovieService>()
+                                    .getMovieByID(id: critique.imdbID);
+
                             return Container(
                               height: 100,
                               width: MediaQuery.of(context).size.width * 0.75,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: SmallCritiqueView(
-                                  critique: otherCritique,
-                                  currentUser: currentUser,
-                                ),
+                              child: FutureBuilder(
+                                future: Future.wait([userFuture, movieFuture]),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<List<dynamic>> snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.waiting:
+                                      return CircularProgressIndicator();
+                                    default:
+                                      if (snapshot.hasError) {
+                                        return Center(
+                                          child: Text(
+                                              'Error ${snapshot.error.toString()}'),
+                                        );
+                                      }
+
+                                      UserModel user =
+                                          snapshot.data![0] as UserModel;
+                                      MovieModel movie =
+                                          snapshot.data![1] as MovieModel;
+
+                                      return SmallCritiqueView(
+                                        movie: movie,
+                                        user: user,
+                                        critique: critique,
+                                        currentUserUid: currentUser.uid!,
+                                      );
+                                  }
+                                },
                               ),
                             );
                           },

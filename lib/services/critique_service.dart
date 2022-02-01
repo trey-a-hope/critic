@@ -1,6 +1,6 @@
 import 'package:critic/constants.dart';
-import 'package:critic/models/comment_model.dart';
-import 'package:critic/models/critique_model.dart';
+import 'package:critic/models/data/comment_model.dart';
+import 'package:critic/models/data/critique_model.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
@@ -86,10 +86,7 @@ class CritiqueService extends ICritiqueService {
 
       final dynamic result = json.decode(response.body);
 
-      CritiqueModel critique = CritiqueModel.fromJSON(map: result);
-
-      //Attach movie to critique object.
-      await critique.getMovie();
+      CritiqueModel critique = CritiqueModel.fromJson(result);
 
       return critique;
     } catch (e) {
@@ -127,14 +124,9 @@ class CritiqueService extends ICritiqueService {
 
       List<CritiqueModel> critiques = results
           .map(
-            (result) => CritiqueModel.fromJSON(map: result),
+            (result) => CritiqueModel.fromJson(result),
           )
           .toList();
-
-      //Attach movie to critique object.
-      for (int i = 0; i < critiques.length; i++) {
-        await critiques[i].getMovie();
-      }
 
       return critiques;
     } catch (e) {
@@ -172,14 +164,9 @@ class CritiqueService extends ICritiqueService {
 
       List<CritiqueModel> critiques = results
           .map(
-            (result) => CritiqueModel.fromJSON(map: result),
+            (result) => CritiqueModel.fromJson(result),
           )
           .toList();
-
-      //Attach movie to critique object.
-      for (int i = 0; i < critiques.length; i++) {
-        await critiques[i].getMovie();
-      }
 
       return critiques;
     } catch (e) {
@@ -340,14 +327,9 @@ class CritiqueService extends ICritiqueService {
 
       List<CritiqueModel> critiques = results
           .map(
-            (result) => CritiqueModel.fromJSON(map: result),
+            (result) => CritiqueModel.fromJson(result),
           )
           .toList();
-
-      //Attach movie to critique object.
-      for (int i = 0; i < critiques.length; i++) {
-        await critiques[i].getMovie();
-      }
 
       return critiques;
     } catch (e) {
@@ -399,8 +381,6 @@ class CritiqueService extends ICritiqueService {
           code: response.statusCode.toString(),
         );
       }
-
-      // final dynamic result = json.decode(response.body);
 
       return 0;
     } catch (e) {
@@ -460,14 +440,9 @@ class CritiqueService extends ICritiqueService {
 
       List<CritiqueModel> critiques = results
           .map(
-            (result) => CritiqueModel.fromJSON(map: result),
+            (result) => CritiqueModel.fromJson(result),
           )
           .toList();
-
-      //Attach movie to critique object.
-      for (int i = 0; i < critiques.length; i++) {
-        await critiques[i].getMovie();
-      }
 
       return critiques;
     } catch (e) {

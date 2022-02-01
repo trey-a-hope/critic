@@ -99,7 +99,10 @@ class ProfilePageState extends State<ProfilePage> {
                                               backgroundImage: imageProvider,
                                             ),
                                             placeholder: (context, url) =>
-                                                CircularProgressIndicator(),
+                                                Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
                                             errorWidget:
                                                 (context, url, error) =>
                                                     Icon(Icons.error),
@@ -168,11 +171,47 @@ class ProfilePageState extends State<ProfilePage> {
                           initialLoader: Spinner(),
                           bottomLoader: Spinner(),
                           itemBuilder: (BuildContext context,
-                                  CritiqueModel critique, int index) =>
-                              CritiqueView(
-                            critique: critique,
-                            currentUser: _currentUser,
-                          ),
+                              CritiqueModel critique, int index) {
+                            //Send future to fetch the movie and user associated with the critique.
+                            Future<UserModel> userFuture =
+                                locator<UserService>()
+                                    .retrieveUser(uid: critique.uid);
+                            Future<MovieModel> movieFuture =
+                                locator<MovieService>()
+                                    .getMovieByID(id: critique.imdbID);
+
+                            return FutureBuilder(
+                              future: Future.wait([userFuture, movieFuture]),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<List<dynamic>> snapshot) {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.waiting:
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  default:
+                                    if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text(
+                                            'Error ${snapshot.error.toString()}'),
+                                      );
+                                    }
+
+                                    UserModel user =
+                                        snapshot.data![0] as UserModel;
+                                    MovieModel movie =
+                                        snapshot.data![1] as MovieModel;
+
+                                    return CritiqueView(
+                                      movie: movie,
+                                      user: user,
+                                      critique: critique,
+                                      currentUserUid: _currentUser.uid!,
+                                    );
+                                }
+                              },
+                            );
+                          },
                           pageFetch: pageFetch,
                           onError: (dynamic error) => Center(
                             child: Column(
@@ -274,8 +313,9 @@ class ProfilePageState extends State<ProfilePage> {
                                         image: imageProvider,
                                         height: 100,
                                       ),
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
+                                      placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                     ),

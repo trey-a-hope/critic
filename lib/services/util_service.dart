@@ -1,5 +1,8 @@
-import 'package:flutter/cupertino.dart';
+import 'package:critic/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../service_locator.dart';
 
 abstract class IUtilService {
   void heroToImage({
@@ -7,6 +10,7 @@ abstract class IUtilService {
     required String imgUrl,
     required String tag,
   });
+  void setOnlineStatus({required bool isOnline});
 }
 
 class UtilService extends IUtilService {
@@ -19,6 +23,22 @@ class UtilService extends IUtilService {
     Navigator.push(context, MaterialPageRoute(builder: (_) {
       return DetailScreen(imgUrl: imgUrl, tag: tag);
     }));
+  }
+
+  @override
+  Future<void> setOnlineStatus({required bool isOnline}) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    await locator<UserService>().updateUser(
+      uid: user.uid,
+      data: {'isOnline': isOnline},
+    );
+
+    return;
   }
 }
 

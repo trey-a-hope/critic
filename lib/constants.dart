@@ -1,7 +1,7 @@
 import 'package:critic/extensions/hex_color.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import 'models/genre_model.dart';
+import 'models/ui/genre_model.dart';
 
 const String DUMMY_POSTER_IMG_URL =
     'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';

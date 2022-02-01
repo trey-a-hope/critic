@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/blocs/search_users/search_users_bloc.dart'
     as SEARCH_USERS_BP;
-import 'package:critic/models/movie_model.dart';
-import 'package:critic/models/recommendation_model.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/movie_model.dart';
+import 'package:critic/models/data/recommendation_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
@@ -18,7 +17,6 @@ import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
     as SEARCH_MOVIES_BP;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -64,7 +62,6 @@ class CreateRecommendationBloc
       await locator<RecommendationsService>().createRecommendation(
         sendeeUID: _selectedUser!.uid!,
         recommendation: RecommendationModel(
-          id: null,
           message: message,
           imdbID: _selectedMovie!.imdbID,
           uid: _currentUser.uid!,

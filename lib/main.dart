@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/pages/entry_page.dart';
 import 'package:critic/services/user_service.dart';
+import 'package:critic/services/util_service.dart';
 import 'package:critic/style/theme_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:package_info/package_info.dart';
 import 'constants.dart';
-import 'models/user_model.dart';
+import 'models/data/user_model.dart';
 import 'service_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';
@@ -62,7 +63,7 @@ class MyApp extends StatefulWidget {
   State createState() => MyAppState();
 }
 
-class MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> with WidgetsBindingObserver {
   MyAppState();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -128,6 +129,15 @@ class MyAppState extends State<MyApp> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      locator<UtilService>().setOnlineStatus(isOnline: true);
+    } else {
+      locator<UtilService>().setOnlineStatus(isOnline: false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -155,11 +165,16 @@ class MyAppState extends State<MyApp> {
                   ),
                 );
               } else if (!snapshot.hasData) {
+                //Send user to login page.
                 return BlocProvider<LoginBloc>(
                   create: (BuildContext context) => LoginBloc(),
                   child: LoginPage(),
                 );
               } else {
+                //Set user to online status.
+                locator<UtilService>().setOnlineStatus(isOnline: true);
+
+                //Proceed to app.
                 return EntryPage(myAppState: this);
               }
           }

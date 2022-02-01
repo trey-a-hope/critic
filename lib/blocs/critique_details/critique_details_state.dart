@@ -14,6 +14,7 @@ class LoadedState extends CritiqueDetailsState {
   final bool isLiked;
   final List<UserModel> likedUsers;
   final List<CritiqueModel> otherCritiques;
+  final MovieModel movie;
 
   LoadedState({
     required this.currentUser,
@@ -22,6 +23,7 @@ class LoadedState extends CritiqueDetailsState {
     required this.isLiked,
     required this.likedUsers,
     required this.otherCritiques,
+    required this.movie,
   });
 
   @override
@@ -32,6 +34,7 @@ class LoadedState extends CritiqueDetailsState {
         isLiked,
         likedUsers,
         otherCritiques,
+        movie,
       ];
 }
 

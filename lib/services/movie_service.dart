@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/blocs/search_movies/search_movies_bloc.dart';
-import 'package:critic/models/movie_model.dart';
+import 'package:critic/models/data/movie_model.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
@@ -35,8 +35,8 @@ class MovieService extends IMovieService {
     );
 
     try {
-      Map bodyMap = json.decode(response.body);
-      MovieModel movie = MovieModel.fromJSON(map: bodyMap);
+      Map<String, dynamic> map = json.decode(response.body);
+      MovieModel movie = MovieModel.fromJson(map);
       return movie;
     } catch (e) {
       throw PlatformException(message: e.toString(), code: '');

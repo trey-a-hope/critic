@@ -1,6 +1,9 @@
-import 'package:critic/models/critique_model.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/models/data/movie_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/critique_service.dart';
+import 'package:critic/services/movie_service.dart';
+import 'package:critic/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination_view/pagination_view.dart';
@@ -47,12 +50,40 @@ class ExploreList extends StatelessWidget {
       child: PaginationView<CritiqueModel>(
         initialLoader: Spinner(),
         bottomLoader: Spinner(),
-        itemBuilder:
-            (BuildContext context, CritiqueModel critique, int index) =>
-                CritiqueView(
-          critique: critique,
-          currentUser: currentUser,
-        ),
+        itemBuilder: (BuildContext context, CritiqueModel critique, int index) {
+          //Send future to fetch the movie and user associated with the critique.
+          Future<UserModel> userFuture =
+              locator<UserService>().retrieveUser(uid: critique.uid);
+          Future<MovieModel> movieFuture =
+              locator<MovieService>().getMovieByID(id: critique.imdbID);
+
+          return FutureBuilder(
+            future: Future.wait([userFuture, movieFuture]),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                default:
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error ${snapshot.error.toString()}'),
+                    );
+                  }
+
+                  UserModel user = snapshot.data![0] as UserModel;
+                  MovieModel movie = snapshot.data![1] as MovieModel;
+
+                  return CritiqueView(
+                    movie: movie,
+                    user: user,
+                    critique: critique,
+                    currentUserUid: currentUser.uid!,
+                  );
+              }
+            },
+          );
+        },
         pageFetch: pageFetch,
         onError: (dynamic error) => Center(
           child: Column(
@@ -92,6 +123,7 @@ class ExploreList extends StatelessWidget {
             ],
           ),
         ),
+        paginationViewType: PaginationViewType.listView,
       ),
       onRefresh: () async {
         lastID = '';

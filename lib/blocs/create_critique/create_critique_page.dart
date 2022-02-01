@@ -7,10 +7,16 @@ class CreateCritiquePage extends StatefulWidget {
 
 class CreateCritiquePageState extends State<CreateCritiquePage>
     implements CreateCritiqueBlocDelegate {
+  /// Editing controller for message on critique.
   final TextEditingController _critiqueController = TextEditingController();
+
+  /// Key for the scaffold.
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  /// Key for the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  /// Starting rating.
   double _rating = 0;
 
   @override
@@ -457,15 +463,47 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                             itemBuilder: (context, index) {
                               CritiqueModel otherCritique =
                                   otherCritiques[index];
+
+                              //Send future to fetch the movie and user associated with the critique.
+                              Future<UserModel> userFuture =
+                                  locator<UserService>()
+                                      .retrieveUser(uid: otherCritique.uid);
+                              Future<MovieModel> movieFuture =
+                                  locator<MovieService>()
+                                      .getMovieByID(id: otherCritique.imdbID);
+
                               return Container(
                                 height: 100,
                                 width: MediaQuery.of(context).size.width * 0.75,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: SmallCritiqueView(
-                                    critique: otherCritique,
-                                    currentUser: currentUser,
-                                  ),
+                                child: FutureBuilder(
+                                  future:
+                                      Future.wait([userFuture, movieFuture]),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<List<dynamic>> snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.waiting:
+                                        return CircularProgressIndicator();
+                                      default:
+                                        if (snapshot.hasError) {
+                                          return Center(
+                                            child: Text(
+                                                'Error ${snapshot.error.toString()}'),
+                                          );
+                                        }
+
+                                        UserModel user =
+                                            snapshot.data![0] as UserModel;
+                                        MovieModel movie =
+                                            snapshot.data![1] as MovieModel;
+
+                                        return SmallCritiqueView(
+                                          movie: movie,
+                                          user: user,
+                                          critique: otherCritique,
+                                          currentUserUid: currentUser.uid!,
+                                        );
+                                    }
+                                  },
                                 ),
                               );
                             },

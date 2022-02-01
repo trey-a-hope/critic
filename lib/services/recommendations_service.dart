@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/recommendation_model.dart';
+import 'package:critic/models/data/recommendation_model.dart';
 
 abstract class IRecommendationsService {
   Future<void> createRecommendation({
@@ -37,13 +37,14 @@ class RecommendationsService extends IRecommendationsService {
 
       DocumentReference newRecommendationDocRef = recommendationsColRef.doc();
 
-      recommendation.id = newRecommendationDocRef.id;
+      String id = newRecommendationDocRef.id;
 
-      Map recommendationMap = recommendation.toMap();
+      Map map = recommendation.toJson();
+      map['id'] = id;
 
       batch.set(
         newRecommendationDocRef,
-        recommendationMap,
+        map,
       );
 
       await batch.commit();
@@ -61,8 +62,12 @@ class RecommendationsService extends IRecommendationsService {
     try {
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      final CollectionReference recommendations =
-          userDocRef.collection(_RECOMMENDATIONS_TABLE_NAME);
+      final CollectionReference recommendations = userDocRef
+          .collection(_RECOMMENDATIONS_TABLE_NAME)
+          .withConverter<RecommendationModel>(
+              fromFirestore: (snapshot, _) =>
+                  RecommendationModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson());
 
       return recommendations.snapshots();
     } catch (e) {

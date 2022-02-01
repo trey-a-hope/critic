@@ -20,8 +20,16 @@ class SearchUsersRepository {
       final List<AlgoliaObjectSnapshot> results =
           (await query.getObjects()).hits;
 
-      final List<UserModel> users =
-          results.map((result) => UserModel.fromJson(result.data)).toList();
+      final List<dynamic> uids =
+          results.map((result) => result.data['uid']).toList();
+
+      // Convert algolia results to user objects.
+      List<UserModel> users = [];
+      for (int i = 0; i < uids.length; i++) {
+        String uid = uids[i];
+        UserModel user = await locator<UserService>().retrieveUser(uid: uid);
+        users.add(user);
+      }
 
       cache.set(term, users);
       return users;

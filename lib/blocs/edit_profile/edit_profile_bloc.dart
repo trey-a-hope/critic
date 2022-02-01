@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';

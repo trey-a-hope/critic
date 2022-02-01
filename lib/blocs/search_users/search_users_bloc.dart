@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:critic/models/user_model.dart';
+import 'package:critic/models/data/user_model.dart';
 import 'package:critic/service_locator.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/block_user_service.dart';
+import 'package:critic/services/user_service.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
