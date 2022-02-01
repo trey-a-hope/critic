@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/data/user_model.dart';
+import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../service_locator.dart';
 
 abstract class IAuthService {
   Future<UserModel> getCurrentUser();
@@ -49,7 +52,11 @@ class AuthService extends IAuthService {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
+    //Set user online status to false.
+    await locator<UtilService>().setOnlineStatus(isOnline: false);
+
+    //Sign user out.
     return _auth.signOut();
   }
 

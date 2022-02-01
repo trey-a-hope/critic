@@ -36,6 +36,9 @@ class UserModel with _$UserModel {
 
     /// Ids of movies in watch list.
     List<String>? watchList,
+
+    /// Determines if the user is active in the app or not.
+    bool? isOnline,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

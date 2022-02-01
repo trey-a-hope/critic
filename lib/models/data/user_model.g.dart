@@ -20,6 +20,7 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       watchList: (json['watchList'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      isOnline: json['isOnline'] as bool?,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -33,4 +34,5 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'username': instance.username,
       'critiqueCount': instance.critiqueCount,
       'watchList': instance.watchList,
+      'isOnline': instance.isOnline,
     };

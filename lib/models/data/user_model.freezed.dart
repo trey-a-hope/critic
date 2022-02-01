@@ -30,7 +30,8 @@ class _$UserModelTearOff {
       @TimestampConverter() required DateTime created,
       required String username,
       required int critiqueCount,
-      List<String>? watchList}) {
+      List<String>? watchList,
+      bool? isOnline}) {
     return _UserModel(
       uid: uid,
       email: email,
@@ -41,6 +42,7 @@ class _$UserModelTearOff {
       username: username,
       critiqueCount: critiqueCount,
       watchList: watchList,
+      isOnline: isOnline,
     );
   }
 
@@ -83,6 +85,9 @@ mixin _$UserModel {
   /// Ids of movies in watch list.
   List<String>? get watchList => throw _privateConstructorUsedError;
 
+  /// Determines if the user is active in the app or not.
+  bool? get isOnline => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $UserModelCopyWith<UserModel> get copyWith =>
@@ -102,7 +107,8 @@ abstract class $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime created,
       String username,
       int critiqueCount,
-      List<String>? watchList});
+      List<String>? watchList,
+      bool? isOnline});
 }
 
 /// @nodoc
@@ -124,6 +130,7 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? username = freezed,
     Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? isOnline = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
@@ -162,6 +169,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isOnline: isOnline == freezed
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -181,7 +192,8 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime created,
       String username,
       int critiqueCount,
-      List<String>? watchList});
+      List<String>? watchList,
+      bool? isOnline});
 }
 
 /// @nodoc
@@ -204,6 +216,7 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? username = freezed,
     Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? isOnline = freezed,
   }) {
     return _then(_UserModel(
       uid: uid == freezed
@@ -242,6 +255,10 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
               as List<String>?,
+      isOnline: isOnline == freezed
+          ? _value.isOnline
+          : isOnline // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -258,7 +275,8 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       @TimestampConverter() required this.created,
       required this.username,
       required this.critiqueCount,
-      this.watchList});
+      this.watchList,
+      this.isOnline});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -301,10 +319,14 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
 
   /// Ids of movies in watch list.
   final List<String>? watchList;
+  @override
+
+  /// Determines if the user is active in the app or not.
+  final bool? isOnline;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount, watchList: $watchList)';
+    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount, watchList: $watchList, isOnline: $isOnline)';
   }
 
   @override
@@ -320,7 +342,8 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('created', created))
       ..add(DiagnosticsProperty('username', username))
       ..add(DiagnosticsProperty('critiqueCount', critiqueCount))
-      ..add(DiagnosticsProperty('watchList', watchList));
+      ..add(DiagnosticsProperty('watchList', watchList))
+      ..add(DiagnosticsProperty('isOnline', isOnline));
   }
 
   @override
@@ -340,7 +363,9 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
                 other.username == username) &&
             (identical(other.critiqueCount, critiqueCount) ||
                 other.critiqueCount == critiqueCount) &&
-            const DeepCollectionEquality().equals(other.watchList, watchList));
+            const DeepCollectionEquality().equals(other.watchList, watchList) &&
+            (identical(other.isOnline, isOnline) ||
+                other.isOnline == isOnline));
   }
 
   @override
@@ -354,7 +379,8 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       created,
       username,
       critiqueCount,
-      const DeepCollectionEquality().hash(watchList));
+      const DeepCollectionEquality().hash(watchList),
+      isOnline);
 
   @JsonKey(ignore: true)
   @override
@@ -377,7 +403,8 @@ abstract class _UserModel implements UserModel {
       @TimestampConverter() required DateTime created,
       required String username,
       required int critiqueCount,
-      List<String>? watchList}) = _$_UserModel;
+      List<String>? watchList,
+      bool? isOnline}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -420,6 +447,10 @@ abstract class _UserModel implements UserModel {
 
   /// Ids of movies in watch list.
   List<String>? get watchList;
+  @override
+
+  /// Determines if the user is active in the app or not.
+  bool? get isOnline;
   @override
   @JsonKey(ignore: true)
   _$UserModelCopyWith<_UserModel> get copyWith =>
