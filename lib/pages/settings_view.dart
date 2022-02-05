@@ -9,16 +9,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../service_locator.dart';
 
 class SettingsView extends StatefulWidget {
-  final MyAppState myAppState;
-  SettingsView({required this.myAppState});
+  SettingsView();
 
   @override
-  State createState() => SettingsViewState(myAppState: myAppState);
+  State createState() => SettingsViewState();
 }
 
 class SettingsViewState extends State<SettingsView> {
-  SettingsViewState({required this.myAppState});
-  final MyAppState myAppState;
+  SettingsViewState();
 
   @override
   void initState() {
