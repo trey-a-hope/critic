@@ -5,6 +5,7 @@ class GenreModel {
   final IconData iconData;
 
   const GenreModel({
+    Key? key,
     required this.title,
     required this.iconData,
   });
