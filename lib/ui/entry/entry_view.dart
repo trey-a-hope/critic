@@ -1,4 +1,3 @@
-import 'package:critic/pages/entry_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/search_users/search_users_bloc.dart'
     as SEARCH_USERS_BP;
@@ -18,11 +17,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:fluid_bottom_nav_bar/fluid_bottom_nav_bar.dart';
 
-class EntryView extends StatelessWidget {
-  // You can ask Get to find a Controller that is being used by another page and redirect you to it.
-  final EntryController entryController = Get.find();
+import 'entry_view_model.dart';
 
-  final List<Widget> viewOptions = [
+class EntryView extends StatelessWidget {
+  final Color _bottomNavBarBackgroundColor = Colors.black;
+
+  final List<Widget> _viewOptions = [
     //Home Page
     BlocProvider(
       create: (BuildContext context) => HOME_BP.HomeBloc()
@@ -68,10 +68,15 @@ class EntryView extends StatelessWidget {
     SettingsView(),
   ];
 
-  final List<PreferredSizeWidget> appBarOptions = [
+  final List<PreferredSizeWidget> _appBarOptions = [
     AppBar(
       title: Text(
         'Home',
+      ),
+    ),
+    AppBar(
+      title: Text(
+        'Create Critique',
       ),
     ),
     AppBar(
@@ -87,8 +92,8 @@ class EntryView extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.add),
           onPressed: () {
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
+            Get.to(
+              () => BlocProvider(
                 create: (context) =>
                     CREATE_RECOMMENDATION_BP.CreateRecommendationBloc()
                       ..add(
@@ -97,8 +102,6 @@ class EntryView extends StatelessWidget {
                 child: CREATE_RECOMMENDATION_BP.CreateRecommendationPage(),
               ),
             );
-
-            // Navigator.push(context, route);
           },
         ),
       ],
@@ -109,8 +112,8 @@ class EntryView extends StatelessWidget {
       leading: IconButton(
         icon: Icon(Icons.search),
         onPressed: () {
-          Route route = MaterialPageRoute(
-            builder: (context) => BlocProvider(
+          Get.to(
+            () => BlocProvider(
               create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
                 searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
                   cache: SEARCH_USERS_BP.SearchUsersCache(),
@@ -121,16 +124,14 @@ class EntryView extends StatelessWidget {
               ),
             ),
           );
-
-          // Navigator.push(context, route);
         },
       ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.edit),
           onPressed: () {
-            Route route = MaterialPageRoute(
-              builder: (context) => BlocProvider(
+            Get.to(
+              () => BlocProvider(
                 create: (context) => EDIT_PROFILE_BP.EditProfileBloc()
                   ..add(
                     EDIT_PROFILE_BP.LoadPage(),
@@ -138,56 +139,60 @@ class EntryView extends StatelessWidget {
                 child: EDIT_PROFILE_BP.EditProfileView(),
               ),
             );
-
-            //Navigator.push(context, route);
           },
         ),
       ],
+    ),
+    AppBar(
+      title: Text(
+        'Settings',
+      ),
     ),
   ];
 
   @override
   Widget build(context) {
-    final EntryController entryController = Get.put(EntryController());
-    final Color bottomNavBarBackgroundColor = Colors.black;
-
-    return Scaffold(
-      appBar: appBarOptions[entryController.navBarIndex.value],
-      body: Obx(
-        () => viewOptions[entryController.navBarIndex.toInt()],
-      ),
-      bottomNavigationBar: FluidNavBar(
-        style: FluidNavBarStyle(
-          iconSelectedForegroundColor: Colors.white,
-          barBackgroundColor: bottomNavBarBackgroundColor,
-          iconBackgroundColor: bottomNavBarBackgroundColor,
-          iconUnselectedForegroundColor: Colors.white,
-        ),
-        icons: [
-          FluidNavBarIcon(
-            icon: Icons.home,
+    return GetBuilder<EntryViewModel>(
+      init: EntryViewModel(),
+      builder: (model) {
+        return Scaffold(
+          appBar: _appBarOptions[model.navBarIndex.value],
+          body: _viewOptions[model.navBarIndex.value],
+          bottomNavigationBar: SizedBox(
+            child: FluidNavBar(
+              style: FluidNavBarStyle(
+                iconSelectedForegroundColor: Colors.white,
+                barBackgroundColor: _bottomNavBarBackgroundColor,
+                iconBackgroundColor: _bottomNavBarBackgroundColor,
+                iconUnselectedForegroundColor: Colors.white,
+              ),
+              icons: [
+                FluidNavBarIcon(
+                  icon: Icons.home,
+                ),
+                FluidNavBarIcon(
+                  icon: Icons.add,
+                ),
+                FluidNavBarIcon(
+                  icon: Icons.explore,
+                ),
+                FluidNavBarIcon(
+                  icon: Icons.list,
+                ),
+                FluidNavBarIcon(
+                  icon: Icons.person,
+                ),
+                FluidNavBarIcon(
+                  icon: Icons.settings,
+                ),
+              ],
+              onChange: (index) {
+                model.setNavBarIndex(index: index);
+              },
+            ),
           ),
-          FluidNavBarIcon(
-            icon: Icons.add,
-          ),
-          FluidNavBarIcon(
-            icon: Icons.explore,
-          ),
-          FluidNavBarIcon(
-            icon: Icons.list,
-          ),
-          FluidNavBarIcon(
-            icon: Icons.person,
-          ),
-          FluidNavBarIcon(
-            icon: Icons.settings,
-          ),
-        ],
-        onChange: (index) {
-          // entryController.increment();
-          entryController.setCount(index: index);
-        },
-      ),
+        );
+      },
     );
   }
 }

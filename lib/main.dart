@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/pages/entry_controller.dart';
-import 'package:critic/pages/entry_view.dart';
+import 'package:critic/ui/entry/entry_view.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:critic/style/theme_data.dart';
@@ -175,9 +174,6 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
               } else {
                 //Set user to online status.
                 locator<UtilService>().setOnlineStatus(isOnline: true);
-
-                /// Instantiate your class using Get.put() to make it available for all "child" routes there.
-                Get.put(EntryController());
 
                 /// Proceed to app.
                 return EntryView();
