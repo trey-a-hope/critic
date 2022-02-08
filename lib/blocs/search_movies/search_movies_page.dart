@@ -8,9 +8,6 @@ class SearchMoviesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Critique'),
-      ),
       body: Column(
         children: [
           _SearchBar(),

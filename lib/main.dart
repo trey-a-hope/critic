@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/pages/entry_page.dart';
+import 'package:critic/ui/entry/entry_view.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:critic/style/theme_data.dart';
@@ -18,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/login/login_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -139,7 +140,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Critic',
       theme: themeData,
@@ -174,8 +175,8 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 //Set user to online status.
                 locator<UtilService>().setOnlineStatus(isOnline: true);
 
-                //Proceed to app.
-                return EntryPage(myAppState: this);
+                /// Proceed to app.
+                return EntryView();
               }
           }
         },
