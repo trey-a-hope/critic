@@ -1,4 +1,5 @@
 import 'package:critic/services/util_service.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
 import 'services/auth_service.dart';
@@ -28,4 +29,19 @@ void setUpLocater() {
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => UtilService());
   locator.registerLazySingleton(() => ValidationService());
+}
+
+void initializeDependencies() {
+  Get.lazyPut(() => AuthService());
+  Get.lazyPut(() => BlockUserService());
+  Get.lazyPut(() => CritiqueService());
+  Get.lazyPut(() => FCMNotificationService());
+  Get.lazyPut(() => ModalService());
+  Get.lazyPut(() => MovieService());
+  Get.lazyPut(() => RecommendationsService());
+  Get.lazyPut(() => StorageService());
+  Get.lazyPut(() => SuggestionService());
+  Get.lazyPut(() => UserService());
+  Get.lazyPut(() => UtilService());
+  Get.lazyPut(() => ValidationService());
 }
