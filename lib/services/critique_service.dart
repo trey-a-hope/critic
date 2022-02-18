@@ -2,71 +2,11 @@ import 'package:critic/constants.dart';
 import 'package:critic/models/data/comment_model.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
-abstract class ICritiqueService {
-  Future<CritiqueModel> get({
-    required String id,
-  });
-
-  Future<int> count({required String uid});
-
-  Future<List<CritiqueModel>> list({
-    required int limit,
-    String? lastID,
-  });
-
-  Future<List<CritiqueModel>> listSimilar({
-    String? id,
-    required String imdbID,
-  });
-
-  Future<List<CritiqueModel>> listByUser({
-    required String uid,
-    required int limit,
-    String? lastID,
-  });
-
-  Future<List<CritiqueModel>> listByGenre({
-    required String genre,
-    required int limit,
-    String lastID,
-  });
-
-  Future<void> create({
-    required CritiqueModel critique,
-  });
-
-  Future<void> delete({
-    required String id,
-  });
-
-  Future<void> deleteAll();
-
-  Future<void> update({
-    required String id,
-    required Map<String, dynamic> params,
-  });
-
-  Future<void> addComment({
-    required String id,
-    required CommentModel comment,
-  });
-
-  Future<void> addLike({
-    required String id,
-    required String uid,
-  });
-
-  Future<void> removeLike({
-    required String id,
-    required String uid,
-  });
-}
-
-class CritiqueService extends ICritiqueService {
-  @override
+class CritiqueService extends GetxService {
   Future<CritiqueModel> get({required String id}) async {
     try {
       http.Response response = await http.post(
@@ -96,7 +36,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<List<CritiqueModel>> listByUser({
     required String uid,
     required int limit,
@@ -136,7 +75,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<List<CritiqueModel>> listByGenre({
     required String genre,
     required int limit,
@@ -176,7 +114,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> create({required CritiqueModel critique}) async {
     try {
       http.Response response = await http.post(
@@ -200,7 +137,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> delete({required String id}) async {
     try {
       http.Response response = await http.post(
@@ -224,7 +160,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> update(
       {required String id, required Map<String, dynamic> params}) async {
     try {
@@ -249,7 +184,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> addComment(
       {required String id, required CommentModel comment}) async {
     try {
@@ -274,7 +208,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> addLike({
     required String id,
     required String uid,
@@ -301,7 +234,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<List<CritiqueModel>> listSimilar({
     String? id,
     required String imdbID,
@@ -339,7 +271,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> removeLike({
     required String id,
     required String uid,
@@ -366,7 +297,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<int> count({required String uid}) async {
     try {
       http.Response response = await http.post(
@@ -390,7 +320,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<void> deleteAll() async {
     try {
       http.Response response = await http.post(
@@ -414,7 +343,6 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
   Future<List<CritiqueModel>> list({
     required int limit,
     String? lastID,

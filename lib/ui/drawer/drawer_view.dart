@@ -53,7 +53,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_HOME);
+                Get.offNamed(Globals.ROUTES_HOME);
               },
             ),
             ListTile(
@@ -63,7 +63,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_CREATE_CRITIQUE);
+                Get.offNamed(Globals.ROUTES_CREATE_CRITIQUE);
               },
             ),
             ListTile(
@@ -73,7 +73,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_PROFILE);
+                Get.offNamed(Globals.ROUTES_PROFILE);
               },
             ),
             ListTile(
@@ -83,7 +83,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_RECOMMENDATIONS);
+                Get.offNamed(Globals.ROUTES_RECOMMENDATIONS);
               },
             ),
             ListTile(
@@ -93,7 +93,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_WATCH_LIST);
+                Get.offNamed(Globals.ROUTES_WATCH_LIST);
               },
             ),
             Spacer(),
@@ -104,7 +104,7 @@ class DrawerView extends StatelessWidget {
                 style: AppThemes.textTheme.headline4,
               ),
               onTap: () {
-                Get.toNamed(Globals.ROUTES_SETTINGS);
+                Get.offNamed(Globals.ROUTES_SETTINGS);
               },
             ),
             ListTile(

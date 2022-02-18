@@ -16,9 +16,6 @@ void main() async {
   /// Wait for firebase app to initialize.
   await Firebase.initializeApp();
 
-  /// Initialize dependencies.
-  initializeDependencies();
-
   /// Set version and build numbers.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
@@ -62,7 +59,7 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Score Square',
+      title: 'Critic',
       theme: ThemeData(
         primaryColor: Colors.lightBlueAccent,
         textTheme: AppThemes.textTheme,
@@ -70,6 +67,7 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
+      initialBinding: InitialBinding(),
       initialRoute: '/',
       getPages: AppRoutes.routes,
     );

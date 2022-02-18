@@ -3,17 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-abstract class IUtilService {
-  void heroToImage({
-    required BuildContext context,
-    required String imgUrl,
-    required String tag,
-  });
-  void setOnlineStatus({required bool isOnline});
-}
-
-class UtilService extends IUtilService {
-  @override
+class UtilService extends GetxService {
   void heroToImage({
     required BuildContext context,
     required String imgUrl,
@@ -24,7 +14,6 @@ class UtilService extends IUtilService {
     }));
   }
 
-  @override
   Future<void> setOnlineStatus({required bool isOnline}) async {
     User? user = FirebaseAuth.instance.currentUser;
 

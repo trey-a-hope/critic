@@ -2,25 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/blocs/search_movies/search_movies_bloc.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
-abstract class IMovieService {
-  Future<MovieModel> getMovieByID({required String id});
-
-  Future<SearchMoviesResult> search({required String term});
-
-  Future<List<MovieModel>> getPopularMovies();
-}
-
-class MovieService extends IMovieService {
+class MovieService extends GetxService {
   final String apiKey = '7c304592';
   final String authority = 'www.omdbapi.com';
 
   final CollectionReference _dataDB =
       FirebaseFirestore.instance.collection('Data');
 
-  @override
   Future<MovieModel> getMovieByID({required String id}) async {
     Map<String, String> params = {
       'i': '$id',
@@ -43,7 +35,6 @@ class MovieService extends IMovieService {
     }
   }
 
-  @override
   Future<SearchMoviesResult> search({required String term}) async {
     final String baseUrl = 'https://www.omdbapi.com';
     final response =
@@ -57,7 +48,6 @@ class MovieService extends IMovieService {
     }
   }
 
-  @override
   Future<List<MovieModel>> getPopularMovies() async {
     try {
       DocumentSnapshot popularMoviesDocSnap =

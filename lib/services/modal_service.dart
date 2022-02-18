@@ -2,26 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../initialize_dependencies.dart';
 import 'validation_service.dart';
 
-abstract class IModalService {
-  void showInSnackBar({required BuildContext context, required String message});
-
-  void showAlert(
-      {required BuildContext context,
-      required String title,
-      required String message});
-  Future<String?> showChangeEmail({required BuildContext context});
-  Future<bool?> showConfirmation(
-      {required BuildContext context,
-      required String title,
-      required String message});
-}
-
-class ModalService extends IModalService {
-  @override
+class ModalService extends GetxService {
   void showInSnackBar(
       {required BuildContext context, required String message}) {
     // Scaffold.of(context).showSnackBar(
@@ -36,7 +22,6 @@ class ModalService extends IModalService {
     );
   }
 
-  @override
   void showAlert(
       {required BuildContext context,
       required String title,
@@ -76,7 +61,6 @@ class ModalService extends IModalService {
     );
   }
 
-  @override
   Future<String?> showChangeEmail({required BuildContext context}) {
     final TextEditingController emailController = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -125,7 +109,6 @@ class ModalService extends IModalService {
     );
   }
 
-  @override
   Future<bool?> showConfirmation(
       {required BuildContext context,
       required String title,

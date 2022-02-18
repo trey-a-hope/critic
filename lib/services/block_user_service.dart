@@ -1,30 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
-abstract class IBlockUserService {
-  void block({
-    required String blockerID,
-    required String blockeeID,
-  });
-
-  void unblock({
-    required String blockerID,
-    required String blockeeID,
-  });
-
-  Future<List<String>> getUsersIBlockedIDs({
-    required String userID,
-  });
-
-  Future<List<String>> getUsersWhoBlockedMeIDs({
-    required String userID,
-  });
-}
-
-class BlockUserService extends IBlockUserService {
+class BlockUserService extends GetxService {
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('Users');
 
-  @override
   void block({
     required String blockerID,
     required String blockeeID,
@@ -42,7 +22,6 @@ class BlockUserService extends IBlockUserService {
     return;
   }
 
-  @override
   void unblock({
     required String blockerID,
     required String blockeeID,
@@ -60,7 +39,6 @@ class BlockUserService extends IBlockUserService {
     return;
   }
 
-  @override
   Future<List<String>> getUsersIBlockedIDs({required String userID}) async {
     DocumentSnapshot followerDocSnapshot = await _usersDB.doc(userID).get();
 
@@ -75,7 +53,6 @@ class BlockUserService extends IBlockUserService {
     return blockedUsersIDS;
   }
 
-  @override
   Future<List<String>> getUsersWhoBlockedMeIDs({required String userID}) async {
     final QuerySnapshot usersWhoBlockedMe = await _usersDB
         .where(

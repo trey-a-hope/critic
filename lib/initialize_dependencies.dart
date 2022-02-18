@@ -16,17 +16,20 @@ import 'services/validation_service.dart';
 
 GetIt locator = GetIt.I; // TODO: Delete this.
 
-void initializeDependencies() {
-  Get.lazyPut(() => AuthService());
-  Get.lazyPut(() => BlockUserService());
-  Get.lazyPut(() => CritiqueService());
-  Get.lazyPut(() => FCMNotificationService());
-  Get.lazyPut(() => ModalService());
-  Get.lazyPut(() => MovieService());
-  Get.lazyPut(() => RecommendationsService());
-  Get.lazyPut(() => StorageService());
-  Get.lazyPut(() => SuggestionService());
-  Get.lazyPut(() => UserService());
-  Get.lazyPut(() => UtilService());
-  Get.lazyPut(() => ValidationService());
+class InitialBinding implements Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => AuthService(), fenix: true);
+    Get.lazyPut(() => BlockUserService(), fenix: true);
+    Get.lazyPut(() => CritiqueService(), fenix: true);
+    Get.lazyPut(() => FCMNotificationService(), fenix: true);
+    Get.lazyPut(() => ModalService(), fenix: true);
+    Get.lazyPut(() => MovieService(), fenix: true);
+    Get.lazyPut(() => RecommendationsService(), fenix: true);
+    Get.lazyPut(() => StorageService(), fenix: true);
+    Get.lazyPut(() => SuggestionService(), fenix: true);
+    Get.lazyPut(() => UserService(), fenix: true);
+    Get.lazyPut(() => UtilService(), fenix: true);
+    Get.lazyPut(() => ValidationService(), fenix: true);
+  }
 }
