@@ -9,7 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../../constants.dart';
-import '../../service_locator.dart';
+import '../../initialize_dependencies.dart';
 
 class MainViewModel extends GetxController {
   /// Firebase auth instance.
@@ -31,6 +31,12 @@ class MainViewModel extends GetxController {
   /// No sql database for storing uid and other credentials.
   static final Box<dynamic> _userCredentialsBox =
       Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+
+  /// Instantiate user service.
+  UserService _userService = Get.find();
+
+  /// Instantiate util service.
+  UtilService _utilService = Get.find();
 
   @override
   void onReady() async {
@@ -82,11 +88,11 @@ class MainViewModel extends GetxController {
           email: _firebaseUser.email!,
         );
 
-        await locator<UserService>().createUser(user: newUser);
+        await _userService.createUser(user: newUser);
       }
 
       /// Set user online status to true.
-      locator<UtilService>().setOnlineStatus(isOnline: true);
+      _utilService.setOnlineStatus(isOnline: true);
 
       /// Proceed to home page.
       Get.offAllNamed("/home");

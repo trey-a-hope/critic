@@ -1,4 +1,4 @@
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/validation_service.dart';

@@ -5,17 +5,17 @@ import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'home_view_model.dart';
+import 'profile_view_model.dart';
 
-class HomeView extends StatelessWidget {
-  HomeView({Key? key}) : super(key: key);
+class ProfileView extends StatelessWidget {
+  ProfileView({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeViewModel>(
-      init: HomeViewModel(),
+    return GetBuilder<ProfileViewModel>(
+      init: ProfileViewModel(),
       builder: (controller) => BasicPage(
         scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
@@ -33,7 +33,7 @@ class HomeView extends StatelessWidget {
             child: Text('Sign Out'),
           ),
         ),
-        title: 'Home',
+        title: 'Profile',
       ),
     );
   }

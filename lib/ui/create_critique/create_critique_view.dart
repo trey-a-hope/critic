@@ -4,18 +4,17 @@ import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'create_critique_view_model.dart';
 
-import 'home_view_model.dart';
-
-class HomeView extends StatelessWidget {
-  HomeView({Key? key}) : super(key: key);
+class CreateCritiqueView extends StatelessWidget {
+  CreateCritiqueView({Key? key}) : super(key: key);
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeViewModel>(
-      init: HomeViewModel(),
+    return GetBuilder<CreateCritiqueViewModel>(
+      init: CreateCritiqueViewModel(),
       builder: (controller) => BasicPage(
         scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
@@ -33,7 +32,7 @@ class HomeView extends StatelessWidget {
             child: Text('Sign Out'),
           ),
         ),
-        title: 'Home',
+        title: 'Create Critique',
       ),
     );
   }

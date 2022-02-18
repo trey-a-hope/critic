@@ -1,4 +1,4 @@
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/widgets/user_list_tile.dart';

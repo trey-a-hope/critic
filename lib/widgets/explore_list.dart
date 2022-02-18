@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination_view/pagination_view.dart';
 import '../constants.dart';
-import '../service_locator.dart';
+import '../initialize_dependencies.dart';
 import 'Spinner.dart';
 import 'critique_view.dart';
 

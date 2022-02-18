@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:critic/models/data/search_movies_result_item_model.dart';
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:equatable/equatable.dart';

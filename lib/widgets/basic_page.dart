@@ -1,3 +1,4 @@
+import 'package:critic/constants/app_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -56,7 +57,7 @@ class BasicPage extends StatelessWidget {
                                 ),
                           Text(
                             title,
-                            // style:textTheme.headline1,
+                            style: AppThemes.textTheme.headline1,
                           ),
                           rightIconButton == null
                               ? Container(

@@ -6,7 +6,7 @@ import 'package:critic/blocs/search_users/search_users_bloc.dart'
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/recommendation_model.dart';
 import 'package:critic/models/data/user_model.dart';
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/services/fcm_notification_service.dart';
 import 'package:critic/services/modal_service.dart';

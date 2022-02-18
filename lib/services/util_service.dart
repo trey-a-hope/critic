@@ -1,8 +1,7 @@
 import 'package:critic/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../service_locator.dart';
+import 'package:get/get.dart';
 
 abstract class IUtilService {
   void heroToImage({
@@ -29,11 +28,14 @@ class UtilService extends IUtilService {
   Future<void> setOnlineStatus({required bool isOnline}) async {
     User? user = FirebaseAuth.instance.currentUser;
 
+    /// Instantiate user service.
+    UserService _userService = Get.find();
+
     if (user == null) {
       return;
     }
 
-    await locator<UserService>().updateUser(
+    await _userService.updateUser(
       uid: user.uid,
       data: {'isOnline': isOnline},
     );

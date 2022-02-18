@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/data/critique_model.dart';
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/blocs/critique_details/critique_details_bloc.dart'
     as CRITIQUE_DETAILS_BP;
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'

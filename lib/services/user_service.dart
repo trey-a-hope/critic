@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/user_model.dart';
 
-import '../service_locator.dart';
+import '../initialize_dependencies.dart';
 import 'movie_service.dart';
 
 //TODO: Create watchlist service and move logic from here to that file.

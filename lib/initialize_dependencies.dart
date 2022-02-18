@@ -14,22 +14,7 @@ import 'services/suggestion_service.dart';
 import 'services/user_service.dart';
 import 'services/validation_service.dart';
 
-GetIt locator = GetIt.I;
-
-void setUpLocater() {
-  locator.registerLazySingleton(() => AuthService());
-  locator.registerLazySingleton(() => BlockUserService());
-  locator.registerLazySingleton(() => CritiqueService());
-  locator.registerLazySingleton(() => FCMNotificationService());
-  locator.registerLazySingleton(() => ModalService());
-  locator.registerLazySingleton(() => MovieService());
-  locator.registerLazySingleton(() => RecommendationsService());
-  locator.registerLazySingleton(() => StorageService());
-  locator.registerLazySingleton(() => SuggestionService());
-  locator.registerLazySingleton(() => UserService());
-  locator.registerLazySingleton(() => UtilService());
-  locator.registerLazySingleton(() => ValidationService());
-}
+GetIt locator = GetIt.I; // TODO: Delete this.
 
 void initializeDependencies() {
   Get.lazyPut(() => AuthService());

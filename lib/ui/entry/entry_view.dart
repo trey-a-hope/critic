@@ -65,7 +65,7 @@ class EntryView extends StatelessWidget {
     ),
 
     //Settings Page
-    SettingsView(),
+    //SettingsView(),
   ];
 
   final List<PreferredSizeWidget> _appBarOptions = [

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../service_locator.dart';
+import '../initialize_dependencies.dart';
 import 'validation_service.dart';
 
 abstract class IModalService {

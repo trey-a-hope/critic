@@ -7,7 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 import 'constants/app_routes.dart';
 import 'constants/app_themes.dart';
-import 'service_locator.dart';
+import 'initialize_dependencies.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -17,7 +17,6 @@ void main() async {
   await Firebase.initializeApp();
 
   /// Initialize dependencies.
-  setUpLocater(); //TODO: Remove this.
   initializeDependencies();
 
   /// Set version and build numbers.

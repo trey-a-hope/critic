@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/recommendation_model.dart';
 import 'package:critic/models/data/user_model.dart';
-import 'package:critic/service_locator.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/blocs/create_critique/create_critique_bloc.dart'
     as CREATE_CRITIQUE_BP;
 import 'package:critic/blocs/other_profile/other_profile_bloc.dart'

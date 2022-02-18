@@ -3,7 +3,7 @@ import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../service_locator.dart';
+import '../initialize_dependencies.dart';
 
 abstract class IAuthService {
   Future<UserModel> getCurrentUser();
