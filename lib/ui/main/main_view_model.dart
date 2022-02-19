@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/user_model.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import '../../constants.dart';
-import '../../initialize_dependencies.dart';
 
 class MainViewModel extends GetxController {
   /// Firebase auth instance.
@@ -51,7 +52,7 @@ class MainViewModel extends GetxController {
   handleAuthChanged(_firebaseUser) async {
     /// Proceed to Login Page if user is null.
     if (_firebaseUser == null) {
-      Get.offAllNamed("/login");
+      Get.offAllNamed(Globals.ROUTES_LOGIN);
     } else {
       /// Get user document reference.
       DocumentReference userDocRef = _usersDB.doc(_firebaseUser.uid);
@@ -61,6 +62,9 @@ class MainViewModel extends GetxController {
 
       //Set UID to hive box.
       _userCredentialsBox.put('uid', _firebaseUser.uid);
+
+      /// Bind Stream Feed Service after uid is determined.
+      Get.lazyPut(() => StreamFeedService(uid: _firebaseUser.uid), fenix: true);
 
       if (userExists) {
         //Request permission from user.
@@ -77,15 +81,18 @@ class MainViewModel extends GetxController {
         //Update fcm token for this device in firebase.
         userDocRef.update({'fcmToken': token});
       } else {
-        //Create user in firebase
+        //Create user in firebase.
         UserModel newUser = UserModel(
           imgUrl: _firebaseUser.photoURL ?? DUMMY_PROFILE_PHOTO_URL,
           created: DateTime.now(),
           modified: DateTime.now(),
           uid: _firebaseUser.uid,
-          username: _firebaseUser.displayName ?? 'John Doe',
-          critiqueCount: 0,
+          username: _firebaseUser.displayName ?? 'I NEED A NAME',
           email: _firebaseUser.email!,
+          watchList: [],
+          blockedUsers: [],
+          followers: [],
+          followings: [],
         );
 
         await _userService.createUser(user: newUser);
@@ -95,10 +102,10 @@ class MainViewModel extends GetxController {
       _utilService.setOnlineStatus(isOnline: true);
 
       /// Proceed to home page.
-      Get.offAllNamed("/home");
+      Get.offAllNamed(Globals.ROUTES_HOME);
     }
   }
 
-  // Firebase user a realtime stream
+  /// Firebase user a realtime stream.
   Stream<User?> get user => _auth.authStateChanges();
 }

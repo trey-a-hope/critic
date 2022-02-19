@@ -16,10 +16,16 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       created:
           const TimestampConverter().fromJson(json['created'] as Timestamp),
       username: json['username'] as String,
-      critiqueCount: json['critiqueCount'] as int,
-      watchList: (json['watchList'] as List<dynamic>?)
-          ?.map((e) => e as String)
+      watchList:
+          (json['watchList'] as List<dynamic>).map((e) => e as String).toList(),
+      blockedUsers: (json['blockedUsers'] as List<dynamic>)
+          .map((e) => e as String)
           .toList(),
+      followings: (json['followings'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      followers:
+          (json['followers'] as List<dynamic>).map((e) => e as String).toList(),
       isOnline: json['isOnline'] as bool?,
     );
 
@@ -32,7 +38,9 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'modified': const TimestampConverter().toJson(instance.modified),
       'created': const TimestampConverter().toJson(instance.created),
       'username': instance.username,
-      'critiqueCount': instance.critiqueCount,
       'watchList': instance.watchList,
+      'blockedUsers': instance.blockedUsers,
+      'followings': instance.followings,
+      'followers': instance.followers,
       'isOnline': instance.isOnline,
     };

@@ -10,7 +10,7 @@ import 'movie_service.dart';
 
 class UserService extends GetxService {
   final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('users');
   final CollectionReference _dataDB =
       FirebaseFirestore.instance.collection('Data');
 
@@ -162,7 +162,7 @@ class UserService extends GetxService {
       }
 
       /// Check to see if the movie id is in their list.
-      if (user.watchList!.contains(imdbID)) {
+      if (user.watchList.contains(imdbID)) {
         return true;
       }
 
@@ -187,8 +187,8 @@ class UserService extends GetxService {
 
       /// Fetch movie for each id in their watchlist array.
       List<MovieModel> movies = [];
-      for (int i = 0; i < user.watchList!.length; i++) {
-        String imdb = user.watchList![i];
+      for (int i = 0; i < user.watchList.length; i++) {
+        String imdb = user.watchList[i];
         MovieModel movie = await locator<MovieService>().getMovieByID(id: imdb);
         movies.add(movie);
       }

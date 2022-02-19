@@ -29,8 +29,10 @@ class _$UserModelTearOff {
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount,
-      List<String>? watchList,
+      required List<String> watchList,
+      required List<String> blockedUsers,
+      required List<String> followings,
+      required List<String> followers,
       bool? isOnline}) {
     return _UserModel(
       uid: uid,
@@ -40,8 +42,10 @@ class _$UserModelTearOff {
       modified: modified,
       created: created,
       username: username,
-      critiqueCount: critiqueCount,
       watchList: watchList,
+      blockedUsers: blockedUsers,
+      followings: followings,
+      followers: followers,
       isOnline: isOnline,
     );
   }
@@ -79,11 +83,17 @@ mixin _$UserModel {
   /// Username of the user.
   String get username => throw _privateConstructorUsedError;
 
-  /// Number of critiques.
-  int get critiqueCount => throw _privateConstructorUsedError;
-
   /// Ids of movies in watch list.
-  List<String>? get watchList => throw _privateConstructorUsedError;
+  List<String> get watchList => throw _privateConstructorUsedError;
+
+  /// Ids of users that this user has blocked.
+  List<String> get blockedUsers => throw _privateConstructorUsedError;
+
+  /// Ids of users that this user is following.
+  List<String> get followings => throw _privateConstructorUsedError;
+
+  /// Ids of users that are following this user.
+  List<String> get followers => throw _privateConstructorUsedError;
 
   /// Determines if the user is active in the app or not.
   bool? get isOnline => throw _privateConstructorUsedError;
@@ -106,8 +116,10 @@ abstract class $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount,
-      List<String>? watchList,
+      List<String> watchList,
+      List<String> blockedUsers,
+      List<String> followings,
+      List<String> followers,
       bool? isOnline});
 }
 
@@ -128,8 +140,10 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? modified = freezed,
     Object? created = freezed,
     Object? username = freezed,
-    Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? blockedUsers = freezed,
+    Object? followings = freezed,
+    Object? followers = freezed,
     Object? isOnline = freezed,
   }) {
     return _then(_value.copyWith(
@@ -161,14 +175,22 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      critiqueCount: critiqueCount == freezed
-          ? _value.critiqueCount
-          : critiqueCount // ignore: cast_nullable_to_non_nullable
-              as int,
       watchList: watchList == freezed
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      blockedUsers: blockedUsers == freezed
+          ? _value.blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      followings: followings == freezed
+          ? _value.followings
+          : followings // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      followers: followers == freezed
+          ? _value.followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -191,8 +213,10 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount,
-      List<String>? watchList,
+      List<String> watchList,
+      List<String> blockedUsers,
+      List<String> followings,
+      List<String> followers,
       bool? isOnline});
 }
 
@@ -214,8 +238,10 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? modified = freezed,
     Object? created = freezed,
     Object? username = freezed,
-    Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? blockedUsers = freezed,
+    Object? followings = freezed,
+    Object? followers = freezed,
     Object? isOnline = freezed,
   }) {
     return _then(_UserModel(
@@ -247,14 +273,22 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      critiqueCount: critiqueCount == freezed
-          ? _value.critiqueCount
-          : critiqueCount // ignore: cast_nullable_to_non_nullable
-              as int,
       watchList: watchList == freezed
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      blockedUsers: blockedUsers == freezed
+          ? _value.blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      followings: followings == freezed
+          ? _value.followings
+          : followings // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      followers: followers == freezed
+          ? _value.followers
+          : followers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -274,8 +308,10 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       @TimestampConverter() required this.modified,
       @TimestampConverter() required this.created,
       required this.username,
-      required this.critiqueCount,
-      this.watchList,
+      required this.watchList,
+      required this.blockedUsers,
+      required this.followings,
+      required this.followers,
       this.isOnline});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
@@ -313,12 +349,20 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   final String username;
   @override
 
-  /// Number of critiques.
-  final int critiqueCount;
+  /// Ids of movies in watch list.
+  final List<String> watchList;
   @override
 
-  /// Ids of movies in watch list.
-  final List<String>? watchList;
+  /// Ids of users that this user has blocked.
+  final List<String> blockedUsers;
+  @override
+
+  /// Ids of users that this user is following.
+  final List<String> followings;
+  @override
+
+  /// Ids of users that are following this user.
+  final List<String> followers;
   @override
 
   /// Determines if the user is active in the app or not.
@@ -326,7 +370,7 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount, watchList: $watchList, isOnline: $isOnline)';
+    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, watchList: $watchList, blockedUsers: $blockedUsers, followings: $followings, followers: $followers, isOnline: $isOnline)';
   }
 
   @override
@@ -341,8 +385,10 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('modified', modified))
       ..add(DiagnosticsProperty('created', created))
       ..add(DiagnosticsProperty('username', username))
-      ..add(DiagnosticsProperty('critiqueCount', critiqueCount))
       ..add(DiagnosticsProperty('watchList', watchList))
+      ..add(DiagnosticsProperty('blockedUsers', blockedUsers))
+      ..add(DiagnosticsProperty('followings', followings))
+      ..add(DiagnosticsProperty('followers', followers))
       ..add(DiagnosticsProperty('isOnline', isOnline));
   }
 
@@ -361,9 +407,12 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
             (identical(other.created, created) || other.created == created) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.critiqueCount, critiqueCount) ||
-                other.critiqueCount == critiqueCount) &&
             const DeepCollectionEquality().equals(other.watchList, watchList) &&
+            const DeepCollectionEquality()
+                .equals(other.blockedUsers, blockedUsers) &&
+            const DeepCollectionEquality()
+                .equals(other.followings, followings) &&
+            const DeepCollectionEquality().equals(other.followers, followers) &&
             (identical(other.isOnline, isOnline) ||
                 other.isOnline == isOnline));
   }
@@ -378,8 +427,10 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       modified,
       created,
       username,
-      critiqueCount,
       const DeepCollectionEquality().hash(watchList),
+      const DeepCollectionEquality().hash(blockedUsers),
+      const DeepCollectionEquality().hash(followings),
+      const DeepCollectionEquality().hash(followers),
       isOnline);
 
   @JsonKey(ignore: true)
@@ -402,8 +453,10 @@ abstract class _UserModel implements UserModel {
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount,
-      List<String>? watchList,
+      required List<String> watchList,
+      required List<String> blockedUsers,
+      required List<String> followings,
+      required List<String> followers,
       bool? isOnline}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
@@ -441,12 +494,20 @@ abstract class _UserModel implements UserModel {
   String get username;
   @override
 
-  /// Number of critiques.
-  int get critiqueCount;
+  /// Ids of movies in watch list.
+  List<String> get watchList;
   @override
 
-  /// Ids of movies in watch list.
-  List<String>? get watchList;
+  /// Ids of users that this user has blocked.
+  List<String> get blockedUsers;
+  @override
+
+  /// Ids of users that this user is following.
+  List<String> get followings;
+  @override
+
+  /// Ids of users that are following this user.
+  List<String> get followers;
   @override
 
   /// Determines if the user is active in the app or not.

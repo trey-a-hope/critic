@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('users');
 
   /// Instantiate util service.
   UtilService _utilService = Get.find();
