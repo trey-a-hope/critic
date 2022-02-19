@@ -1,5 +1,4 @@
-import 'package:critic/initialize_dependencies.dart';
-import 'package:critic/services/auth_service.dart';
+import 'package:critic/models/ui/critique_view_model.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<HomeViewModel>(
       init: HomeViewModel(),
-      builder: (controller) => BasicPage(
+      builder: (model) => BasicPage(
         scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
           icon: const Icon(Icons.menu),
@@ -25,12 +24,10 @@ class HomeView extends StatelessWidget {
           },
         ),
         drawer: DrawerView(),
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              locator<AuthService>().signOut();
-            },
-            child: Text('Sign Out'),
+        child: ListView.builder(
+          itemCount: model.critiques.length,
+          itemBuilder: (context, index) => CritiqueViewModel(
+            critique: model.critiques[index],
           ),
         ),
         title: 'Home',

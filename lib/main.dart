@@ -3,7 +3,7 @@ import 'package:critic/services/util_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:package_info/package_info.dart';
 import 'constants/app_routes.dart';
 import 'constants/app_themes.dart';
@@ -16,16 +16,13 @@ void main() async {
   /// Wait for firebase app to initialize.
   await Firebase.initializeApp();
 
+  /// Initialize Get Storage.
+  await GetStorage.init();
+
   /// Set version and build numbers.
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   version = packageInfo.version;
   buildNumber = packageInfo.buildNumber;
-
-  /// Initialize Hive.
-  await Hive.initFlutter();
-
-  /// Open hive boxes.
-  await Hive.openBox<String>(HIVE_BOX_LOGIN_CREDENTIALS);
 
   /// Set status bar color to black.
   SystemChrome.setSystemUIOverlayStyle(
@@ -42,12 +39,8 @@ void main() async {
 class MyApp extends StatelessWidget with WidgetsBindingObserver {
   MyApp({Key? key}) : super(key: key);
 
-  static final Box<dynamic> _userCredentialsBox =
-      Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    String? uid = _userCredentialsBox.get('uid');
     if (state == AppLifecycleState.resumed) {
       locator<UtilService>().setOnlineStatus(isOnline: true);
     } else {

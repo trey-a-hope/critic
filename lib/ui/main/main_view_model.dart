@@ -10,7 +10,7 @@ import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MainViewModel extends GetxController {
   /// Firebase auth instance.
@@ -29,9 +29,8 @@ class MainViewModel extends GetxController {
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('users');
 
-  /// No sql database for storing uid and other credentials.
-  static final Box<dynamic> _userCredentialsBox =
-      Hive.box<String>(HIVE_BOX_LOGIN_CREDENTIALS);
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
 
   /// Instantiate user service.
   UserService _userService = Get.find();
@@ -60,8 +59,8 @@ class MainViewModel extends GetxController {
       //Check if user already exists.
       bool userExists = (await userDocRef.get()).exists;
 
-      //Set UID to hive box.
-      _userCredentialsBox.put('uid', _firebaseUser.uid);
+      /// Set UID to get storage.
+      _getStorage.write('uid', _firebaseUser.uid);
 
       /// Bind Stream Feed Service after uid is determined.
       Get.lazyPut(() => StreamFeedService(uid: _firebaseUser.uid), fenix: true);

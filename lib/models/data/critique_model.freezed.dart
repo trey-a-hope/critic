@@ -22,7 +22,7 @@ class _$CritiqueModelTearOff {
   const _$CritiqueModelTearOff();
 
   _CritiqueModel call(
-      {@JsonKey(name: '_id') String? id,
+      {String? id,
       required String message,
       required String imdbID,
       required String uid,
@@ -55,7 +55,6 @@ const $CritiqueModel = _$CritiqueModelTearOff();
 /// @nodoc
 mixin _$CritiqueModel {
   /// Id of the critique
-  @JsonKey(name: '_id')
   String? get id => throw _privateConstructorUsedError;
 
   /// The review of the movie
@@ -96,7 +95,7 @@ abstract class $CritiqueModelCopyWith<$Res> {
           CritiqueModel value, $Res Function(CritiqueModel) then) =
       _$CritiqueModelCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey(name: '_id') String? id,
+      {String? id,
       String message,
       String imdbID,
       String uid,
@@ -177,7 +176,7 @@ abstract class _$CritiqueModelCopyWith<$Res>
       __$CritiqueModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: '_id') String? id,
+      {String? id,
       String message,
       String imdbID,
       String uid,
@@ -256,7 +255,7 @@ class __$CritiqueModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CritiqueModel implements _CritiqueModel {
   _$_CritiqueModel(
-      {@JsonKey(name: '_id') this.id,
+      {this.id,
       required this.message,
       required this.imdbID,
       required this.uid,
@@ -272,7 +271,6 @@ class _$_CritiqueModel implements _CritiqueModel {
   @override
 
   /// Id of the critique
-  @JsonKey(name: '_id')
   final String? id;
   @override
 
@@ -357,7 +355,7 @@ class _$_CritiqueModel implements _CritiqueModel {
 
 abstract class _CritiqueModel implements CritiqueModel {
   factory _CritiqueModel(
-      {@JsonKey(name: '_id') String? id,
+      {String? id,
       required String message,
       required String imdbID,
       required String uid,
@@ -373,7 +371,6 @@ abstract class _CritiqueModel implements CritiqueModel {
   @override
 
   /// Id of the critique
-  @JsonKey(name: '_id')
   String? get id;
   @override
 

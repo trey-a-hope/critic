@@ -1,9 +1,15 @@
 import 'package:critic/services/user_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class UtilService extends GetxService {
+  /// Instantiate user service.
+  final UserService _userService = Get.find();
+
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
+
   void heroToImage({
     required BuildContext context,
     required String imgUrl,
@@ -15,17 +21,12 @@ class UtilService extends GetxService {
   }
 
   Future<void> setOnlineStatus({required bool isOnline}) async {
-    User? user = FirebaseAuth.instance.currentUser;
+    String? uid = _getStorage.read('uid');
 
-    /// Instantiate user service.
-    UserService _userService = Get.find();
-
-    if (user == null) {
-      return;
-    }
+    if (uid == null) return;
 
     await _userService.updateUser(
-      uid: user.uid,
+      uid: uid,
       data: {'isOnline': isOnline},
     );
 

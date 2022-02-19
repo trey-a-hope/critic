@@ -1,12 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/constants.dart';
 import 'package:critic/models/data/comment_model.dart';
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
 
+import 'package:stream_feed/stream_feed.dart';
+
 class CritiqueService extends GetxService {
+  /// Instantiate stream feed service.
+  final StreamFeedService _streamFeedService = Get.find();
+
+  /// Create reference to the critiques collection in Firestore.
+  final CollectionReference _critiquesDB =
+      FirebaseFirestore.instance.collection('critiques');
+
   Future<CritiqueModel> get({required String id}) async {
     try {
       http.Response response = await http.post(
@@ -116,24 +127,60 @@ class CritiqueService extends GetxService {
 
   Future<void> create({required CritiqueModel critique}) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate'),
-        body: json.encode(critique.toJson()),
-        headers: {'content-type': 'application/json'},
-      );
+      /// Create activity in Stream that represents this critique.
+      String critiqueID = await _streamFeedService.addActivity();
 
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
+      /// Update id of the critique.
+      CritiqueModel _critique = critique.copyWith(id: critiqueID);
+
+      /// Add critique to database.
+      DocumentReference<Object?> critiqueDocRef = _critiquesDB.doc(critiqueID);
+      critiqueDocRef.set(_critique.toJson());
 
       return;
     } catch (e) {
       throw Exception(
         e.toString(),
       );
+    }
+  }
+
+  Future<List<CritiqueModel>> getFeed() async {
+    try {
+      List<Activity> activities = await _streamFeedService.getActivities();
+
+      List<CritiqueModel> critiques = [];
+
+      for (int i = 0; i < activities.length; i++) {
+        Activity activity = activities[i];
+
+        String critiqueID = activity.id!;
+
+        CritiqueModel critique = await retrieve(id: critiqueID);
+
+        critiques.add(critique);
+      }
+
+      return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<CritiqueModel> retrieve({required String id}) async {
+    try {
+      final DocumentReference model = await _critiquesDB
+          .doc(id)
+          .withConverter<CritiqueModel>(
+              fromFirestore: (snapshot, _) =>
+                  CritiqueModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson());
+
+      return (await model.get()).data() as CritiqueModel;
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
