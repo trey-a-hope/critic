@@ -7,7 +7,7 @@ part of 'user_model.dart';
 // **************************************************************************
 
 _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
-      uid: json['uid'] as String?,
+      uid: json['uid'] as String,
       email: json['email'] as String,
       imgUrl: json['imgUrl'] as String,
       fcmToken: json['fcmToken'] as String?,
@@ -26,7 +26,8 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
           .toList(),
       followers:
           (json['followers'] as List<dynamic>).map((e) => e as String).toList(),
-      isOnline: json['isOnline'] as bool?,
+      isOnline: json['isOnline'] as bool,
+      showAds: json['showAds'] as bool,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -43,4 +44,5 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'followings': instance.followings,
       'followers': instance.followers,
       'isOnline': instance.isOnline,
+      'showAds': instance.showAds,
     };

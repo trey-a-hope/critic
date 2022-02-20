@@ -88,6 +88,8 @@ class MainViewModel extends GetxController {
           uid: _firebaseUser.uid,
           username: _firebaseUser.displayName ?? 'I NEED A NAME',
           email: _firebaseUser.email!,
+          isOnline: true,
+          showAds: true,
           watchList: [],
           blockedUsers: [],
           followers: [],
