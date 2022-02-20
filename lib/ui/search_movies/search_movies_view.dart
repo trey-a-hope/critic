@@ -123,7 +123,7 @@ class SearchMoviesView extends StatelessWidget {
                       ),
           ],
         ),
-        title: 'Search Movie',
+        title: 'Search Movies',
       ),
     );
   }

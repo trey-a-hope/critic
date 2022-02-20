@@ -7,22 +7,22 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import '../initialize_dependencies.dart';
-//
+
 // class SettingsView extends StatefulWidget {
 //   SettingsView();
-//
+
 //   @override
 //   State createState() => SettingsViewState();
 // }
-//
+
 // class SettingsViewState extends State<SettingsView> {
 //   SettingsViewState();
-//
+
 //   @override
 //   void initState() {
 //     super.initState();
 //   }
-//
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -67,7 +67,7 @@
 //                   child: SuggestionsView(),
 //                 ),
 //               );
-//
+
 //               Navigator.push(context, route);
 //             },
 //           ),

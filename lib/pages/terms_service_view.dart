@@ -1,24 +1,20 @@
+import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class TermsServicePage extends StatelessWidget {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+class TermsOfServicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(
-          'Terms & Services',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+    return BasicPage(
+      leftIconButton: IconButton(
+        icon: Icon(Icons.chevron_left),
+        onPressed: () {
+          Get.back();
+        },
       ),
-      body: SafeArea(
+      child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: ListView(
             children: <Widget>[
               SizedBox(
@@ -112,6 +108,7 @@ class TermsServicePage extends StatelessWidget {
           ),
         ),
       ),
+      title: 'Terms of Service',
     );
   }
 }

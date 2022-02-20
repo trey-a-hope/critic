@@ -3,6 +3,7 @@ class Globals {
 
   /// Routes
   static const String ROUTES_CREATE_CRITIQUE = '/create_critique';
+  static const String ROUTES_CONTACT = '/contact';
   static const String ROUTES_HOME = '/home';
   static const String ROUTES_LOGIN = '/login';
   static const String ROUTES_MOVIE_DETAILS = '/movie_details';
@@ -10,6 +11,8 @@ class Globals {
   static const String ROUTES_RECOMMENDATIONS = '/recommendations';
   static const String ROUTES_SEARCH_MOVIES = '/search_movies';
   static const String ROUTES_SETTINGS = '/settings';
+    static const String ROUTES_TERMS_OF_SERVICE = '/terms_of_service';
+
   static const String ROUTES_WATCH_LIST = '/watch_list';
 
   /// Stream API
