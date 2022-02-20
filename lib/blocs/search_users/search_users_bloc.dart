@@ -59,10 +59,10 @@ class SearchUsersBloc extends Bloc<SearchUsersEvent, SearchUsersState> {
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
         _usersIBlockedIDs = await locator<BlockUserService>()
-            .getUsersIBlockedIDs(userID: _currentUser.uid!);
+            .getUsersIBlockedIDs(userID: _currentUser.uid);
 
         _usersWhoBlockedMeIDs = await locator<BlockUserService>()
-            .getUsersWhoBlockedMeIDs(userID: _currentUser.uid!);
+            .getUsersWhoBlockedMeIDs(userID: _currentUser.uid);
       } catch (error) {
         print(error.toString()); //todo: Display error message.
       }

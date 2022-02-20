@@ -16,7 +16,7 @@ class ProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ProfileViewModel>(
       init: ProfileViewModel(),
-      builder: (controller) => BasicPage(
+      builder: (model) => BasicPage(
         scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
           icon: const Icon(Icons.menu),

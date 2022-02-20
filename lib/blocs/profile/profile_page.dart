@@ -21,7 +21,7 @@ class ProfilePageState extends State<ProfilePage> {
 
   Future<List<CritiqueModel>> pageFetch(int offset) async {
     List<CritiqueModel> critiques = await locator<CritiqueService>().listByUser(
-      uid: _currentUser.uid!,
+      uid: _currentUser.uid,
       limit: PAGE_FETCH_LIMIT,
       lastID: _lastID,
     );
@@ -87,7 +87,7 @@ class ProfilePageState extends State<ProfilePage> {
                                             locator<UtilService>().heroToImage(
                                               context: context,
                                               imgUrl: _currentUser.imgUrl,
-                                              tag: _currentUser.uid!,
+                                              tag: _currentUser.uid,
                                             );
                                           },
                                           child: CachedNetworkImage(
@@ -206,7 +206,7 @@ class ProfilePageState extends State<ProfilePage> {
                                       movie: movie,
                                       user: user,
                                       critique: critique,
-                                      currentUserUid: _currentUser.uid!,
+                                      currentUserUid: _currentUser.uid,
                                     );
                                 }
                               },

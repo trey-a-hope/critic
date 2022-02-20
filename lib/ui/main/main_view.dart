@@ -10,7 +10,7 @@ class MainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<MainViewModel>(
       init: MainViewModel(),
-      builder: (controller) => const Scaffold(
+      builder: (model) => const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),

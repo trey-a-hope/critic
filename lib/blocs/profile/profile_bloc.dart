@@ -43,12 +43,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try {
         currentUser = await locator<AuthService>().getCurrentUser();
 
-        List<MovieModel> movies = await locator<UserService>()
-            .listMoviesFromWatchList(uid: currentUser.uid!);
+        // List<MovieModel> movies = await locator<UserService>()
+        //     .listMoviesFromWatchList(uid: currentUser.uid);
 
         yield LoadedState(
           currentUser: currentUser,
-          movies: movies,
+          movies: [],
         );
       } catch (error) {
         yield ErrorState(error: error);
@@ -71,7 +71,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             file: image, imgPath: 'Images/Users/${currentUser.uid}/Profile');
 
         await locator<UserService>()
-            .updateUser(uid: currentUser.uid!, data: {'imgUrl': newImgUrl});
+            .updateUser(uid: currentUser.uid, data: {'imgUrl': newImgUrl});
 
         add(LoadPageEvent());
       } catch (error) {

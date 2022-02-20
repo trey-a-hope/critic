@@ -48,7 +48,7 @@ class SuggestionsBloc extends Bloc<SuggestionsEvent, SuggestionsState> {
         await locator<SuggestionService>().createSuggestion(
           suggestion: SuggestionModel(
             id: null,
-            uid: _currentUser.uid!,
+            uid: _currentUser.uid,
             message: message,
             created: DateTime.now(),
           ),

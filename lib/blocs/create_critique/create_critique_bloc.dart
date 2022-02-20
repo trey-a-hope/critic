@@ -55,15 +55,15 @@ class CreateCritiqueBloc
       try {
         _currentUser = await locator<AuthService>().getCurrentUser();
 
-        watchListHasMovie = await locator<UserService>().watchListHasMovie(
-          uid: _currentUser.uid!,
-          imdbID: movie.imdbID,
-        );
+        // watchListHasMovie = await locator<UserService>().watchListHasMovie(
+        //   uid: _currentUser.uid,
+        //   imdbID: movie.imdbID,
+        // );
 
-        _otherCritiques = await locator<CritiqueService>().listSimilar(
-          id: null,
-          imdbID: movie.imdbID,
-        );
+        // _otherCritiques = await locator<CritiqueService>().listSimilar(
+        //   id: null,
+        //   imdbID: movie.imdbID,
+        // );
 
         yield LoadedState(
           movie: movie,
@@ -79,10 +79,9 @@ class CreateCritiqueBloc
 
     if (event is AddMovieToWatchlistEvent) {
       try {
-        await locator<UserService>().addMovieToWatchList(
-          uid: _currentUser.uid!,
-          imdbID: movie.imdbID,
-        );
+        // await locator<UserService>().addMovieToWatchList(
+        //   imdbID: movie.imdbID,
+        // );
 
         watchListHasMovie = true;
 
@@ -101,10 +100,10 @@ class CreateCritiqueBloc
 
     if (event is RemoveMovieFromWatchlistEvent) {
       try {
-        await locator<UserService>().removeMovieFromWatchList(
-          uid: _currentUser.uid!,
-          imdbID: movie.imdbID,
-        );
+        // await locator<UserService>().removeMovieFromWatchList(
+        //   uid: _currentUser.uid,
+        //   imdbID: movie.imdbID,
+        // );
 
         watchListHasMovie = false;
 
@@ -130,7 +129,7 @@ class CreateCritiqueBloc
       try {
         CritiqueModel critique = CritiqueModel(
           id: null,
-          uid: _currentUser.uid!,
+          uid: _currentUser.uid,
           imdbID: movie.imdbID,
           message: critiqueText,
           //  genres: movie.genre.split(', '),

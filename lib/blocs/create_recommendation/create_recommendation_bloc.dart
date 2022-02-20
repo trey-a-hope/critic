@@ -60,11 +60,11 @@ class CreateRecommendationBloc
       yield LoadingState();
 
       await locator<RecommendationsService>().createRecommendation(
-        sendeeUID: _selectedUser!.uid!,
+        sendeeUID: _selectedUser!.uid,
         recommendation: RecommendationModel(
           message: message,
           imdbID: _selectedMovie!.imdbID,
-          uid: _currentUser.uid!,
+          uid: _currentUser.uid,
           created: DateTime.now(),
         ),
       );

@@ -78,7 +78,7 @@ class ExploreList extends StatelessWidget {
                     movie: movie,
                     user: user,
                     critique: critique,
-                    currentUserUid: currentUser.uid!,
+                    currentUserUid: currentUser.uid,
                   );
               }
             },

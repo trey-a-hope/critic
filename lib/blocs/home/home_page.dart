@@ -245,7 +245,7 @@ class _HomePageState extends State<HomePage> {
                                         movie: movie,
                                         user: user,
                                         critique: critique,
-                                        currentUserUid: currentUser.uid!,
+                                        currentUserUid: currentUser.uid,
                                       );
                                   }
                                 },

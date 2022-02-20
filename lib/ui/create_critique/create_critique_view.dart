@@ -3,7 +3,7 @@ import 'package:critic/constants.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/services/modal_service.dart';
- import 'package:critic/services/validation_service.dart';
+import 'package:critic/services/validation_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -79,16 +79,11 @@ class CreateCritiqueView extends StatelessWidget {
                               Expanded(
                                 child: InkWell(
                                   onTap: () async {
-                                    Get.snackbar(
-                                      'TODO',
-                                      'Create critique details page.',
-                                      icon: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
+                                    Get.toNamed(
+                                      Globals.ROUTES_MOVIE_DETAILS,
+                                      arguments: {
+                                        'movie': model.movie!,
+                                      },
                                     );
                                   },
                                   child: CachedNetworkImage(
@@ -133,25 +128,11 @@ class CreateCritiqueView extends StatelessWidget {
                                       ),
                                       Divider(),
                                       Text(
-                                        'Actors: ${model.movie!.actors}',
+                                        '${model.movie!.plot}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,
                                       ),
-                                      Divider(),
-                                      Text(
-                                        'Director: ${model.movie!.director}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                      Divider(),
-                                      Text(
-                                        'Genres: ${model.movie!.genre}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ), 
                                     ],
                                   ),
                                   margin:

@@ -3,6 +3,7 @@ import 'package:critic/ui/create_critique/create_critique_view.dart';
 import 'package:critic/ui/home/home_view.dart';
 import 'package:critic/ui/login/login_view.dart';
 import 'package:critic/ui/main/main_view.dart';
+import 'package:critic/ui/movie_details/movie_details_view.dart';
 import 'package:critic/ui/profile/profile_view.dart';
 import 'package:critic/ui/recommendations/recommendations_view.dart';
 import 'package:critic/ui/search_movies/search_movies_view.dart';
@@ -18,6 +19,9 @@ class AppRoutes {
         name: Globals.ROUTES_CREATE_CRITIQUE, page: () => CreateCritiqueView()),
     GetPage(name: Globals.ROUTES_HOME, page: () => HomeView()),
     GetPage(name: Globals.ROUTES_LOGIN, page: () => const LoginPage()),
+    GetPage(
+        name: Globals.ROUTES_MOVIE_DETAILS,
+        page: () =>   MovieDetailsView()),
     GetPage(name: Globals.ROUTES_PROFILE, page: () => ProfileView()),
     GetPage(
         name: Globals.ROUTES_RECOMMENDATIONS,

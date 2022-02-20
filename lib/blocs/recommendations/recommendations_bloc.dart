@@ -47,8 +47,9 @@ class RecommendationsBloc
         currentUser = await locator<AuthService>().getCurrentUser();
 
         Stream<QuerySnapshot> recommendationsStream =
-            await locator<RecommendationsService>()
-                .streamRecommendations(uid: currentUser.uid!);
+            await locator<RecommendationsService>().streamRecommendations(
+          uid: currentUser.uid,
+        );
 
         recommendationsStream.listen(
           (QuerySnapshot event) {
@@ -85,7 +86,7 @@ class RecommendationsBloc
     if (event is DeleteRecommendationEvent) {
       final String recommendationID = event.recommendationID;
       await locator<RecommendationsService>().deleteRecommendation(
-          sendeeUID: currentUser.uid!, recommendationID: recommendationID);
+          sendeeUID: currentUser.uid, recommendationID: recommendationID);
     }
   }
 }

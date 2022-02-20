@@ -500,7 +500,7 @@ class CreateCritiquePageState extends State<CreateCritiquePage>
                                           movie: movie,
                                           user: user,
                                           critique: otherCritique,
-                                          currentUserUid: currentUser.uid!,
+                                          currentUserUid: currentUser.uid,
                                         );
                                     }
                                   },

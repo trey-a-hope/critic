@@ -37,7 +37,7 @@ class UserListTile extends StatelessWidget {
         Route route = MaterialPageRoute(
           builder: (context) => BlocProvider(
             create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-              otherUserID: user.uid!,
+              otherUserID: user.uid,
             )..add(
                 OTHER_PROFILE_BP.LoadPageEvent(),
               ),

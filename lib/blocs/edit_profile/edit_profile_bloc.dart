@@ -43,7 +43,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
         //Update the user.
         await locator<UserService>().updateUser(
-          uid: _currentUser.uid!,
+          uid: _currentUser.uid,
           data: {
             'username': username,
             'modified': DateTime.now(),
@@ -51,8 +51,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         );
 
         //Fetch the updated user.
-        _currentUser =
-            await locator<UserService>().retrieveUser(uid: _currentUser.uid!);
+        _currentUser = await locator<UserService>().retrieveUser(
+          uid: _currentUser.uid,
+        );
 
         yield EditProfileLoaded(
           currentUser: _currentUser,

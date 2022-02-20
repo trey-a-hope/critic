@@ -423,7 +423,7 @@ class CritiqueDetailsPageState extends State<CritiqueDetailsPage>
                               user: critiqueUser,
                               movie: movie,
                               critique: otherCritique,
-                              currentUserUid: currentUser.uid!,
+                              currentUserUid: currentUser.uid,
                             ),
                           ),
                         );

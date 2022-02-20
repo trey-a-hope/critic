@@ -1,12 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:get/get.dart';
-
-import '../initialize_dependencies.dart';
-import 'movie_service.dart';
-
-//TODO: Create watchlist service and move logic from here to that file.
 
 class UserService extends GetxService {
   final CollectionReference _usersDB =
@@ -106,94 +100,6 @@ class UserService extends GetxService {
       }
 
       return users;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  Future<void> addMovieToWatchList({
-    required String uid,
-    required String imdbID,
-  }) async {
-    try {
-      final DocumentReference userDocRef = _usersDB.doc(uid);
-
-      await userDocRef.update({
-        'watchList': FieldValue.arrayUnion([imdbID])
-      });
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  Future<void> removeMovieFromWatchList({
-    required String uid,
-    required String imdbID,
-  }) async {
-    try {
-      final DocumentReference userDocRef = _usersDB.doc(uid);
-
-      await userDocRef.update({
-        'watchList': FieldValue.arrayRemove([imdbID])
-      });
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  Future<bool> watchListHasMovie({
-    required String uid,
-    required String imdbID,
-  }) async {
-    try {
-      UserModel user = await retrieveUser(uid: uid);
-
-      /// If watch list is null, the user does not have this movie in their list.
-      if (user.watchList == null) {
-        return false;
-      }
-
-      /// Check to see if the movie id is in their list.
-      if (user.watchList.contains(imdbID)) {
-        return true;
-      }
-
-      return false;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  Future<List<MovieModel>> listMoviesFromWatchList({
-    required String uid,
-  }) async {
-    try {
-      UserModel user = await retrieveUser(uid: uid);
-
-      /// If watch list is null, return empty list.
-      if (user.watchList == null) {
-        return [];
-      }
-
-      /// Fetch movie for each id in their watchlist array.
-      List<MovieModel> movies = [];
-      for (int i = 0; i < user.watchList.length; i++) {
-        String imdb = user.watchList[i];
-        MovieModel movie = await locator<MovieService>().getMovieByID(id: imdb);
-        movies.add(movie);
-      }
-
-      return movies;
     } catch (e) {
       throw Exception(
         e.toString(),

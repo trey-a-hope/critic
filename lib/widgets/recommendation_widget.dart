@@ -49,7 +49,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Route route = MaterialPageRoute(
               builder: (context) => BlocProvider(
                 create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                  otherUserID: '${widget.user.uid!}',
+                  otherUserID: '${widget.user.uid}',
                 )..add(
                     OTHER_PROFILE_BP.LoadPageEvent(),
                   ),
@@ -60,7 +60,7 @@ class _RecommendationWidgetState extends State<RecommendationWidget> {
             Navigator.push(context, route);
           },
           child: CachedNetworkImage(
-            imageUrl: '${widget.user.uid!}',
+            imageUrl: '${widget.user.uid}',
             imageBuilder: (context, imageProvider) => CircleAvatar(
               backgroundImage: imageProvider,
             ),

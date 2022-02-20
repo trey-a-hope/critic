@@ -100,7 +100,7 @@ class CritiqueDetailsBloc
         //Fetch similar critiques.
         List<CritiqueModel> otherCritiques =
             await locator<CritiqueService>().listSimilar(
-          id: _critiqueModel.id,
+          // id: _critiqueModel.id,
           imdbID: _critiqueModel.imdbID,
         );
 
@@ -162,7 +162,7 @@ class CritiqueDetailsBloc
       try {
         await locator<CritiqueService>().addLike(
           id: _critiqueModel.id!,
-          uid: _currentUser.uid!,
+          uid: _currentUser.uid,
         );
 
         if (_currentUser.uid != _critiqueUser.uid &&
@@ -190,7 +190,7 @@ class CritiqueDetailsBloc
       try {
         await locator<CritiqueService>().removeLike(
           id: _critiqueModel.id!,
-          uid: _currentUser.uid!,
+          uid: _currentUser.uid,
         );
 
         add(LoadPageEvent());
@@ -209,7 +209,7 @@ class CritiqueDetailsBloc
         await locator<CritiqueService>().addComment(
           id: critiqueID,
           comment: CommentModel(
-            uid: _currentUser.uid!,
+            uid: _currentUser.uid,
             comment: comment,
             likes: [],
             created: DateTime.now(),

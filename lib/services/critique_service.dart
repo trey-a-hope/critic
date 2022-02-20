@@ -281,34 +281,29 @@ class CritiqueService extends GetxService {
     }
   }
 
+  /// Fetch critiques related to this movie.
   Future<List<CritiqueModel>> listSimilar({
-    String? id,
     required String imdbID,
   }) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListSimilar'),
-        body: json.encode({
-          'id': id,
-          'imdbID': imdbID,
-        }),
-        headers: {'content-type': 'application/json'},
-      );
+      List<QueryDocumentSnapshot<Object?>> querySnapshot =
+          (await _critiquesDB.where('imdbID', isEqualTo: imdbID).get()).docs;
 
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
-
-      List<CritiqueModel> critiques = results
-          .map(
-            (result) => CritiqueModel.fromJson(result),
-          )
+      List<DocumentReference<CritiqueModel>> docRefs = querySnapshot
+          .map((e) => e.reference.withConverter<CritiqueModel>(
+              fromFirestore: (snapshot, _) =>
+                  CritiqueModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson()))
           .toList();
+
+      var test = docRefs
+          .map((docRef) async => ((await docRef.get()).data() as CritiqueModel))
+          .toList();
+
+      List<CritiqueModel> critiques = [];
+      for (int i = 0; i < test.length; i++) {
+        critiques.add(await test[i]);
+      }
 
       return critiques;
     } catch (e) {

@@ -1,7 +1,7 @@
 import 'package:critic/services/util_service.dart';
+import 'package:critic/services/watchlist_service.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-
 import 'services/auth_service.dart';
 import 'services/block_user_service.dart';
 import 'services/critique_service.dart';
@@ -31,5 +31,6 @@ class InitialBinding implements Bindings {
     Get.lazyPut(() => UserService(), fenix: true);
     Get.lazyPut(() => UtilService(), fenix: true);
     Get.lazyPut(() => ValidationService(), fenix: true);
+    Get.lazyPut(() => WatchlistService(), fenix: true);
   }
 }

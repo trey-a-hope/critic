@@ -2,7 +2,6 @@ import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/services/auth_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/ui/recommendations/recommendations_view_model.dart';
-import 'package:critic/ui/settings/settings_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +15,7 @@ class RecommendationsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<RecommendationsViewModel>(
       init: RecommendationsViewModel(),
-      builder: (controller) => BasicPage(
+      builder: (model) => BasicPage(
         scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
           icon: const Icon(Icons.menu),
