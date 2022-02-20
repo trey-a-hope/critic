@@ -1,5 +1,7 @@
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/services/critique_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -9,6 +11,15 @@ class CreateCritiqueViewModel extends GetxController {
 
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
+
+  /// Rating for the critique.
+  double _rating = 3;
+
+  /// Message of the critique.
+  String _message = '';
+
+  /// Movie choice.
+  MovieModel? movie;
 
   @override
   void onInit() async {
@@ -25,18 +36,38 @@ class CreateCritiqueViewModel extends GetxController {
     super.onClose();
   }
 
-  void saveCritique() {
-    _critiqueService.create(
-      critique: CritiqueModel(
-        message: 'This is a great movie',
+  Future<bool> saveCritique() async {
+    try {
+      /// Build critique object.
+      CritiqueModel critique = CritiqueModel(
+        message: _message,
         imdbID: 'tt0120338',
         uid: _getStorage.read('uid'),
         created: DateTime.now(),
         modified: DateTime.now(),
-        rating: 3,
+        rating: _rating,
         likes: [],
-        genres: [],
-      ),
-    );
+      );
+
+      /// Submit the critique.
+      await _critiqueService.create(
+        critique: critique,
+      );
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
+
+  void updateRating({required double rating}) {
+    _rating = rating;
+    update();
+  }
+
+  void updateMessage({required String message}) {
+    _message = message;
+    update();
   }
 }

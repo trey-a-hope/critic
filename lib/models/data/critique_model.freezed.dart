@@ -29,8 +29,7 @@ class _$CritiqueModelTearOff {
       required DateTime created,
       required DateTime modified,
       required double rating,
-      required List<String> likes,
-      required List<String> genres}) {
+      required List<String> likes}) {
     return _CritiqueModel(
       id: id,
       message: message,
@@ -40,7 +39,6 @@ class _$CritiqueModelTearOff {
       modified: modified,
       rating: rating,
       likes: likes,
-      genres: genres,
     );
   }
 
@@ -80,9 +78,6 @@ mixin _$CritiqueModel {
   /// Users who liked the critique
   List<String> get likes => throw _privateConstructorUsedError;
 
-  /// Genres the movie belongs to
-  List<String> get genres => throw _privateConstructorUsedError;
-
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $CritiqueModelCopyWith<CritiqueModel> get copyWith =>
@@ -102,8 +97,7 @@ abstract class $CritiqueModelCopyWith<$Res> {
       DateTime created,
       DateTime modified,
       double rating,
-      List<String> likes,
-      List<String> genres});
+      List<String> likes});
 }
 
 /// @nodoc
@@ -125,7 +119,6 @@ class _$CritiqueModelCopyWithImpl<$Res>
     Object? modified = freezed,
     Object? rating = freezed,
     Object? likes = freezed,
-    Object? genres = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -160,10 +153,6 @@ class _$CritiqueModelCopyWithImpl<$Res>
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      genres: genres == freezed
-          ? _value.genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ));
   }
 }
@@ -183,8 +172,7 @@ abstract class _$CritiqueModelCopyWith<$Res>
       DateTime created,
       DateTime modified,
       double rating,
-      List<String> likes,
-      List<String> genres});
+      List<String> likes});
 }
 
 /// @nodoc
@@ -208,7 +196,6 @@ class __$CritiqueModelCopyWithImpl<$Res>
     Object? modified = freezed,
     Object? rating = freezed,
     Object? likes = freezed,
-    Object? genres = freezed,
   }) {
     return _then(_CritiqueModel(
       id: id == freezed
@@ -243,10 +230,6 @@ class __$CritiqueModelCopyWithImpl<$Res>
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      genres: genres == freezed
-          ? _value.genres
-          : genres // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ));
   }
 }
@@ -262,8 +245,7 @@ class _$_CritiqueModel implements _CritiqueModel {
       required this.created,
       required this.modified,
       required this.rating,
-      required this.likes,
-      required this.genres});
+      required this.likes});
 
   factory _$_CritiqueModel.fromJson(Map<String, dynamic> json) =>
       _$$_CritiqueModelFromJson(json);
@@ -302,14 +284,10 @@ class _$_CritiqueModel implements _CritiqueModel {
 
   /// Users who liked the critique
   final List<String> likes;
-  @override
-
-  /// Genres the movie belongs to
-  final List<String> genres;
 
   @override
   String toString() {
-    return 'CritiqueModel(id: $id, message: $message, imdbID: $imdbID, uid: $uid, created: $created, modified: $modified, rating: $rating, likes: $likes, genres: $genres)';
+    return 'CritiqueModel(id: $id, message: $message, imdbID: $imdbID, uid: $uid, created: $created, modified: $modified, rating: $rating, likes: $likes)';
   }
 
   @override
@@ -325,22 +303,12 @@ class _$_CritiqueModel implements _CritiqueModel {
             (identical(other.modified, modified) ||
                 other.modified == modified) &&
             (identical(other.rating, rating) || other.rating == rating) &&
-            const DeepCollectionEquality().equals(other.likes, likes) &&
-            const DeepCollectionEquality().equals(other.genres, genres));
+            const DeepCollectionEquality().equals(other.likes, likes));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      message,
-      imdbID,
-      uid,
-      created,
-      modified,
-      rating,
-      const DeepCollectionEquality().hash(likes),
-      const DeepCollectionEquality().hash(genres));
+  int get hashCode => Object.hash(runtimeType, id, message, imdbID, uid,
+      created, modified, rating, const DeepCollectionEquality().hash(likes));
 
   @JsonKey(ignore: true)
   @override
@@ -362,8 +330,7 @@ abstract class _CritiqueModel implements CritiqueModel {
       required DateTime created,
       required DateTime modified,
       required double rating,
-      required List<String> likes,
-      required List<String> genres}) = _$_CritiqueModel;
+      required List<String> likes}) = _$_CritiqueModel;
 
   factory _CritiqueModel.fromJson(Map<String, dynamic> json) =
       _$_CritiqueModel.fromJson;
@@ -402,10 +369,6 @@ abstract class _CritiqueModel implements CritiqueModel {
 
   /// Users who liked the critique
   List<String> get likes;
-  @override
-
-  /// Genres the movie belongs to
-  List<String> get genres;
   @override
   @JsonKey(ignore: true)
   _$CritiqueModelCopyWith<_CritiqueModel> get copyWith =>

@@ -133,7 +133,7 @@ class CreateCritiqueBloc
           uid: _currentUser.uid!,
           imdbID: movie.imdbID,
           message: critiqueText,
-          genres: movie.genre.split(', '),
+          //  genres: movie.genre.split(', '),
           likes: [],
           rating: rating,
           //comments: [],

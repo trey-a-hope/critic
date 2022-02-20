@@ -26,7 +26,12 @@ class StreamFeedService extends GetxService {
 
   void onInit() {
     /// Create front end token via uid.
-    final Token _userToken = _streamFeedClient.frontendToken(uid);
+    final Token _userToken = _streamFeedClient.frontendToken(
+      uid,
+      expiresAt: DateTime.now().add(
+        Duration(days: 1),
+      ),
+    );
 
     /// Set the user token for the client.
     _client.setUser(User(id: uid), _userToken);
