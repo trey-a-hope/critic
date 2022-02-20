@@ -4,8 +4,8 @@ import 'package:critic/models/data/search_movies_result_item_model.dart';
 import 'package:critic/ui/search_movies/search_movies_cache.dart';
 import 'package:critic/ui/search_movies/search_movies_repository.dart';
 import 'package:critic/ui/search_movies/search_movies_result.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
-
+import 'package:get/get.dart';
+ 
 class SearchMoviesViewModel extends GetxController {
   /// Movie results.
   List<SearchMoviesResultItemModel> movies = [];
@@ -23,6 +23,9 @@ class SearchMoviesViewModel extends GetxController {
 
   /// Error message when searching.
   String? errorMessage;
+
+  /// Return the movie or go to movie.
+  bool returnMovie = Get.arguments['returnMovie'];
 
   @override
   void onInit() async {

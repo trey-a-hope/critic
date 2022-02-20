@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/search_movies_result_item_model.dart';
 import 'package:critic/services/movie_service.dart';
@@ -103,8 +104,18 @@ class SearchMoviesView extends StatelessWidget {
                                 final MovieModel _movie = await _movieService
                                     .getMovieByID(id: movie.imdbID);
 
-                                /// Return movie to previous screen.
-                                Get.back(result: _movie);
+                                if (model.returnMovie) {
+                                  /// Return movie to previous screen.
+                                  Get.back(result: _movie);
+                                } else {
+                                  /// Go to movie details screen.
+                                  Get.toNamed(
+                                    Globals.ROUTES_MOVIE_DETAILS,
+                                    arguments: {
+                                      'movie': _movie,
+                                    },
+                                  );
+                                }
                               },
                             );
                           },

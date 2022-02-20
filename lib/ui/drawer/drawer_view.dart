@@ -96,6 +96,21 @@ class DrawerView extends StatelessWidget {
                 Get.offNamed(Globals.ROUTES_WATCH_LIST);
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: Text(
+                'Search Movies',
+                style: AppThemes.textTheme.headline4,
+              ),
+              onTap: () {
+                Get.toNamed(
+                  Globals.ROUTES_SEARCH_MOVIES,
+                  arguments: {
+                    'returnMovie': false,
+                  },
+                );
+              },
+            ),
             Spacer(),
             ListTile(
               leading: const Icon(Icons.settings),

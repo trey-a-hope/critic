@@ -93,9 +93,7 @@ class WatchlistService extends GetxService {
     }
   }
 
-  Future<List<MovieModel>> listMoviesFromWatchList({
-    required String uid,
-  }) async {
+  Future<List<MovieModel>> listMoviesFromWatchList() async {
     try {
       /// Get uid of current user.
       final String uid = _getStorage.read('uid');

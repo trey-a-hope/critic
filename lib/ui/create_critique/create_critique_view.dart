@@ -48,8 +48,12 @@ class CreateCritiqueView extends StatelessWidget {
               : MdiIcons.movieOpen),
           onPressed: () async {
             /// Proceed to select movie page.
-            MovieModel movie =
-                (await Get.toNamed(Globals.ROUTES_SEARCH_MOVIES)) as MovieModel;
+            MovieModel movie = (await Get.toNamed(
+              Globals.ROUTES_SEARCH_MOVIES,
+              arguments: {
+                'returnMovie': true,
+              },
+            )) as MovieModel;
 
             model.updateMovie(movie: movie);
           },
