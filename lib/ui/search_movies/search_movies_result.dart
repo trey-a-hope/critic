@@ -1,4 +1,4 @@
-part of 'search_movies_bloc.dart';
+import 'package:critic/models/data/search_movies_result_item_model.dart';
 
 class SearchMoviesResult {
   final List<SearchMoviesResultItemModel> items;

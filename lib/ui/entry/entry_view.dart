@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:critic/blocs/search_users/search_users_bloc.dart'
     as SEARCH_USERS_BP;
-import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
-    as SEARCH_MOVIES_BP;
-import 'package:critic/pages/settings_view.dart';
 import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
@@ -33,16 +30,16 @@ class EntryView extends StatelessWidget {
     ),
 
     /// Search Users page.
-    BlocProvider(
-      create: (context) => SEARCH_MOVIES_BP.SearchMoviesBloc(
-        searchMoviesRepository: SEARCH_MOVIES_BP.SearchMoviesRepository(
-          cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
-        ),
-      ),
-      child: SEARCH_MOVIES_BP.SearchMoviesPage(
-        returnMovie: false,
-      ),
-    ),
+    // BlocProvider(
+    //   create: (context) => SEARCH_MOVIES_BP.SearchMoviesBloc(
+    //     searchMoviesRepository: SEARCH_MOVIES_BP.SearchMoviesRepository(
+    //       cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
+    //     ),
+    //   ),
+    //   child: SEARCH_MOVIES_BP.SearchMoviesPage(
+    //     returnMovie: false,
+    //   ),
+    // ),
     //Explore Page
     BlocProvider(
       create: (BuildContext context) => EXPLORE_BP.ExploreBloc()

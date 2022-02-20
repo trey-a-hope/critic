@@ -1,4 +1,4 @@
-part of 'search_movies_bloc.dart';
+import 'package:critic/ui/search_movies/search_movies_result.dart';
 
 class SearchMoviesCache {
   final _cache = <String, SearchMoviesResult>{};

@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
+import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/services/modal_service.dart';
-import 'package:critic/services/validation_service.dart';
+ import 'package:critic/services/validation_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -40,11 +43,15 @@ class CreateCritiqueView extends StatelessWidget {
           },
         ),
         rightIconButton: IconButton(
-          icon: Icon(model.movie == null
-              ? MdiIcons.movieOpen
-              : MdiIcons.movieOpenCheck),
-          onPressed: () {
+          icon: Icon(model.movieSelected()
+              ? MdiIcons.movieOpenCheck
+              : MdiIcons.movieOpen),
+          onPressed: () async {
             /// Proceed to select movie page.
+            MovieModel movie =
+                (await Get.toNamed(Globals.ROUTES_SEARCH_MOVIES)) as MovieModel;
+
+            model.updateMovie(movie: movie);
           },
         ),
         title: 'Create Critique',
@@ -55,14 +62,118 @@ class CreateCritiqueView extends StatelessWidget {
             key: _formKey,
             child: Column(
               children: [
-                if (model.movie == null) ...[
+                if (!model.movieSelected()) ...[
                   Text(
                       'Please select a movie first, (button in the top right)....'),
                 ],
-                if (model.movie != null) ...[
+                if (model.movieSelected()) ...[
                   Expanded(
                     child: Column(
                       children: [
+                        Container(
+                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          height: 300,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    Get.snackbar(
+                                      'TODO',
+                                      'Create critique details page.',
+                                      icon: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: '${model.movie!.poster}',
+                                    imageBuilder: (context, imageProvider) =>
+                                        Container(
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(5.0, 5.0),
+                                              blurRadius: 10.0)
+                                        ],
+                                      ),
+                                    ),
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      SelectableText(
+                                        model.movie!.title,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline3,
+                                      ),
+                                      Divider(),
+                                      Text(
+                                        'Actors: ${model.movie!.actors}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      Divider(),
+                                      Text(
+                                        'Director: ${model.movie!.director}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      Divider(),
+                                      Text(
+                                        'Genres: ${model.movie!.genre}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ), 
+                                    ],
+                                  ),
+                                  margin:
+                                      EdgeInsets.only(top: 20.0, bottom: 20.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(10.0),
+                                      topRight: Radius.circular(10.0),
+                                    ),
+                                    color: Theme.of(context).canvasColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey,
+                                          offset: Offset(5.0, 5.0),
+                                          blurRadius: 10.0)
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 20),
                           child: TextFormField(
@@ -127,7 +238,7 @@ class CreateCritiqueView extends StatelessWidget {
                     ),
                   ),
                 ],
-                if (model.movie != null) ...[
+                if (model.movieSelected()) ...[
                   Padding(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: Row(
@@ -151,16 +262,20 @@ class CreateCritiqueView extends StatelessWidget {
                                 style: TextStyle(color: Colors.blue),
                               ),
                               onPressed: () async {
+                                /// Ask user about resetting page.
                                 final bool? confirm =
                                     await _modalService.showConfirmation(
                                         context: context,
-                                        title: 'Clear page',
+                                        title: 'Reset',
                                         message: 'Are you sure?');
 
                                 if (confirm == null || !confirm) return;
 
                                 /// Clear message field.
                                 _messageController.clear();
+
+                                /// Reset movie selection.
+                                model.clearMovie();
                               },
                             ),
                           ),

@@ -113,30 +113,30 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                                 TextStyle(color: Theme.of(context).canvasColor),
                           ),
                           onPressed: () async {
-                            Route route = MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) =>
-                                    SEARCH_MOVIES_BP.SearchMoviesBloc(
-                                  searchMoviesRepository:
-                                      SEARCH_MOVIES_BP.SearchMoviesRepository(
-                                    cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
-                                  ),
-                                ),
-                                child: SEARCH_MOVIES_BP.SearchMoviesPage(
-                                  returnMovie: true,
-                                ),
-                              ),
-                            );
+                            // Route route = MaterialPageRoute(
+                            //   builder: (context) => BlocProvider(
+                            //     create: (context) =>
+                            //         SEARCH_MOVIES_BP.SearchMoviesBloc(
+                            //       searchMoviesRepository:
+                            //           SEARCH_MOVIES_BP.SearchMoviesRepository(
+                            //         cache: SEARCH_MOVIES_BP.SearchMoviesCache(),
+                            //       ),
+                            //     ),
+                            //     child: SEARCH_MOVIES_BP.SearchMoviesPage(
+                            //       returnMovie: true,
+                            //     ),
+                            //   ),
+                            // );
 
-                            final result = await Navigator.push(context, route);
+                            // final result = await Navigator.push(context, route);
 
-                            final movie = result as MovieModel?;
+                            // final movie = result as MovieModel?;
 
-                            if (movie != null) {
-                              context
-                                  .read<CreateRecommendationBloc>()
-                                  .add(UpdateSelectedMovieEvent(movie: movie));
-                            }
+                            // if (movie != null) {
+                            //   context
+                            //       .read<CreateRecommendationBloc>()
+                            //       .add(UpdateSelectedMovieEvent(movie: movie));
+                            // }
                           },
                         ),
                       ),

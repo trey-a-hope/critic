@@ -19,7 +19,7 @@ class CreateCritiqueViewModel extends GetxController {
   String _message = '';
 
   /// Movie choice.
-  MovieModel? movie;
+  MovieModel? _movie;
 
   @override
   void onInit() async {
@@ -41,7 +41,7 @@ class CreateCritiqueViewModel extends GetxController {
       /// Build critique object.
       CritiqueModel critique = CritiqueModel(
         message: _message,
-        imdbID: 'tt0120338',
+        imdbID: _movie!.imdbID,
         uid: _getStorage.read('uid'),
         created: DateTime.now(),
         modified: DateTime.now(),
@@ -70,4 +70,20 @@ class CreateCritiqueViewModel extends GetxController {
     _message = message;
     update();
   }
+
+  void updateMovie({required MovieModel movie}) {
+    _movie = movie;
+    update();
+  }
+
+  bool movieSelected() {
+    return _movie != null;
+  }
+
+  void clearMovie() {
+    _movie = null;
+    update();
+  }
+
+  MovieModel? get movie => _movie;
 }

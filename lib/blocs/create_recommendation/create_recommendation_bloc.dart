@@ -13,8 +13,8 @@ import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/recommendations_service.dart';
 import 'package:critic/services/validation_service.dart';
 import 'package:critic/widgets/Spinner.dart';
-import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
-    as SEARCH_MOVIES_BP;
+// import 'package:critic/blocs/search_movies/search_movies_bloc.dart'
+//     as SEARCH_MOVIES_BP;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
