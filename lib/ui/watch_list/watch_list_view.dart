@@ -9,20 +9,17 @@ import 'package:get/get.dart';
 import 'watch_list_view_model.dart';
 
 class WatchListView extends StatelessWidget {
-  WatchListView({Key? key}) : super(key: key);
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  const WatchListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<WatchListViewModel>(
       init: WatchListViewModel(),
       builder: (model) => BasicPage(
-        scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
+            Get.back();
           },
         ),
         rightIconButton: IconButton(

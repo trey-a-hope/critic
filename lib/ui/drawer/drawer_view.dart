@@ -55,7 +55,7 @@ class DrawerView extends StatelessWidget {
                   style: AppThemes.textTheme.headline4,
                 ),
                 onTap: () {
-                  Get.offNamed(Globals.ROUTES_CREATE_CRITIQUE);
+                  Get.toNamed(Globals.ROUTES_CREATE_CRITIQUE);
                 },
               ),
               ListTile(
@@ -65,7 +65,12 @@ class DrawerView extends StatelessWidget {
                   style: AppThemes.textTheme.headline4,
                 ),
                 onTap: () {
-                  Get.offNamed(Globals.ROUTES_PROFILE);
+                  Get.toNamed(
+                    Globals.ROUTES_PROFILE,
+                    arguments: {
+                      'uid': model.user!.uid,
+                    },
+                  );
                 },
               ),
 
@@ -87,7 +92,7 @@ class DrawerView extends StatelessWidget {
                   style: AppThemes.textTheme.headline4,
                 ),
                 onTap: () {
-                  Get.offNamed(Globals.ROUTES_WATCH_LIST);
+                  Get.toNamed(Globals.ROUTES_WATCH_LIST);
                 },
               ),
               ListTile(
@@ -113,7 +118,7 @@ class DrawerView extends StatelessWidget {
                   style: AppThemes.textTheme.headline4,
                 ),
                 onTap: () {
-                  Get.offNamed(Globals.ROUTES_SETTINGS);
+                  Get.toNamed(Globals.ROUTES_SETTINGS);
                 },
               ),
             ],

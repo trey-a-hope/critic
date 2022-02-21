@@ -35,11 +35,10 @@ class CreateCritiqueView extends StatelessWidget {
     return GetBuilder<CreateCritiqueViewModel>(
       init: CreateCritiqueViewModel(),
       builder: (model) => BasicPage(
-        scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
+            Get.back();
           },
         ),
         rightIconButton: IconButton(

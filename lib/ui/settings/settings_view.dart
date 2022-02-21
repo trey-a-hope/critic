@@ -10,8 +10,6 @@ import 'package:get/get.dart';
 class SettingsView extends StatelessWidget {
   SettingsView({Key? key}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   /// Instantiate modal service.
   final ModalService _modalService = Get.find();
 
@@ -23,11 +21,10 @@ class SettingsView extends StatelessWidget {
     return GetBuilder<SettingsViewModel>(
       init: SettingsViewModel(),
       builder: (model) => BasicPage(
-        scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.chevron_left),
           onPressed: () {
-            _scaffoldKey.currentState!.openDrawer();
+            Get.back();
           },
         ),
         drawer: DrawerView(),
