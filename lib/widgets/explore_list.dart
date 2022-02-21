@@ -1,14 +1,14 @@
+import 'package:critic/constants.dart';
+import 'package:critic/initialize_dependencies.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/user_model.dart';
-import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination_view/pagination_view.dart';
-import '../constants.dart';
-import '../initialize_dependencies.dart';
+
 import 'Spinner.dart';
 import 'critique_view.dart';
 
@@ -31,11 +31,11 @@ class ExploreList extends StatelessWidget {
 
     critiques = [];
 
-    critiques = await locator<CritiqueService>().listByGenre(
-      genre: genre,
-      limit: PAGE_FETCH_LIMIT,
-      lastID: lastID,
-    );
+    // critiques = await locator<CritiqueService>().listByGenre(
+    //   genre: genre,
+    //   limit: PAGE_FETCH_LIMIT,
+    //   lastID: lastID,
+    // );
 
     if (critiques.isEmpty) return critiques;
 

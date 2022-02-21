@@ -86,36 +86,38 @@ class CritiqueService extends GetxService {
     }
   }
 
-  Future<List<CritiqueModel>> listByGenre({
-    required String genre,
+  Future<List<CritiqueModel>> listFromFirebase({
     required int limit,
-    String? lastID,
+    required DateTime? lastDateTime,
   }) async {
     try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListByGenre'),
-        body: json.encode({
-          'genre': genre,
-          'limit': limit,
-          'last_id': lastID,
-        }),
-        headers: {'content-type': 'application/json'},
-      );
+      /// Query the critiques from most recent to oldest with a limit.
+      Query query =
+          _critiquesDB.orderBy('created', descending: true).limit(limit);
 
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
+      /// For pagination, start new fetch after the last document's created date.
+      if (lastDateTime != null) {
+        query = query.startAfter([lastDateTime.toIso8601String()]);
       }
 
-      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
+      /// Perform query then save the docu
+      List<QueryDocumentSnapshot<Object?>> querySnapshot =
+          (await query.get()).docs;
 
-      List<CritiqueModel> critiques = results
-          .map(
-            (result) => CritiqueModel.fromJson(result),
-          )
+      /// Create document references from query snapshot.
+      List<DocumentReference<CritiqueModel>> docRefs = querySnapshot
+          .map((e) => e.reference.withConverter<CritiqueModel>(
+              fromFirestore: (snapshot, _) =>
+                  CritiqueModel.fromJson(snapshot.data()!),
+              toFirestore: (model, _) => model.toJson()))
           .toList();
+
+      /// Convert document references to critique objects.
+      List<CritiqueModel> critiques = await Future.wait(
+        docRefs.map(
+          (docRef) async => ((await docRef.get()).data() as CritiqueModel),
+        ),
+      );
 
       return critiques;
     } catch (e) {

@@ -61,14 +61,12 @@ class WatchListView extends StatelessWidget {
                     ),
                     leading: SizedBox(
                       height: 100,
+                      width: 35,
                       child: CachedNetworkImage(
                         imageUrl: '${movie.poster}',
                         imageBuilder: (context, imageProvider) => Image(
                           image: imageProvider,
                           height: 100,
-                        ),
-                        placeholder: (context, url) => Center(
-                          child: CircularProgressIndicator(),
                         ),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                       ),

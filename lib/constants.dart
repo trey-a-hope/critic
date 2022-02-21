@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'models/ui/genre_model.dart';
 
 const String DUMMY_POSTER_IMG_URL =
-    'https://payload.cargocollective.com/1/23/758880/13104445/NO-MOVIE-POSTERS-02-03-03_2000_c.png';
+    'https://www.gamespot.com/a/uploads/original/1562/15626911/3776884-image%285%29.png';
 const String DUMMY_PROFILE_PHOTO_URL =
     'https://firebasestorage.googleapis.com/v0/b/critic-a9e44.appspot.com/o/Images%2FProfile.jpeg?alt=media&token=f8d67c2f-9b1c-4cbe-aca5-6da014c504a0';
 

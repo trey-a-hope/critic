@@ -1,19 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/movie_model.dart';
-import 'package:critic/blocs/critique_details/critique_details_bloc.dart'
-    as CRITIQUE_DETAILS_BP;
-import 'package:critic/blocs/other_profile/other_profile_bloc.dart'
-    as OTHER_PROFILE_BP;
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
-import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CritiqueViewModel extends StatefulWidget {
   const CritiqueViewModel({
@@ -35,17 +32,11 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
   /// The user who posted this critique.
   UserModel? user;
 
-  /// Number of characters for message of the critique.
-  int _critiqueMessageCharCount = 75;
-
   /// Instantiate movie service.
   MovieService _movieService = Get.find();
 
   /// Instantiate user service.
   UserService _userService = Get.find();
-
-  /// Instantiate get storage.
-  final GetStorage _getStorage = GetStorage();
 
   /// Array that holds api calls for fetching the movie and user of this critique.
   List<Future> futures = [];
@@ -68,7 +59,110 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: Container(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                margin: EdgeInsets.only(bottom: 20.0),
+                height: 200,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 130,
+                      child: CachedNetworkImage(
+                        imageUrl: DUMMY_POSTER_IMG_URL,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitHeight,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(5.0, 5.0),
+                                  blurRadius: 10.0)
+                            ],
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Test',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Divider(),
+                            Text(
+                              '\"${widget.critique.message}\"',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            RatingBarIndicator(
+                              rating: widget.critique.rating,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemCount: 5,
+                              itemSize: 20.0,
+                              direction: Axis.horizontal,
+                            ),
+                            Spacer(),
+                            Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: DUMMY_PROFILE_PHOTO_URL,
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 15,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                                Text('John Doe',
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                                Spacer(),
+                                Text(
+                                    '${timeago.format(widget.critique.created, allowFromNow: true)}',
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                              ],
+                            ),
+                          ],
+                        ),
+                        margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10.0),
+                            topRight: Radius.circular(10.0),
+                          ),
+                          color: Theme.of(context).canvasColor,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(5.0, 5.0),
+                                blurRadius: 10.0)
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+
           default:
             if (snapshot.hasError) {
               return Center(
@@ -82,110 +176,113 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
             /// Set result to user object.
             UserModel user = snapshot.data[1];
 
-            return Padding(
-              padding: EdgeInsets.all(10),
-              child: ExpansionTileCard(
-                leading: InkWell(
-                  onTap: () {
-                    /// If the current user is the one who posted this critique, void this action.
-                    if (user.uid == _getStorage.read('uid')) return;
-
-                    Route route = MaterialPageRoute(
-                      builder: (context) => BlocProvider(
-                        create: (context) => OTHER_PROFILE_BP.OtherProfileBloc(
-                          otherUserID: '${user.uid}',
-                        )..add(
-                            OTHER_PROFILE_BP.LoadPageEvent(),
-                          ),
-                        child: OTHER_PROFILE_BP.OtherProfilePage(),
-                      ),
-                    );
-
-                    Navigator.push(context, route);
+            return InkWell(
+              onTap: () async {
+                Get.toNamed(
+                  Globals.ROUTES_MOVIE_DETAILS,
+                  arguments: {
+                    'movie': movie,
                   },
-                  child: CachedNetworkImage(
-                    imageUrl: '${user.imgUrl}',
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                      backgroundImage: imageProvider,
-                    ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                trailing: CachedNetworkImage(
-                  imageUrl: '${movie.poster}',
-                  imageBuilder: (context, imageProvider) => CircleAvatar(
-                    backgroundImage: imageProvider,
-                  ),
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-                title: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        '${movie.title}',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                          '${user.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
-                          style: TextStyle(color: Colors.black, fontSize: 14)),
-                    ],
-                  ),
-                ),
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      widget.critique.message.length > _critiqueMessageCharCount
-                          ? '"${widget.critique.message}\"'
-                                  .substring(0, _critiqueMessageCharCount + 1) +
-                              '..."'
-                          : '"${widget.critique.message}\"',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                margin: EdgeInsets.only(bottom: 20.0),
+                height: 200,
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(
+                      width: 130,
+                      child: CachedNetworkImage(
+                        imageUrl: movie.poster,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.fitHeight,
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(5.0, 5.0),
+                                  blurRadius: 10.0)
+                            ],
+                          ),
                         ),
-                      ),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).canvasColor),
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Colors.black,
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
-                    child: Text('Read Full Review'),
-                    onPressed: () {
-                      Route route = MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) =>
-                              CRITIQUE_DETAILS_BP.CritiqueDetailsBloc(
-                            critiqueID: widget.critique.id!,
-                          )..add(
-                                  CRITIQUE_DETAILS_BP.LoadPageEvent(),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              movie.title,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            Divider(),
+                            Text(
+                              '\"${widget.critique.message}\"',
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            RatingBarIndicator(
+                              rating: widget.critique.rating,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemCount: 5,
+                              itemSize: 20.0,
+                              direction: Axis.horizontal,
+                            ),
+                            Spacer(),
+                            Row(
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: user.imgUrl,
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    radius: 15,
+                                    backgroundImage: imageProvider,
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
                                 ),
-                          child: CRITIQUE_DETAILS_BP.CritiqueDetailsPage(),
+                                Text(user.username,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                                Spacer(),
+                                Text(
+                                    '${timeago.format(widget.critique.created, allowFromNow: true)}',
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-
-                      Navigator.push(context, route);
-                    },
-                  )
-                ],
+                        margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10.0),
+                            topRight: Radius.circular(10.0),
+                          ),
+                          color: Theme.of(context).canvasColor,
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(5.0, 5.0),
+                                blurRadius: 10.0)
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
         }
