@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/app_themes.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,16 +26,11 @@ class ProfileView extends StatelessWidget {
             ? IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  Get.snackbar(
-                    'TODO',
-                    'Go to edit profile page.',
-                    icon: Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
+                  Get.toNamed(
+                    Globals.ROUTES_EDIT_PROFILE,
+                    arguments: {
+                      'uid': model.user!.uid,
+                    },
                   );
                 },
               )
