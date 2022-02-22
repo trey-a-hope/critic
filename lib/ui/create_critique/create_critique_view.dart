@@ -17,9 +17,6 @@ class CreateCritiqueView extends StatelessWidget {
   /// Editing controller for message on critique.
   final TextEditingController _messageController = TextEditingController();
 
-  /// Key for the scaffold.
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   /// Key for the form.
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

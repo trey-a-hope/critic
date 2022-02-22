@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/models/data/comment_model.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/stream_feed_service.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' show json;
 
 import 'package:stream_feed/stream_feed.dart';
 
