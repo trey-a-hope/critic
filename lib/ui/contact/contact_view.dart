@@ -1,9 +1,11 @@
-import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ContactPage extends StatelessWidget {
+class ContactView extends StatelessWidget {
+  const ContactView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BasicPage(
@@ -25,7 +27,7 @@ class ContactPage extends StatelessWidget {
                 height: 30,
               ),
               Text('E-Mail', style: Theme.of(context).textTheme.headline3),
-              Text('$EMAIL', style: Theme.of(context).textTheme.headline5),
+              Text(Globals.EMAIL, style: Theme.of(context).textTheme.headline5),
               SizedBox(
                 height: 30,
               ),

@@ -1,3 +1,5 @@
+import 'package:critic/extensions/hex_color.dart';
+
 class Globals {
   Globals._();
 
@@ -25,4 +27,43 @@ class Globals {
   /// OMDB API
   static const String OMDB_API_KEY = '7c304592';
   static const String OMDB_API_URL = 'www.omdbapi.com';
+
+  /// Dummy Variables
+  static const String DUMMY_POSTER_IMG_URL =
+      'https://www.gamespot.com/a/uploads/original/1562/15626911/3776884-image%285%29.png';
+  static const String DUMMY_PROFILE_PHOTO_URL =
+      'https://firebasestorage.googleapis.com/v0/b/critic-a9e44.appspot.com/o/Images%2FProfile.jpeg?alt=media&token=f8d67c2f-9b1c-4cbe-aca5-6da014c504a0';
+
+  /// App build and version info.
+  static String? version;
+  static String? buildNumber;
+
+  /// Algolia API
+  static const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
+  static const String ALGOLIA_SEARCH_API_KEY =
+      '01be9bb46f445fa21cdba2c7197d84bf';
+
+  /// Colors
+  static final HexColor colorNavy = HexColor('#09487e');
+  static final HexColor colorGrey = HexColor('#25272A');
+
+  /// Assets & Images
+  static const String ASSET_LOGIN_BG = 'assets/images/login_bg.jpg';
+  static const String ASSET_APP_ICON = 'assets/images/app_icon.png';
+  static const String ASSET_APP_ICON_LIGHT = 'assets/images/app_icon_light.png';
+
+  /// UID of Admin
+  static const String TREY_HOPE_UID = 'OkiieQJ7LhbyQwrCEFtOOP9b3Pt2';
+
+  /// Limits
+  static const int CRITIQUE_CHAR_LIMIT = 225;
+  static const int PAGE_FETCH_LIMIT = 10;
+
+  /// Email
+  static const String EMAIL = 'thope@imabigcritic.com';
+
+  /// Messages
+  static const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';
+  static const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
+  static const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';
 }

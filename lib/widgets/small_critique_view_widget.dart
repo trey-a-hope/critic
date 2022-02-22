@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class SmallCritiqueViewModel extends StatefulWidget {
-  const SmallCritiqueViewModel({
+class SmallCritiqueViewWidget extends StatefulWidget {
+  const SmallCritiqueViewWidget({
     Key? key,
     required this.critique,
   }) : super(key: key);
@@ -18,10 +18,11 @@ class SmallCritiqueViewModel extends StatefulWidget {
   final CritiqueModel critique;
 
   @override
-  _SmallCritiqueViewModelState createState() => _SmallCritiqueViewModelState();
+  _SmallCritiqueViewWidgetState createState() =>
+      _SmallCritiqueViewWidgetState();
 }
 
-class _SmallCritiqueViewModelState extends State<SmallCritiqueViewModel> {
+class _SmallCritiqueViewWidgetState extends State<SmallCritiqueViewWidget> {
   /// The user who posted this critique.
   UserModel? user;
 

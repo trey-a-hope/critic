@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/constants.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/services/modal_service.dart';
@@ -175,7 +174,7 @@ class CreateCritiqueView extends StatelessWidget {
                                   Theme.of(context).textTheme.headline4!.color,
                             ),
                             maxLines: 5,
-                            maxLength: CRITIQUE_CHAR_LIMIT,
+                            maxLength: Globals.CRITIQUE_CHAR_LIMIT,
                             decoration: InputDecoration(
                               errorStyle: TextStyle(
                                   color: Theme.of(context)

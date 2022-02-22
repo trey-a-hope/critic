@@ -1,5 +1,5 @@
 import 'package:algolia/algolia.dart';
-import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/ui/search_users/search_users_cache.dart';
@@ -16,8 +16,8 @@ class SearchUsersRepository {
 
   /// Initialize Algolia package.
   final Algolia _algolia = Algolia.init(
-    applicationId: ALGOLIA_APP_ID,
-    apiKey: ALGOLIA_SEARCH_API_KEY,
+    applicationId: Globals.ALGOLIA_APP_ID,
+    apiKey: Globals.ALGOLIA_SEARCH_API_KEY,
   );
 
   Future<List<UserModel>> search(String term) async {

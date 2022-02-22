@@ -1,4 +1,4 @@
-import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/stream_feed_service.dart';
@@ -42,7 +42,7 @@ class HomeViewModel extends GetxController
     critiques = [];
 
     critiques = await _critiqueService.listFromFirebase(
-      limit: PAGE_FETCH_LIMIT,
+      limit: Globals.PAGE_FETCH_LIMIT,
       lastDateTime: _everyoneTabLastDateTime,
     );
 
@@ -65,7 +65,7 @@ class HomeViewModel extends GetxController
     critiques = [];
 
     List<Activity> activities = await _streamFeedService.getActivities(
-      limit: PAGE_FETCH_LIMIT,
+      limit: Globals.PAGE_FETCH_LIMIT,
       offset: offset,
     );
 

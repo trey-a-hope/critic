@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/movie_model.dart';
-import 'package:critic/models/ui/small_critique_view_model.dart';
+import 'package:critic/widgets/small_critique_view_widget.dart';
 import 'package:critic/ui/movie_details/movie_details_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -184,7 +184,7 @@ class MovieDetailsView extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.75,
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: SmallCritiqueViewModel(critique: critique),
+                        child: SmallCritiqueViewWidget(critique: critique),
                       ),
                     );
                   },

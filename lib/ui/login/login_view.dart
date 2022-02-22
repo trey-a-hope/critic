@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/widgets/full_width_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../../constants.dart';
 import 'login_view_model.dart';
 import 'package:new_version/new_version.dart';
 
@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(ASSET_LOGIN_BG),
+                    image: AssetImage(Globals.ASSET_LOGIN_BG),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: Center(
                         child: Image.asset(
-                          ASSET_APP_ICON_LIGHT,
+                          Globals.ASSET_APP_ICON_LIGHT,
                           height: 100,
                         ),
                       ),

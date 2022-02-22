@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:critic/constants.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/stream_feed_service.dart';
@@ -88,7 +87,7 @@ class MainViewModel extends GetxController {
       } else {
         // Create user in firebase.
         UserModel newUser = UserModel(
-          imgUrl: _firebaseUser.photoURL ?? DUMMY_PROFILE_PHOTO_URL,
+          imgUrl: _firebaseUser.photoURL ?? Globals.DUMMY_PROFILE_PHOTO_URL,
           created: DateTime.now(),
           modified: DateTime.now(),
           uid: _firebaseUser.uid,

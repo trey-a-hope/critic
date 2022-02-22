@@ -1,6 +1,6 @@
 import 'package:critic/constants/globals.dart';
-import 'package:critic/pages/contact_page.dart';
-import 'package:critic/pages/terms_service_view.dart';
+import 'package:critic/ui/contact/contact_view.dart';
+import 'package:critic/ui/terms_of_service/terms_of_service_view.dart';
 import 'package:critic/ui/create_critique/create_critique_view.dart';
 import 'package:critic/ui/edit_profile/edit_profile_view.dart';
 import 'package:critic/ui/home/home_view.dart';
@@ -19,7 +19,7 @@ class AppRoutes {
   AppRoutes._();
   static final routes = [
     GetPage(name: '/', page: () => const MainView()),
-    GetPage(name: Globals.ROUTES_CONTACT, page: () => ContactPage()),
+    GetPage(name: Globals.ROUTES_CONTACT, page: () => ContactView()),
     GetPage(
         name: Globals.ROUTES_CREATE_CRITIQUE, page: () => CreateCritiqueView()),
     GetPage(name: Globals.ROUTES_EDIT_PROFILE, page: () => EditProfileView()),

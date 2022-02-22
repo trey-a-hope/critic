@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/constants.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/critique_model.dart';
@@ -14,8 +13,8 @@ import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:shimmer/shimmer.dart';
 
-class CritiqueViewModel extends StatefulWidget {
-  const CritiqueViewModel({
+class CritiqueViewWidget extends StatefulWidget {
+  const CritiqueViewWidget({
     Key? key,
     required this.critique,
   }) : super(key: key);
@@ -24,10 +23,10 @@ class CritiqueViewModel extends StatefulWidget {
   final CritiqueModel critique;
 
   @override
-  _CritiqueViewModelState createState() => _CritiqueViewModelState();
+  _CritiqueViewWidgetState createState() => _CritiqueViewWidgetState();
 }
 
-class _CritiqueViewModelState extends State<CritiqueViewModel> {
+class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
   /// The movie associated with this critique.
   MovieModel? movie;
 
@@ -78,7 +77,7 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
                         SizedBox(
                           width: 130,
                           child: CachedNetworkImage(
-                            imageUrl: DUMMY_POSTER_IMG_URL,
+                            imageUrl: Globals.DUMMY_POSTER_IMG_URL,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 image: DecorationImage(
@@ -130,7 +129,7 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
                                 Row(
                                   children: [
                                     CachedNetworkImage(
-                                      imageUrl: DUMMY_PROFILE_PHOTO_URL,
+                                      imageUrl: Globals.DUMMY_PROFILE_PHOTO_URL,
                                       imageBuilder: (context, imageProvider) =>
                                           CircleAvatar(
                                         radius: 15,
