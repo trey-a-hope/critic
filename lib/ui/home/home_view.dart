@@ -93,6 +93,7 @@ class HomeView extends StatelessWidget {
             ],
           ),
           body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             controller: model.controller,
             children: [
               RefreshIndicator(
