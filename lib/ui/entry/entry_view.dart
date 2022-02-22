@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:critic/blocs/search_users/search_users_bloc.dart'
-    as SEARCH_USERS_BP;
+
 import 'package:critic/blocs/home/home_bloc.dart' as HOME_BP;
 import 'package:critic/blocs/profile/profile_bloc.dart' as PROFILE_BP;
 import 'package:critic/blocs/explore/explore_bloc.dart' as EXPLORE_BP;
@@ -109,18 +108,18 @@ class EntryView extends StatelessWidget {
       leading: IconButton(
         icon: Icon(Icons.search),
         onPressed: () {
-          Get.to(
-            () => BlocProvider(
-              create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
-                searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
-                  cache: SEARCH_USERS_BP.SearchUsersCache(),
-                ),
-              )..add(SEARCH_USERS_BP.LoadPageEvent()),
-              child: SEARCH_USERS_BP.SearchUsersPage(
-                returnUser: false,
-              ),
-            ),
-          );
+          // Get.to(
+          //   () => BlocProvider(
+          //     create: (context) => SEARCH_USERS_BP.SearchUsersBloc(
+          //       searchUsersRepository: SEARCH_USERS_BP.SearchUsersRepository(
+          //         cache: SEARCH_USERS_BP.SearchUsersCache(),
+          //       ),
+          //     )..add(SEARCH_USERS_BP.LoadPageEvent()),
+          //     child: SEARCH_USERS_BP.SearchUsersPage(
+          //       returnUser: false,
+          //     ),
+          //   ),
+          // );
         },
       ),
       actions: <Widget>[

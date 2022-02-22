@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/blocs/search_users/search_users_bloc.dart'
-    as SEARCH_USERS_BP;
+
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/recommendation_model.dart';
 import 'package:critic/models/data/user_model.dart';

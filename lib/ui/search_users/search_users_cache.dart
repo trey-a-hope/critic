@@ -1,4 +1,4 @@
-part of 'search_users_bloc.dart';
+import 'package:critic/models/data/user_model.dart';
 
 class SearchUsersCache {
   final _cache = <String, List<UserModel>>{};

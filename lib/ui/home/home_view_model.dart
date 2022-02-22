@@ -1,6 +1,7 @@
 import 'package:critic/constants.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/critique_service.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,9 @@ class HomeViewModel extends GetxController
     with GetSingleTickerProviderStateMixin {
   /// Instantiate critique service.
   final CritiqueService _critiqueService = Get.find();
+
+  /// Instantiate stream feed service.
+  final StreamFeedService _streamFeedService = Get.find();
 
   /// Pagination last date time for everyone critique view.
   DateTime? _everyoneTabLastDateTime;

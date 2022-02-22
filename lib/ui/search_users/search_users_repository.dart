@@ -1,20 +1,30 @@
-part of 'search_users_bloc.dart';
+import 'package:algolia/algolia.dart';
+import 'package:critic/constants.dart';
+import 'package:critic/models/data/user_model.dart';
+import 'package:critic/services/user_service.dart';
+import 'package:critic/ui/search_users/search_users_cache.dart';
+import 'package:get/get.dart';
 
 class SearchUsersRepository {
+  SearchUsersRepository({required this.cache});
+
+  /// Cache for storing user search results.
   final SearchUsersCache cache;
 
+  /// Instantiate user service.
+  final UserService _userService = Get.find();
+
+  /// Initialize Algolia package.
   final Algolia _algolia = Algolia.init(
     applicationId: ALGOLIA_APP_ID,
     apiKey: ALGOLIA_SEARCH_API_KEY,
   );
 
-  SearchUsersRepository({required this.cache});
-
   Future<List<UserModel>> search(String term) async {
     if (cache.contains(term)) {
       return cache.get(term);
     } else {
-      AlgoliaQuery query = _algolia.instance.index('Users').query(term);
+      AlgoliaQuery query = _algolia.instance.index('users').query(term);
       // query = query.setFacetFilter('isGem:$_isSearchingGems');
 
       final List<AlgoliaObjectSnapshot> results =
@@ -26,8 +36,7 @@ class SearchUsersRepository {
       // Convert algolia results to user objects.
       List<UserModel> users = [];
       for (int i = 0; i < uids.length; i++) {
-        String uid = uids[i];
-        UserModel user = await locator<UserService>().retrieveUser(uid: uid);
+        UserModel user = await _userService.retrieveUser(uid: uids[i]);
         users.add(user);
       }
 

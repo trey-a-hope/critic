@@ -10,14 +10,11 @@ import 'profile_view_model.dart';
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ProfileViewModel>(
       init: ProfileViewModel(),
       builder: (model) => BasicPage(
-        scaffoldKey: _scaffoldKey,
         leftIconButton: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -68,23 +65,45 @@ class ProfileView extends StatelessWidget {
                     ],
                   ),
                   if (!model.isMyProfile) ...[
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                    model.isFollowing
+                        ? ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              'Unfollow',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                            onPressed: () async {
+                              model.unfollow();
+                            },
+                          )
+                        : ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.blue),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              'Follow',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              model.follow();
+                            },
                           ),
-                        ),
-                      ),
-                      child: Text(
-                        'Follow',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      onPressed: () async {},
-                    ),
                   ]
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:critic/services/follow_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:critic/services/watchlist_service.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class InitialBinding implements Bindings {
     Get.lazyPut(() => BlockUserService(), fenix: true);
     Get.lazyPut(() => CritiqueService(), fenix: true);
     Get.lazyPut(() => FCMNotificationService(), fenix: true);
+    Get.lazyPut(() => FollowService(), fenix: true);
     Get.lazyPut(() => ModalService(), fenix: true);
     Get.lazyPut(() => MovieService(), fenix: true);
     Get.lazyPut(() => RecommendationsService(), fenix: true);

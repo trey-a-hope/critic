@@ -290,16 +290,11 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        Get.snackbar(
-                                          'TODO',
-                                          'Go to user profile.',
-                                          icon: Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                          ),
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.green,
-                                          colorText: Colors.white,
+                                        Get.toNamed(
+                                          Globals.ROUTES_PROFILE,
+                                          arguments: {
+                                            'uid': user.uid,
+                                          },
                                         );
                                       },
                                       child: CachedNetworkImage(
@@ -314,6 +309,7 @@ class _CritiqueViewModelState extends State<CritiqueViewModel> {
                                             Icon(Icons.error),
                                       ),
                                     ),
+                                    SizedBox(width: 10),
                                     Text(
                                       user.username,
                                       style:

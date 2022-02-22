@@ -2,6 +2,7 @@ import 'package:critic/constants/app_themes.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'drawer_view_model.dart';
 
 class DrawerView extends StatelessWidget {
@@ -86,7 +87,7 @@ class DrawerView extends StatelessWidget {
               //   },
               // ),
               ListTile(
-                leading: const Icon(Icons.movie),
+                leading: const Icon(Icons.remove_red_eye_rounded),
                 title: Text(
                   'Watch List',
                   style: AppThemes.textTheme.headline4,
@@ -96,7 +97,7 @@ class DrawerView extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.search),
+                leading: const Icon(MdiIcons.movieOpenStar),
                 title: Text(
                   'Search Movies',
                   style: AppThemes.textTheme.headline4,
@@ -106,6 +107,21 @@ class DrawerView extends StatelessWidget {
                     Globals.ROUTES_SEARCH_MOVIES,
                     arguments: {
                       'returnMovie': false,
+                    },
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(MdiIcons.accountMultiple),
+                title: Text(
+                  'Search Users',
+                  style: AppThemes.textTheme.headline4,
+                ),
+                onTap: () {
+                  Get.toNamed(
+                    Globals.ROUTES_SEARCH_USERS,
+                    arguments: {
+                      'returnUser': false,
                     },
                   );
                 },

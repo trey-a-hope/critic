@@ -9,6 +9,7 @@ import 'package:critic/ui/movie_details/movie_details_view.dart';
 import 'package:critic/ui/profile/profile_view.dart';
 import 'package:critic/ui/recommendations/recommendations_view.dart';
 import 'package:critic/ui/search_movies/search_movies_view.dart';
+import 'package:critic/ui/search_users/search_users_view.dart';
 import 'package:critic/ui/settings/settings_view.dart';
 import 'package:critic/ui/watch_list/watch_list_view.dart';
 import 'package:get/get.dart';
@@ -28,6 +29,7 @@ class AppRoutes {
         name: Globals.ROUTES_RECOMMENDATIONS,
         page: () => RecommendationsView()),
     GetPage(name: Globals.ROUTES_SEARCH_MOVIES, page: () => SearchMoviesView()),
+    GetPage(name: Globals.ROUTES_SEARCH_USERS, page: () => SearchUsersView()),
     GetPage(name: Globals.ROUTES_SETTINGS, page: () => SettingsView()),
     GetPage(
         name: Globals.ROUTES_TERMS_OF_SERVICE,

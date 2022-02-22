@@ -1,13 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const Algolia = require('./algolia/index');
-const StreamIO = require('./streamio/index');
+ const StreamIO = require('./streamio/index');
 const MongoDBCritiques = require('./mongodb/critique_functions');
 
 admin.initializeApp(functions.config().firebase);
 
-//Algolia
-exports.AlgoliaSyncUsers = Algolia.algoliaSyncUsers;
 
 //StreamIO
 exports.AddCritiqueToFeed = StreamIO.addCritiqueToFeed;

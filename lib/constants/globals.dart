@@ -10,9 +10,9 @@ class Globals {
   static const String ROUTES_PROFILE = '/profile';
   static const String ROUTES_RECOMMENDATIONS = '/recommendations';
   static const String ROUTES_SEARCH_MOVIES = '/search_movies';
+  static const String ROUTES_SEARCH_USERS = '/search_users';
   static const String ROUTES_SETTINGS = '/settings';
-    static const String ROUTES_TERMS_OF_SERVICE = '/terms_of_service';
-
+  static const String ROUTES_TERMS_OF_SERVICE = '/terms_of_service';
   static const String ROUTES_WATCH_LIST = '/watch_list';
 
   /// Stream API

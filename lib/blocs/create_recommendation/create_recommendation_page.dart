@@ -197,30 +197,30 @@ class _CreateRecommendationPageState extends State<CreateRecommendationPage> {
                                 TextStyle(color: Theme.of(context).canvasColor),
                           ),
                           onPressed: () async {
-                            Route route = MaterialPageRoute(
-                              builder: (context) => BlocProvider(
-                                create: (context) =>
-                                    SEARCH_USERS_BP.SearchUsersBloc(
-                                  searchUsersRepository:
-                                      SEARCH_USERS_BP.SearchUsersRepository(
-                                    cache: SEARCH_USERS_BP.SearchUsersCache(),
-                                  ),
-                                )..add(SEARCH_USERS_BP.LoadPageEvent()),
-                                child: SEARCH_USERS_BP.SearchUsersPage(
-                                  returnUser: true,
-                                ),
-                              ),
-                            );
-
-                            final result = await Navigator.push(context, route);
-
-                            final user = result as UserModel?;
-
-                            if (user != null) {
-                              context.read<CreateRecommendationBloc>().add(
-                                    UpdateSelectedUserEvent(user: user),
-                                  );
-                            }
+                            // Route route = MaterialPageRoute(
+                            //   builder: (context) => BlocProvider(
+                            //     create: (context) =>
+                            //         SEARCH_USERS_BP.SearchUsersBloc(
+                            //       searchUsersRepository:
+                            //           SEARCH_USERS_BP.SearchUsersRepository(
+                            //         cache: SEARCH_USERS_BP.SearchUsersCache(),
+                            //       ),
+                            //     )..add(SEARCH_USERS_BP.LoadPageEvent()),
+                            //     child: SEARCH_USERS_BP.SearchUsersPage(
+                            //       returnUser: true,
+                            //     ),
+                            //   ),
+                            // );
+                            //
+                            // final result = await Navigator.push(context, route);
+                            //
+                            // final user = result as UserModel?;
+                            //
+                            // if (user != null) {
+                            //   context.read<CreateRecommendationBloc>().add(
+                            //         UpdateSelectedUserEvent(user: user),
+                            //       );
+                            // }
                           },
                         ),
                       ),
