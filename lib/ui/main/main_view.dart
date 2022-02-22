@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'main_view_model.dart';
 
 class MainView extends StatelessWidget {

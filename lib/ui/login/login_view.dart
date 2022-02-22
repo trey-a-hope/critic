@@ -5,6 +5,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../constants.dart';
 import 'login_view_model.dart';
+import 'package:new_version/new_version.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,6 +15,9 @@ class LoginPage extends StatelessWidget {
     return GetBuilder<LoginViewModel>(
       init: LoginViewModel(),
       builder: (model) {
+        // Show new version alert message if necessary.
+        NewVersion().showAlertIfNecessary(context: context);
+
         return Scaffold(
           body: Stack(
             children: [
