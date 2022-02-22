@@ -147,9 +147,15 @@ class CritiqueService extends GetxService {
     }
   }
 
-  Future<List<CritiqueModel>> getFeed() async {
+  Future<List<CritiqueModel>> getFeed({
+    required int limit,
+    required int offset,
+  }) async {
     try {
-      List<Activity> activities = await _streamFeedService.getActivities();
+      List<Activity> activities = await _streamFeedService.getActivities(
+        limit: limit,
+        offset: offset,
+      );
 
       List<CritiqueModel> critiques = [];
 

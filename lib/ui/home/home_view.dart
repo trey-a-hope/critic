@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination_view/pagination_view.dart';
 import 'home_view_model.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({Key? key}) : super(key: key);
@@ -96,6 +97,7 @@ class HomeView extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             controller: model.controller,
             children: [
+              // Everyone.
               RefreshIndicator(
                 child: PaginationView<CritiqueModel>(
                   initialLoader: Center(child: CircularProgressIndicator()),
@@ -153,11 +155,63 @@ class HomeView extends StatelessWidget {
                   return;
                 },
               ),
-              Center(
-                child: Text(
-                  'This is the FOLLOWING tab',
-                  style: const TextStyle(fontSize: 36),
+              // Following
+              RefreshIndicator(
+                child: PaginationView<CritiqueModel>(
+                  initialLoader: Center(child: CircularProgressIndicator()),
+                  bottomLoader: Center(child: CircularProgressIndicator()),
+                  itemBuilder: (BuildContext context, CritiqueModel critique,
+                          int index) =>
+                      CritiqueViewModel(
+                    critique: critique,
+                  ),
+                  pageFetch: (int offset) async {
+                    return model.fetchFollowingCritiques(offset);
+                  },
+                  onError: (dynamic error) => Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          'Error',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          error.toString(),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                  onEmpty: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          MdiIcons.movieEdit,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          '$MESSAGE_EMPTY_CRITIQUES',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ],
+                    ),
+                  ),
+                  paginationViewType: PaginationViewType.listView,
                 ),
+                onRefresh: () async {
+                  // model.resetFollowingTabLastDateTime();
+                  return;
+                },
               ),
               Center(
                 child: Text(

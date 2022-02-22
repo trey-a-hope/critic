@@ -1,5 +1,6 @@
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/follow_service.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -10,6 +11,9 @@ class ProfileViewModel extends GetxController {
 
   /// Instantiate follow service.
   final FollowService _followService = Get.find();
+
+  /// Stream Feed service instance.
+  final StreamFeedService _streamFeedService = Get.find();
 
   /// The id of the user.
   final String uid = Get.arguments['uid'];
@@ -56,6 +60,9 @@ class ProfileViewModel extends GetxController {
     await _followService.followAtoB(
         userAuid: _getStorage.read('uid'), userBuid: uid);
 
+    // Follow the user feed in stream.
+    _streamFeedService.followFeed(feedToFollowUID: uid);
+
     // Determine if user a is following user b.
     isFollowing = await _followService.AisFollowingB(
         userAuid: _getStorage.read('uid'), userBuid: uid);
@@ -71,6 +78,9 @@ class ProfileViewModel extends GetxController {
     // Unfollow this user.
     await _followService.unfollowAtoB(
         userAuid: _getStorage.read('uid'), userBuid: uid);
+
+    // Unfollow the user feed in stream.
+    _streamFeedService.unfollowFeed(feedToUnfollowUID: uid);
 
     // Determine if user a is following user b.
     isFollowing = await _followService.AisFollowingB(

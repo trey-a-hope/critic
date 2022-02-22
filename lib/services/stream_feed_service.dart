@@ -54,12 +54,38 @@ class StreamFeedService extends GetxService {
   }
 
   /// Retrieve activities
-  Future<List<Activity>> getActivities() async {
-    return await _client.flatFeed('users', uid).getActivities(limit: 10);
+  Future<List<Activity>> getActivities({
+    required int limit,
+    required int offset,
+  }) async {
+    return await _client.flatFeed('users', uid).getActivities(
+          limit: limit,
+          offset: offset,
+        );
   }
 
   /// Removes the activity by activityId or foreignId parameters [id] : activityId Identifier of activity to remove
   Future<void> removeActivity({required String activityID}) async {
     return await _client.flatFeed('users', uid).removeActivityById(activityID);
+  }
+
+  /// Follow a feed.
+  Future<void> followFeed({required String feedToFollowUID}) async {
+    await _client.flatFeed('users', uid).follow(
+          _client.flatFeed(
+            'users',
+            feedToFollowUID,
+          ),
+        );
+  }
+
+  /// Unfollow a feed.
+  Future<void> unfollowFeed({required String feedToUnfollowUID}) async {
+    await _client.flatFeed('users', uid).unfollow(
+          _client.flatFeed(
+            'users',
+            feedToUnfollowUID,
+          ),
+        );
   }
 }

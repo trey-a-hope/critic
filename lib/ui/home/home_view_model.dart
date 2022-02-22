@@ -4,6 +4,7 @@ import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stream_feed/stream_feed.dart';
 
 class HomeViewModel extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -55,5 +56,25 @@ class HomeViewModel extends GetxController
   /// Restart pagination from the top.
   void resetEveryoneTabLastDateTime() {
     _everyoneTabLastDateTime = null;
+  }
+
+  /// Returns a paginated list of everyone's critiques.
+  Future<List<CritiqueModel>> fetchFollowingCritiques(int offset) async {
+    List<CritiqueModel> critiques;
+
+    critiques = [];
+
+    List<Activity> activities = await _streamFeedService.getActivities(
+      limit: PAGE_FETCH_LIMIT,
+      offset: offset,
+    );
+
+    for (int i = 0; i < activities.length; i++) {
+      critiques.add(await _critiqueService.retrieve(id: activities[i].id!));
+    }
+
+    if (critiques.isEmpty) return critiques;
+
+    return critiques;
   }
 }
