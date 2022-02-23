@@ -54,9 +54,9 @@ class ProfileView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('${model.user!.followers.length} Followers',
+                      Text('${model.followerCount} Followers',
                           style: AppThemes.textTheme.headline6),
-                      Text('${model.user!.followings.length} Followings',
+                      Text('${model.followingCount} Followings',
                           style: AppThemes.textTheme.headline6),
                     ],
                   ),

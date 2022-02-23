@@ -22,7 +22,8 @@ class _$CritiqueModelTearOff {
   const _$CritiqueModelTearOff();
 
   _CritiqueModel call(
-      {String? id,
+      {@JsonKey(name: '_id') String? id,
+      String? activityID,
       required String message,
       required String imdbID,
       required String uid,
@@ -32,6 +33,7 @@ class _$CritiqueModelTearOff {
       required List<String> likes}) {
     return _CritiqueModel(
       id: id,
+      activityID: activityID,
       message: message,
       imdbID: imdbID,
       uid: uid,
@@ -53,7 +55,11 @@ const $CritiqueModel = _$CritiqueModelTearOff();
 /// @nodoc
 mixin _$CritiqueModel {
   /// Id of the critique
+  @JsonKey(name: '_id')
   String? get id => throw _privateConstructorUsedError;
+
+  /// The id of the activity in stream.
+  String? get activityID => throw _privateConstructorUsedError;
 
   /// The review of the movie
   String get message => throw _privateConstructorUsedError;
@@ -90,7 +96,8 @@ abstract class $CritiqueModelCopyWith<$Res> {
           CritiqueModel value, $Res Function(CritiqueModel) then) =
       _$CritiqueModelCopyWithImpl<$Res>;
   $Res call(
-      {String? id,
+      {@JsonKey(name: '_id') String? id,
+      String? activityID,
       String message,
       String imdbID,
       String uid,
@@ -112,6 +119,7 @@ class _$CritiqueModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? activityID = freezed,
     Object? message = freezed,
     Object? imdbID = freezed,
     Object? uid = freezed,
@@ -124,6 +132,10 @@ class _$CritiqueModelCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      activityID: activityID == freezed
+          ? _value.activityID
+          : activityID // ignore: cast_nullable_to_non_nullable
               as String?,
       message: message == freezed
           ? _value.message
@@ -165,7 +177,8 @@ abstract class _$CritiqueModelCopyWith<$Res>
       __$CritiqueModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? id,
+      {@JsonKey(name: '_id') String? id,
+      String? activityID,
       String message,
       String imdbID,
       String uid,
@@ -189,6 +202,7 @@ class __$CritiqueModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? activityID = freezed,
     Object? message = freezed,
     Object? imdbID = freezed,
     Object? uid = freezed,
@@ -201,6 +215,10 @@ class __$CritiqueModelCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      activityID: activityID == freezed
+          ? _value.activityID
+          : activityID // ignore: cast_nullable_to_non_nullable
               as String?,
       message: message == freezed
           ? _value.message
@@ -238,7 +256,8 @@ class __$CritiqueModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_CritiqueModel implements _CritiqueModel {
   _$_CritiqueModel(
-      {this.id,
+      {@JsonKey(name: '_id') this.id,
+      this.activityID,
       required this.message,
       required this.imdbID,
       required this.uid,
@@ -253,7 +272,12 @@ class _$_CritiqueModel implements _CritiqueModel {
   @override
 
   /// Id of the critique
+  @JsonKey(name: '_id')
   final String? id;
+  @override
+
+  /// The id of the activity in stream.
+  final String? activityID;
   @override
 
   /// The review of the movie
@@ -287,7 +311,7 @@ class _$_CritiqueModel implements _CritiqueModel {
 
   @override
   String toString() {
-    return 'CritiqueModel(id: $id, message: $message, imdbID: $imdbID, uid: $uid, created: $created, modified: $modified, rating: $rating, likes: $likes)';
+    return 'CritiqueModel(id: $id, activityID: $activityID, message: $message, imdbID: $imdbID, uid: $uid, created: $created, modified: $modified, rating: $rating, likes: $likes)';
   }
 
   @override
@@ -296,6 +320,8 @@ class _$_CritiqueModel implements _CritiqueModel {
         (other.runtimeType == runtimeType &&
             other is _CritiqueModel &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.activityID, activityID) ||
+                other.activityID == activityID) &&
             (identical(other.message, message) || other.message == message) &&
             (identical(other.imdbID, imdbID) || other.imdbID == imdbID) &&
             (identical(other.uid, uid) || other.uid == uid) &&
@@ -307,8 +333,17 @@ class _$_CritiqueModel implements _CritiqueModel {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, message, imdbID, uid,
-      created, modified, rating, const DeepCollectionEquality().hash(likes));
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      activityID,
+      message,
+      imdbID,
+      uid,
+      created,
+      modified,
+      rating,
+      const DeepCollectionEquality().hash(likes));
 
   @JsonKey(ignore: true)
   @override
@@ -323,7 +358,8 @@ class _$_CritiqueModel implements _CritiqueModel {
 
 abstract class _CritiqueModel implements CritiqueModel {
   factory _CritiqueModel(
-      {String? id,
+      {@JsonKey(name: '_id') String? id,
+      String? activityID,
       required String message,
       required String imdbID,
       required String uid,
@@ -338,7 +374,12 @@ abstract class _CritiqueModel implements CritiqueModel {
   @override
 
   /// Id of the critique
+  @JsonKey(name: '_id')
   String? get id;
+  @override
+
+  /// The id of the activity in stream.
+  String? get activityID;
   @override
 
   /// The review of the movie

@@ -8,7 +8,8 @@ part of 'critique_model.dart';
 
 _$_CritiqueModel _$$_CritiqueModelFromJson(Map<String, dynamic> json) =>
     _$_CritiqueModel(
-      id: json['id'] as String?,
+      id: json['_id'] as String?,
+      activityID: json['activityID'] as String?,
       message: json['message'] as String,
       imdbID: json['imdbID'] as String,
       uid: json['uid'] as String,
@@ -20,7 +21,8 @@ _$_CritiqueModel _$$_CritiqueModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_CritiqueModelToJson(_$_CritiqueModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
+      'activityID': instance.activityID,
       'message': instance.message,
       'imdbID': instance.imdbID,
       'uid': instance.uid,

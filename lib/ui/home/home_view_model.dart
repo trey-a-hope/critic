@@ -1,28 +1,23 @@
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/critique_service.dart';
-import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:stream_feed/stream_feed.dart';
 
 class HomeViewModel extends GetxController
     with GetSingleTickerProviderStateMixin {
   /// Instantiate critique service.
   final CritiqueService _critiqueService = Get.find();
 
-  /// Instantiate stream feed service.
-  final StreamFeedService _streamFeedService = Get.find();
-
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
 
   /// Pagination last date time for everyone critique view.
-  DateTime? _everyoneTabLastDateTime;
+  String _everyoneTabLastID = '';
 
   /// Pagination last date time for my critique view.
-  DateTime? _myTabLastDateTime;
+  String _myTabLastID = '';
 
   /// Tab controller for home view.
   late TabController controller;
@@ -32,6 +27,15 @@ class HomeViewModel extends GetxController
     super.onInit();
 
     controller = TabController(vsync: this, length: 3);
+
+    // _streamFeedService.createActivity(uid: _getStorage.read('uid'));
+
+    // Delete all activites for this user.
+    // List<Activity> activites =
+    //     await _streamFeedService.getActivities(limit: 100, offset: 1);
+    // for (int i = 0; i < activites.length; i++) {
+    //   _streamFeedService.removeActivity(activityID: activites[i].id!);
+    // }
 
     update();
   }
@@ -48,21 +52,16 @@ class HomeViewModel extends GetxController
 
     critiques = [];
 
-    critiques = await _critiqueService.listFromFirebase(
+    critiques = await _critiqueService.list(
       limit: Globals.PAGE_FETCH_LIMIT,
-      lastDateTime: _everyoneTabLastDateTime,
+      lastID: _everyoneTabLastID,
     );
 
     if (critiques.isEmpty) return critiques;
 
-    _everyoneTabLastDateTime = critiques[critiques.length - 1].created;
+    _everyoneTabLastID = critiques[critiques.length - 1].id!;
 
     return critiques;
-  }
-
-  /// Restart pagination from the top.
-  void resetEveryoneTabLastDateTime() {
-    _everyoneTabLastDateTime = null;
   }
 
   /// Returns a paginated list of following's critiques.
@@ -71,14 +70,8 @@ class HomeViewModel extends GetxController
 
     critiques = [];
 
-    List<Activity> activities = await _streamFeedService.getActivities(
-      limit: Globals.PAGE_FETCH_LIMIT,
-      offset: offset,
-    );
-
-    for (int i = 0; i < activities.length; i++) {
-      critiques.add(await _critiqueService.retrieve(id: activities[i].id!));
-    }
+    critiques = await _critiqueService.getFeed(
+        limit: Globals.PAGE_FETCH_LIMIT, offset: offset);
 
     if (critiques.isEmpty) return critiques;
 
@@ -91,21 +84,22 @@ class HomeViewModel extends GetxController
 
     critiques = [];
 
-    critiques = await _critiqueService.listFromFirebase(
+    critiques = await _critiqueService.list(
       limit: Globals.PAGE_FETCH_LIMIT,
-      lastDateTime: _myTabLastDateTime,
+      lastID: _myTabLastID,
       uid: _getStorage.read('uid'),
     );
 
     if (critiques.isEmpty) return critiques;
 
-    _myTabLastDateTime = critiques[critiques.length - 1].created;
+    _myTabLastID = critiques[critiques.length - 1].id!;
 
     return critiques;
   }
 
   /// Restart pagination from the top.
-  void resetMyTabLastDateTime() {
-    _myTabLastDateTime = null;
+  void resetLastIDs() {
+    _myTabLastID = '';
+    _everyoneTabLastID = '';
   }
 }

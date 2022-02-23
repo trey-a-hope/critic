@@ -1,55 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/stream_feed_service.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert' show json;
 import 'package:stream_feed/stream_feed.dart';
 
 class CritiqueService extends GetxService {
   /// Instantiate stream feed service.
   final StreamFeedService _streamFeedService = Get.find();
 
-  /// Create reference to the critiques collection in Firestore.
-  final CollectionReference _critiquesDB =
-      FirebaseFirestore.instance.collection('critiques');
-
-  Future<List<CritiqueModel>> listFromFirebase({
+  Future<List<CritiqueModel>> list({
     required int limit,
-    required DateTime? lastDateTime,
+    String? lastID,
     String? uid,
+    String? imdbID,
   }) async {
     try {
-      /// Query the critiques from most recent to oldest with a limit.
-      Query query =
-          _critiquesDB.orderBy('created', descending: true).limit(limit);
-
-      if (uid != null) {
-        query = query.where('uid', isEqualTo: uid);
-      }
-
-      /// For pagination, start new fetch after the last document's created date.
-      if (lastDateTime != null) {
-        query = query.startAfter([lastDateTime.toIso8601String()]);
-      }
-
-      /// Perform query then save the docu
-      List<QueryDocumentSnapshot<Object?>> querySnapshot =
-          (await query.get()).docs;
-
-      /// Create document references from query snapshot.
-      List<DocumentReference<CritiqueModel>> docRefs = querySnapshot
-          .map((e) => e.reference.withConverter<CritiqueModel>(
-              fromFirestore: (snapshot, _) =>
-                  CritiqueModel.fromJson(snapshot.data()!),
-              toFirestore: (model, _) => model.toJson()))
-          .toList();
-
-      /// Convert document references to critique objects.
-      List<CritiqueModel> critiques = await Future.wait(
-        docRefs.map(
-          (docRef) async => ((await docRef.get()).data() as CritiqueModel),
-        ),
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList'),
+        body: json.encode({
+          'limit': limit,
+          'last_id': lastID,
+          'uid': uid,
+          'imdbID': imdbID,
+        }),
+        headers: {'content-type': 'application/json'},
       );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
+
+      List<CritiqueModel> critiques = results
+          .map(
+            (result) => CritiqueModel.fromJson(result),
+          )
+          .toList();
 
       return critiques;
     } catch (e) {
@@ -62,14 +56,24 @@ class CritiqueService extends GetxService {
   Future<void> create({required CritiqueModel critique}) async {
     try {
       /// Create activity in Stream that represents this critique.
-      String critiqueID = await _streamFeedService.addActivity();
+      String activityID = await _streamFeedService
+          .addActivity(); //createActivity(uid: critique.uid);
 
       /// Update id of the critique.
-      CritiqueModel _critique = critique.copyWith(id: critiqueID);
+      CritiqueModel _critique = critique.copyWith(activityID: activityID);
 
-      /// Add critique to database.
-      DocumentReference<Object?> critiqueDocRef = _critiquesDB.doc(critiqueID);
-      critiqueDocRef.set(_critique.toJson());
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate'),
+        body: json.encode(_critique.toJson()),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
 
       return;
     } catch (e) {
@@ -94,9 +98,9 @@ class CritiqueService extends GetxService {
       for (int i = 0; i < activities.length; i++) {
         Activity activity = activities[i];
 
-        String critiqueID = activity.id!;
+        String activityID = activity.id!;
 
-        CritiqueModel critique = await retrieve(id: critiqueID);
+        CritiqueModel critique = await retrieve(activityID: activityID);
 
         critiques.add(critique);
       }
@@ -109,46 +113,29 @@ class CritiqueService extends GetxService {
     }
   }
 
-  Future<CritiqueModel> retrieve({required String id}) async {
+  Future<CritiqueModel> retrieve({String? id, String? activityID}) async {
     try {
-      final DocumentReference model = await _critiquesDB
-          .doc(id)
-          .withConverter<CritiqueModel>(
-              fromFirestore: (snapshot, _) =>
-                  CritiqueModel.fromJson(snapshot.data()!),
-              toFirestore: (model, _) => model.toJson());
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet'),
+        body: json.encode({
+          'id': id,
+          'activityID': activityID,
+        }),
+        headers: {'content-type': 'application/json'},
+      );
 
-      return (await model.get()).data() as CritiqueModel;
-    } catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  /// Fetch critiques related to this movie.
-  Future<List<CritiqueModel>> listSimilar({
-    required String imdbID,
-  }) async {
-    try {
-      List<QueryDocumentSnapshot<Object?>> querySnapshot =
-          (await _critiquesDB.where('imdbID', isEqualTo: imdbID).get()).docs;
-
-      List<DocumentReference<CritiqueModel>> docRefs = querySnapshot
-          .map((e) => e.reference.withConverter<CritiqueModel>(
-              fromFirestore: (snapshot, _) =>
-                  CritiqueModel.fromJson(snapshot.data()!),
-              toFirestore: (model, _) => model.toJson()))
-          .toList();
-
-      var test = docRefs
-          .map((docRef) async => ((await docRef.get()).data() as CritiqueModel))
-          .toList();
-
-      List<CritiqueModel> critiques = [];
-      for (int i = 0; i < test.length; i++) {
-        critiques.add(await test[i]);
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
       }
 
-      return critiques;
+      final dynamic result = json.decode(response.body);
+
+      CritiqueModel critique = CritiqueModel.fromJson(result);
+
+      return critique;
     } catch (e) {
       throw Exception(
         e.toString(),

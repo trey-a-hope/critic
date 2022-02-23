@@ -32,7 +32,7 @@ class HomeView extends StatelessWidget {
         child: Scaffold(
           appBar: TabBar(
             onTap: (index) {
-              model.resetEveryoneTabLastDateTime();
+              model.resetLastIDs();
             },
             controller: model.controller,
             indicatorColor: Theme.of(context).indicatorColor,
@@ -151,7 +151,7 @@ class HomeView extends StatelessWidget {
                   paginationViewType: PaginationViewType.listView,
                 ),
                 onRefresh: () async {
-                  model.resetEveryoneTabLastDateTime();
+                  model.resetLastIDs();
                   return;
                 },
               ),
@@ -267,7 +267,7 @@ class HomeView extends StatelessWidget {
                   paginationViewType: PaginationViewType.listView,
                 ),
                 onRefresh: () async {
-                  model.resetMyTabLastDateTime();
+                  model.resetLastIDs();
                   return;
                 },
               ),

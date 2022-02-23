@@ -1,21 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
- const StreamIO = require('./streamio/index');
 const MongoDBCritiques = require('./mongodb/critique_functions');
 
 admin.initializeApp(functions.config().firebase);
-
-
-//StreamIO
-exports.AddCritiqueToFeed = StreamIO.addCritiqueToFeed;
-exports.DeleteCritiqueFromFeed = StreamIO.deleteCritiqueFromFeed;
-exports.GetUserFeed = StreamIO.getUserFeed;
-exports.FollowUserFeed = StreamIO.followUserFeed;
-exports.UnfollowUserFeed = StreamIO.unfollowUserFeed;
-exports.GetUsersFollowers = StreamIO.getUsersFollowers;
-exports.GetUsersFollowees = StreamIO.getUsersFollowees;
-exports.GetFollowStats = StreamIO.getFollowStats;
-exports.IsFollowing = StreamIO.isFollowing;
 
 //Mongo DB: Critiques
 exports.MongoDBCritiquesGet = MongoDBCritiques.get;

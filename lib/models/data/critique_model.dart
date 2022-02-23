@@ -8,7 +8,10 @@ part 'critique_model.g.dart';
 class CritiqueModel with _$CritiqueModel {
   factory CritiqueModel({
     /// Id of the critique
-    String? id,
+    @JsonKey(name: '_id') String? id,
+
+    /// The id of the activity in stream.
+    String? activityID,
 
     /// The review of the movie
     required String message,

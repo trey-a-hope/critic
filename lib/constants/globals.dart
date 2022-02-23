@@ -43,6 +43,10 @@ class Globals {
   static const String ALGOLIA_SEARCH_API_KEY =
       '01be9bb46f445fa21cdba2c7197d84bf';
 
+  /// Google Cloud Functions
+  static const String CLOUD_FUNCTIONS_ENDPOINT =
+      'https://us-central1-critic-a9e44.cloudfunctions.net/';
+
   /// Colors
   static final HexColor colorNavy = HexColor('#09487e');
   static final HexColor colorGrey = HexColor('#25272A');

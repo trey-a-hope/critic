@@ -1,13 +1,13 @@
+
+
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:stream_feed/stream_feed.dart';
 
 class StreamFeedService extends GetxService {
-  StreamFeedService({required this.uid});
-
-  /// UID of current user.
-  final String uid;
+  StreamFeedService();
 
   /// Create Stream Feed Client.
   static StreamFeedClient _streamFeedClient = StreamFeedClient(
@@ -24,31 +24,35 @@ class StreamFeedService extends GetxService {
   /// Instantiate new client.
   final StreamFeedClient _client = StreamFeedClient(Globals.STREAM_API_KEY);
 
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
+
   void onInit() {
+    super.onInit();
+
     /// Create front end token via uid.
     final Token _userToken = _streamFeedClient.frontendToken(
-      uid,
+      _getStorage.read('uid'),
       expiresAt: DateTime.now().add(
         Duration(days: 1),
       ),
     );
 
     /// Set the user token for the client.
-    _client.setUser(User(id: uid), _userToken);
-
-    super.onInit();
+    _client.setUser(User(id: _getStorage.read('uid')), _userToken);
   }
 
   /// Adds the given [Activity] to the feed parameters: [activity] : The activity to add
   Future<String> addActivity() async {
     final Activity activity = Activity(
-      actor: 'SU:${uid}',
+      actor: 'SU:${_getStorage.read('uid')}',
       verb: 'post',
       object: '1',
     );
 
-    Activity addedActivity =
-        await _client.flatFeed('users', uid).addActivity(activity);
+    Activity addedActivity = await _streamFeedClient
+        .flatFeed('users', _getStorage.read('uid'))
+        .addActivity(activity);
 
     return addedActivity.id!;
   }
@@ -58,21 +62,26 @@ class StreamFeedService extends GetxService {
     required int limit,
     required int offset,
   }) async {
-    return await _client.flatFeed('users', uid).getActivities(
+    List<Activity> activities = await _streamFeedClient
+        .flatFeed('users', _getStorage.read('uid'))
+        .getActivities(
           limit: limit,
           offset: offset,
         );
+    return activities;
   }
 
   /// Removes the activity by activityId or foreignId parameters [id] : activityId Identifier of activity to remove
   Future<void> removeActivity({required String activityID}) async {
-    return await _client.flatFeed('users', uid).removeActivityById(activityID);
+    return await _streamFeedClient
+        .flatFeed('users', _getStorage.read('uid'))
+        .removeActivityById(activityID);
   }
 
   /// Follow a feed.
   Future<void> followFeed({required String feedToFollowUID}) async {
-    await _client.flatFeed('users', uid).follow(
-          _client.flatFeed(
+    await _streamFeedClient.flatFeed('users', _getStorage.read('uid')).follow(
+          _streamFeedClient.flatFeed(
             'users',
             feedToFollowUID,
           ),
@@ -81,11 +90,36 @@ class StreamFeedService extends GetxService {
 
   /// Unfollow a feed.
   Future<void> unfollowFeed({required String feedToUnfollowUID}) async {
-    await _client.flatFeed('users', uid).unfollow(
-          _client.flatFeed(
+    await _streamFeedClient.flatFeed('users', _getStorage.read('uid')).unfollow(
+          _streamFeedClient.flatFeed(
             'users',
             feedToUnfollowUID,
           ),
         );
+  }
+
+  /// Get follower count.
+  Future<int> followerCount({required String uuid}) async {
+    FollowStats followStats =
+        await _streamFeedClient.flatFeed('users', uuid).followStats();
+
+    return followStats.followers.count!;
+  }
+
+  /// Get followings count.
+  Future<int> followingCount({required String uuid}) async {
+    FollowStats followStats =
+        await _streamFeedClient.flatFeed('users', uuid).followStats();
+
+    return followStats.following.count!;
+  }
+
+  /// Return true if user is following this account.
+  Future<bool> isFollowing({required String uuid}) async {
+    List<Follow> follows = await _streamFeedClient
+        .flatFeed('users', uuid)
+        .following(filter: [FeedId.id('users:${_getStorage.read('uid')}')]);
+
+    return follows.isEmpty;
   }
 }

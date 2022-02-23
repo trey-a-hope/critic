@@ -68,7 +68,7 @@ class MainViewModel extends GetxController {
       _getStorage.write('uid', _firebaseUser.uid);
 
       // Bind Stream Feed Service after uid is determined.
-      Get.lazyPut(() => StreamFeedService(uid: _firebaseUser.uid), fenix: true);
+      Get.lazyPut(() => StreamFeedService(), fenix: true);
 
       if (userExists) {
         // Request permission from user.

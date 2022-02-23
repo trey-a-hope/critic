@@ -4,52 +4,30 @@ var ObjectID = require('mongodb').ObjectID;
 const env = functions.config();
 const client = new MongoClient(env.mongodb.connectionstring, { useNewUrlParser: true, useUnifiedTopology: true });
 const dbName = 'Critic';
-const critiquesColName = 'Critiques';
+const critiquesColName = 'critiques';
 
-exports.listSimilar = functions.https.onRequest(async (req, res) => {
-    const id = req.body.id;
-    const imdbID = req.body.imdbID;
 
-    try {
-        client.connect(err => {
-            if (err) throw err;
-
-            var query;
-
-            if (!id) {
-                query = { imdbID: imdbID };
-            } else {
-                query = { imdbID: imdbID, _id: { '$ne': new ObjectID(id) } };
-            }
-
-            var sort = { _id: -1 };
-
-            client
-                .db(dbName)
-                .collection(critiquesColName)
-                .find(query)
-                .sort(sort)
-                .toArray((error, docs) => {
-                    if (error) throw error;
-                    console.log(docs);
-                    return res.send(docs);
-                    //client.close();
-                });
-        });
-    } catch (err) {
-        return res.send(err);
-    }
-});
 
 exports.get = functions.https.onRequest(async (req, res) => {
     const id = req.body.id;
+    const activityID = req.body.activityID;
+
 
     try {
         client.connect(err => {
             if (err) throw err;
 
-            var query = { _id: new ObjectID(id) };
+            var query = {};
 
+            if (id) {
+                query['_id'] = { $lt:  new ObjectID(id) };
+            } 
+
+            if(activityID) {
+                query['activityID'] = activityID;
+            }
+
+ 
             client
                 .db(dbName)
                 .collection(critiquesColName)
@@ -95,94 +73,31 @@ exports.count = functions.https.onRequest(async (req, res) => {
     }
 });
 
-exports.listByUser = functions.https.onRequest(async (req, res) => {
-    const uid = req.body.uid;
-    const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
-    const last_id = req.body.last_id;
 
-    try {
-        client.connect(err => {
-            if (err) throw err;
 
-            var query;
-
-            if (!last_id) {
-                query = { uid: uid };
-            } else {
-                query = { uid: uid, _id: { $lt: new ObjectID(last_id) } };
-            }
-
-            var sort = { _id: -1 };
-
-            client
-                .db(dbName)
-                .collection(critiquesColName)
-                .find(query)
-                .limit(limit)
-                .sort(sort)
-                .toArray((error, docs) => {
-                    if (error) throw error;
-                    console.log(docs);
-                    return res.send(docs);
-                    //client.close();
-                });
-        });
-    } catch (err) {
-        return res.send(err);
-    }
-});
-
-exports.listByGenre = functions.https.onRequest(async (req, res) => {
-    const genre = req.body.genre;
-    const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
-    const last_id = req.body.last_id;
-
-    try {
-        client.connect(err => {
-            if (err) throw err;
-
-            var query;
-
-            if (!last_id) {
-                query = { genres: genre };
-            } else {
-                query = { genres: genre, _id: { $lt: new ObjectID(last_id) } };
-            }
-
-            var sort = { _id: -1 };
-
-            client
-                .db(dbName)
-                .collection(critiquesColName)
-                .find(query)
-                .limit(limit)
-                .sort(sort)
-                .toArray((error, docs) => {
-                    if (error) throw error;
-                    console.log(docs);
-                    return res.send(docs);
-                    //client.close();
-                });
-        });
-    } catch (err) {
-        return res.send(err);
-    }
-});
 
 exports.list = functions.https.onRequest(async (req, res) => {
     const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.
     const last_id = req.body.last_id;
+    const uid = req.body.uid;
+    const imdbID = req.body.imdbID;
 
     try {
         client.connect(err => {
             if (err) throw err;
 
-            var query;
+            var query = {};
 
-            if (!last_id) {
-                query = {};
-            } else {
-                query = { _id: { $lt: new ObjectID(last_id) } };
+            if (last_id) {
+                query['_id'] = { $lt: new ObjectID(last_id) };
+            } 
+
+            if(uid){
+                query['uid'] = uid;
+            }
+
+            if(imdbID){
+                query['imdbID'] = imdbID;
             }
 
             var sort = { _id: -1 };
@@ -208,26 +123,28 @@ exports.list = functions.https.onRequest(async (req, res) => {
 exports.create = functions.https.onRequest(async (req, res) => {
     const message = req.body.message;
     const uid = req.body.uid;
+    const id = req.body.id;
     const rating = req.body.rating;
     const imdbID = req.body.imdbID;
-    const genres = req.body.genres;
     const created = req.body.created;
     const modified = req.body.created;
+    const activityID = req.body.activityID;
 
     try {
         client.connect(err => {
             if (err) throw err;
             var data = {
+                _id: id,
                 message: message,
                 uid: uid,
                 rating: rating,
+                activityID: activityID,
                 imdbID: imdbID,
                 comments: [],
                 likes: [],
                 created: created,
                 modified: modified,
-                genres: genres,
-            };
+             };
             client.db(dbName).collection(critiquesColName).insertOne(data, (err, _) => {
                 if (err) throw err;
                 //client.close();

@@ -23,7 +23,10 @@ class MovieDetailsViewModel extends GetxController {
   @override
   void onInit() async {
     /// Fetch all critiques for this movie.
-    critiques = await _critiqueService.listSimilar(imdbID: movie.imdbID);
+    critiques = await _critiqueService.list(
+      limit: 100,
+      imdbID: movie.imdbID,
+    ); //TODO: Decrease limit once pagination is needed on this page.
 
     /// Check if movie in watchlist.
     movieInWatchlist =
