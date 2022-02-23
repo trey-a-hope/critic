@@ -1,69 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/globals.dart';
-import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/critique_model.dart';
-import 'package:critic/models/data/user_model.dart';
-import 'package:critic/services/movie_service.dart';
-import 'package:critic/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:shimmer/shimmer.dart';
 
-class CritiqueViewWidget extends StatefulWidget {
-  const CritiqueViewWidget({
-    Key? key,
-    required this.critique,
-  }) : super(key: key);
+import 'critique_widget_view_model.dart';
 
-  /// The critique.
+class CritiqueWidgetView extends StatelessWidget {
+  CritiqueWidgetView({required this.critique});
+
   final CritiqueModel critique;
 
   @override
-  _CritiqueViewWidgetState createState() => _CritiqueViewWidgetState();
-}
-
-class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
-  /// The movie associated with this critique.
-  MovieModel? movie;
-
-  /// The user who posted this critique.
-  UserModel? user;
-
-  /// Instantiate movie service.
-  MovieService _movieService = Get.find();
-
-  /// Instantiate user service.
-  UserService _userService = Get.find();
-
-  /// Array that holds api calls for fetching the movie and user of this critique.
-  List<Future> futures = [];
-
-  /// Instantiate get storage.
-  final GetStorage _getStorage = GetStorage();
-
-  @override
-  void initState() {
-    /// Add service call for fetching movie.
-    futures.add(_movieService.getMovieByID(id: widget.critique.imdbID));
-
-    /// Add service call for fetching user.
-    futures.add(_userService.retrieveUser(uid: widget.critique.uid));
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Future.wait(futures),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Shimmer.fromColors(
+    return GetBuilder<CritiqueWidgetViewModel>(
+      tag: critique.id,
+      init: CritiqueWidgetViewModel(critique: critique),
+      builder: (model) => model.isLoading
+          ? Shimmer.fromColors(
               baseColor: Colors.grey[300]!,
               highlightColor: Colors.grey[100]!,
               child: Column(
@@ -107,16 +65,16 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Test',
+                                  '',
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                                 Divider(),
                                 Text(
-                                  '\"${widget.critique.message}\"',
+                                  '',
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                                 RatingBarIndicator(
-                                  rating: widget.critique.rating,
+                                  rating: 0,
                                   itemBuilder: (context, index) => Icon(
                                     Icons.star,
                                     color: Colors.amber,
@@ -138,13 +96,12 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                     ),
-                                    Text('John Doe',
+                                    Text('',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
                                     Spacer(),
-                                    Text(
-                                        '${timeago.format(widget.critique.created, allowFromNow: true)}',
+                                    Text('',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -175,7 +132,7 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                     child: Row(
                       children: [
                         Text(
-                          'Posted  ',
+                          '',
                         ),
                         Spacer(),
                         IconButton(
@@ -202,27 +159,13 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                   Divider(),
                 ],
               ),
-            );
-
-          default:
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error ${snapshot.error.toString()}'),
-              );
-            }
-
-            /// Set result to movie object.
-            MovieModel movie = snapshot.data[0];
-
-            /// Set result to user object.
-            UserModel user = snapshot.data[1];
-
-            return InkWell(
+            )
+          : InkWell(
               onTap: () async {
                 Get.toNamed(
                   Globals.ROUTES_MOVIE_DETAILS,
                   arguments: {
-                    'movie': movie,
+                    'movie': model.movie,
                   },
                 );
               },
@@ -236,7 +179,7 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                         SizedBox(
                           width: 130,
                           child: CachedNetworkImage(
-                            imageUrl: movie.poster,
+                            imageUrl: model.movie.poster,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
                                 image: DecorationImage(
@@ -266,16 +209,16 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  movie.title,
+                                  model.movie.title,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                                 Divider(),
                                 Text(
-                                  '\"${widget.critique.message}\"',
+                                  '\"${critique.message}\"',
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
                                 RatingBarIndicator(
-                                  rating: widget.critique.rating,
+                                  rating: critique.rating,
                                   itemBuilder: (context, index) => Icon(
                                     Icons.star,
                                     color: Colors.amber,
@@ -292,12 +235,12 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                                         Get.toNamed(
                                           Globals.ROUTES_PROFILE,
                                           arguments: {
-                                            'uid': user.uid,
+                                            'uid': model.user.uid,
                                           },
                                         );
                                       },
                                       child: CachedNetworkImage(
-                                        imageUrl: user.imgUrl,
+                                        imageUrl: model.user.imgUrl,
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 CircleAvatar(
@@ -310,7 +253,7 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      user.username,
+                                      model.user.username,
                                       style:
                                           Theme.of(context).textTheme.headline6,
                                     ),
@@ -341,10 +284,10 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                     child: Row(
                       children: [
                         Text(
-                          widget.critique.created.isAfter(
+                          critique.created.isAfter(
                                   DateTime.now().subtract(Duration(days: 6)))
-                              ? 'Posted ${timeago.format(widget.critique.created, allowFromNow: true)}'
-                              : 'Posted ${DateFormat('MMM dd, yyyy').format(widget.critique.created)}',
+                              ? 'Posted ${timeago.format(critique.created, allowFromNow: true)}'
+                              : 'Posted ${DateFormat('MMM dd, yyyy').format(critique.created)}',
                         ),
                         Spacer(),
                         IconButton(
@@ -385,7 +328,7 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                             );
                           },
                         ),
-                        _getStorage.read('uid') == user.uid
+                        model.postedByMe
                             ? IconButton(
                                 icon: Icon(
                                   Icons.delete,
@@ -418,9 +361,7 @@ class _CritiqueViewWidgetState extends State<CritiqueViewWidget> {
                   Divider(),
                 ],
               ),
-            );
-        }
-      },
+            ),
     );
   }
 }

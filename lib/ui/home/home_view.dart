@@ -1,6 +1,6 @@
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
-import 'package:critic/widgets/critique_view_widget.dart';
+import 'package:critic/ui/critique_widget/critique_widget_view.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +104,7 @@ class HomeView extends StatelessWidget {
                   bottomLoader: Center(child: CircularProgressIndicator()),
                   itemBuilder: (BuildContext context, CritiqueModel critique,
                           int index) =>
-                      CritiqueViewWidget(
+                      CritiqueWidgetView(
                     critique: critique,
                   ),
                   pageFetch: (int offset) async {
@@ -162,7 +162,7 @@ class HomeView extends StatelessWidget {
                   bottomLoader: Center(child: CircularProgressIndicator()),
                   itemBuilder: (BuildContext context, CritiqueModel critique,
                           int index) =>
-                      CritiqueViewWidget(
+                      CritiqueWidgetView(
                     critique: critique,
                   ),
                   pageFetch: (int offset) async {
