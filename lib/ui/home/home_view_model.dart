@@ -4,6 +4,7 @@ import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:stream_feed/stream_feed.dart';
 
 class HomeViewModel extends GetxController
@@ -14,8 +15,14 @@ class HomeViewModel extends GetxController
   /// Instantiate stream feed service.
   final StreamFeedService _streamFeedService = Get.find();
 
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
+
   /// Pagination last date time for everyone critique view.
   DateTime? _everyoneTabLastDateTime;
+
+  /// Pagination last date time for my critique view.
+  DateTime? _myTabLastDateTime;
 
   /// Tab controller for home view.
   late TabController controller;
@@ -58,7 +65,7 @@ class HomeViewModel extends GetxController
     _everyoneTabLastDateTime = null;
   }
 
-  /// Returns a paginated list of everyone's critiques.
+  /// Returns a paginated list of following's critiques.
   Future<List<CritiqueModel>> fetchFollowingCritiques(int offset) async {
     List<CritiqueModel> critiques;
 
@@ -76,5 +83,29 @@ class HomeViewModel extends GetxController
     if (critiques.isEmpty) return critiques;
 
     return critiques;
+  }
+
+  /// Returns a paginated list of my critiques.
+  Future<List<CritiqueModel>> fetchMyCritiques(int offset) async {
+    List<CritiqueModel> critiques;
+
+    critiques = [];
+
+    critiques = await _critiqueService.listFromFirebase(
+      limit: Globals.PAGE_FETCH_LIMIT,
+      lastDateTime: _myTabLastDateTime,
+      uid: _getStorage.read('uid'),
+    );
+
+    if (critiques.isEmpty) return critiques;
+
+    _myTabLastDateTime = critiques[critiques.length - 1].created;
+
+    return critiques;
+  }
+
+  /// Restart pagination from the top.
+  void resetMyTabLastDateTime() {
+    _myTabLastDateTime = null;
   }
 }

@@ -16,11 +16,16 @@ class CritiqueService extends GetxService {
   Future<List<CritiqueModel>> listFromFirebase({
     required int limit,
     required DateTime? lastDateTime,
+    String? uid,
   }) async {
     try {
       /// Query the critiques from most recent to oldest with a limit.
       Query query =
           _critiquesDB.orderBy('created', descending: true).limit(limit);
+
+      if (uid != null) {
+        query = query.where('uid', isEqualTo: uid);
+      }
 
       /// For pagination, start new fetch after the last document's created date.
       if (lastDateTime != null) {
