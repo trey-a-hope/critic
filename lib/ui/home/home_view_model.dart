@@ -16,9 +16,6 @@ class HomeViewModel extends GetxController
   /// Pagination last date time for everyone critique view.
   String _everyoneTabLastID = '';
 
-  /// Pagination last date time for my critique view.
-  String _myTabLastID = '';
-
   /// Tab controller for home view.
   late TabController controller;
 
@@ -26,9 +23,7 @@ class HomeViewModel extends GetxController
   void onInit() async {
     super.onInit();
 
-    controller = TabController(vsync: this, length: 3);
-
-    // _streamFeedService.createActivity(uid: _getStorage.read('uid'));
+    controller = TabController(vsync: this, length: 2);
 
     // Delete all activites for this user.
     // List<Activity> activites =
@@ -78,28 +73,8 @@ class HomeViewModel extends GetxController
     return critiques;
   }
 
-  /// Returns a paginated list of my critiques.
-  Future<List<CritiqueModel>> fetchMyCritiques(int offset) async {
-    List<CritiqueModel> critiques;
-
-    critiques = [];
-
-    critiques = await _critiqueService.list(
-      limit: Globals.PAGE_FETCH_LIMIT,
-      lastID: _myTabLastID,
-      uid: _getStorage.read('uid'),
-    );
-
-    if (critiques.isEmpty) return critiques;
-
-    _myTabLastID = critiques[critiques.length - 1].id!;
-
-    return critiques;
-  }
-
   /// Restart pagination from the top.
   void resetLastIDs() {
-    _myTabLastID = '';
     _everyoneTabLastID = '';
   }
 }

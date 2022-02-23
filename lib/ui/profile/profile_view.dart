@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/app_themes.dart';
 import 'package:critic/constants/globals.dart';
+import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/ui/critique_widget/critique_widget_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:pagination_view/pagination_view.dart';
 
 import 'profile_view_model.dart';
 
@@ -42,7 +46,7 @@ class ProfileView extends StatelessWidget {
                   CachedNetworkImage(
                     imageUrl: model.user!.imgUrl,
                     imageBuilder: (context, imageProvider) => GFAvatar(
-                      radius: 40,
+                      radius: 30,
                       backgroundImage: imageProvider,
                     ),
                     placeholder: (context, url) => Center(
@@ -50,16 +54,17 @@ class ProfileView extends StatelessWidget {
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  Text(model.user!.username),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text('${model.followerCount} Followers',
                           style: AppThemes.textTheme.headline6),
+                      Text(model.user!.username),
                       Text('${model.followingCount} Followings',
                           style: AppThemes.textTheme.headline6),
                     ],
                   ),
+                  Divider(),
                   if (!model.isMyProfile) ...[
                     model.isFollowing
                         ? ElevatedButton(
@@ -100,7 +105,68 @@ class ProfileView extends StatelessWidget {
                               model.follow();
                             },
                           ),
-                  ]
+                  ],
+                  Expanded(
+                    child: RefreshIndicator(
+                      child: PaginationView<CritiqueModel>(
+                        initialLoader:
+                            Center(child: CircularProgressIndicator()),
+                        bottomLoader:
+                            Center(child: CircularProgressIndicator()),
+                        itemBuilder: (BuildContext context,
+                                CritiqueModel critique, int index) =>
+                            CritiqueWidgetView(
+                          critique: critique,
+                        ),
+                        pageFetch: (int offset) async {
+                          return model.fetchMyCritiques(offset);
+                        },
+                        onError: (dynamic error) => Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.error,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                'Error',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                error.toString(),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                        onEmpty: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                MdiIcons.movieEdit,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                '${Globals.MESSAGE_EMPTY_CRITIQUES}',
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                            ],
+                          ),
+                        ),
+                        paginationViewType: PaginationViewType.listView,
+                      ),
+                      onRefresh: () async {
+                        model.resetLastIDs();
+                        return;
+                      },
+                    ),
+                  ),
                 ],
               ),
         title: 'Profile',

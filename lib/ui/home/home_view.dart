@@ -42,24 +42,6 @@ class HomeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      MdiIcons.accountGroup,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Everyone',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                  ],
-                ),
-              ),
-              Tab(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
                       MdiIcons.accountMultiple,
                       color: Theme.of(context).iconTheme.color,
                     ),
@@ -78,14 +60,14 @@ class HomeView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.person,
+                      MdiIcons.accountGroup,
                       color: Theme.of(context).iconTheme.color,
                     ),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
-                      'Me',
+                      'Everyone',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                   ],
@@ -97,64 +79,6 @@ class HomeView extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
             controller: model.controller,
             children: [
-              // Everyone.
-              RefreshIndicator(
-                child: PaginationView<CritiqueModel>(
-                  initialLoader: Center(child: CircularProgressIndicator()),
-                  bottomLoader: Center(child: CircularProgressIndicator()),
-                  itemBuilder: (BuildContext context, CritiqueModel critique,
-                          int index) =>
-                      CritiqueWidgetView(
-                    critique: critique,
-                  ),
-                  pageFetch: (int offset) async {
-                    return model.fetchEveryoneCritiques(offset);
-                  },
-                  onError: (dynamic error) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Error',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          error.toString(),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                  onEmpty: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          MdiIcons.movieEdit,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          '${Globals.MESSAGE_EMPTY_CRITIQUES}',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
-                  ),
-                  paginationViewType: PaginationViewType.listView,
-                ),
-                onRefresh: () async {
-                  model.resetLastIDs();
-                  return;
-                },
-              ),
               // Following
               RefreshIndicator(
                 child: PaginationView<CritiqueModel>(
@@ -224,7 +148,7 @@ class HomeView extends StatelessWidget {
                     critique: critique,
                   ),
                   pageFetch: (int offset) async {
-                    return model.fetchMyCritiques(offset);
+                    return model.fetchEveryoneCritiques(offset);
                   },
                   onError: (dynamic error) => Center(
                     child: Column(

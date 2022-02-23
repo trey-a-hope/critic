@@ -1,4 +1,7 @@
+import 'package:critic/constants/globals.dart';
+import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/user_model.dart';
+import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:get/get.dart';
@@ -17,6 +20,9 @@ class ProfileViewModel extends GetxController {
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
 
+  /// Critique service instance.
+  final CritiqueService _critiqueService = Get.find();
+
   /// The user of this profile.
   UserModel? user;
 
@@ -28,6 +34,9 @@ class ProfileViewModel extends GetxController {
 
   /// Number of users this profile is following.
   int followingCount = 0;
+
+  /// Pagination last date time for my critique view.
+  String _myTabLastID = '';
 
   @override
   void onInit() async {
@@ -48,6 +57,30 @@ class ProfileViewModel extends GetxController {
   @override
   void onClose() async {
     super.onClose();
+  }
+
+  /// Returns a paginated list of my critiques.
+  Future<List<CritiqueModel>> fetchMyCritiques(int offset) async {
+    List<CritiqueModel> critiques;
+
+    critiques = [];
+
+    critiques = await _critiqueService.list(
+      limit: Globals.PAGE_FETCH_LIMIT,
+      lastID: _myTabLastID,
+      uid: uid,
+    );
+
+    if (critiques.isEmpty) return critiques;
+
+    _myTabLastID = critiques[critiques.length - 1].id!;
+
+    return critiques;
+  }
+
+  /// Restart pagination from the top.
+  void resetLastIDs() {
+    _myTabLastID = '';
   }
 
   /// Updates follower count, following count, and if the user is following this profile.
