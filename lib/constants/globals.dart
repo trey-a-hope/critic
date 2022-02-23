@@ -43,9 +43,11 @@ class Globals {
   static const String ALGOLIA_SEARCH_API_KEY =
       '01be9bb46f445fa21cdba2c7197d84bf';
 
-  /// Google Cloud Functions
+  /// Google Cloud
   static const String CLOUD_FUNCTIONS_ENDPOINT =
       'https://us-central1-critic-a9e44.cloudfunctions.net/';
+  static const String CLOUD_MESSAGING_SERVER_KEY =
+      'AAAANziSKLs:APA91bHYQGvOjarIPvbuEjSQpxwsQo-h4SMftTD9L-3dxX7ZAjC5KeDPG1Vf7EMf3tuh6LaGBwwHtJUOs9f4Qq5MPkLMdEWt8DCXj0fjmqBiXNjEIooaS3soehfDr3xQ_Hr8cbtN_soU';
 
   /// Colors
   static final HexColor colorNavy = HexColor('#09487e');

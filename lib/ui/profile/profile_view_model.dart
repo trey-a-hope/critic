@@ -2,6 +2,7 @@ import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/critique_service.dart';
+import 'package:critic/services/fcm_notification_service.dart';
 import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:get/get.dart';
@@ -23,8 +24,14 @@ class ProfileViewModel extends GetxController {
   /// Critique service instance.
   final CritiqueService _critiqueService = Get.find();
 
+  /// FCM Notification Service instance.
+  final FCMNotificationService _fcmNotificationService = Get.find();
+
   /// The user of this profile.
   UserModel? user;
+
+  /// Current user of the app.
+  UserModel? currentUser;
 
   /// Flag true if I am following the user of this profile, (only used when isMyProfile is false).
   bool isFollowing = false;
@@ -43,6 +50,8 @@ class ProfileViewModel extends GetxController {
     super.onInit();
 
     user = await _userService.retrieveUser(uid: uid);
+
+    currentUser = await _userService.retrieveUser(uid: _getStorage.read('uid'));
 
     await fetchStats();
 
@@ -99,6 +108,16 @@ class ProfileViewModel extends GetxController {
   void follow() async {
     // Follow the user feed in stream.
     await _streamFeedService.followFeed(feedToFollowUID: uid);
+
+    // Send notification to user.
+    if (user!.fcmToken != null) {
+      _fcmNotificationService.sendNotificationToUser(
+        fcmToken: user!.fcmToken!,
+        title: '${currentUser!.username} just followed you!',
+        body: 'Time to post a critique.',
+        notificationData: null,
+      );
+    }
 
     await fetchStats();
 

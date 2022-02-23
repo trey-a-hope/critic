@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' show json;
+import 'package:critic/constants/globals.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -8,8 +9,7 @@ class FCMNotificationService extends GetxService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final String _endpoint = 'https://fcm.googleapis.com/fcm/send';
   final String _contentType = 'application/json';
-  final String _authorization =
-      'key=AAAANziSKLs:APA91bHYQGvOjarIPvbuEjSQpxwsQo-h4SMftTD9L-3dxX7ZAjC5KeDPG1Vf7EMf3tuh6LaGBwwHtJUOs9f4Qq5MPkLMdEWt8DCXj0fjmqBiXNjEIooaS3soehfDr3xQ_Hr8cbtN_soU';
+  final String _authorization = 'key=${Globals.CLOUD_MESSAGING_SERVER_KEY}';
 
   Future<http.Response> _sendNotification(
     String to,
