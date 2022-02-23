@@ -35,11 +35,7 @@ class ProfileViewModel extends GetxController {
 
     user = await _userService.retrieveUser(uid: uid);
 
-    followerCount = await _streamFeedService.followerCount(uuid: uid);
-
-    followingCount = await _streamFeedService.followingCount(uuid: uid);
-
-    isFollowing = await _streamFeedService.isFollowing(uuid: uid);
+    await fetchStats();
 
     update();
   }
@@ -54,19 +50,24 @@ class ProfileViewModel extends GetxController {
     super.onClose();
   }
 
+  /// Updates follower count, following count, and if the user is following this profile.
+  Future<void> fetchStats() async {
+    followerCount = await _streamFeedService.followerCount(uuid: uid);
+
+    followingCount = await _streamFeedService.followingCount(uuid: uid);
+
+    isFollowing = await _streamFeedService.isFollowing(uuid: uid);
+  }
+
   /// Determines if the current profile is mine or of another person.
   bool get isMyProfile => _getStorage.read('uid') == uid;
 
   /// Follow the user of this profile.
   void follow() async {
     // Follow the user feed in stream.
-    _streamFeedService.followFeed(feedToFollowUID: uid);
+    await _streamFeedService.followFeed(feedToFollowUID: uid);
 
-    // Update is following variable.
-    isFollowing = await _streamFeedService.isFollowing(uuid: uid);
-
-    // Fetch the current user.
-    user = await _userService.retrieveUser(uid: uid);
+    await fetchStats();
 
     update();
   }
@@ -74,13 +75,9 @@ class ProfileViewModel extends GetxController {
   /// Unfollow the user of this profile.
   void unfollow() async {
     // Unfollow the user feed in stream.
-    _streamFeedService.unfollowFeed(feedToUnfollowUID: uid);
+    await _streamFeedService.unfollowFeed(feedToUnfollowUID: uid);
 
-    // Update is following variable.
-    isFollowing = await _streamFeedService.isFollowing(uuid: uid);
-
-    // Fetch the current user.
-    user = await _userService.retrieveUser(uid: uid);
+    await fetchStats();
 
     update();
   }

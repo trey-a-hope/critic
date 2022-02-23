@@ -1,5 +1,3 @@
-
-
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:get/get.dart';
@@ -117,9 +115,9 @@ class StreamFeedService extends GetxService {
   /// Return true if user is following this account.
   Future<bool> isFollowing({required String uuid}) async {
     List<Follow> follows = await _streamFeedClient
-        .flatFeed('users', uuid)
-        .following(filter: [FeedId.id('users:${_getStorage.read('uid')}')]);
+        .flatFeed('users', _getStorage.read('uid'))
+        .following(filter: [FeedId.id('users:${uuid}')]);
 
-    return follows.isEmpty;
+    return follows.isNotEmpty;
   }
 }
