@@ -97,8 +97,6 @@ class MainViewModel extends GetxController {
           showAds: true,
           watchList: [],
           blockedUsers: [],
-          followers: [],
-          followings: [],
         );
 
         await _userService.createUser(user: newUser);

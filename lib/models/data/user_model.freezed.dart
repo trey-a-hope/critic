@@ -31,8 +31,6 @@ class _$UserModelTearOff {
       required String username,
       required List<String> watchList,
       required List<String> blockedUsers,
-      required List<String> followings,
-      required List<String> followers,
       required bool isOnline,
       required bool showAds}) {
     return _UserModel(
@@ -45,8 +43,6 @@ class _$UserModelTearOff {
       username: username,
       watchList: watchList,
       blockedUsers: blockedUsers,
-      followings: followings,
-      followers: followers,
       isOnline: isOnline,
       showAds: showAds,
     );
@@ -91,12 +87,6 @@ mixin _$UserModel {
   /// Ids of users that this user has blocked.
   List<String> get blockedUsers => throw _privateConstructorUsedError;
 
-  /// Ids of users that this user is following.
-  List<String> get followings => throw _privateConstructorUsedError;
-
-  /// Ids of users that are following this user.
-  List<String> get followers => throw _privateConstructorUsedError;
-
   /// Determines if the user is active in the app or not.
   bool get isOnline => throw _privateConstructorUsedError;
 
@@ -123,8 +113,6 @@ abstract class $UserModelCopyWith<$Res> {
       String username,
       List<String> watchList,
       List<String> blockedUsers,
-      List<String> followings,
-      List<String> followers,
       bool isOnline,
       bool showAds});
 }
@@ -148,8 +136,6 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? username = freezed,
     Object? watchList = freezed,
     Object? blockedUsers = freezed,
-    Object? followings = freezed,
-    Object? followers = freezed,
     Object? isOnline = freezed,
     Object? showAds = freezed,
   }) {
@@ -190,14 +176,6 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.blockedUsers
           : blockedUsers // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      followings: followings == freezed
-          ? _value.followings
-          : followings // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      followers: followers == freezed
-          ? _value.followers
-          : followers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -226,8 +204,6 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       String username,
       List<String> watchList,
       List<String> blockedUsers,
-      List<String> followings,
-      List<String> followers,
       bool isOnline,
       bool showAds});
 }
@@ -252,8 +228,6 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? username = freezed,
     Object? watchList = freezed,
     Object? blockedUsers = freezed,
-    Object? followings = freezed,
-    Object? followers = freezed,
     Object? isOnline = freezed,
     Object? showAds = freezed,
   }) {
@@ -294,14 +268,6 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.blockedUsers
           : blockedUsers // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      followings: followings == freezed
-          ? _value.followings
-          : followings // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      followers: followers == freezed
-          ? _value.followers
-          : followers // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
@@ -327,8 +293,6 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       required this.username,
       required this.watchList,
       required this.blockedUsers,
-      required this.followings,
-      required this.followers,
       required this.isOnline,
       required this.showAds});
 
@@ -375,14 +339,6 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   final List<String> blockedUsers;
   @override
 
-  /// Ids of users that this user is following.
-  final List<String> followings;
-  @override
-
-  /// Ids of users that are following this user.
-  final List<String> followers;
-  @override
-
   /// Determines if the user is active in the app or not.
   final bool isOnline;
   @override
@@ -392,7 +348,7 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, watchList: $watchList, blockedUsers: $blockedUsers, followings: $followings, followers: $followers, isOnline: $isOnline, showAds: $showAds)';
+    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, watchList: $watchList, blockedUsers: $blockedUsers, isOnline: $isOnline, showAds: $showAds)';
   }
 
   @override
@@ -409,8 +365,6 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('username', username))
       ..add(DiagnosticsProperty('watchList', watchList))
       ..add(DiagnosticsProperty('blockedUsers', blockedUsers))
-      ..add(DiagnosticsProperty('followings', followings))
-      ..add(DiagnosticsProperty('followers', followers))
       ..add(DiagnosticsProperty('isOnline', isOnline))
       ..add(DiagnosticsProperty('showAds', showAds));
   }
@@ -433,9 +387,6 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
             const DeepCollectionEquality().equals(other.watchList, watchList) &&
             const DeepCollectionEquality()
                 .equals(other.blockedUsers, blockedUsers) &&
-            const DeepCollectionEquality()
-                .equals(other.followings, followings) &&
-            const DeepCollectionEquality().equals(other.followers, followers) &&
             (identical(other.isOnline, isOnline) ||
                 other.isOnline == isOnline) &&
             (identical(other.showAds, showAds) || other.showAds == showAds));
@@ -453,8 +404,6 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       username,
       const DeepCollectionEquality().hash(watchList),
       const DeepCollectionEquality().hash(blockedUsers),
-      const DeepCollectionEquality().hash(followings),
-      const DeepCollectionEquality().hash(followers),
       isOnline,
       showAds);
 
@@ -480,8 +429,6 @@ abstract class _UserModel implements UserModel {
       required String username,
       required List<String> watchList,
       required List<String> blockedUsers,
-      required List<String> followings,
-      required List<String> followers,
       required bool isOnline,
       required bool showAds}) = _$_UserModel;
 
@@ -526,14 +473,6 @@ abstract class _UserModel implements UserModel {
 
   /// Ids of users that this user has blocked.
   List<String> get blockedUsers;
-  @override
-
-  /// Ids of users that this user is following.
-  List<String> get followings;
-  @override
-
-  /// Ids of users that are following this user.
-  List<String> get followers;
   @override
 
   /// Determines if the user is active in the app or not.

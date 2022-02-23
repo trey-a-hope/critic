@@ -6,12 +6,9 @@ const client = new MongoClient(env.mongodb.connectionstring, { useNewUrlParser: 
 const dbName = 'Critic';
 const critiquesColName = 'critiques';
 
-
-
 exports.get = functions.https.onRequest(async (req, res) => {
     const id = req.body.id;
     const activityID = req.body.activityID;
-
 
     try {
         client.connect(err => {
@@ -72,9 +69,6 @@ exports.count = functions.https.onRequest(async (req, res) => {
         return res.send(err);
     }
 });
-
-
-
 
 exports.list = functions.https.onRequest(async (req, res) => {
     const limit = parseInt(req.body.limit);//Numbers come through as strings for mongodb for some reason.

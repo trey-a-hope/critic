@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/stream_feed_service.dart';
@@ -55,11 +54,10 @@ class CritiqueService extends GetxService {
 
   Future<void> create({required CritiqueModel critique}) async {
     try {
-      /// Create activity in Stream that represents this critique.
-      String activityID = await _streamFeedService
-          .addActivity(); //createActivity(uid: critique.uid);
+      // Create activity in Stream that represents this critique.
+      String activityID = await _streamFeedService.addActivity();
 
-      /// Update id of the critique.
+      // Update activity id of the critique.
       CritiqueModel _critique = critique.copyWith(activityID: activityID);
 
       http.Response response = await http.post(

@@ -37,12 +37,6 @@ class UserModel with _$UserModel {
     /// Ids of users that this user has blocked.
     required List<String> blockedUsers,
 
-    /// Ids of users that this user is following.
-    required List<String> followings,
-
-    /// Ids of users that are following this user.
-    required List<String> followers,
-
     /// Determines if the user is active in the app or not.
     required bool isOnline,
 

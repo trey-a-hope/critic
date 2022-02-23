@@ -21,11 +21,6 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       blockedUsers: (json['blockedUsers'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      followings: (json['followings'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      followers:
-          (json['followers'] as List<dynamic>).map((e) => e as String).toList(),
       isOnline: json['isOnline'] as bool,
       showAds: json['showAds'] as bool,
     );
@@ -41,8 +36,6 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'username': instance.username,
       'watchList': instance.watchList,
       'blockedUsers': instance.blockedUsers,
-      'followings': instance.followings,
-      'followers': instance.followers,
       'isOnline': instance.isOnline,
       'showAds': instance.showAds,
     };
