@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:shimmer/shimmer.dart';
-
+import 'package:like_button/like_button.dart';
 import 'critique_widget_view_model.dart';
 
 class CritiqueWidgetView extends StatelessWidget {
@@ -284,30 +284,43 @@ class CritiqueWidgetView extends StatelessWidget {
                         Text(
                           critique.created.isAfter(
                                   DateTime.now().subtract(Duration(days: 6)))
-                              ? '${timeago.format(critique.created, allowFromNow: true)},'
-                              : '${DateFormat('MMM dd, yyyy').format(critique.created)},',
+                              ? 'Posted ${timeago.format(critique.created, allowFromNow: true)}'
+                              : 'Posted ${DateFormat('MMM dd, yyyy').format(critique.created)}',
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          '${model.critique.likes.length} like${model.critique.likes.length == 1 ? '' : 's'}',
-                          style: TextStyle(
-                            color: model.critique.likes.isEmpty
-                                ? Colors.grey
-                                : Colors.red,
-                          ),
-                        ),
                         Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            Icons.favorite,
-                            color: model.isLiked ? Colors.red : Colors.grey,
+                        LikeButton(
+                          size: 25,
+                          isLiked: model.isLiked,
+                          circleColor: CircleColor(
+                              start: Color(0xff00ddff), end: Color(0xff0099cc)),
+                          bubblesColor: BubblesColor(
+                            dotPrimaryColor: Color(0xff33b5e5),
+                            dotSecondaryColor: Color(0xff0099cc),
                           ),
-                          onPressed: () async {
-                            model.isLiked
-                                ? await model.unlikeCritique()
-                                : await model.likeCritique();
+                          likeBuilder: (bool isLiked) {
+                            return Icon(
+                              Icons.favorite,
+                              color: isLiked ? Colors.red : Colors.grey,
+                              size: 25,
+                            );
+                          },
+                          likeCount: model.critique.likes.length,
+                          countBuilder:
+                              (int? count, bool isLiked, String text) {
+                            return Text(text);
+                          },
+                          onTap: (bool isLiked) async {
+                            try {
+                              isLiked
+                                  ? await model.unlikeCritique()
+                                  : await model.likeCritique();
+                              return !isLiked;
+                            } catch (e) {
+                              return isLiked;
+                            }
                           },
                         ),
                         model.postedByMe

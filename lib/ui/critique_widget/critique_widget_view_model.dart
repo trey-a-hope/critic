@@ -92,9 +92,9 @@ class CritiqueWidgetViewModel extends GetxController {
     }
   }
 
+  /// Like the critique.
   Future<void> likeCritique() async {
     try {
-      // Like the critique.
       await _critiqueService.like(
         uid: _getStorage.read('uid'),
         activityID: critique.activityID!,
@@ -109,13 +109,6 @@ class CritiqueWidgetViewModel extends GetxController {
           notificationData: null,
         );
       }
-
-      /// Fetch updated critique.
-      critique =
-          await _critiqueService.retrieve(activityID: critique.activityID);
-
-      update();
-
       return;
     } catch (e) {
       debugPrint(e.toString());
@@ -123,19 +116,13 @@ class CritiqueWidgetViewModel extends GetxController {
     }
   }
 
+  /// Unlike the critique.
   Future<void> unlikeCritique() async {
     try {
-      /// Unlike the critique.
       await _critiqueService.unlike(
         uid: _getStorage.read('uid'),
         activityID: critique.activityID!,
       );
-
-      /// Fetch updated critique.
-      critique =
-          await _critiqueService.retrieve(activityID: critique.activityID);
-
-      update();
 
       return;
     } catch (e) {
