@@ -137,39 +137,57 @@ class MovieDetailsView extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                'Actors: ${movie.actors}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Director: ${movie.director}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Genres: ${movie.genre}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Rated: ${movie.rated}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Released: ${movie.released}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Writer: ${movie.writer}',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              Divider(),
-              Text(
-                'Critiques - ${critiques.length}',
-                style: Theme.of(context).textTheme.headline4,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Actors',
+                        style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.actors}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text('Director',
+                        style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.director}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text('Genres',
+                        style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.genre}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text('Rated', style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.rated}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text('Released',
+                        style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.released}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text('Writer',
+                        style: Theme.of(context).textTheme.headline3),
+                    Text(
+                      '${movie.writer}',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    Divider(),
+                    Text(
+                      'Critiques - ${critiques.length}',
+                    ),
+                  ],
+                ),
               ),
               Container(
                 height: 250,
