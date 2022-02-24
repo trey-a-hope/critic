@@ -104,11 +104,17 @@ class CritiqueWidgetViewModel extends GetxController {
       if (user.fcmToken != null) {
         _fcmNotificationService.sendNotificationToUser(
           fcmToken: user.fcmToken!,
-          title: '${currentUser.username} liked your critique.',
-          body: 'Ebert and Roeper would be proud.',
+          title: 'New like on your critique!',
+          body: '${currentUser.username}, ${movie.title}',
           notificationData: null,
         );
       }
+
+      //Add uid to update ui when navigation between pages.
+      critique.likes.add(_getStorage.read('uid'));
+
+      update();
+
       return;
     } catch (e) {
       debugPrint(e.toString());
@@ -123,6 +129,11 @@ class CritiqueWidgetViewModel extends GetxController {
         uid: _getStorage.read('uid'),
         activityID: critique.activityID!,
       );
+
+      //Remove uid to update ui when navigation between pages.
+      critique.likes.remove(_getStorage.read('uid'));
+
+      update();
 
       return;
     } catch (e) {
