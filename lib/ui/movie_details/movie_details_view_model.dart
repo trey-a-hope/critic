@@ -3,6 +3,7 @@ import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/watchlist_service.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class MovieDetailsViewModel extends GetxController {
   /// The id of the movie.
@@ -14,11 +15,17 @@ class MovieDetailsViewModel extends GetxController {
   /// Instantiate watchlist service.
   final WatchlistService _watchlistService = Get.find();
 
-  /// All critqiues related to this movie.
+  /// All critiques related to this movie.
   List<CritiqueModel> critiques = [];
+
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
 
   /// Determines if this movie is in the users watchlist or not.
   bool movieInWatchlist = false;
+
+  /// Indicator if page is still loading.
+  bool _isLoading = true;
 
   @override
   void onInit() async {
@@ -28,9 +35,22 @@ class MovieDetailsViewModel extends GetxController {
       imdbID: movie.imdbID,
     ); //TODO: Decrease limit once pagination is needed on this page.
 
+    // Place current user's critique at front if this applies.
+    int index = critiques
+        .indexWhere((critique) => critique.uid == _getStorage.read('uid'));
+    if (index > 0) {
+      // Remove critique at that index.
+      CritiqueModel myCritique = critiques.removeAt(index);
+
+      // Insert it to the front.
+      critiques.insert(0, myCritique);
+    }
+
     /// Check if movie in watchlist.
     movieInWatchlist =
         await _watchlistService.watchListHasMovie(imdbID: movie.imdbID);
+
+    _isLoading = false;
 
     update();
 
@@ -46,6 +66,8 @@ class MovieDetailsViewModel extends GetxController {
   void onClose() async {
     super.onClose();
   }
+
+  bool get isLoading => _isLoading;
 
   Future<void> addMovieToWatchList() async {
     await _watchlistService.addMovieToWatchList(imdbID: movie.imdbID);

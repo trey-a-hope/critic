@@ -96,7 +96,7 @@ class CritiqueWidgetViewModel extends GetxController {
     try {
       // Like the critique.
       await _critiqueService.like(
-        uid: user.uid,
+        uid: _getStorage.read('uid'),
         activityID: critique.activityID!,
       );
 
@@ -127,7 +127,7 @@ class CritiqueWidgetViewModel extends GetxController {
     try {
       /// Unlike the critique.
       await _critiqueService.unlike(
-        uid: user.uid,
+        uid: _getStorage.read('uid'),
         activityID: critique.activityID!,
       );
 
