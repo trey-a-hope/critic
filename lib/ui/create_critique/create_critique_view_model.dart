@@ -21,9 +21,16 @@ class CreateCritiqueViewModel extends GetxController {
   /// Movie choice.
   MovieModel? _movie;
 
+  /// Indicator that the page is loading.
+  bool _isLoading = true;
+
   @override
   void onInit() async {
     super.onInit();
+    // Turn off loading indicator.
+    _isLoading = false;
+
+    update();
   }
 
   @override
@@ -36,9 +43,16 @@ class CreateCritiqueViewModel extends GetxController {
     super.onClose();
   }
 
+  bool get isLoading => _isLoading;
+
   Future<bool> saveCritique() async {
     try {
-      /// Build critique object.
+      // Turn on loading indicator.
+      _isLoading = true;
+
+      update();
+
+      // Build critique object.
       CritiqueModel critique = CritiqueModel(
         message: _message,
         imdbID: _movie!.imdbID,
@@ -49,33 +63,47 @@ class CreateCritiqueViewModel extends GetxController {
         likes: [],
       );
 
-      /// Submit the critique.
+      // Submit the critique.
       await _critiqueService.create(
         critique: critique,
       );
 
+      // Turn off loading indicator.
+      _isLoading = false;
+
+      update();
+
       return true;
     } catch (e) {
+      // Turn off loading indicator.
+      _isLoading = false;
+
+      update();
+
       debugPrint(e.toString());
       return false;
     }
   }
 
+  /// Update the rating for the critique.
   void updateRating({required double rating}) {
     _rating = rating;
     update();
   }
 
+  /// Update the message for the critique.
   void updateMessage({required String message}) {
     _message = message;
     update();
   }
 
+  /// Update the selected movie.
   void updateMovie({required MovieModel movie}) {
     _movie = movie;
     update();
   }
 
+  /// Indicator that a movie has been selected.
   bool movieSelected() {
     return _movie != null;
   }
