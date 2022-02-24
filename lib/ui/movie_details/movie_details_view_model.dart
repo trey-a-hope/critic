@@ -29,7 +29,20 @@ class MovieDetailsViewModel extends GetxController {
 
   @override
   void onInit() async {
-    /// Fetch all critiques for this movie.
+    super.onInit();
+
+    // Check if movie in watchlist.
+    movieInWatchlist =
+        await _watchlistService.watchListHasMovie(imdbID: movie.imdbID);
+
+    _isLoading = false;
+
+    update();
+
+    /* To prevent a slow load time, turn loading off before fetching critiques.
+    Then update again. */
+
+    // Fetch all critiques for this movie.
     critiques = await _critiqueService.list(
       limit: 100,
       imdbID: movie.imdbID,
@@ -46,15 +59,7 @@ class MovieDetailsViewModel extends GetxController {
       critiques.insert(0, myCritique);
     }
 
-    /// Check if movie in watchlist.
-    movieInWatchlist =
-        await _watchlistService.watchListHasMovie(imdbID: movie.imdbID);
-
-    _isLoading = false;
-
     update();
-
-    super.onInit();
   }
 
   @override
@@ -69,6 +74,7 @@ class MovieDetailsViewModel extends GetxController {
 
   bool get isLoading => _isLoading;
 
+  /// Add the movie to the current user's watchlist.
   Future<void> addMovieToWatchList() async {
     await _watchlistService.addMovieToWatchList(imdbID: movie.imdbID);
     movieInWatchlist =
@@ -76,6 +82,7 @@ class MovieDetailsViewModel extends GetxController {
     update();
   }
 
+  /// Remove the movie to the current user's watchlist.
   Future<void> removeMovieFromWatchList() async {
     await _watchlistService.removeMovieFromWatchList(imdbID: movie.imdbID);
     movieInWatchlist =

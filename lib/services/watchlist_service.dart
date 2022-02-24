@@ -16,17 +16,18 @@ class WatchlistService extends GetxService {
   /// Instantiate movie service.
   final MovieService _movieService = Get.find();
 
+  /// Add the movie from the current user's watchlist.
   Future<void> addMovieToWatchList({
     required String imdbID,
   }) async {
     try {
-      /// Get uid of current user.
+      // Get uid of current user.
       final String uid = _getStorage.read('uid');
 
-      /// Get the document reference for this user.
+      // Get the document reference for this user.
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      /// Add the movie id to the users watch list.
+      // Add the movie id to the users watch list.
       await userDocRef.update({
         'watchList': FieldValue.arrayUnion([imdbID])
       });
@@ -38,17 +39,18 @@ class WatchlistService extends GetxService {
     }
   }
 
+  /// Remove the movie from the current user's watchlist.
   Future<void> removeMovieFromWatchList({
     required String imdbID,
   }) async {
     try {
-      /// Get uid of current user.
+      // Get uid of current user.
       final String uid = _getStorage.read('uid');
 
-      /// Get the document reference for this user.
+      // Get the document reference for this user.
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      /// Remove the movie id to the users watch list.
+      // Remove the movie id to the users watch list.
       await userDocRef.update({
         'watchList': FieldValue.arrayRemove([imdbID])
       });
@@ -60,17 +62,18 @@ class WatchlistService extends GetxService {
     }
   }
 
+  /// Return true if the current user has this movie in their watchlist.
   Future<bool> watchListHasMovie({
     required String imdbID,
   }) async {
     try {
-      /// Get uid of current user.
+      // Get uid of current user.
       final String uid = _getStorage.read('uid');
 
-      /// Get the document reference for this user.
+      // Get the document reference for this user.
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      /// Convert document reference to user model.
+      // Convert document reference to user model.
       UserModel user = (await (await userDocRef.get())
               .reference
               .withConverter<UserModel>(
@@ -80,7 +83,7 @@ class WatchlistService extends GetxService {
               .get())
           .data() as UserModel;
 
-      /// Check to see if the movie id is in their list.
+      // Check to see if the movie id is in their list.
       if (user.watchList.contains(imdbID)) {
         return true;
       }
@@ -93,15 +96,16 @@ class WatchlistService extends GetxService {
     }
   }
 
+  /// List all the movies in the user's watchlist, (no pagination).
   Future<List<MovieModel>> listMoviesFromWatchList() async {
     try {
-      /// Get uid of current user.
+      // Get uid of current user.
       final String uid = _getStorage.read('uid');
 
-      /// Get the document reference for this user.
+      // Get the document reference for this user.
       final DocumentReference userDocRef = _usersDB.doc(uid);
 
-      /// Convert document reference to user model.
+      // Convert document reference to user model.
       UserModel user = (await (await userDocRef.get())
               .reference
               .withConverter<UserModel>(
@@ -111,7 +115,7 @@ class WatchlistService extends GetxService {
               .get())
           .data() as UserModel;
 
-      /// Fetch movie for each id in their watchlist array.
+      // Fetch movie for each id in their watchlist array.
       List<MovieModel> movies = [];
       for (int i = 0; i < user.watchList.length; i++) {
         String imdb = user.watchList[i];
