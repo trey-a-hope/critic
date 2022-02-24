@@ -151,12 +151,12 @@ exports.create = functions.https.onRequest(async (req, res) => {
 });
 
 exports.delete = functions.https.onRequest(async (req, res) => {
-    const id = req.body.id;
+    const activityID = req.body.activityID;
 
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = { _id: new ObjectID(id) };
+            var query = { activityID: activityID };
             client.db(dbName).collection(critiquesColName).deleteOne(query, (err, docs) => {
                 if (err) throw err;
                 console.log('Delete success.');

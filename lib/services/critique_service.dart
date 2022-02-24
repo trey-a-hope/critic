@@ -140,4 +140,37 @@ class CritiqueService extends GetxService {
       );
     }
   }
+
+  Future<void> delete({required String uid, required String activityID}) async {
+    try {
+      // Delete activity in Stream that represents this critique.
+      await _streamFeedService.removeActivity(uid: uid, activityID: activityID);
+
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDelete'),
+        body: json.encode(
+          {
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      // Response returns a bool, but I don't think that's necessary here.
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
 }

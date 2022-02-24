@@ -70,9 +70,10 @@ class StreamFeedService extends GetxService {
   }
 
   /// Removes the activity by activityId or foreignId parameters [id] : activityId Identifier of activity to remove
-  Future<void> removeActivity({required String activityID}) async {
+  Future<void> removeActivity(
+      {required String uid, required String activityID}) async {
     return await _streamFeedClient
-        .flatFeed('users', _getStorage.read('uid'))
+        .flatFeed('users', uid)
         .removeActivityById(activityID);
   }
 

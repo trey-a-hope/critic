@@ -1,6 +1,7 @@
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/models/data/user_model.dart';
+import 'package:critic/services/critique_service.dart';
 import 'package:critic/services/movie_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,9 @@ class CritiqueWidgetViewModel extends GetxController {
 
   /// Instantiate user service.
   UserService _userService = Get.find();
+
+  /// Critique service instance.
+  CritiqueService _critiqueService = Get.find();
 
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
@@ -60,4 +64,19 @@ class CritiqueWidgetViewModel extends GetxController {
   bool get isLoading => _isLoading;
 
   bool get postedByMe => _getStorage.read('uid') == user.uid;
+
+  Future<bool> deleteCritique() async {
+    try {
+      /// Delete the critique.
+      await _critiqueService.delete(
+        uid: user.uid,
+        activityID: critique.activityID!,
+      );
+
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
 }

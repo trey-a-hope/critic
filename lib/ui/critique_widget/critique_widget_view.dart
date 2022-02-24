@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/services/modal_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,9 @@ class CritiqueWidgetView extends StatelessWidget {
   CritiqueWidgetView({required this.critique});
 
   final CritiqueModel critique;
+
+  /// Instantiate modal service.
+  final ModalService _modalService = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -135,12 +139,6 @@ class CritiqueWidgetView extends StatelessWidget {
                           '',
                         ),
                         Spacer(),
-                        IconButton(
-                          icon: Icon(
-                            Icons.ios_share,
-                          ),
-                          onPressed: () {},
-                        ),
                         IconButton(
                           icon: Icon(
                             Icons.delete,
@@ -309,43 +307,52 @@ class CritiqueWidgetView extends StatelessWidget {
                             );
                           },
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.ios_share,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {
-                            Get.snackbar(
-                              'TODO',
-                              'Share critique.',
-                              icon: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
                         model.postedByMe
                             ? IconButton(
                                 icon: Icon(
                                   Icons.delete,
                                   color: Colors.grey,
                                 ),
-                                onPressed: () {
-                                  Get.snackbar(
-                                    'TODO',
-                                    'Delete critique.',
-                                    icon: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: Colors.green,
-                                    colorText: Colors.white,
-                                  );
+                                onPressed: () async {
+                                  /// Ask user if they want to delete critique.
+                                  final bool? confirm =
+                                      await _modalService.showConfirmation(
+                                          context: context,
+                                          title: 'Delete Critique',
+                                          message: 'Are you sure?');
+
+                                  /// Return if not true.
+                                  if (confirm == null || !confirm) return;
+
+                                  /// Proceed to delete critique.
+                                  bool success = await model.deleteCritique();
+
+                                  /// Show success or error message based on response.
+                                  if (success) {
+                                    Get.snackbar(
+                                      'Success',
+                                      'Your critique has been deleted.',
+                                      icon: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      colorText: Colors.white,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      'Error',
+                                      'There was an issue deleting your critique.',
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  }
                                 },
                               )
                             : IconButton(
@@ -353,7 +360,49 @@ class CritiqueWidgetView extends StatelessWidget {
                                   Icons.report,
                                   color: Colors.grey,
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  /// Ask user if they want to delete critique.
+                                  final bool? confirm =
+                                      await _modalService.showConfirmation(
+                                    context: context,
+                                    title: 'Report Critique',
+                                    message:
+                                        'Is the content of this critique grotesque, vulgar, or inappropriate in any way?',
+                                  );
+
+                                  /// Return if not true.
+                                  if (confirm == null || !confirm) return;
+
+                                  /// Proceed to delete critique.
+                                  bool success = await model.deleteCritique();
+
+                                  /// Show success or error message based on response.
+                                  if (success) {
+                                    Get.snackbar(
+                                      'Success',
+                                      'The critique has been flagged as inappropriate.',
+                                      icon: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      colorText: Colors.white,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      'Error',
+                                      'There was an issue flagged this critique as inappropriate.',
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: Colors.white,
+                                      ),
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  }
+                                },
                               )
                       ],
                     ),
