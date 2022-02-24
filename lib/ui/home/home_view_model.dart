@@ -3,15 +3,11 @@ import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/critique_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class HomeViewModel extends GetxController
     with GetSingleTickerProviderStateMixin {
   /// Instantiate critique service.
   final CritiqueService _critiqueService = Get.find();
-
-  /// Instantiate get storage.
-  final GetStorage _getStorage = GetStorage();
 
   /// Pagination last date time for everyone critique view.
   String _everyoneTabLastID = '';
@@ -24,13 +20,6 @@ class HomeViewModel extends GetxController
     super.onInit();
 
     controller = TabController(vsync: this, length: 2);
-
-    // Delete all activites for this user.
-    // List<Activity> activites =
-    //     await _streamFeedService.getActivities(limit: 100, offset: 1);
-    // for (int i = 0; i < activites.length; i++) {
-    //   _streamFeedService.removeActivity(activityID: activites[i].id!);
-    // }
 
     update();
   }
@@ -48,7 +37,7 @@ class HomeViewModel extends GetxController
     critiques = [];
 
     critiques = await _critiqueService.list(
-      limit: Globals.PAGE_FETCH_LIMIT,
+      limit: Globals.MONGODB_PAGE_FETCH_LIMIT,
       lastID: _everyoneTabLastID,
     );
 
@@ -66,7 +55,7 @@ class HomeViewModel extends GetxController
     critiques = [];
 
     critiques = await _critiqueService.getFeed(
-        limit: Globals.PAGE_FETCH_LIMIT, offset: offset);
+        limit: Globals.STREAM_PAGE_FETCH_LIMIT, offset: offset);
 
     if (critiques.isEmpty) return critiques;
 

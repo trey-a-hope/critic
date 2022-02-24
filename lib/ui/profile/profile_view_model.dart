@@ -75,7 +75,7 @@ class ProfileViewModel extends GetxController {
     critiques = [];
 
     critiques = await _critiqueService.list(
-      limit: Globals.PAGE_FETCH_LIMIT,
+      limit: Globals.MONGODB_PAGE_FETCH_LIMIT,
       lastID: _myTabLastID,
       uid: uid,
     );

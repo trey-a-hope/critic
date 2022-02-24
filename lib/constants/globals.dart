@@ -63,7 +63,8 @@ class Globals {
 
   /// Limits
   static const int CRITIQUE_CHAR_LIMIT = 225;
-  static const int PAGE_FETCH_LIMIT = 10;
+  static const int MONGODB_PAGE_FETCH_LIMIT = 10;
+  static const int STREAM_PAGE_FETCH_LIMIT = 5;
 
   /// Email
   static const String EMAIL = 'thope@imabigcritic.com';
