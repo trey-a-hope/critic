@@ -3,6 +3,7 @@ import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 import 'drawer_view_model.dart';
 
 class DrawerView extends StatelessWidget {
@@ -16,29 +17,37 @@ class DrawerView extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              model.user == null
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : DrawerHeader(
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              'Hello, ${model.user!.username}',
-                              style: AppThemes.textTheme.headline4,
+              DrawerHeader(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        model.user == null
+                            ? 'Hello...'
+                            : 'Hello, ${model.user!.username}',
+                        style: AppThemes.textTheme.headline4,
+                      ),
+                    ),
+                    model.user == null
+                        ? Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: CircleAvatar(
+                              radius: 40,
+                              backgroundImage:
+                                  NetworkImage(Globals.DUMMY_PROFILE_PHOTO_URL),
                             ),
-                          ),
-                          CircleAvatar(
+                          )
+                        : CircleAvatar(
                             radius: 40,
                             backgroundImage: NetworkImage(
                               model.user!.imgUrl,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
+                  ],
+                ),
+              ),
               ListTile(
                 leading: const Icon(Icons.home),
                 title: Text(
