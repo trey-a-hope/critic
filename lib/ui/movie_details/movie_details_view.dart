@@ -191,6 +191,13 @@ class MovieDetailsView extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Divider(),
+                          Text('IMDB Rating',
+                              style: Theme.of(context).textTheme.headline3),
+                          Text(
+                            '${movie.imdbRating} (${movie.imdbVotes} votes)',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          Divider(),
                           Text(
                             'Critiques (${critiques.length})',
                           ),
