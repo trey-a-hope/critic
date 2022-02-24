@@ -231,13 +231,13 @@ exports.addComment = functions.https.onRequest(async (req, res) => {
 });
 
 exports.addLike = functions.https.onRequest(async (req, res) => {
-    const id = req.body.id;
+    const activityID = req.body.activityID;
     const uid = req.body.uid;
 
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = { _id: new ObjectID(id) };
+            var query = { activityID: activityID};
             var newvalues = { $push: { likes: uid } };
             client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
                 if (err) throw err;
@@ -252,13 +252,13 @@ exports.addLike = functions.https.onRequest(async (req, res) => {
 });
 
 exports.removeLike = functions.https.onRequest(async (req, res) => {
-    const id = req.body.id;
+    const activityID = req.body.activityID;
     const uid = req.body.uid;
 
     try {
         client.connect(err => {
             if (err) throw err;
-            var query = { _id: new ObjectID(id) };
+            var query = { activityID: activityID};
             var newvalues = { $pull: { likes: uid } };
             client.db(dbName).collection(critiquesColName).updateOne(query, newvalues, (err, docs) => {
                 if (err) throw err;

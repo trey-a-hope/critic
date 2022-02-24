@@ -173,4 +173,63 @@ class CritiqueService extends GetxService {
       );
     }
   }
+
+  Future<void> like({required String uid, required String activityID}) async {
+    try {
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddLike'),
+        body: json.encode(
+          {
+            'uid': uid,
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> unlike({required String uid, required String activityID}) async {
+    try {
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse(
+            '${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesRemoveLike'),
+        body: json.encode(
+          {
+            'uid': uid,
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
 }

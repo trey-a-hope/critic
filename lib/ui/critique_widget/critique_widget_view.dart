@@ -284,27 +284,30 @@ class CritiqueWidgetView extends StatelessWidget {
                         Text(
                           critique.created.isAfter(
                                   DateTime.now().subtract(Duration(days: 6)))
-                              ? 'Posted ${timeago.format(critique.created, allowFromNow: true)}'
-                              : 'Posted ${DateFormat('MMM dd, yyyy').format(critique.created)}',
+                              ? '${timeago.format(critique.created, allowFromNow: true)},'
+                              : '${DateFormat('MMM dd, yyyy').format(critique.created)},',
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${model.critique.likes.length} like${model.critique.likes.length == 1 ? '' : 's'}',
+                          style: TextStyle(
+                            color: model.critique.likes.isEmpty
+                                ? Colors.grey
+                                : Colors.red,
+                          ),
                         ),
                         Spacer(),
                         IconButton(
                           icon: Icon(
                             Icons.favorite,
-                            color: true ? Colors.grey : Colors.red,
+                            color: model.isLiked ? Colors.red : Colors.grey,
                           ),
-                          onPressed: () {
-                            Get.snackbar(
-                              'TODO',
-                              'Favorite critique.',
-                              icon: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
-                            );
+                          onPressed: () async {
+                            model.isLiked
+                                ? await model.unlikeCritique()
+                                : await model.likeCritique();
                           },
                         ),
                         model.postedByMe
