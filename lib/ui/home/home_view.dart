@@ -133,7 +133,7 @@ class HomeView extends StatelessWidget {
                   paginationViewType: PaginationViewType.listView,
                 ),
                 onRefresh: () async {
-                  // model.resetFollowingTabLastDateTime();
+                  model.resetLastIDs();
                   return;
                 },
               ),
