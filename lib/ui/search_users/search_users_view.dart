@@ -71,9 +71,8 @@ class SearchUsersView extends StatelessWidget {
                                   leading: CachedNetworkImage(
                                     imageUrl: user.imgUrl,
                                     imageBuilder: (context, imageProvider) =>
-                                        Image(
-                                      image: imageProvider,
-                                      height: 100,
+                                        CircleAvatar(
+                                      backgroundImage: imageProvider,
                                     ),
                                     placeholder: (context, url) =>
                                         CircularProgressIndicator(),
@@ -82,13 +81,6 @@ class SearchUsersView extends StatelessWidget {
                                   ),
                                   title: Text(
                                     user.username,
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                  subtitle: Text(
-                                    user.email,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
                                   ),
                                   trailing: Icon(
                                     Icons.chevron_right,

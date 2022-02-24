@@ -9,10 +9,16 @@ class WatchListViewModel extends GetxController {
   /// Instantiate watchlist service.
   final WatchlistService _watchlistService = Get.find();
 
+  /// Indicator that the page is loading.
+  bool _isLoading = true;
+
   @override
   void onInit() async {
-    /// Fetch movies in watchlist.
+    // Fetch movies in watchlist.
     movies = await _watchlistService.listMoviesFromWatchList();
+
+    // Turn off loading indicator.
+    _isLoading = false;
 
     update();
 
@@ -29,8 +35,10 @@ class WatchListViewModel extends GetxController {
     super.onClose();
   }
 
+  bool get isLoading => _isLoading;
+
+  /// Fetch movies in watchlist.
   void refreshList() async {
-    /// Fetch movies in watchlist.
     movies = await _watchlistService.listMoviesFromWatchList();
 
     update();
