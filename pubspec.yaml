@@ -35,8 +35,8 @@ dependencies:
   get_it: ^7.2.0
   google_sign_in: ^5.2.3
   http: ^0.13.1
-  image_cropper: ^1.4.1
-  image_picker: ^0.8.4+4
+  image_cropper: ^1.5.0
+  image_picker: ^0.8.4+9
   image_stack: ^2.0.1
   intl: ^0.17.0
   json_annotation: ^4.3.0

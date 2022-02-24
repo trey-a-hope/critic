@@ -61,7 +61,7 @@ class EditProfileViewModel extends GetxController {
 
       if (file == null) return;
 
-      File? image = await ImageCropper.cropImage(sourcePath: file.path);
+      File? image = await ImageCropper().cropImage(sourcePath: file.path);
 
       if (image == null) return;
 
