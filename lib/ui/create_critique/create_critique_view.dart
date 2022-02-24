@@ -220,7 +220,7 @@ class CreateCritiqueView extends StatelessWidget {
                 ],
                 if (model.movieSelected()) ...[
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: Row(
                       children: [
                         Expanded(

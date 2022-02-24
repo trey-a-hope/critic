@@ -30,6 +30,7 @@ class BasicPage extends StatelessWidget {
 
     return Scaffold(
       key: scaffoldKey,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: floatingActionButton,
       drawer: drawer,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
