@@ -80,120 +80,108 @@ class HomeView extends StatelessWidget {
             controller: model.controller,
             children: [
               // Following
-              RefreshIndicator(
-                child: PaginationView<CritiqueModel>(
-                  initialLoader: Center(child: CircularProgressIndicator()),
-                  bottomLoader: Center(child: CircularProgressIndicator()),
-                  itemBuilder: (BuildContext context, CritiqueModel critique,
-                          int index) =>
-                      CritiqueWidgetView(
-                    critique: critique,
-                  ),
-                  pageFetch: (int offset) async {
-                    return model.fetchFollowingCritiques(offset);
-                  },
-                  onError: (dynamic error) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Error',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          error.toString(),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                  onEmpty: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          MdiIcons.movieEdit,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          '${Globals.MESSAGE_EMPTY_CRITIQUES}',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
-                  ),
-                  paginationViewType: PaginationViewType.listView,
+              PaginationView<CritiqueModel>(
+                initialLoader: Center(child: CircularProgressIndicator()),
+                bottomLoader: Center(child: CircularProgressIndicator()),
+                itemBuilder:
+                    (BuildContext context, CritiqueModel critique, int index) =>
+                        CritiqueWidgetView(
+                  critique: critique,
                 ),
-                onRefresh: () async {
-                  model.resetLastIDs();
-                  return;
+                pageFetch: (int offset) async {
+                  return model.fetchFollowingCritiques(offset);
                 },
+                onError: (dynamic error) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        'Error',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+                onEmpty: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        MdiIcons.movieEdit,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        '${Globals.MESSAGE_EMPTY_CRITIQUES}',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ],
+                  ),
+                ),
+                paginationViewType: PaginationViewType.listView,
               ),
               // Everyone.
-              RefreshIndicator(
-                child: PaginationView<CritiqueModel>(
-                  initialLoader: Center(child: CircularProgressIndicator()),
-                  bottomLoader: Center(child: CircularProgressIndicator()),
-                  itemBuilder: (BuildContext context, CritiqueModel critique,
-                          int index) =>
-                      CritiqueWidgetView(
-                    critique: critique,
-                  ),
-                  pageFetch: (int offset) async {
-                    return model.fetchEveryoneCritiques(offset);
-                  },
-                  onError: (dynamic error) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Error',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          error.toString(),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                  onEmpty: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          MdiIcons.movieEdit,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          '${Globals.MESSAGE_EMPTY_CRITIQUES}',
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
-                    ),
-                  ),
-                  paginationViewType: PaginationViewType.listView,
+              PaginationView<CritiqueModel>(
+                initialLoader: Center(child: CircularProgressIndicator()),
+                bottomLoader: Center(child: CircularProgressIndicator()),
+                itemBuilder:
+                    (BuildContext context, CritiqueModel critique, int index) =>
+                        CritiqueWidgetView(
+                  critique: critique,
                 ),
-                onRefresh: () async {
-                  model.resetLastIDs();
-                  return;
+                pageFetch: (int offset) async {
+                  return model.fetchEveryoneCritiques(offset);
                 },
+                onError: (dynamic error) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        'Error',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+                onEmpty: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        MdiIcons.movieEdit,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        '${Globals.MESSAGE_EMPTY_CRITIQUES}',
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ],
+                  ),
+                ),
+                paginationViewType: PaginationViewType.listView,
               ),
             ],
           ),
