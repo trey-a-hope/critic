@@ -16,7 +16,7 @@ class MovieDetailsViewModel extends GetxController {
   final WatchlistService _watchlistService = Get.find();
 
   /// All critiques related to this movie.
-  List<CritiqueModel> critiques = [];
+  List<CritiqueModel>? critiques;
 
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
@@ -49,14 +49,14 @@ class MovieDetailsViewModel extends GetxController {
     ); //TODO: Decrease limit once pagination is needed on this page.
 
     // Place current user's critique at front if this applies.
-    int index = critiques
+    int index = critiques!
         .indexWhere((critique) => critique.uid == _getStorage.read('uid'));
     if (index > 0) {
       // Remove critique at that index.
-      CritiqueModel myCritique = critiques.removeAt(index);
+      CritiqueModel myCritique = critiques!.removeAt(index);
 
       // Insert it to the front.
-      critiques.insert(0, myCritique);
+      critiques!.insert(0, myCritique);
     }
 
     update();

@@ -2,16 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/models/data/movie_model.dart';
 import 'package:critic/ui/critique_widget/critique_widget_view.dart';
+import 'package:critic/ui/critique_widget/loading_critique_widget_view.dart';
 import 'package:critic/ui/movie_details/movie_details_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-///TODO: Make this UI cleaner.
 class MovieDetailsView extends StatelessWidget {
-  MovieDetailsView({Key? key}) : super(key: key);
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  const MovieDetailsView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,7 @@ class MovieDetailsView extends StatelessWidget {
         MovieModel movie = model.movie;
 
         /// All critiques for this movie.
-        List<CritiqueModel> critiques = model.critiques;
+        List<CritiqueModel>? critiques = model.critiques;
 
         /// Flag for if the movie is in the user's watchlist.
         bool movieInWatchlist = model.movieInWatchlist;
@@ -30,7 +28,6 @@ class MovieDetailsView extends StatelessWidget {
         return model.isLoading
             ? Scaffold(body: Center(child: CircularProgressIndicator()))
             : BasicPage(
-                scaffoldKey: _scaffoldKey,
                 leftIconButton: IconButton(
                   icon: const Icon(Icons.chevron_left),
                   onPressed: () {
@@ -149,83 +146,150 @@ class MovieDetailsView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Actors',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.actors}',
-                            style: Theme.of(context).textTheme.headline5,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Actors',
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                    Text(
+                                      '${movie.actors}',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text('Director',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                      '${movie.director}',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                           Divider(),
-                          Text('Director',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.director}',
-                            style: Theme.of(context).textTheme.headline5,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text('Genres',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                      '${movie.genre}',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text('Rated',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                      '${movie.rated}',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           Divider(),
-                          Text('Genres',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.genre}',
-                            style: Theme.of(context).textTheme.headline5,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text('Released',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                      '${movie.released}',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text('IMDB Rating',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                      '${movie.imdbRating} (${movie.imdbVotes} votes)',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           Divider(),
-                          Text('Rated',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.rated}',
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          Divider(),
-                          Text('Released',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.released}',
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          Divider(),
-                          Text('Writer',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.writer}',
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          Divider(),
-                          Text('IMDB Rating',
-                              style: Theme.of(context).textTheme.headline3),
-                          Text(
-                            '${movie.imdbRating} (${movie.imdbVotes} votes)',
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                          Divider(),
-                          Text(
-                            'Critiques (${critiques.length})',
-                          ),
-                          SizedBox(
-                            height: 20,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Critiques (${critiques == null ? '0' : critiques.length})',
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
-                      height: 270,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: critiques.length,
-                        itemBuilder: (context, index) {
-                          CritiqueModel critique = critiques[index];
-                          return Container(
-                            height: 100,
+                    model.critiques == null
+                        ? LoadingCritiqueWidgetView()
+                        : Container(
+                            height: 270,
                             width: MediaQuery.of(context).size.width,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: CritiqueWidgetView(critique: critique),
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: critiques!.length,
+                              itemBuilder: (context, index) {
+                                CritiqueModel critique = critiques[index];
+                                return Container(
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child:
+                                        CritiqueWidgetView(critique: critique),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
                   ],
                 ),
                 title: 'Details',
