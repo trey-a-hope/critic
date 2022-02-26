@@ -11,13 +11,13 @@ import 'package:get/get.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// Wait for firebase app to initialize.
+  // Wait for firebase app to initialize.
   await Firebase.initializeApp();
 
-  /// Initialize Get Storage.
+  // Initialize Get Storage.
   await GetStorage.init();
 
-  /// Set status bar color to black.
+  // Set status bar color to black.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.black,

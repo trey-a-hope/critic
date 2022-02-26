@@ -146,118 +146,131 @@ class MovieDetailsView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'Actors',
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                    Text(
-                                      '${movie.actors}',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('Director',
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Actors',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
-                                    Text(
-                                      '${movie.director}',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
+                                            .headline5,
+                                      ),
+                                      Text(
+                                        '${movie.actors}',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ],
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text('Director',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      Text(
+                                        '${movie.director}',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('Genres',
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text('Genres',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      Text(
+                                        '${movie.genre}',
+                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
-                                    Text(
-                                      '${movie.genre}',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('Rated',
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text('Rated',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      Text(
+                                        '${movie.rated}',
+                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
-                                    Text(
-                                      '${movie.rated}',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          Divider(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('Released',
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text('Released',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      Text(
+                                        '${movie.released}',
+                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
-                                    Text(
-                                      '${movie.released}',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('IMDB Rating',
+                                Expanded(
+                                  child: Column(
+                                    children: [
+                                      Text('IMDB Rating',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
+                                      Text(
+                                        '${movie.imdbRating} (${movie.imdbVotes} votes)',
+                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
-                                    Text(
-                                      '${movie.imdbRating} (${movie.imdbVotes} votes)',
-                                      textAlign: TextAlign.center,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                          Divider(),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
