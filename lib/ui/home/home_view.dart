@@ -1,6 +1,7 @@
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/ui/critique_widget/critique_widget_view.dart';
+import 'package:critic/ui/critique_widget/loading_critique_widget_view.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,15 @@ class HomeView extends StatelessWidget {
             children: [
               // Following
               PaginationView<CritiqueModel>(
-                initialLoader: Center(child: CircularProgressIndicator()),
+                initialLoader: ListView(
+                  children: [
+                    for (int i = 0;
+                        i < Globals.STREAM_PAGE_FETCH_LIMIT;
+                        i++) ...[
+                      LoadingCritiqueWidgetView(),
+                    ]
+                  ],
+                ),
                 bottomLoader: Center(child: CircularProgressIndicator()),
                 itemBuilder:
                     (BuildContext context, CritiqueModel critique, int index) =>
@@ -133,7 +142,15 @@ class HomeView extends StatelessWidget {
               ),
               // Everyone.
               PaginationView<CritiqueModel>(
-                initialLoader: Center(child: CircularProgressIndicator()),
+                initialLoader: ListView(
+                  children: [
+                    for (int i = 0;
+                        i < Globals.MONGODB_PAGE_FETCH_LIMIT;
+                        i++) ...[
+                      LoadingCritiqueWidgetView(),
+                    ]
+                  ],
+                ),
                 bottomLoader: Center(child: CircularProgressIndicator()),
                 itemBuilder:
                     (BuildContext context, CritiqueModel critique, int index) =>
