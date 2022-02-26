@@ -1,10 +1,14 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const MongoDBCritiques = require('./mongodb/critique_functions');
+const Util = require('./util/util_functions');
 
 admin.initializeApp(functions.config().firebase);
 
-//Mongo DB: Critiques
+/// Util functions.
+exports.UtilGenerateApplicationCsv = Util.generateApplicationCsv;
+
+/// Mongo DB - Critique functions.
 exports.MongoDBCritiquesGet = MongoDBCritiques.get;
 exports.MongoDBCritiquesCount = MongoDBCritiques.count;
 exports.MongoDBCritiquesListSimilar = MongoDBCritiques.listSimilar;
