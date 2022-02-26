@@ -3,10 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:package_info/package_info.dart';
 import 'constants/app_routes.dart';
 import 'constants/app_themes.dart';
-import 'constants/globals.dart';
 import 'initialize_dependencies.dart';
 import 'package:get/get.dart';
 
@@ -18,11 +16,6 @@ void main() async {
 
   /// Initialize Get Storage.
   await GetStorage.init();
-
-  /// Set version and build numbers.
-  PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  Globals.version = packageInfo.version;
-  Globals.buildNumber = packageInfo.buildNumber;
 
   /// Set status bar color to black.
   SystemChrome.setSystemUIOverlayStyle(

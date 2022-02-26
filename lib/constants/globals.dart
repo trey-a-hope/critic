@@ -34,10 +34,6 @@ class Globals {
   static const String DUMMY_PROFILE_PHOTO_URL =
       'https://firebasestorage.googleapis.com/v0/b/critic-a9e44.appspot.com/o/Images%2FProfile.jpeg?alt=media&token=f8d67c2f-9b1c-4cbe-aca5-6da014c504a0';
 
-  /// App build and version info.
-  static String? version;
-  static String? buildNumber;
-
   /// Algolia API
   static const String ALGOLIA_APP_ID = 'GGXI4MP1WJ';
   static const String ALGOLIA_SEARCH_API_KEY =
@@ -73,4 +69,8 @@ class Globals {
   static const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';
   static const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
   static const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';
+
+  /// Package info
+  static const String APP_VERSION = 'app_version';
+  static const String APP_BUILD_NUMBER = 'build_number';
 }

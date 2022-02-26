@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:new_version/new_version.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MainViewModel extends GetxController {
   /// Firebase auth instance.
@@ -57,7 +58,9 @@ class MainViewModel extends GetxController {
     final VersionStatus? status = await _newVersion.getVersionStatus();
     if (_firebaseUser == null || (status != null && status.canUpdate)) {
       Get.offAllNamed(Globals.ROUTES_LOGIN);
-    } else {
+    }
+    // Proceed to home page.
+    else {
       // Get user document reference.
       DocumentReference userDocRef = _usersDB.doc(_firebaseUser.uid);
 
@@ -67,11 +70,16 @@ class MainViewModel extends GetxController {
       // Set UID to get storage.
       _getStorage.write('uid', _firebaseUser.uid);
 
+      // Set app version and build number.
+      PackageInfo packageInfo = await PackageInfo.fromPlatform();
+      _getStorage.write(Globals.APP_BUILD_NUMBER, packageInfo.buildNumber);
+      _getStorage.write(Globals.APP_VERSION, packageInfo.version);
+
       // Bind Stream Feed Service after uid is determined.
       Get.lazyPut(() => StreamFeedService(), fenix: true);
 
       if (userExists) {
-        // Request permission from user.
+        // Request permission from user to receive push notifications.
         if (Platform.isIOS) {
           _firebaseMessaging.requestPermission();
         }

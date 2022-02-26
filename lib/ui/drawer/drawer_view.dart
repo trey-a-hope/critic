@@ -2,12 +2,16 @@ import 'package:critic/constants/app_themes.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 import 'drawer_view_model.dart';
 
 class DrawerView extends StatelessWidget {
   DrawerView({Key? key}) : super(key: key);
+
+  /// Instantiate get storage.
+  final GetStorage _getStorage = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +150,9 @@ class DrawerView extends StatelessWidget {
                   Get.toNamed(Globals.ROUTES_SETTINGS);
                 },
               ),
+              Text(
+                'Version ${_getStorage.read(Globals.APP_VERSION)}',
+              )
             ],
           ),
         ),
