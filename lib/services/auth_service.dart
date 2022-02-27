@@ -2,35 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/data/user_model.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
-import '../service_locator.dart';
-
-abstract class IAuthService {
-  Future<UserModel> getCurrentUser();
-
-  Future<void> signOut();
-
-  Stream<User?> onAuthStateChanged();
-
-  Future<UserCredential> signInWithEmailAndPassword(
-      {required String email, required String password});
-
-  Future<UserCredential> createUserWithEmailAndPassword(
-      {required String email, required String password});
-
-  void updatePassword({required String password});
-
-  Future<void> deleteUser({required String userID});
-
-  Future<void> resetPassword({required String email});
-}
-
-class AuthService extends IAuthService {
+class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CollectionReference _usersDB =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('users');
 
-  @override
+  /// Instantiate util service.
+  UtilService _utilService = Get.find();
+
   Future<UserModel> getCurrentUser() async {
     try {
       final User firebaseUser = _auth.currentUser!;
@@ -51,34 +32,29 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
   Future<void> signOut() async {
     //Set user online status to false.
-    await locator<UtilService>().setOnlineStatus(isOnline: false);
+    await _utilService.setOnlineStatus(isOnline: false);
 
     //Sign user out.
     return _auth.signOut();
   }
 
-  @override
   Stream<User?> onAuthStateChanged() {
     return _auth.authStateChanges();
   }
 
-  @override
   Future<UserCredential> signInWithEmailAndPassword(
       {required String email, required String password}) {
     return _auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
-  @override
   Future<UserCredential> createUserWithEmailAndPassword(
       {required String email, required String password}) {
     return _auth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 
-  @override
   void updatePassword({required String password}) async {
     try {
       User firebaseUser = _auth.currentUser!;
@@ -91,7 +67,6 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
   Future<void> deleteUser({required String userID}) async {
     try {
       User firebaseUser = _auth.currentUser!;
@@ -105,7 +80,6 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
   Future<void> resetPassword({required String email}) async {
     try {
       return await _auth.sendPasswordResetEmail(email: email);

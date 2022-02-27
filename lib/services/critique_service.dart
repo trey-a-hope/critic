@@ -1,316 +1,29 @@
-import 'package:critic/constants.dart';
-import 'package:critic/models/data/comment_model.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' show json;
+import 'package:stream_feed/stream_feed.dart';
 
-abstract class ICritiqueService {
-  Future<CritiqueModel> get({
-    required String id,
-  });
-
-  Future<int> count({required String uid});
+class CritiqueService extends GetxService {
+  /// Instantiate stream feed service.
+  final StreamFeedService _streamFeedService = Get.find();
 
   Future<List<CritiqueModel>> list({
     required int limit,
     String? lastID,
-  });
-
-  Future<List<CritiqueModel>> listSimilar({
-    String? id,
-    required String imdbID,
-  });
-
-  Future<List<CritiqueModel>> listByUser({
-    required String uid,
-    required int limit,
-    String? lastID,
-  });
-
-  Future<List<CritiqueModel>> listByGenre({
-    required String genre,
-    required int limit,
-    String lastID,
-  });
-
-  Future<void> create({
-    required CritiqueModel critique,
-  });
-
-  Future<void> delete({
-    required String id,
-  });
-
-  Future<void> deleteAll();
-
-  Future<void> update({
-    required String id,
-    required Map<String, dynamic> params,
-  });
-
-  Future<void> addComment({
-    required String id,
-    required CommentModel comment,
-  });
-
-  Future<void> addLike({
-    required String id,
-    required String uid,
-  });
-
-  Future<void> removeLike({
-    required String id,
-    required String uid,
-  });
-}
-
-class CritiqueService extends ICritiqueService {
-  @override
-  Future<CritiqueModel> get({required String id}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet'),
-        body: json.encode({
-          'id': id,
-        }),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      final dynamic result = json.decode(response.body);
-
-      CritiqueModel critique = CritiqueModel.fromJson(result);
-
-      return critique;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<CritiqueModel>> listByUser({
-    required String uid,
-    required int limit,
-    String? lastID,
+    String? uid,
+    String? imdbID,
   }) async {
     try {
       http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListByUser'),
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList'),
         body: json.encode({
+          'limit': limit,
+          'last_id': lastID,
           'uid': uid,
-          'limit': limit,
-          'last_id': lastID,
-        }),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
-
-      List<CritiqueModel> critiques = results
-          .map(
-            (result) => CritiqueModel.fromJson(result),
-          )
-          .toList();
-
-      return critiques;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<CritiqueModel>> listByGenre({
-    required String genre,
-    required int limit,
-    String? lastID,
-  }) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListByGenre'),
-        body: json.encode({
-          'genre': genre,
-          'limit': limit,
-          'last_id': lastID,
-        }),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
-
-      List<CritiqueModel> critiques = results
-          .map(
-            (result) => CritiqueModel.fromJson(result),
-          )
-          .toList();
-
-      return critiques;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> create({required CritiqueModel critique}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate'),
-        body: json.encode(critique.toJson()),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> delete({required String id}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDelete'),
-        body: json.encode({'id': id}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> update(
-      {required String id, required Map<String, dynamic> params}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesUpdate'),
-        body: json.encode({'id': id, 'params': params}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> addComment(
-      {required String id, required CommentModel comment}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddComment'),
-        body: json.encode({'id': id, 'comment': comment.toJson()}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> addLike({
-    required String id,
-    required String uid,
-  }) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddLike'),
-        body: json.encode({'id': id, 'uid': uid}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<CritiqueModel>> listSimilar({
-    String? id,
-    required String imdbID,
-  }) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesListSimilar'),
-        body: json.encode({
-          'id': id,
           'imdbID': imdbID,
         }),
         headers: {'content-type': 'application/json'},
@@ -339,15 +52,17 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
-  Future<void> removeLike({
-    required String id,
-    required String uid,
-  }) async {
+  Future<void> create({required CritiqueModel critique}) async {
     try {
+      // Create activity in Stream that represents this critique.
+      String activityID = await _streamFeedService.addActivity();
+
+      // Update activity id of the critique.
+      CritiqueModel _critique = critique.copyWith(activityID: activityID);
+
       http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesRemoveLike'),
-        body: json.encode({'id': id, 'uid': uid}),
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCreate'),
+        body: json.encode(_critique.toJson()),
         headers: {'content-type': 'application/json'},
       );
 
@@ -366,65 +81,43 @@ class CritiqueService extends ICritiqueService {
     }
   }
 
-  @override
-  Future<int> count({required String uid}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesCount'),
-        body: json.encode({'uid': uid}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return 0;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<void> deleteAll() async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDeleteAll'),
-        //body: json.encode({'id': id}),
-        headers: {'content-type': 'application/json'},
-      );
-
-      if (response.statusCode != 200) {
-        throw PlatformException(
-          message: response.body,
-          code: response.statusCode.toString(),
-        );
-      }
-
-      return;
-    } catch (e) {
-      throw Exception(
-        e.toString(),
-      );
-    }
-  }
-
-  @override
-  Future<List<CritiqueModel>> list({
+  Future<List<CritiqueModel>> getFeed({
     required int limit,
-    String? lastID,
+    required int offset,
   }) async {
     try {
+      List<Activity> activities = await _streamFeedService.getActivities(
+        limit: limit,
+        offset: offset,
+      );
+
+      List<CritiqueModel> critiques = [];
+
+      for (int i = 0; i < activities.length; i++) {
+        Activity activity = activities[i];
+
+        String activityID = activity.id!;
+
+        CritiqueModel critique = await retrieve(activityID: activityID);
+
+        critiques.add(critique);
+      }
+
+      return critiques;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<CritiqueModel> retrieve({String? id, String? activityID}) async {
+    try {
       http.Response response = await http.post(
-        Uri.parse('${CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesList'),
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesGet'),
         body: json.encode({
-          'limit': limit,
-          'last_id': lastID,
+          'id': id,
+          'activityID': activityID,
         }),
         headers: {'content-type': 'application/json'},
       );
@@ -436,15 +129,103 @@ class CritiqueService extends ICritiqueService {
         );
       }
 
-      final List<dynamic> results = json.decode(response.body) as List<dynamic>;
+      final dynamic result = json.decode(response.body);
 
-      List<CritiqueModel> critiques = results
-          .map(
-            (result) => CritiqueModel.fromJson(result),
-          )
-          .toList();
+      CritiqueModel critique = CritiqueModel.fromJson(result);
 
-      return critiques;
+      return critique;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> delete({required String uid, required String activityID}) async {
+    try {
+      // Delete activity in Stream that represents this critique.
+      await _streamFeedService.removeActivity(uid: uid, activityID: activityID);
+
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesDelete'),
+        body: json.encode(
+          {
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      // Response returns a bool, but I don't think that's necessary here.
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> like({required String uid, required String activityID}) async {
+    try {
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse('${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesAddLike'),
+        body: json.encode(
+          {
+            'uid': uid,
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
+    } catch (e) {
+      throw Exception(
+        e.toString(),
+      );
+    }
+  }
+
+  Future<void> unlike({required String uid, required String activityID}) async {
+    try {
+      // Delete critique from database.
+      http.Response response = await http.post(
+        Uri.parse(
+            '${Globals.CLOUD_FUNCTIONS_ENDPOINT}MongoDBCritiquesRemoveLike'),
+        body: json.encode(
+          {
+            'uid': uid,
+            'activityID': activityID,
+          },
+        ),
+        headers: {'content-type': 'application/json'},
+      );
+
+      if (response.statusCode != 200) {
+        throw PlatformException(
+          message: response.body,
+          code: response.statusCode.toString(),
+        );
+      }
+
+      return;
     } catch (e) {
       throw Exception(
         e.toString(),

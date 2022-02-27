@@ -11,7 +11,7 @@ part 'user_model.g.dart';
 class UserModel with _$UserModel {
   factory UserModel({
     /// The unique id of the user.
-    String? uid,
+    required String uid,
 
     /// The user's email.
     required String email,
@@ -31,14 +31,17 @@ class UserModel with _$UserModel {
     /// Username of the user.
     required String username,
 
-    /// Number of critiques.
-    required int critiqueCount,
-
     /// Ids of movies in watch list.
-    List<String>? watchList,
+    required List<String> watchList,
+
+    /// Ids of users that this user has blocked.
+    required List<String> blockedUsers,
 
     /// Determines if the user is active in the app or not.
-    bool? isOnline,
+    required bool isOnline,
+
+    /// Show user google ads if flag is true.
+    required bool showAds,
   }) = _UserModel;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

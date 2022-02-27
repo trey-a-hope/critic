@@ -1,29 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/data/recommendation_model.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
-abstract class IRecommendationsService {
-  Future<void> createRecommendation({
-    required String sendeeUID,
-    required RecommendationModel recommendation,
-  });
-
-  Future<void> deleteRecommendation({
-    required String sendeeUID,
-    required String recommendationID,
-  });
-
-  Future<Stream<QuerySnapshot>> streamRecommendations({
-    required String uid,
-  });
-}
-
-class RecommendationsService extends IRecommendationsService {
+class RecommendationsService extends GetxService {
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('Users');
 
   static const String _RECOMMENDATIONS_TABLE_NAME = 'recommendations';
 
-  @override
   Future<void> createRecommendation(
       {required String sendeeUID,
       required RecommendationModel recommendation}) async {
@@ -56,7 +40,6 @@ class RecommendationsService extends IRecommendationsService {
     }
   }
 
-  @override
   Future<Stream<QuerySnapshot>> streamRecommendations(
       {required String uid}) async {
     try {
@@ -77,7 +60,6 @@ class RecommendationsService extends IRecommendationsService {
     }
   }
 
-  @override
   Future<void> deleteRecommendation({
     required String sendeeUID,
     required String recommendationID,

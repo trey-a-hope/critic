@@ -22,16 +22,17 @@ class _$UserModelTearOff {
   const _$UserModelTearOff();
 
   _UserModel call(
-      {String? uid,
+      {required String uid,
       required String email,
       required String imgUrl,
       String? fcmToken,
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount,
-      List<String>? watchList,
-      bool? isOnline}) {
+      required List<String> watchList,
+      required List<String> blockedUsers,
+      required bool isOnline,
+      required bool showAds}) {
     return _UserModel(
       uid: uid,
       email: email,
@@ -40,9 +41,10 @@ class _$UserModelTearOff {
       modified: modified,
       created: created,
       username: username,
-      critiqueCount: critiqueCount,
       watchList: watchList,
+      blockedUsers: blockedUsers,
       isOnline: isOnline,
+      showAds: showAds,
     );
   }
 
@@ -57,7 +59,7 @@ const $UserModel = _$UserModelTearOff();
 /// @nodoc
 mixin _$UserModel {
   /// The unique id of the user.
-  String? get uid => throw _privateConstructorUsedError;
+  String get uid => throw _privateConstructorUsedError;
 
   /// The user's email.
   String get email => throw _privateConstructorUsedError;
@@ -79,14 +81,17 @@ mixin _$UserModel {
   /// Username of the user.
   String get username => throw _privateConstructorUsedError;
 
-  /// Number of critiques.
-  int get critiqueCount => throw _privateConstructorUsedError;
-
   /// Ids of movies in watch list.
-  List<String>? get watchList => throw _privateConstructorUsedError;
+  List<String> get watchList => throw _privateConstructorUsedError;
+
+  /// Ids of users that this user has blocked.
+  List<String> get blockedUsers => throw _privateConstructorUsedError;
 
   /// Determines if the user is active in the app or not.
-  bool? get isOnline => throw _privateConstructorUsedError;
+  bool get isOnline => throw _privateConstructorUsedError;
+
+  /// Show user google ads if flag is true.
+  bool get showAds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -99,16 +104,17 @@ abstract class $UserModelCopyWith<$Res> {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
       _$UserModelCopyWithImpl<$Res>;
   $Res call(
-      {String? uid,
+      {String uid,
       String email,
       String imgUrl,
       String? fcmToken,
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount,
-      List<String>? watchList,
-      bool? isOnline});
+      List<String> watchList,
+      List<String> blockedUsers,
+      bool isOnline,
+      bool showAds});
 }
 
 /// @nodoc
@@ -128,15 +134,16 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
     Object? modified = freezed,
     Object? created = freezed,
     Object? username = freezed,
-    Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? blockedUsers = freezed,
     Object? isOnline = freezed,
+    Object? showAds = freezed,
   }) {
     return _then(_value.copyWith(
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       email: email == freezed
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -161,18 +168,22 @@ class _$UserModelCopyWithImpl<$Res> implements $UserModelCopyWith<$Res> {
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      critiqueCount: critiqueCount == freezed
-          ? _value.critiqueCount
-          : critiqueCount // ignore: cast_nullable_to_non_nullable
-              as int,
       watchList: watchList == freezed
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      blockedUsers: blockedUsers == freezed
+          ? _value.blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
+      showAds: showAds == freezed
+          ? _value.showAds
+          : showAds // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -184,16 +195,17 @@ abstract class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
       __$UserModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? uid,
+      {String uid,
       String email,
       String imgUrl,
       String? fcmToken,
       @TimestampConverter() DateTime modified,
       @TimestampConverter() DateTime created,
       String username,
-      int critiqueCount,
-      List<String>? watchList,
-      bool? isOnline});
+      List<String> watchList,
+      List<String> blockedUsers,
+      bool isOnline,
+      bool showAds});
 }
 
 /// @nodoc
@@ -214,15 +226,16 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
     Object? modified = freezed,
     Object? created = freezed,
     Object? username = freezed,
-    Object? critiqueCount = freezed,
     Object? watchList = freezed,
+    Object? blockedUsers = freezed,
     Object? isOnline = freezed,
+    Object? showAds = freezed,
   }) {
     return _then(_UserModel(
       uid: uid == freezed
           ? _value.uid
           : uid // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       email: email == freezed
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -247,18 +260,22 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      critiqueCount: critiqueCount == freezed
-          ? _value.critiqueCount
-          : critiqueCount // ignore: cast_nullable_to_non_nullable
-              as int,
       watchList: watchList == freezed
           ? _value.watchList
           : watchList // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
+      blockedUsers: blockedUsers == freezed
+          ? _value.blockedUsers
+          : blockedUsers // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       isOnline: isOnline == freezed
           ? _value.isOnline
           : isOnline // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
+      showAds: showAds == freezed
+          ? _value.showAds
+          : showAds // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -267,16 +284,17 @@ class __$UserModelCopyWithImpl<$Res> extends _$UserModelCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   _$_UserModel(
-      {this.uid,
+      {required this.uid,
       required this.email,
       required this.imgUrl,
       this.fcmToken,
       @TimestampConverter() required this.modified,
       @TimestampConverter() required this.created,
       required this.username,
-      required this.critiqueCount,
-      this.watchList,
-      this.isOnline});
+      required this.watchList,
+      required this.blockedUsers,
+      required this.isOnline,
+      required this.showAds});
 
   factory _$_UserModel.fromJson(Map<String, dynamic> json) =>
       _$$_UserModelFromJson(json);
@@ -284,7 +302,7 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   @override
 
   /// The unique id of the user.
-  final String? uid;
+  final String uid;
   @override
 
   /// The user's email.
@@ -313,20 +331,24 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
   final String username;
   @override
 
-  /// Number of critiques.
-  final int critiqueCount;
+  /// Ids of movies in watch list.
+  final List<String> watchList;
   @override
 
-  /// Ids of movies in watch list.
-  final List<String>? watchList;
+  /// Ids of users that this user has blocked.
+  final List<String> blockedUsers;
   @override
 
   /// Determines if the user is active in the app or not.
-  final bool? isOnline;
+  final bool isOnline;
+  @override
+
+  /// Show user google ads if flag is true.
+  final bool showAds;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, critiqueCount: $critiqueCount, watchList: $watchList, isOnline: $isOnline)';
+    return 'UserModel(uid: $uid, email: $email, imgUrl: $imgUrl, fcmToken: $fcmToken, modified: $modified, created: $created, username: $username, watchList: $watchList, blockedUsers: $blockedUsers, isOnline: $isOnline, showAds: $showAds)';
   }
 
   @override
@@ -341,9 +363,10 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       ..add(DiagnosticsProperty('modified', modified))
       ..add(DiagnosticsProperty('created', created))
       ..add(DiagnosticsProperty('username', username))
-      ..add(DiagnosticsProperty('critiqueCount', critiqueCount))
       ..add(DiagnosticsProperty('watchList', watchList))
-      ..add(DiagnosticsProperty('isOnline', isOnline));
+      ..add(DiagnosticsProperty('blockedUsers', blockedUsers))
+      ..add(DiagnosticsProperty('isOnline', isOnline))
+      ..add(DiagnosticsProperty('showAds', showAds));
   }
 
   @override
@@ -361,11 +384,12 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
             (identical(other.created, created) || other.created == created) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.critiqueCount, critiqueCount) ||
-                other.critiqueCount == critiqueCount) &&
             const DeepCollectionEquality().equals(other.watchList, watchList) &&
+            const DeepCollectionEquality()
+                .equals(other.blockedUsers, blockedUsers) &&
             (identical(other.isOnline, isOnline) ||
-                other.isOnline == isOnline));
+                other.isOnline == isOnline) &&
+            (identical(other.showAds, showAds) || other.showAds == showAds));
   }
 
   @override
@@ -378,9 +402,10 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
       modified,
       created,
       username,
-      critiqueCount,
       const DeepCollectionEquality().hash(watchList),
-      isOnline);
+      const DeepCollectionEquality().hash(blockedUsers),
+      isOnline,
+      showAds);
 
   @JsonKey(ignore: true)
   @override
@@ -395,16 +420,17 @@ class _$_UserModel with DiagnosticableTreeMixin implements _UserModel {
 
 abstract class _UserModel implements UserModel {
   factory _UserModel(
-      {String? uid,
+      {required String uid,
       required String email,
       required String imgUrl,
       String? fcmToken,
       @TimestampConverter() required DateTime modified,
       @TimestampConverter() required DateTime created,
       required String username,
-      required int critiqueCount,
-      List<String>? watchList,
-      bool? isOnline}) = _$_UserModel;
+      required List<String> watchList,
+      required List<String> blockedUsers,
+      required bool isOnline,
+      required bool showAds}) = _$_UserModel;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$_UserModel.fromJson;
@@ -412,7 +438,7 @@ abstract class _UserModel implements UserModel {
   @override
 
   /// The unique id of the user.
-  String? get uid;
+  String get uid;
   @override
 
   /// The user's email.
@@ -441,16 +467,20 @@ abstract class _UserModel implements UserModel {
   String get username;
   @override
 
-  /// Number of critiques.
-  int get critiqueCount;
+  /// Ids of movies in watch list.
+  List<String> get watchList;
   @override
 
-  /// Ids of movies in watch list.
-  List<String>? get watchList;
+  /// Ids of users that this user has blocked.
+  List<String> get blockedUsers;
   @override
 
   /// Determines if the user is active in the app or not.
-  bool? get isOnline;
+  bool get isOnline;
+  @override
+
+  /// Show user google ads if flag is true.
+  bool get showAds;
   @override
   @JsonKey(ignore: true)
   _$UserModelCopyWith<_UserModel> get copyWith =>

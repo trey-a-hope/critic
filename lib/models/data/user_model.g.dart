@@ -7,7 +7,7 @@ part of 'user_model.dart';
 // **************************************************************************
 
 _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
-      uid: json['uid'] as String?,
+      uid: json['uid'] as String,
       email: json['email'] as String,
       imgUrl: json['imgUrl'] as String,
       fcmToken: json['fcmToken'] as String?,
@@ -16,11 +16,13 @@ _$_UserModel _$$_UserModelFromJson(Map<String, dynamic> json) => _$_UserModel(
       created:
           const TimestampConverter().fromJson(json['created'] as Timestamp),
       username: json['username'] as String,
-      critiqueCount: json['critiqueCount'] as int,
-      watchList: (json['watchList'] as List<dynamic>?)
-          ?.map((e) => e as String)
+      watchList:
+          (json['watchList'] as List<dynamic>).map((e) => e as String).toList(),
+      blockedUsers: (json['blockedUsers'] as List<dynamic>)
+          .map((e) => e as String)
           .toList(),
-      isOnline: json['isOnline'] as bool?,
+      isOnline: json['isOnline'] as bool,
+      showAds: json['showAds'] as bool,
     );
 
 Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
@@ -32,7 +34,8 @@ Map<String, dynamic> _$$_UserModelToJson(_$_UserModel instance) =>
       'modified': const TimestampConverter().toJson(instance.modified),
       'created': const TimestampConverter().toJson(instance.created),
       'username': instance.username,
-      'critiqueCount': instance.critiqueCount,
       'watchList': instance.watchList,
+      'blockedUsers': instance.blockedUsers,
       'isOnline': instance.isOnline,
+      'showAds': instance.showAds,
     };

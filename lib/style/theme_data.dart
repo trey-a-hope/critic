@@ -1,4 +1,4 @@
-import 'package:critic/constants.dart';
+import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -38,10 +38,9 @@ ThemeData darkThemeData = ThemeData(
 );
 
 ThemeData themeData = ThemeData(
-
   textTheme: TextTheme(
     headline3: TextStyle(
-      color: colorNavy,
+      color: Globals.colorNavy,
       fontWeight: FontWeight.bold,
       fontSize: 21,
     ),
@@ -49,13 +48,14 @@ ThemeData themeData = ThemeData(
         color: Colors.grey.shade800, fontSize: 16, fontWeight: FontWeight.bold),
     headline5: TextStyle(
         color: Colors.grey.shade800, fontSize: 14, fontWeight: FontWeight.bold),
-    headline6: TextStyle(color: colorNavy, fontSize: 14),
+    headline6: TextStyle(color: Globals.colorNavy, fontSize: 14),
   ),
-  indicatorColor: colorNavy,
-  iconTheme: IconThemeData(color: colorNavy),
+  indicatorColor: Globals.colorNavy,
+  iconTheme: IconThemeData(color: Globals.colorNavy),
   appBarTheme: const AppBarTheme(
     systemOverlayStyle: SystemUiOverlayStyle.dark,
-  ),  scaffoldBackgroundColor: Colors.white,
+  ),
+  scaffoldBackgroundColor: Colors.white,
   fontFamily: fontFamily,
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: Colors.white,

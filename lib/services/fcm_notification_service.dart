@@ -1,27 +1,15 @@
 import 'dart:async';
 import 'dart:convert' show json;
+import 'package:critic/constants/globals.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-abstract class IFCMNotificationService {
-  Future<void> sendNotificationToUser({
-    required String fcmToken,
-    required String title,
-    required String body,
-    required NotificationData? notificationData,
-  });
-  Future<void> sendNotificationToGroup(
-      {required String group, required String title, required String body});
-  Future<void> unsubscribeFromTopic({required String topic});
-  Future<void> subscribeToTopic({required String topic});
-}
-
-class FCMNotificationService extends IFCMNotificationService {
+class FCMNotificationService extends GetxService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final String _endpoint = 'https://fcm.googleapis.com/fcm/send';
   final String _contentType = 'application/json';
-  final String _authorization =
-      'key=AAAANziSKLs:APA91bHYQGvOjarIPvbuEjSQpxwsQo-h4SMftTD9L-3dxX7ZAjC5KeDPG1Vf7EMf3tuh6LaGBwwHtJUOs9f4Qq5MPkLMdEWt8DCXj0fjmqBiXNjEIooaS3soehfDr3xQ_Hr8cbtN_soU';
+  final String _authorization = 'key=${Globals.CLOUD_MESSAGING_SERVER_KEY}';
 
   Future<http.Response> _sendNotification(
     String to,
@@ -71,17 +59,14 @@ class FCMNotificationService extends IFCMNotificationService {
     }
   }
 
-  @override
   Future<void> unsubscribeFromTopic({required String topic}) {
     return _firebaseMessaging.subscribeToTopic(topic);
   }
 
-  @override
   Future<void> subscribeToTopic({required String topic}) {
     return _firebaseMessaging.subscribeToTopic(topic);
   }
 
-  @override
   Future<void> sendNotificationToUser({
     required String fcmToken,
     required String title,
@@ -91,7 +76,6 @@ class FCMNotificationService extends IFCMNotificationService {
     return _sendNotification(fcmToken, title, body, notificationData);
   }
 
-  @override
   Future<void> sendNotificationToGroup(
       {required String group, required String title, required String body}) {
     return _sendNotification('/topics/' + group, title, body);

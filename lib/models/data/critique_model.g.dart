@@ -9,6 +9,7 @@ part of 'critique_model.dart';
 _$_CritiqueModel _$$_CritiqueModelFromJson(Map<String, dynamic> json) =>
     _$_CritiqueModel(
       id: json['_id'] as String?,
+      activityID: json['activityID'] as String?,
       message: json['message'] as String,
       imdbID: json['imdbID'] as String,
       uid: json['uid'] as String,
@@ -16,13 +17,12 @@ _$_CritiqueModel _$$_CritiqueModelFromJson(Map<String, dynamic> json) =>
       modified: DateTime.parse(json['modified'] as String),
       rating: (json['rating'] as num).toDouble(),
       likes: (json['likes'] as List<dynamic>).map((e) => e as String).toList(),
-      genres:
-          (json['genres'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$_CritiqueModelToJson(_$_CritiqueModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
+      'activityID': instance.activityID,
       'message': instance.message,
       'imdbID': instance.imdbID,
       'uid': instance.uid,
@@ -30,5 +30,4 @@ Map<String, dynamic> _$$_CritiqueModelToJson(_$_CritiqueModel instance) =>
       'modified': instance.modified.toIso8601String(),
       'rating': instance.rating,
       'likes': instance.likes,
-      'genres': instance.genres,
     };

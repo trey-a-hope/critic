@@ -1,20 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:critic/models/data/suggestion_model.dart';
+import 'package:get/get.dart';
 
-abstract class ISuggestionService {
-  Future<void> createSuggestion({required SuggestionModel suggestion});
-  Future<SuggestionModel> readSuggestion({required String suggestionID});
-  Future<List<SuggestionModel>> listSuggestions();
-  Future<void> updateSuggestion({required SuggestionModel suggestion});
-  Future<void> deleteSuggestion({required String suggestionID});
-}
-
-class SuggestionService extends ISuggestionService {
+class SuggestionService extends GetxService {
   final CollectionReference _suggestionsColRef =
       FirebaseFirestore.instance.collection('Suggestions');
   final CollectionReference _dataColRef =
       FirebaseFirestore.instance.collection('Data');
-  @override
   Future<void> createSuggestion({required SuggestionModel suggestion}) async {
     try {
       final WriteBatch batch = FirebaseFirestore.instance.batch();
@@ -38,22 +30,18 @@ class SuggestionService extends ISuggestionService {
     }
   }
 
-  @override
   Future<void> deleteSuggestion({required String suggestionID}) {
     throw UnimplementedError();
   }
 
-  @override
   Future<List<SuggestionModel>> listSuggestions() {
     throw UnimplementedError();
   }
 
-  @override
   Future<SuggestionModel> readSuggestion({required String suggestionID}) {
     throw UnimplementedError();
   }
 
-  @override
   Future<void> updateSuggestion({required SuggestionModel suggestion}) {
     throw UnimplementedError();
   }

@@ -10,6 +10,9 @@ class CritiqueModel with _$CritiqueModel {
     /// Id of the critique
     @JsonKey(name: '_id') String? id,
 
+    /// The id of the activity in stream.
+    String? activityID,
+
     /// The review of the movie
     required String message,
 
@@ -33,9 +36,6 @@ class CritiqueModel with _$CritiqueModel {
 
     /// Users who liked the critique
     required List<String> likes,
-
-    /// Genres the movie belongs to
-    required List<String> genres,
   }) = _CritiqueModel;
 
   factory CritiqueModel.fromJson(Map<String, dynamic> json) =>
