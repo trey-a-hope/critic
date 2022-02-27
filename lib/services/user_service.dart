@@ -3,28 +3,34 @@ import 'package:critic/models/data/user_model.dart';
 import 'package:get/get.dart';
 
 class UserService extends GetxService {
+  /// Users collection reference.
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('users');
-  final CollectionReference _dataDB =
-      FirebaseFirestore.instance.collection('Data');
 
+  /// Data collection reference.
+  final CollectionReference _dataDB =
+      FirebaseFirestore.instance.collection('data');
+
+  /// Create a user.
   Future<void> createUser({required UserModel user}) async {
     try {
+      // Create batch instance.
       final WriteBatch batch = FirebaseFirestore.instance.batch();
 
+      // Create document reference of user.
       final DocumentReference userDocRef = _usersDB.doc(user.uid);
 
-      Map userMap = user.toJson();
-      userMap['blockedUsers'] = [];
-
+      // Set the user data to the document reference.
       batch.set(
         userDocRef,
-        userMap,
+        user.toJson(),
       );
 
+      // Create document reference of tableCounts.
       final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
       batch.update(tableCountsDocRef, {'users': FieldValue.increment(1)});
 
+      // Execute batch.
       await batch.commit();
       return;
     } catch (e) {
@@ -34,6 +40,7 @@ class UserService extends GetxService {
     }
   }
 
+  /// Retrieve a user.
   Future<UserModel> retrieveUser({required String uid}) async {
     try {
       final DocumentReference model = await _usersDB
@@ -49,11 +56,7 @@ class UserService extends GetxService {
     }
   }
 
-  Stream<QuerySnapshot> streamUsers() {
-    Query query = _usersDB;
-    return query.snapshots();
-  }
-
+  /// Update a user.
   Future<void> updateUser({
     required String uid,
     required Map<String, dynamic> data,
@@ -69,6 +72,7 @@ class UserService extends GetxService {
     }
   }
 
+  /// Retrieve users.
   Future<List<UserModel>> retrieveUsers(
       {required int? limit, required String? orderBy}) async {
     try {
@@ -107,6 +111,7 @@ class UserService extends GetxService {
     }
   }
 
+  /// Get total user count.
   Future<int> getTotalUserCount() async {
     try {
       DocumentSnapshot tableCountsDocSnap =

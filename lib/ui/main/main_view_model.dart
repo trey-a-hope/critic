@@ -68,7 +68,7 @@ class MainViewModel extends GetxController {
       bool userExists = (await userDocRef.get()).exists;
 
       // Set UID to get storage.
-      _getStorage.write('uid', _firebaseUser.uid);
+      await _getStorage.write('uid', _firebaseUser.uid);
 
       // Set app version and build number.
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -100,7 +100,7 @@ class MainViewModel extends GetxController {
           modified: DateTime.now(),
           uid: _firebaseUser.uid,
           username: _firebaseUser.displayName ?? 'I NEED A NAME',
-          email: _firebaseUser.email!,
+          email: _firebaseUser.email ?? '',
           isOnline: true,
           showAds: true,
           watchList: [],
@@ -111,7 +111,7 @@ class MainViewModel extends GetxController {
       }
 
       // Set user online status to true.
-      _utilService.setOnlineStatus(isOnline: true);
+      await _utilService.setOnlineStatus(isOnline: true);
 
       // Proceed to home page.
       Get.offAllNamed(Globals.ROUTES_HOME);
