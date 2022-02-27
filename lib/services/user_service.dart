@@ -28,6 +28,8 @@ class UserService extends GetxService {
 
       // Create document reference of tableCounts.
       final DocumentReference tableCountsDocRef = _dataDB.doc('tableCounts');
+
+      // Update the user account on the table counts document.
       batch.update(tableCountsDocRef, {'users': FieldValue.increment(1)});
 
       // Execute batch.
