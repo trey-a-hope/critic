@@ -4,6 +4,7 @@ import 'package:critic/services/modal_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/ui/settings/settings_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -101,8 +102,11 @@ class SettingsView extends StatelessWidget {
                   message: 'Are you sure?',
                 );
                 if (confirm == null || confirm) {
+                  // Clear user identifier for crashlytics.
+                  await FirebaseCrashlytics.instance.setUserIdentifier('');
+
+                  // Sign user out of auth.
                   await _authService.signOut();
-                  print('Goodbye...');
                 }
               },
             ),
