@@ -7,6 +7,7 @@ import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/services/user_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -77,6 +78,9 @@ class MainViewModel extends GetxController {
 
       // Bind Stream Feed Service after uid is determined.
       Get.lazyPut(() => StreamFeedService(), fenix: true);
+
+      // Records a user ID (identifier) that's associated with subsequent fatal and non-fatal reports.
+      await FirebaseCrashlytics.instance.setUserIdentifier(_firebaseUser.uid);
 
       if (userExists) {
         // Request permission from user to receive push notifications.

@@ -7,12 +7,16 @@ import 'constants/app_routes.dart';
 import 'constants/app_themes.dart';
 import 'initialize_dependencies.dart';
 import 'package:get/get.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Wait for firebase app to initialize.
   await Firebase.initializeApp();
+
+  // Pass all uncaught errors from the framework to Crashlytics.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   // Initialize Get Storage.
   await GetStorage.init();
