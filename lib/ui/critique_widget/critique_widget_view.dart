@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
 import 'package:critic/services/modal_service.dart';
+import 'package:critic/services/time_ago_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:shimmer/shimmer.dart';
 import 'package:like_button/like_button.dart';
 import 'critique_widget_view_model.dart';
 import 'loading_critique_widget_view.dart';
@@ -20,6 +19,9 @@ class CritiqueWidgetView extends StatelessWidget {
 
   /// Instantiate modal service.
   final ModalService _modalService = Get.find();
+
+  /// Time ago service instance.
+  final TimeAgoService _timeAgoService = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -152,10 +154,11 @@ class CritiqueWidgetView extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          critique.created.isAfter(
-                                  DateTime.now().subtract(Duration(days: 6)))
-                              ? 'Posted ${timeago.format(critique.created, allowFromNow: true)}'
-                              : 'Posted ${DateFormat('MMM dd, yyyy').format(critique.created)}',
+                          critique.created.isAfter(DateTime.now()
+                                  .toUtc()
+                                  .subtract(Duration(days: 6)))
+                              ? 'Posted ${_timeAgoService.timeAgoSinceDate(dateTime: critique.created)}'
+                              : 'Posted ${DateFormat('MMM dd, yyyy').format(critique.created.toLocal())}',
                         ),
                         SizedBox(
                           width: 10,

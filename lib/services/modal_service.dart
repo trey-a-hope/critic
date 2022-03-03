@@ -4,17 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../initialize_dependencies.dart';
-import 'validation_service.dart';
-
 class ModalService extends GetxService {
   void showInSnackBar(
       {required BuildContext context, required String message}) {
-    // Scaffold.of(context).showSnackBar(
-    //   SnackBar(
-    //     content: Text(message),
-    //   ),
-    // );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -57,54 +49,6 @@ class ModalService extends GetxService {
             ],
           );
         }
-      },
-    );
-  }
-
-  Future<String?> showChangeEmail({required BuildContext context}) {
-    final TextEditingController emailController = TextEditingController();
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    return showDialog<String>(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Change Email'),
-          content: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: TextFormField(
-              controller: emailController,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term) {},
-              validator: locator<ValidationService>().email,
-              onSaved: (value) {},
-              decoration: InputDecoration(
-                errorStyle: TextStyle(color: Colors.white),
-                hintText: 'New Email',
-                icon: Icon(Icons.email),
-                fillColor: Colors.white,
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('SUBMIT'),
-              onPressed: () {
-                if (!formKey.currentState!.validate()) return;
-                Navigator.of(context).pop(emailController.text);
-              },
-            )
-          ],
-        );
       },
     );
   }

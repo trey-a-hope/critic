@@ -1,7 +1,7 @@
 name: critic
 description: Timeline view of movie/tv show critiques.
 
-version: 2.0.3+203
+version: 2.0.4+204
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -56,7 +56,6 @@ dependencies:
   shared_preferences: ^2.0.5
   shimmer: ^2.0.0
   stream_feed: ^0.5.0
-  timeago: ^3.1.0
   tutorial_coach_mark: ^1.1.1
   url_launcher: ^6.0.3
   universal_io: ^2.0.4

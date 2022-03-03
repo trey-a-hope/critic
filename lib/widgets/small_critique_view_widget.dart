@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import '../services/time_ago_service.dart';
 
 class SmallCritiqueViewWidget extends StatefulWidget {
   const SmallCritiqueViewWidget({
@@ -34,6 +34,9 @@ class _SmallCritiqueViewWidgetState extends State<SmallCritiqueViewWidget> {
 
   /// Instantiate get storage.
   final GetStorage _getStorage = GetStorage();
+
+  /// Time ago service instance.
+  final TimeAgoService _timeAgoService = Get.find();
 
   /// Array that holds api calls for fetching the movie and user of this critique.
   List<Future> futures = [];
@@ -88,7 +91,7 @@ class _SmallCritiqueViewWidgetState extends State<SmallCritiqueViewWidget> {
                       ),
                     ),
                     Text(
-                      '${user.username}, ${timeago.format(widget.critique.created, allowFromNow: true)}',
+                      '${user.username}, ${_timeAgoService.timeAgoSinceDate(dateTime: widget.critique.created)}',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                     ),
                     Padding(

@@ -64,7 +64,7 @@ class UserService extends GetxService {
     required Map<String, dynamic> data,
   }) async {
     try {
-      data['modified'] = DateTime.now();
+      data['modified'] = DateTime.now().toUtc();
       await _usersDB.doc(uid).update(data);
       return;
     } catch (e) {

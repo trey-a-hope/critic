@@ -174,9 +174,10 @@ class CreateCritiqueView extends StatelessWidget {
                                   textInputAction: TextInputAction.done,
                                   validator: _validationService.isEmpty,
                                   style: TextStyle(
+                                    fontSize: 16,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .headline4!
+                                        .headline3!
                                         .color,
                                   ),
                                   maxLines: 5,
