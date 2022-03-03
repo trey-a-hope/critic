@@ -100,8 +100,8 @@ class MainViewModel extends GetxController {
         // Create user in firebase.
         UserModel newUser = UserModel(
           imgUrl: _firebaseUser.photoURL ?? Globals.DUMMY_PROFILE_PHOTO_URL,
-          created: DateTime.now(),
-          modified: DateTime.now(),
+          created: DateTime.now().toUtc(),
+          modified: DateTime.now().toUtc(),
           uid: _firebaseUser.uid,
           username: _firebaseUser.displayName ?? 'I NEED A NAME',
           email: _firebaseUser.email ?? '',

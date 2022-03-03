@@ -1,4 +1,3 @@
-import 'package:critic/services/util_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,9 +38,10 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      locator<UtilService>().setOnlineStatus(isOnline: true);
+      //TODO:
+      // locator<UtilService>().setOnlineStatus(isOnline: true);
     } else {
-      locator<UtilService>().setOnlineStatus(isOnline: false);
+      // locator<UtilService>().setOnlineStatus(isOnline: false);
     }
   }
 

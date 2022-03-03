@@ -1,5 +1,3 @@
-import 'package:critic/initialize_dependencies.dart';
-import 'package:critic/services/auth_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/ui/recommendations/recommendations_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
@@ -26,9 +24,7 @@ class RecommendationsView extends StatelessWidget {
         drawer: DrawerView(),
         child: Center(
           child: ElevatedButton(
-            onPressed: () {
-              locator<AuthService>().signOut();
-            },
+            onPressed: () {},
             child: Text('Sign Out'),
           ),
         ),

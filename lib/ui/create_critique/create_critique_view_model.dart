@@ -57,8 +57,8 @@ class CreateCritiqueViewModel extends GetxController {
         message: _message,
         imdbID: _movie!.imdbID,
         uid: _getStorage.read('uid'),
-        created: DateTime.now(),
-        modified: DateTime.now(),
+        created: DateTime.now().toUtc(),
+        modified: DateTime.now().toUtc(),
         rating: _rating,
         likes: [],
       );
