@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/constants/globals.dart';
-import 'package:critic/models/data/user_model.dart';
 import 'package:critic/ui/search_users/search_users_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
+import 'package:critic/ui/user_list_tile/user_list_tile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -64,44 +62,10 @@ class SearchUsersView extends StatelessWidget {
                         : Expanded(
                             child: ListView.builder(
                               itemCount: model.users.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                final UserModel user = model.users[index];
-
-                                return ListTile(
-                                  leading: CachedNetworkImage(
-                                    imageUrl: user.imgUrl,
-                                    imageBuilder: (context, imageProvider) =>
-                                        CircleAvatar(
-                                      backgroundImage: imageProvider,
-                                    ),
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  ),
-                                  title: Text(
-                                    user.username,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.chevron_right,
-                                    color: Theme.of(context).iconTheme.color,
-                                  ),
-                                  onTap: () async {
-                                    if (model.returnUser) {
-                                      /// Return user to previous screen.
-                                      Get.back(result: user);
-                                    } else {
-                                      /// Go to profile screen.
-                                      Get.toNamed(
-                                        Globals.ROUTES_PROFILE,
-                                        arguments: {
-                                          'uid': user.uid,
-                                        },
-                                      );
-                                    }
-                                  },
-                                );
-                              },
+                              itemBuilder: (BuildContext context, int index) =>
+                                  UserListTile(
+                                      user: model.users[index],
+                                      returnUser: false),
                             ),
                           ),
           ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:like_button/like_button.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'critique_widget_view_model.dart';
 import 'loading_critique_widget_view.dart';
 
@@ -22,6 +25,9 @@ class CritiqueWidgetView extends StatelessWidget {
 
   /// Time ago service instance.
   final TimeAgoService _timeAgoService = Get.find();
+
+  /// Debounce timer to prevent multiple api calls.
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -186,113 +192,160 @@ class CritiqueWidgetView extends StatelessWidget {
                             return Text(text);
                           },
                           onTap: (bool isLiked) async {
-                            try {
-                              isLiked
-                                  ? await model.unlikeCritique()
-                                  : await model.likeCritique();
-                              return !isLiked;
-                            } catch (e) {
-                              return isLiked;
-                            }
+                            if (_debounce?.isActive ?? false)
+                              _debounce!.cancel();
+                            _debounce =
+                                Timer(const Duration(milliseconds: 250), () {
+                              try {
+                                isLiked
+                                    ? model.unlikeCritique()
+                                    : model.likeCritique();
+                              } catch (e) {}
+                            });
+                            return !isLiked;
                           },
                         ),
-                        model.postedByMe
-                            ? IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () async {
-                                  /// Ask user if they want to delete critique.
-                                  final bool? confirm =
-                                      await _modalService.showConfirmation(
-                                          context: context,
-                                          title: 'Delete Critique',
-                                          message: 'Are you sure?');
+                        IconButton(
+                          onPressed: () {
+                            Get.defaultDialog(
+                              title: 'Critique For ${model.movie.title}',
+                              middleText: 'What would you like to do?',
+                              titleStyle: TextStyle(color: Colors.black),
+                              middleTextStyle: TextStyle(color: Colors.black),
+                              actions: [
+                                model.postedByMe
+                                    ? ElevatedButton(
+                                        onPressed: () async {
+                                          Get.back();
 
-                                  /// Return if not true.
-                                  if (confirm == null || !confirm) return;
+                                          // Ask user if they want to delete critique.
+                                          final bool? confirm =
+                                              await _modalService
+                                                  .showConfirmation(
+                                                      context: context,
+                                                      title: 'Delete Critique',
+                                                      message: 'Are you sure?');
 
-                                  /// Proceed to delete critique.
-                                  bool success = await model.deleteCritique();
+                                          // Return if not true.
+                                          if (confirm == null || !confirm)
+                                            return;
 
-                                  /// Show success or error message based on response.
-                                  if (success) {
-                                    Get.snackbar(
-                                      'Success',
-                                      'Your critique has been deleted.',
-                                      icon: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
+                                          // Proceed to delete critique.
+                                          bool success =
+                                              await model.deleteCritique();
+
+                                          // Show success or error message based on response.
+                                          if (success) {
+                                            Get.snackbar(
+                                              'Success',
+                                              'Your critique has been deleted.',
+                                              icon: Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              colorText: Colors.white,
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              'Error',
+                                              'There was an issue deleting your critique.',
+                                              icon: Icon(
+                                                Icons.cancel,
+                                                color: Colors.white,
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          }
+                                        },
+                                        child: Text('Delete'),
+                                      )
+                                    : ElevatedButton(
+                                        onPressed: () async {
+                                          Get.back();
+
+                                          // Ask user if they want to delete critique.
+                                          final bool? confirm =
+                                              await _modalService
+                                                  .showConfirmation(
+                                            context: context,
+                                            title: 'Report Critique',
+                                            message:
+                                                'Is the content of this critique grotesque, vulgar, or inappropriate in any way?',
+                                          );
+
+                                          // Return if not true.
+                                          if (confirm == null || !confirm)
+                                            return;
+
+                                          // Proceed to delete critique.
+                                          bool success =
+                                              await model.deleteCritique();
+
+                                          // Show success or error message based on response.
+                                          if (success) {
+                                            Get.snackbar(
+                                              'Success',
+                                              'The critique has been flagged as inappropriate.',
+                                              icon: Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              colorText: Colors.white,
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              'Error',
+                                              'There was an issue flagged this critique as inappropriate.',
+                                              icon: Icon(
+                                                Icons.cancel,
+                                                color: Colors.white,
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          }
+                                        },
+                                        child: Text('Report'),
                                       ),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green,
-                                      colorText: Colors.white,
-                                    );
-                                  } else {
-                                    Get.snackbar(
-                                      'Error',
-                                      'There was an issue deleting your critique.',
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: Colors.white,
-                                      ),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
-                                    );
-                                  }
-                                },
-                              )
-                            : IconButton(
-                                icon: Icon(
-                                  Icons.report,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () async {
-                                  /// Ask user if they want to delete critique.
-                                  final bool? confirm =
-                                      await _modalService.showConfirmation(
-                                    context: context,
-                                    title: 'Report Critique',
-                                    message:
-                                        'Is the content of this critique grotesque, vulgar, or inappropriate in any way?',
-                                  );
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    Get.back();
 
-                                  /// Return if not true.
-                                  if (confirm == null || !confirm) return;
+                                    List<String> likeUids =
+                                        model.critique.likes;
 
-                                  /// Proceed to delete critique.
-                                  bool success = await model.deleteCritique();
-
-                                  /// Show success or error message based on response.
-                                  if (success) {
-                                    Get.snackbar(
-                                      'Success',
-                                      'The critique has been flagged as inappropriate.',
-                                      icon: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.green,
-                                      colorText: Colors.white,
+                                    Get.toNamed(
+                                      Globals.ROUTES_USERS_LIST,
+                                      arguments: {
+                                        'uids': likeUids,
+                                        'title': 'Likes'
+                                      },
                                     );
-                                  } else {
-                                    Get.snackbar(
-                                      'Error',
-                                      'There was an issue flagged this critique as inappropriate.',
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: Colors.white,
-                                      ),
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
-                                    );
-                                  }
-                                },
-                              )
+                                  },
+                                  child: Text('View Likes'),
+                                )
+                              ],
+                              barrierDismissible: true,
+                              radius: 10,
+                              // ),
+                            );
+                          },
+                          icon: Icon(
+                            MdiIcons.dotsVertical,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ),

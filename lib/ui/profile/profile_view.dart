@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:critic/constants/app_themes.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:critic/models/data/critique_model.dart';
+import 'package:critic/services/stream_feed_service.dart';
 import 'package:critic/ui/critique_widget/critique_widget_view.dart';
 import 'package:critic/widgets/basic_page.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +9,21 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pagination_view/pagination_view.dart';
+import 'package:uuid/uuid.dart';
 
 import 'profile_view_model.dart';
 
 class ProfileView extends StatelessWidget {
   ProfileView({Key? key}) : super(key: key);
 
+  /// Stream feed service instance.
+  final StreamFeedService _streamFeedService = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ProfileViewModel>(
+      tag: Uuid()
+          .v4(), // Need random tag since profile views can be nested on top of each other.
       init: ProfileViewModel(),
       builder: (model) => BasicPage(
         leftIconButton: IconButton(
@@ -55,13 +61,71 @@ class ProfileView extends StatelessWidget {
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('${model.followerCount} Followers',
-                          style: AppThemes.textTheme.headline6),
+                      InkWell(
+                        onTap: () async {
+                          List<String> followerUids = await _streamFeedService
+                              .getFollowerUids(uuid: model.user!.uid);
+
+                          Get.toNamed(
+                            Globals.ROUTES_USERS_LIST,
+                            arguments: {
+                              'uids': followerUids,
+                              'title': 'Followers'
+                            },
+                          );
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black),
+                            children: [
+                              TextSpan(
+                                text: '${model.followerCount}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                              TextSpan(
+                                text: ' Followers',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Text(model.user!.username),
-                      Text('${model.followingCount} Followings',
-                          style: AppThemes.textTheme.headline6),
+                      InkWell(
+                        onTap: () async {
+                          List<String> followingUids = await _streamFeedService
+                              .getFollowingUids(uuid: model.user!.uid);
+
+                          Get.toNamed(
+                            Globals.ROUTES_USERS_LIST,
+                            arguments: {
+                              'uids': followingUids,
+                              'title': 'Following'
+                            },
+                          );
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black),
+                            children: [
+                              TextSpan(
+                                text: '${model.followingCount}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
+                              ),
+                              TextSpan(
+                                text: ' Following',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   Divider(),

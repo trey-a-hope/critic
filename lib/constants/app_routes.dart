@@ -12,6 +12,7 @@ import 'package:critic/ui/recommendations/recommendations_view.dart';
 import 'package:critic/ui/search_movies/search_movies_view.dart';
 import 'package:critic/ui/search_users/search_users_view.dart';
 import 'package:critic/ui/settings/settings_view.dart';
+import 'package:critic/ui/users_list/users_list_view.dart';
 import 'package:critic/ui/watch_list/watch_list_view.dart';
 import 'package:get/get.dart';
 
@@ -36,6 +37,7 @@ class AppRoutes {
     GetPage(
         name: Globals.ROUTES_TERMS_OF_SERVICE,
         page: () => TermsOfServicePage()),
+    GetPage(name: Globals.ROUTES_USERS_LIST, page: () => UsersListView()),
     GetPage(name: Globals.ROUTES_WATCH_LIST, page: () => WatchListView()),
   ];
 }
