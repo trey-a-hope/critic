@@ -121,4 +121,38 @@ class StreamFeedService extends GetxService {
 
     return follows.isNotEmpty;
   }
+
+  /// Return list of uids that are following this account.
+  Future<List<String>> getFollowerUids({required String uuid}) async {
+    List<Follow> followers =
+        await _streamFeedClient.flatFeed('users', uuid).followers();
+
+    List<String> uids = [];
+
+    for (int i = 0; i < followers.length; i++) {
+      // Extract user id from feed id.
+      String followerUid = followers[i].feedId.replaceAll('users:', '');
+
+      uids.add(followerUid);
+    }
+
+    return uids;
+  }
+
+  /// Return list of uids this account is following.
+  Future<List<String>> getFollowingUids({required String uuid}) async {
+    List<Follow> followings =
+        await _streamFeedClient.flatFeed('users', uuid).following();
+
+    List<String> uids = [];
+
+    for (int i = 0; i < followings.length; i++) {
+      // Extract user id from feed id.
+      String followingUid = followings[i].targetId.replaceAll('users:', '');
+
+      uids.add(followingUid);
+    }
+
+    return uids;
+  }
 }

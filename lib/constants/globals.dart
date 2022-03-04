@@ -16,6 +16,7 @@ class Globals {
   static const String ROUTES_SEARCH_USERS = '/search_users';
   static const String ROUTES_SETTINGS = '/settings';
   static const String ROUTES_TERMS_OF_SERVICE = '/terms_of_service';
+  static const String ROUTES_USERS_LIST = '/users_list';
   static const String ROUTES_WATCH_LIST = '/watch_list';
 
   /// Stream API
@@ -61,14 +62,16 @@ class Globals {
   static const int CRITIQUE_CHAR_LIMIT = 225;
   static const int MONGODB_PAGE_FETCH_LIMIT = 10;
   static const int STREAM_PAGE_FETCH_LIMIT = 5;
+  static const int USERS_PAGE_FETCH_LIMIT = 20;
 
   /// Email
   static const String EMAIL = 'thope@imabigcritic.com';
 
   /// Messages
-  static const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at this moment.';
+  static const String MESSAGE_EMPTY_CRITIQUES = 'No critiques at the moment.';
   static const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
-  static const String MESSAGE_EMPTY_COMMENTS = 'No comments at this moment.';
+  static const String MESSAGE_EMPTY_COMMENTS = 'No comments at the moment.';
+  static const String MESSAGE_EMPTY_USERS = 'No users at the moment.';
 
   /// Package info
   static const String APP_VERSION = 'app_version';
