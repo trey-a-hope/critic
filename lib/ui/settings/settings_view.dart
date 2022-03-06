@@ -7,6 +7,7 @@ import 'package:critic/widgets/basic_page.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:launch_review/launch_review.dart';
 
 class SettingsView extends StatelessWidget {
   SettingsView({Key? key}) : super(key: key);
@@ -50,6 +51,20 @@ class SettingsView extends StatelessWidget {
               ),
               onTap: () {
                 Get.toNamed(Globals.ROUTES_CONTACT);
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Leave a Review',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              trailing: Icon(
+                Icons.chevron_right,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              onTap: () {
+                LaunchReview.launch(
+                    androidAppId: 'com.io.critic', iOSAppId: '1508043723');
               },
             ),
             // ListTile(
