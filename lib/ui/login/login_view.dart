@@ -71,7 +71,7 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'The best place for movie & TV show reviews.',
+                              Globals.SPLASH_MESSAGE,
                               style: TextStyle(
                                 color: Colors.grey.shade100,
                                 fontSize: 14,

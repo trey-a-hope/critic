@@ -9,6 +9,7 @@ class Globals {
   static const String ROUTES_EDIT_PROFILE = '/edit_profile';
   static const String ROUTES_HOME = '/home';
   static const String ROUTES_LOGIN = '/login';
+  static const String ROUTES_MAIN = '/main';
   static const String ROUTES_MOVIE_DETAILS = '/movie_details';
   static const String ROUTES_PROFILE = '/profile';
   static const String ROUTES_RECOMMENDATIONS = '/recommendations';
@@ -72,6 +73,8 @@ class Globals {
   static const String MESSAGE_EMPTY_WATCHLIST = 'No movies in your watchlist.';
   static const String MESSAGE_EMPTY_COMMENTS = 'No comments at the moment.';
   static const String MESSAGE_EMPTY_USERS = 'No users at the moment.';
+  static const String SPLASH_MESSAGE =
+      'The best place for movie & TV show reviews.';
 
   /// Package info
   static const String APP_VERSION = 'app_version';
