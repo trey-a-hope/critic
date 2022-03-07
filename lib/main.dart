@@ -7,12 +7,18 @@ import 'constants/app_themes.dart';
 import 'initialize_dependencies.dart';
 import 'package:get/get.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Wait for firebase app to initialize.
   await Firebase.initializeApp();
+
+  // Force disable Crashlytics collection while doing every day development.
+  // Handle Crashlytics enabled status when not in Debug,
+  await FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(kDebugMode ? false : true);
 
   // Pass all uncaught errors from the framework to Crashlytics.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
