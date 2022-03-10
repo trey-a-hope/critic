@@ -35,8 +35,7 @@ class SearchMoviesView extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.headline6!.color),
+              style: context.textTheme.headline5!,
               controller: _textController,
               autocorrect: false,
               onChanged: (text) {

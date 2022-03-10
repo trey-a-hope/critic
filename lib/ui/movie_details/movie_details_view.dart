@@ -89,12 +89,7 @@ class MovieDetailsView extends StatelessWidget {
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10.0),
                                   ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(5.0, 5.0),
-                                        blurRadius: 10.0)
-                                  ],
+                               
                                 ),
                               ),
                               placeholder: (context, url) =>
@@ -129,12 +124,7 @@ class MovieDetailsView extends StatelessWidget {
                                   topRight: Radius.circular(10.0),
                                 ),
                                 color: Theme.of(context).canvasColor,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(5.0, 5.0),
-                                      blurRadius: 10.0)
-                                ],
+                          
                               ),
                             ),
                           )

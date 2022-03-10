@@ -36,13 +36,16 @@ class SplashView extends StatelessWidget {
                     height: 300.0,
                     width: 300.0,
                   ),
-                  Text(
-                    Globals.SPLASH_MESSAGE,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      Globals.SPLASH_MESSAGE,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
                     ),
                   ),
                 ],

@@ -24,16 +24,15 @@ class SearchUsersView extends StatelessWidget {
         child: Column(
           children: [
             TextField(
-              style: TextStyle(
-                  color: Theme.of(context).textTheme.headline6!.color),
+              style: context.textTheme.headline5!,
               controller: _textController,
               autocorrect: false,
               onChanged: (text) {
                 model.udpateSearchText(text: text);
               },
-              cursorColor: Theme.of(context).textTheme.headline5!.color,
+              cursorColor: context.textTheme.headline5!.color,
               decoration: InputDecoration(
-                  errorStyle: TextStyle(color: Colors.white),
+                  errorStyle: context.textTheme.headline5!,
                   prefixIcon: Icon(
                     Icons.search,
                     color: Theme.of(context).iconTheme.color,

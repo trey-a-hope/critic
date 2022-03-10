@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// Used only to display a critique view that is loading.
@@ -101,22 +102,19 @@ class LoadingCritiqueWidgetView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                Text(
-                  '',
+                Text(''),
+                SizedBox(
+                  width: 10,
                 ),
                 Spacer(),
-                IconButton(
-                  icon: Icon(
-                    Icons.delete,
-                  ),
-                  onPressed: () {},
+                Icon(
+                  Icons.favorite,
+                  color: Colors.grey,
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.report,
-                  ),
-                  onPressed: () {},
-                )
+                Icon(
+                  MdiIcons.dotsVertical,
+                  color: Colors.grey,
+                ),
               ],
             ),
           ),
