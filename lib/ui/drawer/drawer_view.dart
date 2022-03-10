@@ -1,4 +1,3 @@
-import 'package:critic/constants/app_themes.dart';
 import 'package:critic/constants/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +29,7 @@ class DrawerView extends StatelessWidget {
                         model.user == null
                             ? 'Hello...'
                             : 'Hello, ${model.user!.username}',
-                        style: AppThemes.textTheme.headline4,
+                        style: context.textTheme.headline4,
                       ),
                     ),
                     model.user == null
@@ -56,7 +55,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(Icons.home),
                 title: Text(
                   'Home',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.offNamed(Globals.ROUTES_HOME);
@@ -66,7 +65,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(Icons.add),
                 title: Text(
                   'Create Critique',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(Globals.ROUTES_CREATE_CRITIQUE);
@@ -76,7 +75,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(Icons.person),
                 title: Text(
                   'Profile',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(
@@ -103,7 +102,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(Icons.remove_red_eye_rounded),
                 title: Text(
                   'Watch List',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(Globals.ROUTES_WATCH_LIST);
@@ -113,7 +112,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(MdiIcons.movieOpenStar),
                 title: Text(
                   'Search Movies',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(
@@ -128,7 +127,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(MdiIcons.accountMultiple),
                 title: Text(
                   'Search Users',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(
@@ -144,7 +143,7 @@ class DrawerView extends StatelessWidget {
                 leading: const Icon(Icons.settings),
                 title: Text(
                   'Settings',
-                  style: AppThemes.textTheme.headline4,
+                  style: context.textTheme.headline4,
                 ),
                 onTap: () {
                   Get.toNamed(Globals.ROUTES_SETTINGS);

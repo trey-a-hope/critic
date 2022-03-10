@@ -58,6 +58,8 @@ class CritiqueWidgetView extends StatelessWidget {
                             imageUrl: model.movie.poster,
                             imageBuilder: (context, imageProvider) => Container(
                               decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black, width: 1.0),
                                 image: DecorationImage(
                                   image: imageProvider,
                                   fit: BoxFit.fitHeight,
@@ -66,12 +68,6 @@ class CritiqueWidgetView extends StatelessWidget {
                                   topLeft: Radius.circular(10),
                                   bottomLeft: Radius.circular(10),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey,
-                                      offset: Offset(5.0, 5.0),
-                                      blurRadius: 10.0)
-                                ],
                               ),
                             ),
                             errorWidget: (context, url, error) =>
@@ -91,7 +87,7 @@ class CritiqueWidgetView extends StatelessWidget {
                                 Divider(),
                                 Text(
                                   '\"${critique.message}\"',
-                                  style: Theme.of(context).textTheme.headline6,
+                                  style: context.textTheme.headline6,
                                 ),
                                 RatingBarIndicator(
                                   rating: critique.rating,
@@ -138,17 +134,13 @@ class CritiqueWidgetView extends StatelessWidget {
                               ],
                             ),
                             decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.black, width: 1.0),
                               borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(10.0),
                                 topRight: Radius.circular(10.0),
                               ),
                               color: Theme.of(context).canvasColor,
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.grey,
-                                    offset: Offset(5.0, 5.0),
-                                    blurRadius: 10.0)
-                              ],
                             ),
                           ),
                         )
@@ -210,8 +202,9 @@ class CritiqueWidgetView extends StatelessWidget {
                             Get.defaultDialog(
                               title: 'Critique For ${model.movie.title}',
                               middleText: 'What would you like to do?',
-                              titleStyle: TextStyle(color: Colors.black),
-                              middleTextStyle: TextStyle(color: Colors.black),
+                              titleStyle: context.theme.textTheme.headline4,
+                              middleTextStyle:
+                                  context.theme.textTheme.headline5,
                               actions: [
                                 model.postedByMe
                                     ? ElevatedButton(

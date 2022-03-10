@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomIconBox extends StatelessWidget {
   final IconButton iconButton;
@@ -11,7 +12,7 @@ class CustomIconBox extends StatelessWidget {
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.theme.canvasColor,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Colors.grey.withAlpha(40),

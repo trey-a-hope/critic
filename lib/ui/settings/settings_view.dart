@@ -4,9 +4,11 @@ import 'package:critic/services/modal_service.dart';
 import 'package:critic/ui/drawer/drawer_view.dart';
 import 'package:critic/ui/settings/settings_view_model.dart';
 import 'package:critic/widgets/basic_page.dart';
+import 'package:day_night_switcher/day_night_switcher.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:launch_review/launch_review.dart';
 
 class SettingsView extends StatelessWidget {
@@ -17,6 +19,9 @@ class SettingsView extends StatelessWidget {
 
   /// Instantiate auth service.
   final AuthService _authService = Get.find();
+
+  /// Get storage instance.
+  final GetStorage _getStorage = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +41,37 @@ class SettingsView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
+                'Personal'.toUpperCase(),
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+            ListTile(
+              title: Text(
+                '${_getStorage.read(Globals.DARK_MODE_ENABLED) ?? false ? 'Dark' : 'Light'} Mode Enabled',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              trailing: DayNightSwitcher(
+                isDarkModeEnabled:
+                    _getStorage.read(Globals.DARK_MODE_ENABLED) ?? false,
+                onStateChanged: (isDarkModeEnabled) async {
+                  // Save user's selection of dark mode.
+                  await _getStorage.write(
+                      Globals.DARK_MODE_ENABLED, isDarkModeEnabled);
+
+                  // Update the theme from dark/light.
+                  Get.changeThemeMode(
+                      isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light);
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
                 'Contact Us'.toUpperCase(),
                 style: Theme.of(context).textTheme.headline5,
               ),
             ),
+
             ListTile(
               title: Text(
                 'Email',

@@ -1,7 +1,7 @@
 name: critic
 description: Timeline view of movie/tv show critiques.
 
-version: 2.0.6+206
+version: 2.0.7+207
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -13,6 +13,7 @@ dependencies:
   cached_network_image: ^3.1.0+1
   cloud_firestore: ^3.1.0
   cupertino_icons: ^1.0.0
+  day_night_switcher: ^0.2.0+1
   firebase_auth: ^3.2.0
   firebase_core: ^1.10.5
   firebase_crashlytics: ^2.5.2

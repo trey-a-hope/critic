@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:critic/services/modal_service.dart';
 import 'package:critic/services/validation_service.dart';
@@ -172,11 +170,8 @@ class EditProfileView extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(40),
                         child: TextFormField(
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).textTheme.headline6!.color),
-                          cursorColor:
-                              Theme.of(context).textTheme.headline5!.color,
+                          style: context.textTheme.headline5!,
+                          cursorColor: context.textTheme.headline5!.color,
                           controller: _usernameController,
                           keyboardType: TextInputType.text,
                           validator: _validationService.isEmpty,
@@ -184,16 +179,10 @@ class EditProfileView extends StatelessWidget {
                           maxLines: 1,
                           decoration: InputDecoration(
                             errorStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .color),
+                              color: context.textTheme.headline5!.color,
+                            ),
                             hintText: 'Username',
-                            hintStyle: TextStyle(
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .color),
+                            hintStyle: context.textTheme.headline5!,
                           ),
                         ),
                       ),

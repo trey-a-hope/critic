@@ -60,73 +60,76 @@ class ProfileView extends StatelessWidget {
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          List<String> followerUids = await _streamFeedService
-                              .getFollowerUids(uuid: model.user!.uid);
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            List<String> followerUids = await _streamFeedService
+                                .getFollowerUids(uuid: model.user!.uid);
 
-                          Get.toNamed(
-                            Globals.ROUTES_USERS_LIST,
-                            arguments: {
-                              'uids': followerUids,
-                              'title': 'Followers'
-                            },
-                          );
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(color: Colors.black),
-                            children: [
-                              TextSpan(
-                                text: '${model.followerCount}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: ' Followers',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
+                            Get.toNamed(
+                              Globals.ROUTES_USERS_LIST,
+                              arguments: {
+                                'uids': followerUids,
+                                'title': 'Followers'
+                              },
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(color: Colors.black),
+                              children: [
+                                TextSpan(
+                                  text: '${model.followerCount}',
+                                  style: context.theme.textTheme.headline6,
+                                ),
+                                TextSpan(
+                                  text: ' Followers',
+                                  style: context.theme.textTheme.headline6,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Text(model.user!.username),
-                      InkWell(
-                        onTap: () async {
-                          List<String> followingUids = await _streamFeedService
-                              .getFollowingUids(uuid: model.user!.uid);
+                        Text(
+                          model.user!.username,
+                          style: context.theme.textTheme.headline4,
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            List<String> followingUids =
+                                await _streamFeedService.getFollowingUids(
+                                    uuid: model.user!.uid);
 
-                          Get.toNamed(
-                            Globals.ROUTES_USERS_LIST,
-                            arguments: {
-                              'uids': followingUids,
-                              'title': 'Following'
-                            },
-                          );
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(color: Colors.black),
-                            children: [
-                              TextSpan(
-                                text: '${model.followingCount}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: ' Following',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
+                            Get.toNamed(
+                              Globals.ROUTES_USERS_LIST,
+                              arguments: {
+                                'uids': followingUids,
+                                'title': 'Following'
+                              },
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(color: Colors.black),
+                              children: [
+                                TextSpan(
+                                  text: '${model.followingCount}',
+                                  style: context.theme.textTheme.headline6,
+                                ),
+                                TextSpan(
+                                  text: ' Following',
+                                  style: context.theme.textTheme.headline6,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Divider(),
                   if (!model.isMyProfile) ...[
