@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'constants/app_routes.dart';
 import 'constants/app_themes.dart';
+import 'constants/globals.dart';
 import 'initialize_dependencies.dart';
 import 'package:get/get.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -26,6 +27,9 @@ void main() async {
   // Initialize Get Storage.
   await GetStorage.init();
 
+  // Inject Get Storage.
+  Get.lazyPut(() => GetStorage(), fenix: true);
+
   // Set status bar color to black.
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -41,6 +45,9 @@ void main() async {
 class MyApp extends StatelessWidget with WidgetsBindingObserver {
   MyApp({Key? key}) : super(key: key);
 
+  /// Get storage instance.
+  final GetStorage _getStorage = Get.find();
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
@@ -53,16 +60,17 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // Set theme of app.
+    Get.changeThemeMode(_getStorage.read(Globals.DARK_MODE_ENABLED) ?? false
+        ? ThemeMode.dark
+        : ThemeMode.light);
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Critic',
-      theme: ThemeData(
-        primaryColor: Colors.lightBlueAccent,
-        textTheme: AppThemes.textTheme,
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-      ),
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
+      themeMode: ThemeMode.system,
       initialBinding: InitialBinding(),
       initialRoute: '/',
       getPages: AppRoutes.routes,

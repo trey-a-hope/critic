@@ -79,4 +79,7 @@ class Globals {
   /// Package info
   static const String APP_VERSION = 'app_version';
   static const String APP_BUILD_NUMBER = 'build_number';
+
+  /// Personal
+  static const String DARK_MODE_ENABLED = 'dark_mode_enabled';
 }

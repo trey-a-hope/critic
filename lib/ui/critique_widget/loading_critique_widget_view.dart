@@ -33,12 +33,6 @@ class LoadingCritiqueWidgetView extends StatelessWidget {
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey,
-                              offset: Offset(5.0, 5.0),
-                              blurRadius: 10.0)
-                        ],
                       ),
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
@@ -97,12 +91,6 @@ class LoadingCritiqueWidgetView extends StatelessWidget {
                         topRight: Radius.circular(10.0),
                       ),
                       color: Theme.of(context).canvasColor,
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(5.0, 5.0),
-                            blurRadius: 10.0)
-                      ],
                     ),
                   ),
                 )

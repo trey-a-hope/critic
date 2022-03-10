@@ -33,8 +33,11 @@ class UsersListViewModel extends GetxController {
   Future<List<UserModel>> fetchUsers(int offset) async {
     List<UserModel> users = [];
 
-    for (int i = offset;
-        (i < uids.length) && (i < (offset + Globals.USERS_PAGE_FETCH_LIMIT));
+    for (int i = offset * Globals.USERS_PAGE_FETCH_LIMIT;
+        (i < uids.length) &
+            (i <
+                (offset * Globals.USERS_PAGE_FETCH_LIMIT) +
+                    Globals.USERS_PAGE_FETCH_LIMIT);
         i++) {
       users.add(await _userService.retrieveUser(uid: uids[i]));
     }

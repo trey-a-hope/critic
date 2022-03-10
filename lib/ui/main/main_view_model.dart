@@ -31,14 +31,14 @@ class MainViewModel extends GetxController {
   final CollectionReference _usersDB =
       FirebaseFirestore.instance.collection('users');
 
-  /// Instantiate get storage.
-  final GetStorage _getStorage = GetStorage();
-
   /// Instantiate user service.
   UserService _userService = Get.find();
 
   /// Instantiate util service.
   UtilService _utilService = Get.find();
+
+  /// Get storage instance.
+  GetStorage _getStorage = Get.find();
 
   /// Instance of new version class.
   final NewVersion _newVersion = NewVersion();

@@ -37,7 +37,11 @@ class SearchUsersRepository {
       List<UserModel> users = [];
       for (int i = 0; i < uids.length; i++) {
         UserModel user = await _userService.retrieveUser(uid: uids[i]);
-        users.add(user);
+
+        // Prevent null users from returning in search.
+        if (user.username != 'I NEED A NAME') {
+          users.add(user);
+        }
       }
 
       cache.set(term, users);
