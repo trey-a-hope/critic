@@ -1,3 +1,5 @@
+import 'package:critic/repositories/recipe_repository.dart';
+import 'package:critic/services/firestore_service.dart';
 import 'package:critic/services/time_ago_service.dart';
 import 'package:critic/services/util_service.dart';
 import 'package:critic/services/watchlist_service.dart';
@@ -20,8 +22,10 @@ class InitialBinding implements Bindings {
     Get.lazyPut(() => BlockUserService(), fenix: true);
     Get.lazyPut(() => CritiqueService(), fenix: true);
     Get.lazyPut(() => FCMNotificationService(), fenix: true);
+    Get.lazyPut(() => FirestoreService(), fenix: true);
     Get.lazyPut(() => ModalService(), fenix: true);
     Get.lazyPut(() => MovieService(), fenix: true);
+    Get.lazyPut(() => RecipeRepository(), fenix: true);
     Get.lazyPut(() => RecommendationsService(), fenix: true);
     Get.lazyPut(() => StorageService(), fenix: true);
     Get.lazyPut(() => SuggestionService(), fenix: true);

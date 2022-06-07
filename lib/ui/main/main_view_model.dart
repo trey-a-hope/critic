@@ -14,6 +14,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:new_version/new_version.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../rowy/rowy_view.dart';
+
 class MainViewModel extends GetxController {
   /// Firebase auth instance.
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -118,7 +120,8 @@ class MainViewModel extends GetxController {
       await _utilService.setOnlineStatus(isOnline: true);
 
       // Proceed to home page.
-      Get.offAllNamed(Globals.ROUTES_HOME);
+      // Get.offAllNamed(Globals.ROUTES_HOME);
+      Get.to(( ) => RowyView());
     }
   }
 

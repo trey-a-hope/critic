@@ -17,10 +17,13 @@ import 'package:critic/ui/users_list/users_list_view.dart';
 import 'package:critic/ui/watch_list/watch_list_view.dart';
 import 'package:get/get.dart';
 
+import '../rowy/rowy_view.dart';
+
 class AppRoutes {
   AppRoutes._();
   static final routes = [
-    GetPage(name: '/', page: () => const SplashView()),
+    // GetPage(name: '/', page: () => const SplashView()),
+     GetPage(name: '/', page: () =>   RowyView()),
     GetPage(name: Globals.ROUTES_CONTACT, page: () => ContactView()),
     GetPage(
         name: Globals.ROUTES_CREATE_CRITIQUE, page: () => CreateCritiqueView()),
