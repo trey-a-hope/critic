@@ -8,6 +8,8 @@ Greetings, and welcome to my Github. I've been doing mobile develpoment for abou
 ![IMG_2780_iphone13promaxgraphite_portrait](https://user-images.githubusercontent.com/99027548/179417519-d1f0f5b9-85c3-4057-a8f6-9f7c823f883c.png)
 ![IMG_2781_iphone13promaxgraphite_portrait](https://user-images.githubusercontent.com/99027548/179417520-2853d958-5d30-45bb-918a-e881ff37ce2a.png)
 
+{{ COMMITS }}
+
 [![Linkedin Badge](https://img.shields.io/badge/-Trey_Hope-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/trey-hope-69a3a774/)](https://www.linkedin.com/in/trey-hope-69a3a774/)
 [![Instagram Badge](https://img.shields.io/badge/-trey.codes-purple?style=flat-square&logo=instagram&logoColor=white&link=https://instagram.com/trey.codes/)](https://instagram.com/trey.codes)
 [![Youtube Badge](https://img.shields.io/badge/-trey.codes-darkred?style=flat-square&logo=youtube&logoColor=white&link=https://www.youtube.com/channel/UCZPhxIr0rjxwAC5pRYwz4UA)](https://www.youtube.com/channel/UCZPhxIr0rjxwAC5pRYwz4UA)
